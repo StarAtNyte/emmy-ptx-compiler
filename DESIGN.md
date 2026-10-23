@@ -38,7 +38,11 @@ accumulators and inner-loop accumulators have different reset points.
 
 The code deliberately uses separately rounded add and multiply rather than
 contracting arbitrary arithmetic into FMA. This preserves exact public pointwise
-expectations; optimization requires its own numerical validation.
+expectations. An adjacent multiply followed by an additive Accum in the same body
+can use fma.rn.f32: adjacency proves the operands have not changed, and reduction
+tolerances permit the single-rounding contraction. Ordinary pointwise expressions
+remain separate. The discarded multiply is left for ptxas dead-code elimination
+if no other statement consumes it.
 
 ## Reductions
 

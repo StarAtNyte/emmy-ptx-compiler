@@ -33,6 +33,22 @@ class Driver:
             'cuMemFree_v2': [ct.c_uint64],
             'cuMemcpyHtoD_v2': [ct.c_uint64, ct.c_void_p, ct.c_size_t],
             'cuMemcpyDtoH_v2': [ct.c_void_p, ct.c_uint64, ct.c_size_t],
+            'cuMemsetD8_v2': [ct.c_uint64, ct.c_ubyte, ct.c_size_t],
+            'cuEventCreate': [ct.POINTER(ct.c_void_p), ct.c_uint],
+            'cuEventRecord': [ct.c_void_p, ct.c_void_p],
+            'cuEventRecordWithFlags': [ct.c_void_p, ct.c_void_p, ct.c_uint],
+            'cuEventSynchronize': [ct.c_void_p],
+            'cuEventElapsedTime': [ct.POINTER(ct.c_float), ct.c_void_p, ct.c_void_p],
+            'cuEventDestroy_v2': [ct.c_void_p],
+            'cuStreamCreate': [ct.POINTER(ct.c_void_p), ct.c_uint],
+            'cuStreamDestroy_v2': [ct.c_void_p],
+            'cuStreamBeginCapture_v2': [ct.c_void_p, ct.c_int],
+            'cuStreamEndCapture': [ct.c_void_p, ct.POINTER(ct.c_void_p)],
+            'cuStreamSynchronize': [ct.c_void_p],
+            'cuGraphInstantiateWithFlags': [ct.POINTER(ct.c_void_p), ct.c_void_p, ct.c_uint64],
+            'cuGraphLaunch': [ct.c_void_p, ct.c_void_p],
+            'cuGraphExecDestroy': [ct.c_void_p],
+            'cuGraphDestroy': [ct.c_void_p],
             'cuLaunchKernel': [ct.c_void_p, ct.c_uint, ct.c_uint, ct.c_uint,
                                ct.c_uint, ct.c_uint, ct.c_uint, ct.c_uint,
                                ct.c_void_p, ct.POINTER(ct.c_void_p), ct.c_void_p],
@@ -60,9 +76,12 @@ class Driver:
     def close(self):
         self.call('cuCtxDestroy_v2', self.context)
 
-    def run(self, ptx, kernel, inputs):
+    def run(self, ptx, kernel, inputs, timed_iters=0):
         module = ct.c_void_p()
         allocations = []
+        events = []
+        stream, graph, executable = ct.c_void_p(), ct.c_void_p(), ct.c_void_p()
+        self.last_timings_us = []
         arrays, parameters = {}, []
         types = {'f32': np.float32, 'f16': np.float16, 'f64': np.float64,
                  'i32': np.int32, 'i64': np.int64}
@@ -94,6 +113,35 @@ class Driver:
             self.call('cuLaunchKernel', function, *kernel['grid'], *kernel['block'],
                       kernel['smem_bytes'], None, addresses, None)
             self.call('cuCtxSynchronize')
+            if timed_iters:
+                for _ in range(2):
+                    event = ct.c_void_p()
+                    self.call('cuEventCreate', ct.byref(event), 0)
+                    events.append(event)
+                # Capture events with the kernel so Python dispatch cannot add
+                # an idle host gap between the measured start and launch.
+                self.call('cuStreamCreate', ct.byref(stream), 1)
+                self.call('cuStreamBeginCapture_v2', stream, 0)
+                self.call('cuEventRecordWithFlags', events[0], stream, 1)
+                self.call('cuLaunchKernel', function, *kernel['grid'], *kernel['block'],
+                          kernel['smem_bytes'], stream, addresses, None)
+                self.call('cuEventRecordWithFlags', events[1], stream, 1)
+                self.call('cuStreamEndCapture', stream, ct.byref(graph))
+                self.call('cuGraphInstantiateWithFlags', ct.byref(executable), graph, 0)
+                for iteration in range(timed_iters + 5):
+                    for name in kernel['zero_outputs']:
+                        array, pointer = arrays[name]
+                        self.call('cuMemsetD8_v2', pointer, 0, array.nbytes)
+                    if kernel['zero_outputs']:
+                        # The graph stream is nonblocking and does not inherit
+                        # legacy default-stream ordering from these memsets.
+                        self.call('cuCtxSynchronize')
+                    self.call('cuGraphLaunch', executable, stream)
+                    self.call('cuStreamSynchronize', stream)
+                    milliseconds = ct.c_float()
+                    self.call('cuEventElapsedTime', ct.byref(milliseconds), *events)
+                    if iteration >= 5:
+                        self.last_timings_us.append(milliseconds.value * 1000)
             outputs = {}
             for arg in kernel['args']:
                 if arg.get('output'):
@@ -102,6 +150,14 @@ class Driver:
                     outputs[arg['name']] = array
             return outputs
         finally:
+            if executable.value:
+                self.call('cuGraphExecDestroy', executable)
+            if graph.value:
+                self.call('cuGraphDestroy', graph)
+            if stream.value:
+                self.call('cuStreamDestroy_v2', stream)
+            for event in events:
+                self.call('cuEventDestroy_v2', event)
             for pointer in allocations:
                 self.call('cuMemFree_v2', pointer)
             if module.value:

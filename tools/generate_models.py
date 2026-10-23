@@ -5,21 +5,27 @@ value=None in its JSON, so development models need their seeded weights supplied
 explicitly. This tool changes test data only, never the compiler or its IR.
 """
 import json
+import argparse
+import importlib.util
 import subprocess
 import sys
 from pathlib import Path
 
-from expressions_models import OPEN
-
-
 def main():
     root = Path(__file__).resolve().parents[1]
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--specs', type=Path, default=root / 'tools/expressions_models.py')
+    parser.add_argument('--out', type=Path, default=root / 'artifacts/models')
+    args = parser.parse_args()
+    source = importlib.util.spec_from_file_location('model_specifications', args.specs)
+    specifications = importlib.util.module_from_spec(source)
+    source.loader.exec_module(specifications)
     subprocess.run([sys.executable, str(root / 'challenge/tools/generate.py'),
-                    str(root / 'tools/expressions_models.py'),
+                    str(args.specs),
                     '--emmy', str(root / '.venv/bin/emmy'),
-                    '--out', str(root / 'artifacts/models')], check=True)
-    for spec in OPEN:
-        path = root / 'artifacts/models' / spec['id'] / 'meta.json'
+                    '--out', str(args.out)], check=True)
+    for spec in specifications.OPEN:
+        path = args.out / spec['id'] / 'meta.json'
         meta = json.loads(path.read_text())
         constants = spec['constants']()
         restored = set()

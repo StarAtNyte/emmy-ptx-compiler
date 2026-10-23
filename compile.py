@@ -189,8 +189,7 @@ class Compiler:
                 stride //= extent
                 quotient = self.instruction('div.u32', gid, stride)
                 self.values[axis.name] = self.instruction('rem.u32', quotient, extent)
-            for child in stmt.body:
-                self.statement(child)
+            self.body(stmt.body)
             self.emit('tile_end:')
         elif isinstance(stmt, Init):
             self.values[stmt.name] = self.instruction('mov.f32', self.floating(stmt.identity), kind='f')
@@ -227,12 +226,10 @@ class Compiler:
             other, end = self.label('else'), self.label('endif')
             predicate = self.predicate(stmt.cond)
             self.emit(f'@!{predicate} bra {other};')
-            for child in stmt.body:
-                self.statement(child)
+            self.body(stmt.body)
             self.emit(f'bra {end};')
             self.emit(other + ':')
-            for child in stmt.else_body:
-                self.statement(child)
+            self.body(stmt.else_body)
             self.emit(end + ':')
         elif isinstance(stmt, WarpShuffle):
             distance = stmt.length // 2
@@ -274,8 +271,7 @@ class Compiler:
             self.emit(head + ':')
             done = self.instruction('setp.ge.s32', axis, end, kind='p')
             self.emit(f'@{done} bra {tail};')
-            for child in stmt.body:
-                self.statement(child)
+            self.body(stmt.body)
             self.emit(f'add.s32 {axis}, {axis}, {step};')
             self.emit(f'bra {head};')
             self.emit(tail + ':')
@@ -291,10 +287,7 @@ class Compiler:
             else:
                 self.values[stmt.name] = self.integer(stmt.value)
         elif isinstance(stmt, Accum):
-            dest = self.values[stmt.name]
-            base = self.values[stmt.base] if stmt.base is not None else dest
-            result = self.arithmetic(stmt.op.name, [base, self.values[stmt.value]])
-            self.emit(f'mov.f32 {dest}, {result};')
+            self.accumulate(stmt)
         elif isinstance(stmt, Load):
             if stmt.dtype is not None and stmt.dtype.name != 'f32':
                 raise NotImplementedError(f'Load dtype {stmt.dtype}')
@@ -312,13 +305,38 @@ class Compiler:
         else:
             raise NotImplementedError(f'Statement {type(stmt).__name__}')
 
+    def accumulate(self, stmt, product=None):
+        dest = self.values[stmt.name]
+        base = self.values[stmt.base] if stmt.base is not None else dest
+        if product is not None:
+            result = self.instruction('fma.rn.f32', *(self.values[a] for a in product.args), base, kind='f')
+        else:
+            result = self.arithmetic(stmt.op.name, [base, self.values[stmt.value]])
+        self.emit(f'mov.f32 {dest}, {result};')
+
+    def body(self, statements):
+        """Contract an adjacent multiply/fold, never ordinary pointwise math.
+
+        Adjacency within the same body proves that the multiply operands have
+        not changed. Reduction tolerances allow this single-rounding contraction.
+        ptxas removes the now-unused separate multiply when it has no other use.
+        """
+        previous = None
+        for stmt in statements:
+            if (isinstance(stmt, Accum) and stmt.op.name == 'add'
+                    and isinstance(previous, Assign) and previous.op.name == 'multiply'
+                    and stmt.value == previous.name):
+                self.accumulate(stmt, previous)
+            else:
+                self.statement(stmt)
+            previous = stmt
+
     def compile(self):
         params = self.launch['arg_order']
         for i, name in enumerate(params):
             raw = self.instruction('ld.param.u64', f'[param_{i}]', kind='rd')
             self.pointers[name] = self.instruction('cvta.to.global.u64', raw, kind='rd')
-        for stmt in self.node.op.body:
-            self.statement(stmt)
+        self.body(self.node.op.body)
         self.emit('ret;')
         header = ['.version 8.0', '.target sm_89', '.address_size 64',
                   f'.visible .entry {self.node.op.name}(',

@@ -67,6 +67,59 @@ the official packager already handles scalar constants correctly.
 - Shared memory, async copies, barriers and atomic output accumulation.
 - Dynamic shared memory when the total exceeds 48 KiB.
 - Masked Select, combined conditions and identity-aware reduction merges.
+- Targeted FMA contraction for adjacent multiply/add reduction steps.
+
+The FMA compiler passed 56 hosted checks across the public, variation, schedule,
+MLP and transformer-stage corpora, plus 125 local regression cases. Nine complete
+transformer seed/depth tests checked 147 stage outputs. A matching compiler hash,
+sanitizer scope and raw paired timings are recorded in
+`validation/2026-10-23-iteration3.json`.
+
+## Schedule, model and performance development
+
+Ten additional schedules cover 32–512 cooperative threads, serial reductions,
+and transposed reductions. All passed on the hosted runner before the FMA pass.
+Seven individually traced transformer stages also passed. The full block has
+RMSNorm, Q/K/V projections, scaled dot-product attention, output projection,
+residual additions and a SiLU MLP. Its local end-to-end check uses three seeds and
+one, two or four repeated blocks, comparing intermediate and final outputs with
+the actual PyTorch model. It is an untrained numerical correctness test.
+
+The pinned Emmy release fails to materialize the fully fused transformer due to
+unbound axes, even with a cut pin. The staged test executes the same complete
+model through our PTX with host transfers; it is not a full-model speed benchmark.
+
+```sh
+.venv/bin/python challenge/tools/generate.py tools/expressions_schedules.py --emmy .venv/bin/emmy --out artifacts/schedules
+.venv/bin/python tools/generate_models.py --specs tools/transformer_model.py --out artifacts/transformer-stages
+.venv/bin/python tools/validate_transformer.py
+.venv/bin/python tools/benchmark.py challenge/problems/m01_matmul_512
+```
+
+The local benchmark captures events and a kernel into a CUDA graph, avoiding
+Python dispatch gaps inside its measurement. It resets atomic outputs outside
+the timed region and checks results after repeated launches. Clocks are not
+locked. It uses NVIDIA's [event API](https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/group__CUDA__EVENT.html)
+and [graph capture](https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/cuda-graphs.html).
+
+Hosted paired timing runs alternate baseline/candidate order and preserve raw
+samples. The first targeted FMA pass measured 119.424 → 90.784 microseconds for
+public a01 attention (1.315x), and 101.024 → 98.976 microseconds for public m01
+matmul (1.021x), with both versions' outputs checked. These are observations on
+the runner, not guaranteed speedups for other kernels or hidden cases. The
+smaller kernels' gaps were modest and mixed.
+
+To reproduce that comparison from this repository's history:
+
+```sh
+git show 4a8c225:compile.py > artifacts/compiler-before-fma.py
+.venv/bin/python tools/benchmark_hosted.py challenge/problems/m01_matmul_512 challenge/problems/a01_attention --baseline artifacts/compiler-before-fma.py
+```
+
+NVIDIA Compute Sanitizer 2025.3.1 reported zero errors for memcheck, synccheck and
+initcheck, zero leaks, and zero racecheck hazards on eight representative cases
+with the FMA compiler. This is explicitly a selected subset. The harness is
+`tools/sanitize.py`; it accepts the installed sanitizer binary and problem paths.
 
 Current limits: f32 computation and buffer addressing; no auxiliary thread bands
 or shared-memory swizzles; integer expression and operation coverage is incomplete.
@@ -76,8 +129,8 @@ review and performance measurements before treating the compiler as competition
 ready. Branch assignments, repeated tiles, nested accumulator scopes and additional
 TreeHalve options need further review.
 
-Next: schedule diversity and a genuinely held-out corpus; additional model families;
-sanitizer checks, compiler cleanup and performance. The development cases above
+Next: a genuinely held-out corpus, alignment-proven vector accesses, more numerical
+stress testing, and compiler cleanup. The development cases above
 have been used to fix bugs, so they are regression coverage rather than a held-out
 estimate. The required submission video and public repository publication are
 still outstanding.
