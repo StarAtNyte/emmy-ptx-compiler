@@ -164,13 +164,13 @@ class Driver:
                 self.call('cuModuleUnload', module)
 
 
-def check_problem(driver, folder):
+def check_problem(driver, folder, compiler=None):
     root = Path(__file__).resolve().parents[1]
     meta = json.loads((folder / 'meta.json').read_text())
     with np.load(folder / 'expected.npz') as expected:
         produced = {}
         for kernel in meta['kernels']:
-            result = subprocess.run([sys.executable, str(root / 'compile.py'),
+            result = subprocess.run([sys.executable, str(compiler or root / 'compile.py'),
                                      str(folder / f"{kernel['entry']}.ir.json")],
                                     capture_output=True, text=True, check=True)
             produced.update(driver.run(result.stdout, kernel, produced))
@@ -183,19 +183,21 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('problems', nargs='+', type=Path)
     parser.add_argument('--report', type=Path)
+    parser.add_argument('--compiler',type=Path)
     args = parser.parse_args()
     driver = Driver()
     failures = []
     rows = []
     root = Path(__file__).resolve().parents[1]
-    fingerprint = hashlib.sha256((root / 'compile.py').read_bytes()).hexdigest()
+    compiler=args.compiler or root / 'compile.py'
+    fingerprint = hashlib.sha256(compiler.read_bytes()).hexdigest()
     try:
         print(f'Local PTX target: {driver.arch}', flush=True)
         for folder in args.problems:
             start = time.monotonic()
             row = {'problem': folder.name}
             try:
-                check_problem(driver, folder)
+                check_problem(driver, folder, compiler)
                 row['passed'] = True
                 print(f'PASS {folder.name}', flush=True)
             except Exception as error:

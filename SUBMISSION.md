@@ -1,0 +1,53 @@
+# Submission draft
+
+Submission page: https://riftstack.ai/hackathon/submit
+
+The live form was inspected on 2026-10-23. It asks for entrant name/email,
+optional teammates (up to three people total), tech stack, approach, public
+repository URL, video URL, and the entrant's age/rules/video confirmations.
+The deadline is October 27 at 23:59 AoE, October 28 at 17:44 in Nepal.
+
+## Technical fields ready to use
+
+Tech stack:
+
+> Python 3.12, Emmy 0.3.11 typed IR loader, direct PTX 8.0 generation, NVIDIA
+> ptxas/RTX 5090 runner, NumPy and PyTorch reference tests, CUDA driver API,
+> NVIDIA Compute Sanitizer.
+
+Approach:
+
+> A typed visitor lowers Emmy Kernel IR directly to PTX without calling an
+> existing IR-to-code compiler. It uses the supplied metadata's parameter order
+> and launch contract, and explicitly tracks tile coordinates, loop-owned
+> accumulators, address spaces, shared-memory allocation and virtual registers.
+>
+> Reduction lowering supports coupled online-softmax state and neutral-state
+> handling for empty lanes. Binary tree order and synchronization are preserved.
+> When scratch mutations are observable, an atomic ticket selects one writer per
+> logical slot, including repeated lanes and named-barrier groups, without extra
+> shared allocation. A cheaper register reduction is used when scratch writes
+> are dead.
+>
+> Optimizations are tested with alternating paired runs on the hosted RTX 5090.
+> Adjacent multiply/add reduction steps contract to FMA; bounded shared-memory
+> scalar loops expand four ways with scalar tails. These measured about 1.32x
+> speedup for one attention kernel and 1.33x for one matmul step respectively.
+> Broader unrolling and an explicit vector pass were rejected after measurement.
+>
+> Validation includes all public categories, independent shape/operation and
+> schedule variations, finite-value stress cases, semantic regressions, actual
+> PyTorch MLP and staged transformer comparisons, and selected memory/race/sync/
+> initialization checks. Records identify the compiler hash and test scope.
+> Hidden-test results are unknown. AI coding assistance was used.
+
+## Human fields still required
+
+- Entrant's preferred name and email, and any teammate details.
+- Public repository URL. Proposed name: `StarAtNyte/emmy-ptx-compiler`; it has not
+  been created or published yet.
+- A public-link 3–5 minute own-voice video. See `WALKTHROUGH.md`.
+- The entrant's own age, rule and video-understanding confirmations.
+
+No entry has been submitted. These fields and confirmations must come from the
+entrant. The draft above is below the form's 3000-character approach limit.

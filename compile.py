@@ -31,6 +31,24 @@ class Compiler:
         self.shared = {}
         self.shared_offsets = {}
         self.identities = {}
+        self.observed_tree_buffers = set()
+        tree_counts = Counter()
+        read_buffers = set()
+        def inspect_tree_uses(body, in_loop=False):
+            for stmt in body:
+                if isinstance(stmt, Load):
+                    read_buffers.add(stmt.input)
+                elif isinstance(stmt, Write) and stmt.atomic:
+                    read_buffers.add(stmt.output)
+                elif isinstance(stmt, TreeHalve):
+                    tree_counts.update(stmt.bufs)
+                    if in_loop:
+                        self.observed_tree_buffers.update(stmt.bufs)
+                for field in ('body', 'else_body'):
+                    if hasattr(stmt, field):
+                        inspect_tree_uses(getattr(stmt, field), in_loop or isinstance(stmt, (Loop, StridedLoop)))
+        inspect_tree_uses(self.node.op.body)
+        self.observed_tree_buffers.update(b for b,n in tree_counts.items() if n > 1 or b in read_buffers)
         def collect_shared(body):
             for stmt in body:
                 if isinstance(stmt, Smem) and stmt.name not in self.shared_offsets:
@@ -183,14 +201,15 @@ class Compiler:
             gid = self.instruction('mad.lo.s32', bid, width, tid)
             extents = [a.extent.value for a in stmt.axes]
             guard = self.instruction('setp.ge.u32', gid, math.prod(extents), kind='p')
-            self.emit(f'@{guard} bra tile_end;')
+            end = self.label('tile_end')
+            self.emit(f'@{guard} bra {end};')
             stride = math.prod(extents)
             for axis, extent in zip(stmt.axes, extents):
                 stride //= extent
                 quotient = self.instruction('div.u32', gid, stride)
                 self.values[axis.name] = self.instruction('rem.u32', quotient, extent)
             self.body(stmt.body)
-            self.emit('tile_end:')
+            self.emit(end + ':')
         elif isinstance(stmt, Init):
             self.values[stmt.name] = self.instruction('mov.f32', self.floating(stmt.identity), kind='f')
             self.identities[stmt.name] = stmt.identity
@@ -239,20 +258,29 @@ class Compiler:
                 self.combine(stmt)
                 distance //= 2
         elif isinstance(stmt, TreeHalve):
-            # Each thread folds the small published partial-state array locally.
-            # This preserves arbitrary coupled combine programs and broadcasts
-            # the result without additional shared writes or synchronization.
+            if self.observed_tree_buffers.intersection(stmt.bufs):
+                self.shared_tree(stmt)
+                return
+            # Preserve the binary tree's operand order, even for coupled or
+            # noncommutative merge programs. Scratch writes are dead on this path.
             def slot(index):
                 if stmt.inner is None:
                     return Literal(index, 'int')
                 name, scale = stmt.inner
                 return BinaryExpr('+', Literal(index * scale, 'int'), Var(name))
-            for state, buffer in zip(stmt.state, stmt.bufs):
-                self.values[state] = self.instruction('ld.shared.f32', f'[{self.address(buffer, (slot(0),))}]', kind='f')
-            for index in range(1, stmt.length):
-                for other, buffer in zip(stmt.state_b, stmt.bufs):
-                    self.values[other] = self.instruction('ld.shared.f32', f'[{self.address(buffer, (slot(index),))}]', kind='f')
-                self.combine(stmt)
+            partials = [[self.instruction('ld.shared.f32', f'[{self.address(buffer, (slot(index),))}]',kind='f')
+                         for buffer in stmt.bufs] for index in range(stmt.length)]
+            half = stmt.length // 2
+            while half:
+                for index in range(half):
+                    self.values.update(zip(stmt.state,partials[index]))
+                    self.values.update(zip(stmt.state_b,partials[index+half]))
+                    self.combine(stmt)
+                    partials[index] = [self.values[name] for name in stmt.state]
+                half //= 2
+            self.values.update(zip(stmt.state,partials[0]))
+            if stmt.length > 1:
+                self.statement(Sync(barrier_id=stmt.barrier_id,count=stmt.barrier_count))
         elif isinstance(stmt, (Loop, StridedLoop)):
             folds = self.accumulators(stmt.body, stmt.axis.name) if stmt.seed else {}
             for name, fold in folds.items():
@@ -305,7 +333,11 @@ class Compiler:
             self.values[stmt.name] = value
         elif isinstance(stmt, Let):
             if isinstance(stmt.value, Literal):
-                self.values[stmt.name] = self.instruction('mov.f32', self.floating(stmt.value.value), kind='f')
+                dtype = stmt.dtype.name if stmt.dtype is not None else stmt.value.dtype
+                if dtype in ('int','i32','u32'):
+                    self.values[stmt.name] = self.instruction('mov.b32',int(stmt.value.value))
+                else:
+                    self.values[stmt.name] = self.instruction('mov.f32', self.floating(stmt.value.value), kind='f')
             else:
                 self.values[stmt.name] = self.integer(stmt.value)
         elif isinstance(stmt, Accum):
@@ -326,6 +358,47 @@ class Compiler:
                 self.emit(f'{opcode} [{address}], {self.values[value]};')
         else:
             raise NotImplementedError(f'Statement {type(stmt).__name__}')
+
+    def shared_tree(self, stmt):
+        """Materialize observable scratch mutations with one writer per slot.
+
+        Logical coordinates can repeat across lanes. After caching a merge's
+        operands, temporarily use its first scratch word for atomic tickets.
+        Exactly one lane writes each result. This needs no extra shared memory
+        and also preserves partial-CTA barriers and segmented column subsets.
+        """
+        scale = stmt.inner[1] if stmt.inner else 1
+        left = Var(stmt.tid_var)
+        if stmt.inner:
+            left = BinaryExpr('+',BinaryExpr('*',left,Literal(scale,'int')),Var(stmt.inner[0]))
+        half = stmt.length // 2
+        while half:
+            eligible = self.instruction('setp.lt.s32',self.values[stmt.tid_var],half,kind='p')
+            end = self.label('tree_merged')
+            self.emit(f'@!{eligible} bra {end};')
+            right = BinaryExpr('+',left,Literal(half*scale,'int'))
+            for name, other, buffer in zip(stmt.state,stmt.state_b,stmt.bufs):
+                self.values[name] = self.instruction('ld.shared.f32',f'[{self.address(buffer,(left,))}]',kind='f')
+                self.values[other] = self.instruction('ld.shared.f32',f'[{self.address(buffer,(right,))}]',kind='f')
+            self.combine(stmt)
+            results = [self.values[name] for name in stmt.state]
+            self.emit(end + ':')
+            barrier = Sync(barrier_id=stmt.barrier_id,count=stmt.barrier_count)
+            self.statement(barrier)
+            address = self.address(stmt.bufs[0],(left,))
+            self.instruction(f'@{eligible} atom.shared.exch.b32',f'[{address}]',0)
+            self.statement(barrier)
+            ticket = self.instruction('mov.u32','0xffffffff')
+            self.emit(f'@{eligible} atom.shared.add.u32 {ticket}, [{address}], 1;')
+            self.statement(barrier)
+            writer = self.instruction('setp.eq.u32',ticket,0,kind='p')
+            for value,buffer in zip(results,stmt.bufs):
+                self.emit(f'@{writer} st.shared.f32 [{self.address(buffer,(left,))}], {value};')
+            self.statement(barrier)
+            half //= 2
+        root = Var(stmt.inner[0]) if stmt.inner else Literal(0,'int')
+        for name,buffer in zip(stmt.state,stmt.bufs):
+            self.values[name] = self.instruction('ld.shared.f32',f'[{self.address(buffer,(root,))}]',kind='f')
 
     def accumulate(self, stmt, product=None):
         dest = self.values[stmt.name]

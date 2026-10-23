@@ -124,11 +124,27 @@ with the FMA compiler. This is explicitly a selected subset. The harness is
 
 Current limits: f32 computation and buffer addressing; no auxiliary thread bands
 or shared-memory swizzles; integer expression and operation coverage is incomplete.
-Reduction folding uses a different association from TreeHalve's parallel tree.
-Grouped accesses are scalarized. These choices need stress testing, numerical
-review and performance measurements before treating the compiler as competition
-ready. Branch assignments, repeated tiles, nested accumulator scopes and additional
-TreeHalve options need further review.
+Grouped accesses are scalarized. Additional dtype, operation and numerical
+coverage remains useful. TreeHalve now preserves halving order and synchronization;
+observable scratch uses a unique-writer fallback with named-barrier support.
+
+The semantic audit added repeated tiles, integer Let literals, conditional folds,
+observable/reused/segmented scratch, noncommutative merge ordering, memory ordering,
+named groups, duplicated logical lanes and partial column subsets. Reproduce it:
+
+```sh
+.venv/bin/python tools/generate_audit_cases.py
+.venv/bin/python tools/local_runner.py artifacts/audit/*
+```
+
+`SUBMISSION.md` contains the entry draft and missing entrant fields.
+`WALKTHROUGH.md` contains a four-minute own-voice recording outline and questions
+to check understanding. Neither a public repository nor an entry has been created.
+
+The audited compiler passed 88 hosted checks, 157 local cases, the complete
+transformer checks, and all four sanitizer tools on the 11 semantic audit cases.
+Paired timings retained the existing matmul/attention performance. Evidence and
+baseline counterexamples are in `validation/2026-10-23-iteration5.json`.
 
 An explicit vector-memory pass was tested and archived rather than kept: its
 timings were neutral on public and million-element workloads. Four-way scalar

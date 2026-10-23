@@ -10,6 +10,17 @@ Third iteration: ten schedule variants (including coop-t and 32–512 thread wid
 
 Fourth iteration: explicit vector accesses with alignment proofs were correct and sanitizer-clean but timing-neutral on five public and two million-element workloads, so the pass was archived instead of merged. Four-way leaf-loop expansion improved m01 matmul by 1.33x but regressed a01 attention by about 2x. Restricting it to shared-memory loops preserved the matmul gain and attention baseline. New test generators add eight alignment cases, nine shared-loop tail cases, two prime-sized cross-attention cases and two bandwidth cases. The active optimization uses memory-space facts rather than kernel names. Benchmark tooling now supports full-output checks in the first trial and checked prefixes in later timing trials to avoid repeated multi-megabyte transfers, and retries transient runner disconnections.
 
+Fifth iteration: a typed semantic audit exposed repeated Tile label collisions,
+integer Let literal typing, scratch mutation omissions, noncommutative tree order
+and lost shared-memory ordering. The root-only tree now preserves ordered halving
+and the barrier. Observable scratch uses atomic per-slot writer tickets without
+extra allocation, preserving named participant barriers and partial column
+subsets. Eleven cases cover these behaviors; conditional accumulators already
+worked. The submission form was read directly (no write): name/email, optional
+teammates, tech stack, approach, public repo, video and entrant confirmations are
+required. Draft and walkthrough files are prepared; no repository publication or
+form submission has occurred.
+
 ## Evidence collected
 
 - Challenge checkout: `challenge`, commit `ec8cde1943f88efea3827a95bda6085553d2d407`.

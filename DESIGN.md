@@ -57,11 +57,19 @@ IR-provided merge program. This supports coupled states such as online softmax's
 running maximum and normalized exponential sum. The merge program's statement
 order matters: old state must be consumed before its update.
 
-The current TreeHalve lowering loads shared partials and folds them locally in
-each participating thread. This broadcasts results without shared write races,
-but changes association from a parallel halving tree. It is conservative for the
-small partial arrays tested so far, not a proven replacement for every possible
-TreeHalve use or subsequent observation of its scratch storage.
+TreeHalve preserves the binary halving order. A conservative use analysis selects
+the cheaper register path only when no explicit read, atomic update, repeated
+tree or enclosing loop can observe its scratch mutations. Each thread loads its
+partial states, merges the same ordered pairs as the IR and retains the final
+required barrier, which also orders unrelated shared-memory accesses.
+
+Observable scratch uses a materialized tree. Logical coordinates follow the IR,
+including segmented column subsets and named participant barriers. Multiple lanes
+may name one slot. They first cache operands/results in registers, synchronize,
+atomically reset that slot's first component to a counter, synchronize, acquire
+atomic tickets, synchronize, then let ticket zero write all result components.
+Another barrier publishes the restored floating-point state. No extra shared
+allocation is needed. This slower fallback is limited to observable scratch.
 
 Short softmax rows exposed an important neutral-state problem: empty lanes carry
 maximum=-infinity and sum=0. Combining two empty states naively evaluates
@@ -92,6 +100,12 @@ PyTorch MLP have caught bugs beyond the public suite. These are development and
 regression cases, not a statistical estimate of hidden-test success. The reports
 record a SHA-256 of the compiler used for each run.
 
-Remaining priorities include more schedule families, held-out computations,
-dtype coverage, repeated Tile labels, branch value merging, scratch-storage
-semantics, sanitizer checks and generated-kernel performance.
+Tile exits use fresh labels, including repeated tiles. Let literals preserve their
+integer/floating type. Ordinary branch-local SSA values do not need phi nodes:
+the IR scopes them to their branch, while mutable accumulators use already-bound
+registers. A conditional-accumulator regression checks this boundary.
+
+Remaining priorities include held-out computations, wider dtype/operation
+coverage and additional measured performance work. The supported compute/storage
+path is f32; this document does not claim every possible IR field combination or
+numeric corner case has been tested.
