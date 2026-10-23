@@ -14,7 +14,7 @@ from pathlib import Path
 from emmy.compiler.graph import Graph
 from emmy.compiler.ir.expr import BinaryExpr, Literal, TernaryExpr, Var
 from emmy.compiler.ir.kernel.ir import CpAsyncCommit, CpAsyncCopy, CpAsyncWait, Smem, Sync, Tile, TreeHalve, WarpShuffle
-from emmy.compiler.ir.stmt import Accum, Assign, Cond, Init, Let, Load, Loop, StridedLoop, Write
+from emmy.compiler.ir.stmt import Accum, Assign, Cond, Init, Let, Load, Loop, Select, StridedLoop, Write
 
 
 class Compiler:
@@ -30,6 +30,7 @@ class Compiler:
         self.label_count = 0
         self.shared = {}
         self.shared_offsets = {}
+        self.identities = {}
         def collect_shared(body):
             for stmt in body:
                 if isinstance(stmt, Smem) and stmt.name not in self.shared_offsets:
@@ -70,8 +71,9 @@ class Compiler:
         for stmt in body:
             if isinstance(stmt, Accum) and axis in stmt.axes:
                 found[stmt.name] = stmt
-            if hasattr(stmt, 'body'):
-                found.update(self.accumulators(stmt.body, axis))
+            for field in ('body', 'else_body'):
+                if hasattr(stmt, field):
+                    found.update(self.accumulators(getattr(stmt, field), axis))
         return found
 
     def instruction(self, opcode, *args, kind='r'):
@@ -81,7 +83,7 @@ class Compiler:
 
     def integer(self, expr):
         if isinstance(expr, TernaryExpr):
-            predicate = self.integer(expr.cond)
+            predicate = self.predicate(expr.cond)
             return self.instruction('selp.b32', self.integer(expr.if_true), self.integer(expr.if_false), predicate)
         if isinstance(expr, Var):
             return self.values[expr.name]
@@ -90,6 +92,9 @@ class Compiler:
         if isinstance(expr, (int, float)):
             return str(int(expr))
         if isinstance(expr, BinaryExpr):
+            if expr.op in ('&&', '||'):
+                return self.instruction('and.pred' if expr.op == '&&' else 'or.pred',
+                                        self.predicate(expr.left), self.predicate(expr.right), kind='p')
             left, right = self.integer(expr.left), self.integer(expr.right)
             comparisons = {'==': 'eq', '!=': 'ne', '<': 'lt', '<=': 'le', '>': 'gt', '>=': 'ge'}
             if expr.op in comparisons:
@@ -98,6 +103,10 @@ class Compiler:
                       '/': 'div.s32', '//': 'div.s32', '%': 'rem.s32'}[expr.op]
             return self.instruction(opcode, left, right)
         raise NotImplementedError(f'Index expression: {expr!r}')
+
+    def predicate(self, expr):
+        value = self.integer(expr)
+        return value if value.startswith('%p') else self.instruction('setp.ne.s32', value, 0, kind='p')
 
     def address(self, buffer, index, offset=0):
         shape = self.shapes[buffer]
@@ -120,13 +129,45 @@ class Compiler:
                   'multiply': 'mul.rn.f32', 'divide': 'div.rn.f32',
                   'maximum': 'max.f32', 'minimum': 'min.f32',
                   'negative': 'neg.f32', 'sqrt': 'sqrt.rn.f32',
+                  'tanh': 'tanh.approx.f32', 'absolute': 'abs.f32', 'abs': 'abs.f32',
                   'rsqrt': 'rsqrt.approx.f32', 'reciprocal': 'rcp.rn.f32'}
         if op == 'relu':
             return self.instruction('max.f32', args[0], '0f00000000', kind='f')
-        if op == 'exp':
+        if op in ('sigmoid', 'silu'):
+            negative = self.instruction('neg.f32', args[0], kind='f')
+            exponential = self.arithmetic('exp', [negative])
+            denominator = self.instruction('add.rn.f32', exponential, self.floating(1), kind='f')
+            sigmoid = self.instruction('rcp.rn.f32', denominator, kind='f')
+            return sigmoid if op == 'sigmoid' else self.instruction('mul.rn.f32', args[0], sigmoid, kind='f')
+        if op in ('exp', 'exp_fast'):
             scaled = self.instruction('mul.rn.f32', args[0], self.floating(math.log2(math.e)), kind='f')
             return self.instruction('ex2.approx.f32', scaled, kind='f')
         return self.instruction(opcode[op], *args, kind='f')
+
+    def combine(self, stmt):
+        """Apply a reduction's merge program with its proven neutral state.
+
+        In an online softmax, merging two empty lanes would otherwise evaluate
+        exp(-inf - -inf). Returning the other state for an identity operand
+        enforces the reduction identity without changing ordinary scalar exp.
+        """
+        left = [self.values[name] for name in stmt.state]
+        right = [self.values[name] for name in stmt.state_b]
+        neutral = all(name in self.identities for name in stmt.state)
+        empty = []
+        if neutral:
+            for values in (left, right):
+                test = None
+                for name, value in zip(stmt.state, values):
+                    equality = self.instruction('setp.eq.f32', value, self.floating(self.identities[name]), kind='p')
+                    test = equality if test is None else self.instruction('and.pred', test, equality, kind='p')
+                empty.append(test)
+        for child in stmt.combine_states:
+            self.statement(child)
+        if neutral:
+            for name, old_left, old_right in zip(stmt.state, left, right):
+                value = self.instruction('selp.f32', old_right, self.values[name], empty[0], kind='f')
+                self.values[name] = self.instruction('selp.f32', old_left, value, empty[1], kind='f')
 
     def statement(self, stmt):
         if isinstance(stmt, Tile):
@@ -153,6 +194,7 @@ class Compiler:
             self.emit('tile_end:')
         elif isinstance(stmt, Init):
             self.values[stmt.name] = self.instruction('mov.f32', self.floating(stmt.identity), kind='f')
+            self.identities[stmt.name] = stmt.identity
         elif isinstance(stmt, CpAsyncCopy):
             if stmt.swizzle != 'NONE':
                 raise NotImplementedError('Shared-memory swizzle')
@@ -183,7 +225,7 @@ class Compiler:
                 self.emit(f'bar.sync {stmt.barrier_id}{count};')
         elif isinstance(stmt, Cond):
             other, end = self.label('else'), self.label('endif')
-            predicate = self.integer(stmt.cond)
+            predicate = self.predicate(stmt.cond)
             self.emit(f'@!{predicate} bra {other};')
             for child in stmt.body:
                 self.statement(child)
@@ -197,26 +239,30 @@ class Compiler:
             while distance:
                 for state, other in zip(stmt.state, stmt.state_b):
                     self.values[other] = self.instruction('shfl.sync.bfly.b32', self.values[state], distance, 31, '0xffffffff', kind='f')
-                for child in stmt.combine_states:
-                    self.statement(child)
+                self.combine(stmt)
                 distance //= 2
         elif isinstance(stmt, TreeHalve):
             # Each thread folds the small published partial-state array locally.
             # This preserves arbitrary coupled combine programs and broadcasts
             # the result without additional shared writes or synchronization.
+            def slot(index):
+                if stmt.inner is None:
+                    return Literal(index, 'int')
+                name, scale = stmt.inner
+                return BinaryExpr('+', Literal(index * scale, 'int'), Var(name))
             for state, buffer in zip(stmt.state, stmt.bufs):
-                self.values[state] = self.instruction('ld.shared.f32', f'[{self.address(buffer, (Literal(0, "int"),))}]', kind='f')
+                self.values[state] = self.instruction('ld.shared.f32', f'[{self.address(buffer, (slot(0),))}]', kind='f')
             for index in range(1, stmt.length):
                 for other, buffer in zip(stmt.state_b, stmt.bufs):
-                    self.values[other] = self.instruction('ld.shared.f32', f'[{self.address(buffer, (Literal(index, "int"),))}]', kind='f')
-                for child in stmt.combine_states:
-                    self.statement(child)
+                    self.values[other] = self.instruction('ld.shared.f32', f'[{self.address(buffer, (slot(index),))}]', kind='f')
+                self.combine(stmt)
         elif isinstance(stmt, (Loop, StridedLoop)):
             folds = self.accumulators(stmt.body, stmt.axis.name) if stmt.seed else {}
             for name, fold in folds.items():
                 register = self.reg('f')
                 self.values[name] = register
                 identity = {'add': 0.0, 'multiply': 1.0, 'maximum': -math.inf, 'minimum': math.inf}[fold.op.name]
+                self.identities[name] = identity
                 self.emit(f'mov.f32 {register}, {self.floating(identity)};')
             axis = self.reg()
             self.values[stmt.axis.name] = axis
@@ -233,6 +279,12 @@ class Compiler:
             self.emit(f'add.s32 {axis}, {axis}, {step};')
             self.emit(f'bra {head};')
             self.emit(tail + ':')
+        elif isinstance(stmt, Select):
+            value = self.values[stmt.branches[-1].value]
+            for branch in reversed(stmt.branches[:-1]):
+                condition = self.predicate(branch.select)
+                value = self.instruction('selp.f32', self.values[branch.value], value, condition, kind='f')
+            self.values[stmt.name] = value
         elif isinstance(stmt, Let):
             if isinstance(stmt.value, Literal):
                 self.values[stmt.name] = self.instruction('mov.f32', self.floating(stmt.value.value), kind='f')

@@ -4,6 +4,8 @@ Research snapshot: 2026-10-23. This is a living plan, not a claim of complete in
 
 Implementation update, 2026-10-23: a first direct compiler now passes all 15 public problems through the official hosted runner. Evidence is saved in `artifacts/public-results.json`; a typed feature inventory is in `artifacts/ir-inventory.json`. Pinned 0.3.11 loading and actual runner execution are verified. Independent shape/schedule variations and model integration remain unverified. See README for current limits.
 
+Second iteration: all 23 independently generated shape/operation variations passed the hosted runner. The corpus exposed missing Select lowering and an online-softmax empty-state NaN; both were fixed generally. A three-layer nn.Module MLP with ReLU/SiLU matches CPU PyTorch on local and hosted GPUs. Local CUDA-driver execution now works without nvcc. CPU Torch 2.14.1+cpu generates test IR. The model packager restores parameter tensors because Emmy's JSON omits their values and the official generator handles scalar constants only. A further 69 finite-input stress variants passed locally. Schedule diversity, broader model families, sanitizer execution and performance remain open.
+
 ## Evidence collected
 
 - Challenge checkout: `challenge`, commit `ec8cde1943f88efea3827a95bda6085553d2d407`.
