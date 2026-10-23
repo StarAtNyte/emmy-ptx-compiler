@@ -44,6 +44,12 @@ tolerances permit the single-rounding contraction. Ordinary pointwise expression
 remain separate. The discarded multiply is left for ptxas dead-code elimination
 if no other statement consumes it.
 
+Straight-line scalar loops reading only shared memory can expand four iterations
+per loop, with a scalar epilogue for any remainder. Body and extent bounds limit
+code growth. The memory-space guard is deliberate: an unrestricted experiment
+improved matmul but doubled one global-memory attention kernel's runtime. No
+kernel-name or public-problem checks select this optimization.
+
 ## Reductions
 
 WarpShuffle exchanges each state component with an XOR partner and runs the

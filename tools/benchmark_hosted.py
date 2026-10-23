@@ -23,12 +23,21 @@ def main():
     parser.add_argument('--trials', type=int, default=7)
     parser.add_argument('--report', type=Path, default=Path('artifacts/hosted-benchmark.json'))
     parser.add_argument('--server', default='http://runner.riftstack.ai:48701')
+    parser.add_argument('--timing-return-limit',type=int,default=0,
+                        help='Return full outputs in the first trial, then this many values for final outputs')
     args = parser.parse_args()
     session = requests.Session()
 
     def post(endpoint, body):
-        for _ in range(30):
-            response = session.post(args.server + endpoint, json=body, timeout=(10, 60))
+        for attempt in range(30):
+            try:
+                response = session.post(args.server + endpoint, json=body, timeout=(10, 60))
+            except (requests.ConnectionError, requests.Timeout) as error:
+                if attempt >= 4:
+                    raise
+                print(f'Transient runner connection failure ({type(error).__name__}); retrying',file=sys.stderr,flush=True)
+                time.sleep(min(2**attempt,8))
+                continue
             response.raise_for_status()
             result = response.json()
             if result.get('stage') == 'busy':
@@ -42,7 +51,7 @@ def main():
     compilers = {'baseline': args.baseline, 'candidate': args.candidate}
     report = {'clock_locked':False, 'warmup':8, 'iters':75,
               'compilers': {k:hashlib.sha256(v.read_bytes()).hexdigest() for k,v in compilers.items()},
-              'results':[]}
+              'timing_return_limit':args.timing_return_limit, 'results':[]}
     for folder in args.problems:
         meta = json.loads((folder / 'meta.json').read_text())
         cubins = {}
@@ -64,23 +73,30 @@ def main():
                             arg['data'] = produced[arg['name']].ravel().tolist()
                         arguments.append(arg)
                     count = sum(int(np.prod(a['shape'])) for a in arguments if a.get('output'))
+                    final_only=all(a['name'] in meta['graph_outputs'] for a in arguments if a.get('output'))
+                    if trial and final_only and args.timing_return_limit:
+                        count=min(count,args.timing_return_limit)
                     result = post('/run', {'cubin_id':cubins[name,kernel['entry']]['cubin_id'],
                         'entry':kernel['entry'], 'grid':kernel['grid'], 'block':kernel['block'],
                         'smem_bytes':kernel['smem_bytes'], 'zero_outputs':kernel['zero_outputs'],
                         'args':arguments, 'warmup':report['warmup'], 'iters':report['iters'],
-                        'max_return':max(4096,count)})
+                        'max_return':max(1,count)})
                     total += result['median_us']
                     for output, value in result['outputs'].items():
-                        if value.get('truncated'):
+                        if value.get('truncated') and (not trial or not args.timing_return_limit or not final_only):
                             raise RuntimeError('Truncated benchmark output')
-                        produced[output] = np.array(value['values'],dtype=np.float32).reshape(value['shape'])
+                        produced[output] = np.array(value['values'],dtype=np.float32)
+                        if not value.get('truncated'):
+                            produced[output]=produced[output].reshape(value['shape'])
                 with np.load(folder / 'expected.npz') as expected:
                     for output in expected.files:
-                        np.testing.assert_allclose(produced[output],expected[output],rtol=meta['rtol'],atol=meta['atol'])
+                        actual=produced[output].ravel()
+                        np.testing.assert_allclose(actual,expected[output].ravel()[:actual.size],rtol=meta['rtol'],atol=meta['atol'])
                 samples[name].append(total)
         baseline, candidate = (float(np.median(samples[n])) for n in ('baseline','candidate'))
         row = {'problem':folder.name, 'samples_us':samples, 'baseline_median_us':baseline,
                'candidate_median_us':candidate, 'speedup':baseline/candidate, 'outputs_passed':True,
+               'output_check':'full first trial; returned prefix thereafter' if args.timing_return_limit else 'full every trial',
                'registers':{name:{k['entry']:cubins[name,k['entry']].get('registers') for k in meta['kernels']} for name in compilers}}
         report['results'].append(row)
         args.report.parent.mkdir(parents=True,exist_ok=True)

@@ -68,6 +68,7 @@ the official packager already handles scalar constants correctly.
 - Dynamic shared memory when the total exceeds 48 KiB.
 - Masked Select, combined conditions and identity-aware reduction merges.
 - Targeted FMA contraction for adjacent multiply/add reduction steps.
+- Four-way expansion of bounded shared-memory scalar inner loops, with tails.
 
 The FMA compiler passed 56 hosted checks across the public, variation, schedule,
 MLP and transformer-stage corpora, plus 125 local regression cases. Nine complete
@@ -129,8 +130,30 @@ review and performance measurements before treating the compiler as competition
 ready. Branch assignments, repeated tiles, nested accumulator scopes and additional
 TreeHalve options need further review.
 
-Next: a genuinely held-out corpus, alignment-proven vector accesses, more numerical
-stress testing, and compiler cleanup. The development cases above
+An explicit vector-memory pass was tested and archived rather than kept: its
+timings were neutral on public and million-element workloads. Four-way scalar
+loop expansion was useful only for shared-memory loops. A broad version slowed
+one attention kernel by about 2x, so the active pass selects shared-memory loads
+using typed IR properties. Paired hosted runs measured 98.944 → 74.400 microseconds
+for m01 matmul while preserving a01 attention at about 90.8 microseconds.
+See `experiments/README.md` for both rejected experiments.
+
+The retained shared-memory loop pass passed 77 hosted checks and 146 local cases,
+the nine complete transformer checks, and four sanitizer tools over 15 selected
+cases. Matching compiler hashes and all measured experiments are recorded in
+`validation/2026-10-23-iteration4.json`.
+
+Additional generators cover eight alignment layouts, two prime-sized
+cross-attention cases, nine shared-loop lengths and two bandwidth workloads:
+
+```sh
+.venv/bin/python tools/generate_alignment_cases.py
+.venv/bin/python tools/generate_shared_loop_cases.py
+.venv/bin/python challenge/tools/generate.py tools/expressions_loop_tails.py --emmy .venv/bin/emmy --out artifacts/loop-tails
+.venv/bin/python challenge/tools/generate.py tools/expressions_bandwidth.py --emmy .venv/bin/emmy --out artifacts/bandwidth
+```
+
+Next: a held-out corpus, more numerical coverage and compiler cleanup. The development cases above
 have been used to fix bugs, so they are regression coverage rather than a held-out
 estimate. The required submission video and public repository publication are
 still outstanding.

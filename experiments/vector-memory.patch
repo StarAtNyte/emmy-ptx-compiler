@@ -1,0 +1,77 @@
+diff --git a/compile.py b/compile.py
+index 1bb2c3b..8e0b121 100644
+--- a/compile.py
++++ b/compile.py
+@@ -122,6 +122,35 @@ class Compiler:
+         byte_offset = self.instruction('mul.wide.s32', flat, 4, kind='rd')
+         return self.instruction('add.u64', self.pointers[buffer], byte_offset, kind='rd')
+ 
++    @staticmethod
++    def residues(expr, modulus):
++        """Conservative possible index residues; unknown values permit all."""
++        unknown = set(range(modulus))
++        if isinstance(expr, Literal):
++            return {int(expr.value) % modulus}
++        if isinstance(expr, BinaryExpr):
++            left = Compiler.residues(expr.left, modulus)
++            right = Compiler.residues(expr.right, modulus)
++            functions = {'+': lambda a,b: a+b, '-': lambda a,b: a-b,
++                         '*': lambda a,b: a*b}
++            if expr.op in functions:
++                return {functions[expr.op](a,b) % modulus for a in left for b in right}
++            if (expr.op == '%' and isinstance(expr.right, Literal)
++                    and int(expr.right.value) != 0 and int(expr.right.value) % modulus == 0):
++                return left
++        return unknown
++
++    def vector_aligned(self, buffer, index, width):
++        # Device buffer allocations have at least 16-byte base alignment. Shared
++        # declarations may promise only four bytes, so keep their accesses scalar.
++        if width not in (2,4) or buffer in self.shared:
++            return False
++        residues = {0}
++        for coordinate, extent in zip(index, self.shapes[buffer]):
++            coordinate_residues = self.residues(coordinate, width)
++            residues = {(a * extent + b) % width for a in residues for b in coordinate_residues}
++        return residues == {0}
++
+     def arithmetic(self, op, args):
+         if op == 'copy':
+             return self.instruction('mov.f32', args[0], kind='f')
+@@ -291,17 +320,28 @@ class Compiler:
+         elif isinstance(stmt, Load):
+             if stmt.dtype is not None and stmt.dtype.name != 'f32':
+                 raise NotImplementedError(f'Load dtype {stmt.dtype}')
+-            for i, name in enumerate(stmt.names):
+-                space = 'shared' if stmt.input in self.shared else 'global'
+-                self.values[name] = self.instruction(f'ld.{space}.f32', f'[{self.address(stmt.input, stmt.index, i)}]', kind='f')
++            if self.vector_aligned(stmt.input, stmt.index, len(stmt.names)):
++                registers = [self.reg('f') for _ in stmt.names]
++                address = self.address(stmt.input, stmt.index)
++                self.emit(f'ld.global.v{len(registers)}.f32 {{{", ".join(registers)}}}, [{address}];')
++                self.values.update(zip(stmt.names,registers))
++            else:
++                for i, name in enumerate(stmt.names):
++                    space = 'shared' if stmt.input in self.shared else 'global'
++                    self.values[name] = self.instruction(f'ld.{space}.f32', f'[{self.address(stmt.input, stmt.index, i)}]', kind='f')
+         elif isinstance(stmt, Assign):
+             self.values[stmt.name] = self.arithmetic(stmt.op.name, [self.values[a] for a in stmt.args])
+         elif isinstance(stmt, Write):
+-            for i, value in enumerate(stmt.values):
+-                address = self.address(stmt.output, stmt.index, i)
+-                space = 'shared' if stmt.output in self.shared else 'global'
+-                opcode = f'red.{space}.add.f32' if stmt.atomic else f'st.{space}.f32'
+-                self.emit(f'{opcode} [{address}], {self.values[value]};')
++            if not stmt.atomic and self.vector_aligned(stmt.output, stmt.index, len(stmt.values)):
++                address = self.address(stmt.output, stmt.index)
++                registers = ', '.join(self.values[value] for value in stmt.values)
++                self.emit(f'st.global.v{len(stmt.values)}.f32 [{address}], {{{registers}}};')
++            else:
++                for i, value in enumerate(stmt.values):
++                    address = self.address(stmt.output, stmt.index, i)
++                    space = 'shared' if stmt.output in self.shared else 'global'
++                    opcode = f'red.{space}.add.f32' if stmt.atomic else f'st.{space}.f32'
++                    self.emit(f'{opcode} [{address}], {self.values[value]};')
+         else:
+             raise NotImplementedError(f'Statement {type(stmt).__name__}')
+ 
