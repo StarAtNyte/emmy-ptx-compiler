@@ -177,3 +177,14 @@ failure 8 → 8, both observed deletion fixed points. Passing-input/budget CLI c
 pass. Evidence validation/2026-10-24-statement-shrinking.json and self-contained
 fixtures validation/counterexamples; TESTING.md has commands/limits. All reducer
 jobs completed. Next: CPU CI on committed fixtures, broader typing, target profiling.
+
+## Step 24 — CPU CI awaits first hosted run
+
+Compiler unchanged bb3a72b2. New check_cpu_contract.py passes five checks in the
+no-Torch runtime and clean copied checkout; corrupted PTX golden correctly fails.
+Only committed assets needed. requirements-ci.lock constrains runtime versions;
+.github/workflows/cpu-contract.yml configures push/PR/manual/nightly on Python
+3.12/3.13/3.14, pinned action commits and report artifacts. Current evidence:
+validation/2026-10-24-cpu-ci.json. First actual GitHub Actions matrix run pending;
+next push workflow, inspect jobs, fix failures and record evidence. Do not claim
+sustained CI or GPU coverage from these CPU checks. Submission remains deferred.

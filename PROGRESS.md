@@ -671,3 +671,24 @@ Completed 2026-10-24, compiler unchanged bb3a72b2...:
 Next: sustained CPU CI using committed fixtures/isolated runtime contract, broader
 index/control-flow type validation, and target bottleneck profiling. General IR
 shrinking and production readiness remain unproven; submission still deferred.
+
+## Step 24 — reproducible CPU contract CI configured
+
+Completed locally 2026-10-24, compiler unchanged bb3a72b2...:
+
+- Added check_cpu_contract.py and a committed snapshot manifest for two numerical
+  counterexamples. Verifies input/meta/oracle hashes, copies only required assets,
+  compiles twice with Python -I from an unrelated directory, checks deterministic
+  GPU-validated PTX snapshots and three unsupported-type/layout CLI diagnostics.
+- Local no-Torch checks pass from a clean copied checkout without ignored assets.
+  A deliberately corrupted golden is rejected; snapshots never auto-refresh.
+- Added requirements-ci.lock from the verified standalone environment and GitHub
+  Actions workflow: Python 3.12/3.13/3.14, push/PR/manual/nightly, read-only repository
+  permissions, pinned official action commits and retained JSON evidence artifacts.
+  Resolved release tags/commit SHAs from official GitHub repository APIs.
+- Evidence validation/2026-10-24-cpu-ci.json records local checks. First actual CI
+  run is pending publication; do not claim matrix success or sustained history yet.
+
+Next: push, inspect authoritative Actions job results, fix matrix/setup failures,
+then record verified outcomes. CPU snapshots do not replace GPU numerical gates.
+Production readiness remains unproven; submission deferred and release ZIP stale.

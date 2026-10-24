@@ -339,3 +339,28 @@ all trial classifications, and checks for passing-input rejection and trial-budg
 reporting. Self-contained retained fixtures are under `validation/counterexamples`.
 The numerical oracle remains independent, but reference-compiler acceptance is
 only an observed validity filter. The reducer does not prove arbitrary IR valid.
+
+## CPU contract CI
+
+`.github/workflows/cpu-contract.yml` runs on pushes, pull requests, manual dispatch
+and nightly at 02:17 UTC on Python 3.12/3.13/3.14. It installs runtime requirements
+with exact version constraints from `requirements-ci.lock`, checks dependency
+consistency, and requires Torch to be absent. The lock records the previously
+verified Python 3.12 standalone environment; matrix compatibility is checked by CI.
+
+```sh
+uv venv --python 3.12 artifacts/cpu-ci-runtime
+uv pip install --python artifacts/cpu-ci-runtime/bin/python -r requirements.txt -c requirements-ci.lock
+artifacts/cpu-ci-runtime/bin/python tools/check_cpu_contract.py --forbid-torch --report artifacts/cpu-contract.json
+```
+
+The checker uses only tracked fixtures. It verifies their input/meta/oracle hashes,
+copies the compiler and fixtures to a temporary directory, and invokes the CLI
+with isolated Python (`-I`) from an unrelated working directory. Two deterministic
+compilations must match the committed, previously GPU-validated PTX snapshots.
+Three real CLI probes require unsupported dtype/swizzle errors before any output.
+The checker fails a deliberately corrupted golden in local verification; it never
+automatically refreshes snapshots. Intentional codegen changes require reviewed
+snapshot updates backed by numerical GPU gates. CI reports are retained as Actions
+artifacts for 14 days. This is compilation/CLI coverage on two fixtures, not GPU
+correctness, sanitization, throughput or proof of long-running CI stability.

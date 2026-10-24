@@ -130,3 +130,9 @@ No hidden-set result or prize outcome is claimed.
 [WALKTHROUGH.md](WALKTHROUGH.md) is an own-voice recording outline with understanding
 questions. The public repository is https://github.com/StarAtNyte/emmy-ptx-compiler.
 The competition entry still requires the entrant details and own-voice video.
+
+CPU contract checks run on pushes, pull requests and nightly across Python
+3.12–3.14. They use committed counterexamples, isolated CLI execution without
+Torch, fixed PTX snapshots and unsupported-feature probes. See
+[the workflow](.github/workflows/cpu-contract.yml) and [testing notes](TESTING.md).
+These checks complement the numerical GPU and sanitizer gates above.

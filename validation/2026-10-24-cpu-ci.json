@@ -1,0 +1,103 @@
+{
+  "status": "local clean-checkout checks passed; first GitHub Actions run pending",
+  "compiler_sha256": "bb3a72b276f87396b15e9e8e5d0d984b9f1eb86330c43cb6189d6856b85f22fb",
+  "local_contract": {
+    "compiler_sha256": "bb3a72b276f87396b15e9e8e5d0d984b9f1eb86330c43cb6189d6856b85f22fb",
+    "manifest_sha256": "41fa8c483b27d01811903fe126c2ccf7442c0b591a2caf7a9354e636eaa846f8",
+    "python": "3.12.13 (main, Jul 23 2026, 14:43:28) [Clang 22.1.3 ]",
+    "torch_present": false,
+    "packages": {
+      "emmy-ml": "0.3.11",
+      "numpy": "2.5.4"
+    },
+    "scope": "CPU CLI/code-generation contract, not GPU execution",
+    "results": [
+      {
+        "case": "2026-10-24-scope-shrunk",
+        "passed": true,
+        "ptx_sha256": "808b7dd2be9067300a0d7d6a873675ea26a09ecdc4288202dc07b74a22b759c3",
+        "stderr": [
+          "",
+          ""
+        ]
+      },
+      {
+        "case": "2026-10-24-strided-shrunk",
+        "passed": true,
+        "ptx_sha256": "d978ffa0ed5c3a837c6d36ce061dedd966ad8ba03ef64fb20c1000d4eb504a68",
+        "stderr": [
+          "",
+          ""
+        ]
+      },
+      {
+        "case": "tensor_f16",
+        "passed": true,
+        "stderr": "compile.py: Kernel k_sum_1_reduce, tensor x: unsupported tensor dtype f16\n"
+      },
+      {
+        "case": "write_f16",
+        "passed": true,
+        "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write dtype f16\n"
+      },
+      {
+        "case": "write_swizzle",
+        "passed": true,
+        "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write swizzle B32\n"
+      }
+    ]
+  },
+  "corrupted_snapshot_gate": {
+    "compiler_sha256": "bb3a72b276f87396b15e9e8e5d0d984b9f1eb86330c43cb6189d6856b85f22fb",
+    "manifest_sha256": "c23eb73bb261b51a730b3d367546e4ffe50e2f998cf69ec7da964004a40441f1",
+    "python": "3.12.13 (main, Jul 23 2026, 14:43:28) [Clang 22.1.3 ]",
+    "torch_present": false,
+    "packages": {
+      "emmy-ml": "0.3.11",
+      "numpy": "2.5.4"
+    },
+    "scope": "CPU CLI/code-generation contract, not GPU execution",
+    "results": [
+      {
+        "case": "2026-10-24-scope-shrunk",
+        "passed": false,
+        "ptx_sha256": "808b7dd2be9067300a0d7d6a873675ea26a09ecdc4288202dc07b74a22b759c3",
+        "stderr": [
+          "",
+          ""
+        ]
+      },
+      {
+        "case": "2026-10-24-strided-shrunk",
+        "passed": true,
+        "ptx_sha256": "d978ffa0ed5c3a837c6d36ce061dedd966ad8ba03ef64fb20c1000d4eb504a68",
+        "stderr": [
+          "",
+          ""
+        ]
+      },
+      {
+        "case": "tensor_f16",
+        "passed": true,
+        "stderr": "compile.py: Kernel k_sum_1_reduce, tensor x: unsupported tensor dtype f16\n"
+      },
+      {
+        "case": "write_f16",
+        "passed": true,
+        "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write dtype f16\n"
+      },
+      {
+        "case": "write_swizzle",
+        "passed": true,
+        "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write swizzle B32\n"
+      }
+    ]
+  },
+  "files_sha256": {
+    "tools/check_cpu_contract.py": "27cf7d6111043bbf0952768fcf151e421161880b7600e1b60a8eda77a677a203",
+    "requirements-ci.lock": "b7ead8525fd2eac60596ef02da4c27cbf8a45c31b4e4668618f889e5387060c3",
+    "validation/cpu-contract.json": "41fa8c483b27d01811903fe126c2ccf7442c0b591a2caf7a9354e636eaa846f8",
+    ".github/workflows/cpu-contract.yml": "eb67587764e1d9e1c25985f0c91571e7dc108e38900c7e6d0e87fe90786c3536"
+  },
+  "limits": "CPU compile/CLI snapshots on two committed numerical fixtures; no GPU execution or sustained history claimed"
+}
