@@ -13,17 +13,20 @@ def main():
     parser.add_argument('--binary',type=Path,required=True)
     parser.add_argument('--tools',nargs='+',default=['memcheck','racecheck','synccheck','initcheck'])
     parser.add_argument('--out',type=Path,default=Path('artifacts/sanitizers'))
+    parser.add_argument('--compiler',type=Path)
     args = parser.parse_args()
     args.out.mkdir(parents=True,exist_ok=True)
     root=Path(__file__).resolve().parents[1]
-    report={'compiler_sha256':hashlib.sha256((root/'compile.py').read_bytes()).hexdigest(),
+    compiler=(args.compiler or root/'compile.py').resolve()
+    report={'compiler_sha256':hashlib.sha256(compiler.read_bytes()).hexdigest(),
             'problems':[p.name for p in args.problems], 'results':[]}
     for tool in args.tools:
         log=args.out/f'{tool}.log'
         command=[str(args.binary),'--tool',tool,'--error-exitcode','9','--log-file',str(log)]
         if tool=='memcheck':
             command.extend(['--leak-check','full'])
-        command.extend([sys.executable,str(root/'tools/local_runner.py'),*(str(p) for p in args.problems)])
+        command.extend([sys.executable,str(root/'tools/local_runner.py'),*(str(p) for p in args.problems),
+                        '--compiler',str(compiler)])
         result=subprocess.run(command,capture_output=True,text=True,timeout=600)
         (args.out/f'{tool}-checks.log').write_text(result.stdout+result.stderr)
         contents=log.read_text() if log.exists() else ''

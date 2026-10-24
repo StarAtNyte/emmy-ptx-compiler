@@ -12,17 +12,19 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--problems', default='challenge/problems')
     parser.add_argument('--report', default='artifacts/public-results.json')
+    parser.add_argument('--compiler', type=Path)
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     rows = []
-    fingerprint = hashlib.sha256((root / 'compile.py').read_bytes()).hexdigest()
+    compiler = (args.compiler or root / 'compile.py').resolve()
+    fingerprint = hashlib.sha256(compiler.read_bytes()).hexdigest()
     for folder in sorted(Path(args.problems).iterdir()):
         if not (folder / 'meta.json').exists():
             continue
         start = time.monotonic()
         result = subprocess.run(
             [sys.executable, str(root / 'challenge/submit.py'), str(folder.resolve()),
-             '--compiler', str(root / 'compile.py')],
+             '--compiler', str(compiler)],
             capture_output=True, text=True, timeout=360,
         )
         row = {'problem': folder.name, 'passed': result.returncode == 0,

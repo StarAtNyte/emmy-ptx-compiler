@@ -70,9 +70,10 @@ Raw samples and both compiler hashes are preserved in the production validation
 record. This rejects blanket backend-unroll suppression; it does not establish
 that every possible per-loop policy would be slower.
 
-## Paired shared reads — measured candidate, not accepted
+## Paired shared reads — accepted after semantic gates
 
-`paired-shared-loads.patch` applies to the nested-scope compiler. It pairs
+`paired-shared-loads.patch` applies to the nested-scope compiler at 5791ed6.
+The active compiler now includes this change; the patch preserves its provenance. It pairs
 separate aligned adjacent shared-memory scalar reads across pure arithmetic in
 straight-line read-only leaf bodies. The earlier neutral vector-memory patch
 handled grouped global accesses; this is a different memory-space/scheduling
@@ -84,8 +85,10 @@ thereafter: m01 66.208 → 64.128 µs (1.032x); a01 90.784 → 90.784. Hosted re
 rise from 40 to 48 for m01. Its PTX shrinks from 187,430 to 151,531 bytes and
 contains 64 paired shared reads. Clocks were unlocked; no general speedup claim.
 
-**Not active compiler code.** Before adoption, verify dependency/alias guards,
-intervening value uses/rebindings, weak alignment, shared writes, independent
-matmul shapes and all semantic/sanitizer gates. The measured improvement alone
-does not establish correct general load motion. Raw samples and hashes are in
-the third production iteration record; keep its accepted compiler as fallback.
+Accepted after dependency/mutation/alignment probes, independent matmul checks,
+232 prior local regressions, transformer, fresh fixtures and selected sanitizer
+gates. The fourth production iteration record preserves these gates, standalone
+runtime checks and the final seven-pair timing: m01 66.176 → 64.160 µs (1.031x),
+independent vectorizing matmul 35.488 → 31.392 µs (1.130x). Attention and scalar
+controls remain within noise. This bounded evidence does not establish general
+load-motion safety for every possible IR or production readiness.

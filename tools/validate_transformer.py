@@ -23,8 +23,10 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--stages', type=Path, default=Path('artifacts/transformer-stages'))
     parser.add_argument('--report', type=Path, default=Path('artifacts/transformer-results.json'))
+    parser.add_argument('--compiler', type=Path)
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
+    compiler = (args.compiler or root / 'compile.py').resolve()
     model = make_block()
     driver = Driver()
     cache = {}
@@ -33,7 +35,7 @@ def main():
         meta = json.loads((folder / 'meta.json').read_text())
         kernels = []
         for kernel in meta['kernels']:
-            ptx = subprocess.check_output([sys.executable, str(root / 'compile.py'),
+            ptx = subprocess.check_output([sys.executable, str(compiler),
                  str(folder / (kernel['entry'] + '.ir.json'))], text=True)
             kernels.append((kernel, ptx))
         cache[name] = (meta, kernels)
@@ -47,7 +49,7 @@ def main():
             produced.update(driver.run(ptx, kernel, produced))
         return produced[meta['graph_outputs'][0]]
 
-    report = {'compiler_sha256': hashlib.sha256((root / 'compile.py').read_bytes()).hexdigest(),
+    report = {'compiler_sha256': hashlib.sha256(compiler.read_bytes()).hexdigest(),
               'arch': driver.arch, 'model': 'seeded RMSNorm + QKV SDPA + output projection + residual SiLU MLP',
               'shape': [1, 4, 16], 'execution': 'seven separately traced stages, host transfers',
               'results': []}

@@ -106,12 +106,16 @@ not locked; these are observations on named kernels, not universal speedups.
 | Reduction FMA | Public a01 attention | 119.424 → 90.784 µs | 1.315× |
 | Shared-memory loop expansion | Public m01 matmul | 98.944 → 74.400 µs | 1.330× |
 | Larger bounded shared expansion | Public m01 matmul | 74.304 → 66.176 µs | 1.123× |
+| Aligned shared-read pairing | Public m01 matmul | 66.176 → 64.160 µs | 1.031× |
+| Aligned shared-read pairing | Independent 384×256×320 matmul | 35.488 → 31.392 µs | 1.130× |
 
 The semantic audit retained those performance levels. Raw samples are preserved
 in the validation records. Explicit vector accesses were timing-neutral, and
 unrestricted scalar-loop expansion regressed attention; those versions are
 archived under [experiments](experiments/README.md) rather than active.
-The latest candidate preserves attention latency within measurement noise;
+The accepted shared-read pairing preserves attention latency within measurement noise;
+[iteration four](validation/2026-10-24-production-iteration4.json) records its
+semantic, sanitizer, standalone-runtime and target-timing gates;
 see [production research and gates](RESEARCH_PRODUCTION.md) for the current
 research direction, profiling limits and remaining production work.
 

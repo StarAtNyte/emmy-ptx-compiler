@@ -20,7 +20,7 @@ https://github.com/cloudrift-ai/emmy-hackathon-2026.
 - Workspace `/home/nitiz/Projects/Self/Challenges/emmy`; branch `master`, origin
   https://github.com/StarAtNyte/emmy-ptx-compiler. Check git status/log before work.
 - Current accepted compiler SHA-256:
-  `f99ea2445222a65e737a0b75dde99ee73c50d41dd546d30b8390abcec6f135c2`.
+  `da4f12dd4522262b5f6919e132a74725f10e024f3316debfbb7134cde2c5c33a`.
 - Use `.venv/bin/python` (3.12); host default is 3.14. Pinned Emmy 0.3.11,
   NumPy 2.5.4, CPU Torch 2.14.1. Runtime compiler does not need Torch or a GPU.
 - Local RTX 3050 Laptop 6 GiB, sm_86; hosted RTX 5090, sm_120:
@@ -45,7 +45,8 @@ ordered tree merges. Observable tree scratch uses per-slot atomic writer tickets
 without extra allocation; dead scratch takes the register path with final barrier.
 No auxiliary thread bands, shared swizzles, broad dtype support or general IR claim.
 
-Accepted optimizations: adjacent reduction multiply/add FMA and shared-only scalar
+Accepted optimizations: aligned adjacent shared-read pairing, adjacent reduction
+multiply/add FMA and shared-only scalar
 loop expansion by a power of two up to 64, extent and 1024 expanded statements.
 Four-way baseline m01 was ~74.3 µs; larger bounded expansion reaches ~66.2 µs.
 Global unrolling, explicit vector memory (neutral), and blanket backend nounroll
@@ -121,22 +122,28 @@ Use tools/sanitize.py; TESTING.md documents full suites and reconstruction.
 
 ## Next concrete work
 
-Test the **unmerged paired-shared-load candidate** in
-`experiments/paired-shared-loads.patch`. It applies to current f99ea244... source.
-Local ignored candidate: `artifacts/compiler-paired-shared.py`; builder:
-`artifacts/build-paired-shared-candidate.py`. Candidate source can be reconstructed
-from the committed patch if ignored artifacts are absent.
+Aligned shared-read pairing is now accepted. Latest combined evidence:
+`validation/2026-10-24-production-iteration4.json`. Candidate compiler da4f12dd...
+is byte-identical to active compile.py. Prior baseline source is reproducible from
+5791ed6 and saved as artifacts/compiler-before-pair.py. Historical experiment
+patch is preserved; do not apply it to the newly active compiler.
 
-Seven paired RTX 5090 trials measured m01 66.208 → 64.128 µs (1.032x), attention
-unchanged at 90.784. M01 registers rise 40 → 48 and PTX falls 187430 → 151531 bytes.
-This pairs separate aligned shared reads across pure arithmetic, not the rejected
-global grouped-access pass. **NOT ACTIVE OR ACCEPTED.** Before adoption, add
-negative eligibility probes: intervening uses/redefinitions, mutable index
-bindings, weak base/index alignment, shared writes/barriers, shadowed shared
-names and valid but nonadjacent addresses. Then run independent matmul shapes,
-all current semantic gates, sanitizer checks and paired target repetitions.
-Preserve current compiler as fallback. A 3.2% timing observation alone does not
-prove safe general load motion or justify weakening correctness.
+Completed gates: 232 prior local regressions, 26 each one-trip/seven-trip/fresh
+three-trip cases on both GPUs, 78 codegen checks, nine transformer runs,
+four independent matmuls on both GPUs. Four sanitizer tools clean on 27 selected
+motion/public cases and separately four matmuls. Three standalone no-Torch
+compilation checks emit byte-identical PTX from /tmp.
+
+Final seven-pair RTX 5090 timings: public m01 66.176 → 64.160 µs (1.031x),
+independent 384×256×320 matmul 35.488 → 31.392 µs (1.130x). Attention and three
+scalar control matmuls change by at most 0.032 µs (noise). Only the independent
+384×256×320 schedule vectorizes (32 static vector instructions). Clocks unlocked;
+full output first trial, prefixes thereafter. All generation/validation/timing
+sessions listed in old progress entries are complete.
+
+Next: broaden adversarial IR probes and strengthen unsupported-feature
+validation/diagnostics before further expression/address reuse. Preserve these
+semantic gates and avoid interpreting bounded grammar coverage as general safety.
 
 Afterward consider SSA-aware integer/address reuse and loop-invariant addressing;
 never cache expressions by text across mutable axes/state. Broaden fuzzing and

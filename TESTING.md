@@ -216,3 +216,33 @@ sizes, including the original 64-statement eligibility boundary:
 Repeated load/fold pairs stress the expansion budget; expected sums come from
 float64 NumPy over the seeded input, multiplied by the repeat count. These are
 synthetic correctness tests, not representative model performance measurements.
+
+## Accepted paired shared-read optimization
+
+The historical patch in `experiments/paired-shared-loads.patch` targets the nested
+scope compiler at 5791ed6. The current compiler includes this optimization. To
+reconstruct the tested candidate independently:
+
+```sh
+git show 5791ed6:compile.py > artifacts/compiler-before-pair.py
+patch --output artifacts/compiler-paired-shared.py artifacts/compiler-before-pair.py < experiments/paired-shared-loads.patch
+.venv/bin/python tools/generate_pair_cases.py --out artifacts/pair-cases
+.venv/bin/python tools/generate_pair_cases.py --seed 71 --trips 7 --out artifacts/pair-loops
+.venv/bin/python tools/check_pair_codegen.py artifacts/pair-cases/*/ --compiler artifacts/compiler-paired-shared.py
+.venv/bin/python tools/validate_isolated.py artifacts/pair-cases/*/ --compiler artifacts/compiler-paired-shared.py
+.venv/bin/python tools/validate.py --problems artifacts/pair-cases --compiler artifacts/compiler-paired-shared.py
+.venv/bin/python challenge/tools/generate.py tools/expressions_shared_matmul.py --emmy .venv/bin/emmy --out artifacts/shared-matmul
+.venv/bin/python tools/validate_isolated.py artifacts/shared-matmul/*/ --compiler artifacts/compiler-paired-shared.py
+```
+
+The motion generator has 13 bounded variants with renamed counterparts and
+independent exact small-integer NumPy references. Codegen checks require actual
+vector reads in positive cases and scalar reads in negative cases; numerical
+passes alone could otherwise validate only a fallback. The nested weak-alignment
+case includes a strong-alignment outer loop, whose vector reads remain expected.
+The four matmul expressions have independent float64 NumPy references. Inspect
+actual vector instruction counts: only the 384×256×320 generated schedule uses
+pairing in this set; the other three are controls, not positive vector coverage.
+Use `--compiler` on sanitizer and transformer tools as well. Run fresh frozen-seed
+fixtures and paired hosted timings before adopting; these commands alone do not
+establish acceptance or production readiness.

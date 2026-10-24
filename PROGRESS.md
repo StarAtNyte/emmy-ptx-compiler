@@ -409,3 +409,93 @@ mutation, alignment and alias cases; check independent matmul workloads,
 regressions/sanitizers, then repeat target timings before any adoption. Main stays
 at the accepted nested fix. General shrinking, broader IR/dtype support, target
 counter/roofline work and production readiness remain open. Submission deferred.
+
+## Step 14 — motion eligibility probes and isolated candidate tooling
+
+Completed 2026-10-24:
+
+- Added tools/generate_pair_cases.py: 13 motion/alignment variants with renamed
+  counterparts and exact independent small-integer NumPy oracles. Includes
+  adjacency/cancellation positives, nested weak alignment, destination uses and
+  updates, index/axis shadowing, odd/nonadjacent offsets, writes, barriers and
+  mixed global reads. All 26 one-trip fixtures pass the accepted baseline.
+- tools/check_pair_codegen.py verifies actual emitted vector-read eligibility:
+  all 26 candidate checks pass, including zero vectors in negative cases and
+  exactly one vector in each positive one-trip case. This prevents a scalar
+  fallback from masquerading as validation of the optimization.
+- Added --compiler selection to hosted validation, sanitizer and transformer
+  tools so candidate verification does not replace the accepted compiler.
+- Candidate numerical isolated execution is in progress; codegen checks alone
+  are not numerical or memory-safety acceptance. Main remains f99ea244....
+
+Next: candidate runtime checks, loop repetitions, independent matmul shapes,
+full regressions, sanitizer gates and fresh frozen cases; then repeat target
+performance and assess whether the gain justifies adoption.
+
+## Step 15 — candidate numerical and repeated-loop checks
+
+Verified from current reports, 2026-10-24:
+
+- Candidate da4f12dd4522262b5f6919e132a74725f10e024f3316debfbb7134cde2c5c33a
+  passes 26 one-trip isolated local and 26 hosted motion fixtures. Baseline also
+  passes all 26. Another 26 seed-71 seven-trip cases pass isolated local checks.
+- Both 26-case codegen suites pass: positive cases actually vectorize and
+  negative cases stay scalar. Nine staged transformer runs pass.
+- Preserved completed reports in validation/2026-10-24-paired-shared-partial.json;
+  this is partial evidence, not candidate acceptance.
+- Revalidated live existing full-regression and sanitizer processes rather than
+  restarting them. Memcheck and racecheck have completed clean on 27 selected
+  cases; synccheck/initcheck are not yet recorded complete.
+- Started independent four-shape matmul generation via expressions_shared_matmul.py
+  and hosted seven-trip fixture validation. Both remain live at this checkpoint.
+
+Next: poll generation session 63514 and hosted session 82961, inspect completed
+regression/sanitizer records, validate independent matmuls, then frozen fresh
+cases and repeated target timing. Main compiler remains f99ea244; no adoption.
+
+## Step 16 — shared-pair semantic gates completed
+
+Completed 2026-10-24 for frozen candidate da4f12dd...:
+
+- All 232 prior local regressions pass. Motion suites: 26 one-trip local/hosted,
+  26 seven-trip local/hosted, 26 fresh seed-1907 three-trip local/hosted pass.
+  All three 26-case eligibility/codegen suites pass. Baseline one-trip 26 passes
+  and nine transformer runs remain preserved.
+- Four new independent matmul shapes pass locally and hosted; float64 NumPy
+  references check their results. Actual PTX has 32 vector loads for 384×256×320;
+  the other three shapes have zero and are controls, not positive coverage.
+- All four sanitizers clean on 27 motion/public cases and separately on all four
+  independent matmuls. Sanitizer scope is these cases only.
+- Combined evidence validation/2026-10-24-paired-shared-gates.json preserves 16
+  verified reports and hashes of IR/metadata/oracle files for 82 fixtures.
+- Added reproduction and coverage limits to TESTING.md. Found an older matmul
+  generator running separately; both distinct output runs completed successfully.
+- Started final seven-pair RTX 5090 timing on m01, a01 and all four independent
+  matmuls, session 48325; artifacts/pair-final-benchmark.json/log are incremental.
+
+Next: finish target timing, inspect independent positive schedule regression/win,
+verify isolated runtime packaging, then accept or archive the experiment. Current
+compile.py is still accepted f99ea244; no submission or candidate adoption.
+
+## Step 17 — aligned shared-read pairing accepted
+
+Completed 2026-10-24:
+
+- Adopted exactly tested compiler da4f12dd4522262b5f6919e132a74725f10e024f3316debfbb7134cde2c5c33a.
+  Saved previous f99ea244 source at artifacts/compiler-before-pair.py; reproducible
+  from committed 5791ed6. No kernel-name specialization selects the pass.
+- Final seven alternating target pairs: public m01 66.176 → 64.160 µs (1.031x);
+  independent vectorizing 384×256×320 matmul 35.488 → 31.392 µs (1.130x).
+  Attention and three scalar controls differ by at most 0.032 µs, treated as noise.
+  Full outputs checked first trial, prefixes thereafter; clocks unlocked.
+- Isolated existing Python 3.12 environment has no Torch and emits byte-identical
+  PTX from /tmp for public m01, independent vectorizing matmul and nested weak
+  alignment scope fixture. This does not rebuild/test the stale release archive.
+- Consolidated all semantic gates, fixture hashes, final raw timing and runtime
+  evidence in validation/2026-10-24-production-iteration4.json. Updated README,
+  DESIGN and TESTING with behavior, timing limits and baseline reconstruction.
+
+Next: broaden adversarial IR correctness and improve unsupported-feature
+validation/diagnostics before further address reuse; production readiness remains
+unproven. Keep target profiling/roofline and long-running CI gaps explicit.
+Submission remains deferred and the existing ZIP stale.

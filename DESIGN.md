@@ -66,6 +66,15 @@ is deliberate: an unrestricted experiment
 improved matmul but doubled one global-memory attention kernel's runtime. No
 kernel-name or public-problem checks select this optimization.
 
+Straight-line bodies of at most 64 statements may pair two aligned, adjacent
+f32 shared reads into ld.shared.v2.f32 across pure arithmetic. Linearized index
+terms prove adjacency and eight-byte alignment; declaration alignment must also
+permit eight-byte accesses. Writes, barriers, global reads and control flow
+disable pairing. Intervening index mutations and uses or redefinitions of the
+second destination prohibit motion. Removing the scalar second load retains its
+original arithmetic-adjacency boundary for FMA selection. This pass uses IR
+structure and lexical storage bindings, without kernel-name checks.
+
 ## Reductions
 
 WarpShuffle exchanges each state component with an XOR partner and runs the
