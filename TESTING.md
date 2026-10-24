@@ -550,6 +550,7 @@ Cross-iteration shared pairing uses committed generator templates:
 ```sh
 python tools/generate_cross_iteration_cases.py --out artifacts/cross-original --seed 0
 python tools/generate_cross_iteration_cases.py --out artifacts/cross-fresh --seed 9161
+git show b2a1b19:compile.py > artifacts/compiler-before-cross-pair.py
 python tools/check_cross_iteration_codegen.py \
   artifacts/cross-original/manifest.json artifacts/cross-fresh/manifest.json \
   --baseline artifacts/compiler-before-cross-pair.py --candidate compile.py \
@@ -569,3 +570,12 @@ Full evidence: cross-iteration-discovery.json. Acceptance: production-iteration1
 Four GPU-checked cross-iteration fixtures add positive/tail and write/local-index
 guards to CPU CI; all twelve existing snapshots stay unchanged. Twenty snapshot/
 feature, 28 launch and 42 ABI checks make ninety checks per Python version.
+
+Current 90-check local matrix passes without Torch on Python 3.12.13, 3.13.14
+and 3.14.4. The latter two environments were freshly installed with requirements.txt
+and requirements-ci.lock; all dependency checks pass. GitHub run 40109402820 on
+07f4851 produced no test results: all three jobs were rejected before starting
+because of account payments/spending-limit state. Local matrix results are not
+hosted CI evidence. Reports and GitHub annotation are in production-iteration13.json.
+The archive from 07f4851 passes extracted hosted scalar-add/matmul/attention checks;
+current-package.json records exact bytes and compiler. Repository remains private.

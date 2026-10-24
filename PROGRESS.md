@@ -1102,8 +1102,8 @@ Completed 2026-10-24:
   da5716307f46d4d7452e87d668617cbc63980a760fd6ab495ce01cf6070e0000.
   Extracted scalar-add, matmul and attention pass hosted using the reused isolated
   no-Torch 3.12.13 runtime. ABI/current/submission ZIP aliases match byte-for-byte.
-- Preserved previous launch evidence separately; current-package.json records ABI
-  checkpoint. Updated README and handoff. No entry submission/readiness claim.
+- Preserved previous launch evidence separately; abi-package.json preserves the historical ABI
+  checkpoint after the cross-iteration update. Updated README and handoff. No entry submission/readiness claim.
 - Remaining validation includes static tile shapes, grid coverage, argument roles,
   payloads and graph/schema consistency. Next performance priority is measured
   target launch/bandwidth calibration and workload lower bounds, with explicit
@@ -1194,3 +1194,27 @@ Completed 2026-10-24:
   measured 1.482x/1.466x/1.387x gains and limits. No universal speedup claim.
 - Next publish, inspect actual 90-check CI reports and refresh compiler archive.
   Prior archive is still 7fbe5ee4. Repository stays private; submission deferred.
+
+## Step 47 — verified local matrix and packaged optimization; hosted CI billing gap
+
+Completed 2026-10-24:
+
+- Published exact source 40a1de84 as 07f4851. GitHub run 40109402820 rejected all
+  three jobs before starting, with no steps or test results. Annotation says
+  recent account payments failed or spending limit needs increasing. Preserved
+  actual run/annotation in iteration13; no hosted CI success claim. Keep repo
+  private, do not change billing or automatically retry the same rejected jobs.
+- Ran the same 20 snapshot/feature + 28 launch + 42 ABI checks locally on Python
+  3.12.13/3.13.14/3.14.4: all 270 check results pass without Torch. Python 3.12
+  reuses the existing isolated environment; 3.13/3.14 are fresh pinned installs.
+  All three dependency checks pass. These are local results, not GitHub CI.
+- Packaged committed 07f4851 and verified compiler/hash. Archive SHA256
+  6281fe79f8d272115f81c4f654c8be67da96f03931972b3f3b0886c9d87c8679.
+  Extracted hosted scalar-add, matmul and attention checks pass using existing
+  isolated no-Torch 3.12.13 runtime. Cross-iteration/current/submission ZIP aliases
+  are identical; prior ABI evidence preserved as abi-package.json.
+- Updated current acceptance, handoff, README and target-performance document.
+  Compiler remains 40a1de84; latest paired gains 1.482x/1.466x/1.387x retained.
+  Broader shape/type/role/bounds coverage, sustained CI and hardware-counter
+  analysis remain. Hosted CPU CI needs account state fixed externally. Full
+  objective remains active; repository private and entry submission deferred.

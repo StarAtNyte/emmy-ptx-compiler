@@ -50,7 +50,7 @@ dtypes/layouts fail before PTX output; this is not a complete IR type checker.
 No auxiliary thread bands, swizzles, broad dtype/dynamic-shape support claim.
 
 Accepted optimizations: adjacent fold FMA; bounded shared-only loop expansion
-(up to 64 / extent / 1024 expanded statements); aligned adjacent shared-read
+(up to 64 / extent / 1024 expanded statements); aligned within- and cross-iteration shared-read
 pairing; exact signed floor/remainder power-of-two shifts/masks. No kernel-name
 selection. Generic signed / and // floor; % follows divisor sign. Lexical scopes,
 Let snapshots, declaration-identity shared allocation and nested fold discovery
@@ -64,7 +64,7 @@ Accepted compiler is 40a1de84. Exact frozen source
 artifacts/compiler-cross-pair.py SHA256
 40a1de84e3813cb1377d1dcdd0c0e369666c5638332d6cb18155cb31fcfc678c.
 Reconstruct via experiments/cross-iteration-pair.patch against prior 7fbe5ee4.
-Candidate adds aligned v2 shared reads across even/odd positions in the existing
+The lowering adds aligned v2 shared reads across even/odd positions in the existing
 bounded unroll. Requires affine unit axis coefficient, even remaining terms,
 >=8-byte allocation alignment and immutable index dependencies. Skips within-body
 pairs, shadowed/local indices, writes/global reads/control; tails stay scalar.
@@ -88,7 +88,11 @@ static entry grows 1546→4976 despite speedup, so static counts are not dynamic
 Main adopts the exact validated candidate. Four GPU-verified positive/tail/guard
 fixtures are committed; existing twelve goldens unchanged. Twenty local no-Torch
 snapshot/feature checks pass; CI now totals 90 checks with launch/ABI suites.
-NEXT: publish/verify actual CI and refresh archive. Current package still 7fbe5ee4.
+Published as 07f4851. Ninety checks pass locally on Python 3.12.13/3.13.14/3.14.4
+without Torch. GitHub run 40109402820 did NOT start any jobs: account failed
+payments/spending limit annotation; no test logs/results. Do not claim hosted
+CI success or retry repeatedly without account state changing. Archive from
+07f4851 passes three hosted GPU smoke checks; see current-package.json.
 Broader goal/readiness gaps remain. Keep repository private; submission deferred.
 
 ## Latest acceptance evidence
@@ -236,22 +240,26 @@ This differs from remote/direct-module JIT. No hosted counters/SASS capture or
 roofline study. Address CSE reduced PTX but five target timings were neutral;
 partial safety sweep stopped after rejection, patch/evidence preserved.
 
-CPU Actions run on push/PR/manual/nightly across Python 3.12–3.14. Current
-manifest has twelve GPU-verified fixtures/four negative feature probes, plus
-28 launch and 42 ABI checks. Published b2a1b19 passes all 86 checks on all three
-versions in run 40107112159. Downloaded reports verify compiler 7fbe5ee4 and no
-Torch; retained in iteration12. Existing PTX goldens unchanged. Push matrices are
-an initial history, not sustained-nightly proof.
+CPU workflow is configured for push/PR/manual/nightly on Python 3.12–3.14.
+Current suite: sixteen GPU-verified snapshots/four feature probes, plus 28 launch
+and 42 ABI checks (90 total). Local isolated matrix passes all 90 on 3.12.13,
+3.13.14 and 3.14.4 without Torch; 3.13/3.14 environments were freshly installed
+from pinned requirements. Dependencies check clean. Full reports in iteration13.
+GitHub run 40109402820 on source 07f4851 failed before any job step: annotation
+says recent account payments failed or spending limit needs increasing. Hosted
+90-check CI remains UNVERIFIED until account state changes. Keep repo private;
+do not alter billing/spending or republish it. Prior public-repo 86-check matrix
+run 40107112159 passed 7fbe5ee4, not the current compiler. Nightly history unproven.
 
 ## Packaging and next work
 
-Prior verified archive built from b2a1b19, compiler 7fbe5ee4. Uses the existing
+Current verified archive built from 07f4851, compiler 40a1de84. Uses the existing
 isolated no-Torch Python 3.12.13 runtime from the earlier pinned fresh install;
 dependencies unchanged. Extracted scalar-add, matmul and attention hosted checks
 pass. Latest evidence: validation/2026-10-24-current-package.json. Archive aliases
-artifacts/emmy-ptx-abi-checkpoint.zip, artifacts/emmy-ptx-current-checkpoint.zip,
-and artifacts/emmy-ptx-submission.zip hold identical verified bytes. Prior launch
-archive/report retained; evidence validation/2026-10-24-launch-package.json.
+artifacts/emmy-ptx-cross-iteration-checkpoint.zip, artifacts/emmy-ptx-current-checkpoint.zip,
+and artifacts/emmy-ptx-submission.zip hold identical verified bytes. Prior ABI
+archive/report retained; evidence validation/2026-10-24-abi-package.json.
 No rebuild needed for documentation-only changes. No entry submitted.
 
 Next: broaden index/control-flow type validation, operation/dtype coverage and
@@ -259,7 +267,7 @@ bounded failure shrinking. Continue target hardware lower-bound/bottleneck work;
 no hosted counters or rigorous clock-aware roofline yet. First calibration is
 recorded above. Add future retained cases to CPU CI.
 No candidate jobs remain live from this acceptance step. New CI runs may trigger
-on documentation pushes; existing accepted-code 86-check matrix is verified.
+on documentation pushes, but current hosted CI is billing-blocked as stated above.
 
 Entry drafts SUBMISSION.md/WALKTHROUGH.md reflect current measured optimizations.
 **No contest entry submitted.** Personal fields/video still missing; don't invent
@@ -280,4 +288,4 @@ Next performance priority: investigate matmul instruction/address work, shared
 traffic/dependencies and available warp parallelism using the calibrated gap.
 Prescribed grids have 80–128 CTAs vs 170 SMs. Further optimization still needs
 independent safety gates and target paired timing; no counter-proven bottleneck.
-Latest cross-iteration compiler needs a refreshed package; prior ABI archive is historical.
+Current cross-iteration package is verified; prior ABI archive is historical.

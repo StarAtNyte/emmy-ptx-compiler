@@ -125,4 +125,6 @@ reconstructs candidate 40a1de84. It pairs aligned affine unit-stride shared read
 across two unrolled iterations with immutable index dependencies. Final target
 matmul gains are 1.387–1.482x; full safety and timing scope is recorded in
 validation/2026-10-24-cross-iteration-discovery.json. Main now adopts that exact compiler; four GPU-verified CPU fixtures are retained.
-Actual updated CI and refreshed packaging remain to be verified.
+Local 90-check matrix passes all three Python versions; packaged hosted smoke
+checks pass. Actual GitHub CI jobs were rejected before starting for account
+billing/spending-limit state; see production-iteration13.json.

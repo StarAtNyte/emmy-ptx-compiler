@@ -46,7 +46,7 @@ locally, and the rejection is in the evidence record. The corrected largest case
 uses 231 MiB total. Output returns are capped at 4194304 elements. Memory-workload
 PTX comes from our compiler; only the no-work timing control is hand-written PTX.
 
-## Current matmul models
+## Baseline matmul models before cross-iteration pairing
 
 Three fresh forward/reverse trials compare the compiler with itself, yielding six
 request medians per workload. Both compiler hashes are identical. Full numerical
@@ -76,21 +76,46 @@ traffic, dependencies and available warp parallelism. It does not identify a
 single bottleneck. Launch geometry remains prescribed. No Tensor Core or reduced
 precision peak is used, and no clock-locked or counter-backed roofline is claimed.
 
+## Accepted cross-iteration pairing
+
+Compiler 40a1de84 pairs aligned shared reads across two bounded-unroll iterations.
+Final seven alternating paired trials on nineteen workloads, after hosted safety
+requests finished, give the results below. Full first-trial outputs and later
+prefixes pass; clocks remain unlocked. The unchanged launch geometry means the
+conditional nominal arithmetic columns above still apply. These gains do not
+identify a counter-proven bottleneck or claim universal speedups.
+
+| M×K×N | Before µs | After µs | Speedup |
+|---|---:|---:|---:|
+| 512×512×512 | 25.088 | 16.928 | 1.482× |
+| 256×512×384 | 19.040 | 12.992 | 1.466× |
+| 384×256×320 | 14.912 | 10.752 | 1.387× |
+
+The other sixteen workloads differ by at most 0.032 µs. Safety and timing evidence:
+[cross-iteration discovery](validation/2026-10-24-cross-iteration-discovery.json),
+[accepted source](validation/2026-10-24-production-iteration13.json). Baseline
+launch/bandwidth calibration above uses 7fbe5ee4, not the newer compiler.
+
 ## Reproduction
 
 ```sh
-python tools/calibrate_hosted.py --out artifacts/target-calibration --trials 5
+mkdir -p artifacts
+git show b2a1b19:compile.py > artifacts/compiler-abi-validation.py
+python tools/calibrate_hosted.py --compiler artifacts/compiler-abi-validation.py \
+  --out artifacts/target-calibration --trials 5
 ```
 
 The tool uses committed fixtures and the pinned compiler runtime, without Torch
 or local CUDA. It contacts the hosted compile/run API and can transfer several
-MiB of first-trial outputs. The separate matmul self-comparison used:
+MiB of first-trial outputs. The separate baseline matmul self-comparison used compiler 7fbe5ee4 for both
+arguments (use the historical source above to reproduce it):
 
 ```sh
 python tools/benchmark_hosted.py challenge/problems/m01_matmul_512 \
   artifacts/shared-matmul/m_shared_256_512_384 \
   artifacts/shared-matmul/m_shared_384_256_320 \
-  --baseline compile.py --candidate compile.py --trials 3 \
+  --baseline artifacts/compiler-abi-validation.py \
+  --candidate artifacts/compiler-abi-validation.py --trials 3 \
   --timing-return-limit 4096 --report artifacts/calibration-current-matmul.json
 ```
 

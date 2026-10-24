@@ -164,11 +164,11 @@ No hidden-set result or prize outcome is claimed.
 questions. The private repository is https://github.com/StarAtNyte/emmy-ptx-compiler.
 The competition entry still requires the entrant details and own-voice video.
 
-CPU contract checks run on pushes, pull requests and nightly across Python
-3.12–3.14. They use committed counterexamples, isolated CLI execution without
+The CPU workflow is configured for pushes, pull requests and nightly across Python
+3.12–3.14. The checks use committed counterexamples, isolated CLI execution without
 Torch, fixed PTX snapshots and unsupported-feature probes. See
 [the workflow](.github/workflows/cpu-contract.yml) and [testing notes](TESTING.md).
-The [86-check CPU matrix](https://github.com/StarAtNyte/emmy-ptx-compiler/actions/runs/40107112159)
+The prior [86-check hosted matrix](https://github.com/StarAtNyte/emmy-ptx-compiler/actions/runs/40107112159)
 passed on all three versions; [downloaded evidence](validation/2026-10-24-production-iteration12.json)
 records exact versions, hashes and scope. These checks complement the numerical GPU and
 sanitizer gates above.
@@ -182,4 +182,8 @@ retains scalar tails and index/alignment guards. Sixty new cases pass on both GP
 561 prior kernels keep identical PTX and all 33 changed kernels pass on both GPUs.
 Final seven-pair timing covers nineteen workloads; the other sixteen differ by
 at most 0.032 µs. Twenty snapshot/feature checks plus 28 launch and 42 ABI probes
-are now committed for CPU CI; updated hosted CI verification is pending.
+pass locally on Python 3.12.13/3.13.14/3.14.4 without Torch.
+GitHub [run 40109402820](https://github.com/StarAtNyte/emmy-ptx-compiler/actions/runs/40109402820)
+did not start any jobs because of an account billing/spending-limit rejection;
+current hosted CPU CI remains unverified. The refreshed archive separately passes
+three hosted GPU smoke checks.
