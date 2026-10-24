@@ -108,7 +108,7 @@ class Compiler:
                 if name is not None and name not in allowed:
                     unsupported(here, f'dtype {name}')
                 if isinstance(stmt, Write):
-                    if stmt.value_dtype is not None and stmt.value_dtype.name != 'f32':
+                    if stmt.value_dtype is not None and stmt.value_dtype.name not in ('f32', 'i32'):
                         unsupported(here, f'write dtype {stmt.value_dtype}')
                     if stmt.swizzle != 'NONE':
                         unsupported(here, f'write swizzle {stmt.swizzle}')
@@ -161,6 +161,8 @@ class Compiler:
     def index_interval(self, expr):
         """Conservative signed-int32 bounds; unknown/overflow means no proof."""
         if isinstance(expr, Literal):
+            if expr.dtype == 'float' or isinstance(expr.value, float):
+                return None
             value = int(expr.value)
             return (value, value) if -(1 << 31) <= value < (1 << 31) else None
         if isinstance(expr, Var):
@@ -189,26 +191,74 @@ class Compiler:
 
     def integer(self, expr):
         value = self.expression(expr)
-        # PTX predicates are a separate register class. Index arithmetic and
-        # memory offsets require the IR boolean's numeric 0-or-1 value.
-        return self.instruction('selp.b32', 1, 0, value) if value.startswith('%p') else value
+        if self.is_float(value):
+            raise ValueError(f'Kernel {self.node.op.name}: unsupported floating index expression {expr!r}')
+        return self.as_integer(value)
+
+    @staticmethod
+    def is_float(value):
+        return value.startswith(('%f', '0f'))
+
+    def as_integer(self, value, *, cast_float=False):
+        if value.startswith('%p'):
+            return self.instruction('selp.b32', 1, 0, value)
+        if self.is_float(value):
+            if not cast_float:
+                raise ValueError(f'Kernel {self.node.op.name}: unsupported implicit floating index')
+            return self.instruction('cvt.rzi.s32.f32', value)
+        return value
+
+    def as_float(self, value):
+        if self.is_float(value):
+            return value
+        value = self.as_integer(value)
+        return (self.instruction('cvt.rn.f32.s32', value, kind='f') if value.startswith('%')
+                else self.floating(int(value)))
+
+    def float_expression(self, expr):
+        if isinstance(expr, Var):
+            return self.is_float(self.values[expr.name])
+        if isinstance(expr, Literal):
+            return expr.dtype == 'float' or isinstance(expr.value, float)
+        if isinstance(expr, float):
+            return True
+        if isinstance(expr, TernaryExpr):
+            return self.float_expression(expr.if_true) or self.float_expression(expr.if_false)
+        if isinstance(expr, BinaryExpr) and expr.op in ('+', '-', '*', '/', '//', '%'):
+            return self.float_expression(expr.left) or self.float_expression(expr.right)
+        return False
 
     def expression(self, expr):
         if isinstance(expr, TernaryExpr):
             predicate = self.predicate(expr.cond)
+            if self.float_expression(expr):
+                return self.instruction('selp.f32', self.as_float(self.expression(expr.if_true)),
+                                        self.as_float(self.expression(expr.if_false)), predicate, kind='f')
             return self.instruction('selp.b32', self.integer(expr.if_true), self.integer(expr.if_false), predicate)
         if isinstance(expr, Var):
             return self.values[expr.name]
         if isinstance(expr, Literal):
+            if self.float_expression(expr):
+                return self.floating(expr.value)
             return str(int(expr.value))
         if isinstance(expr, (int, float)):
-            return str(int(expr))
+            return self.floating(expr) if isinstance(expr, float) else str(expr)
         if isinstance(expr, BinaryExpr):
             if expr.op in ('&&', '||'):
                 return self.instruction('and.pred' if expr.op == '&&' else 'or.pred',
                                         self.predicate(expr.left), self.predicate(expr.right), kind='p')
-            left, right = self.integer(expr.left), self.integer(expr.right)
             comparisons = {'==': 'eq', '!=': 'ne', '<': 'lt', '<=': 'le', '>': 'gt', '>=': 'ge'}
+            if self.float_expression(expr.left) or self.float_expression(expr.right):
+                left = self.as_float(self.expression(expr.left))
+                right = self.as_float(self.expression(expr.right))
+                if expr.op in comparisons:
+                    relation = 'neu' if expr.op == '!=' else comparisons[expr.op]
+                    return self.instruction(f'setp.{relation}.f32', left, right, kind='p')
+                operations = {'+': 'add', '-': 'subtract', '*': 'multiply'}
+                if expr.op not in operations:
+                    raise NotImplementedError(f'Unsupported floating Expr operation {expr.op}; use typed scalar Assign')
+                return self.arithmetic(operations[expr.op], [left, right])
+            left, right = self.integer(expr.left), self.integer(expr.right)
             if expr.op in comparisons:
                 return self.instruction(f'setp.{comparisons[expr.op]}.s32', left, right, kind='p')
             if expr.op in ('/', '//', '%'):
@@ -240,6 +290,8 @@ class Compiler:
 
     def predicate(self, expr):
         value = self.expression(expr)
+        if self.is_float(value):
+            return self.instruction('setp.neu.f32', value, self.floating(0), kind='p')
         return value if value.startswith('%p') else self.instruction('setp.ne.s32', value, 0, kind='p')
 
     def address(self, buffer, index, offset=0):
@@ -257,6 +309,7 @@ class Compiler:
         return self.instruction('add.u64', self.pointers[buffer], byte_offset, kind='rd')
 
     def arithmetic(self, op, args):
+        args = [self.as_float(value) for value in args]
         if op == 'copy':
             return self.instruction('mov.f32', args[0], kind='f')
         opcode = {'add': 'add.rn.f32', 'subtract': 'sub.rn.f32',
@@ -521,22 +574,27 @@ class Compiler:
             self.values = enclosing_values | results
             self.identities = enclosing_identities | neutrals
         elif isinstance(stmt, Select):
-            value = self.values[stmt.branches[-1].value]
+            value = self.as_float(self.values[stmt.branches[-1].value])
             for branch in reversed(stmt.branches[:-1]):
                 condition = self.predicate(branch.select)
-                value = self.instruction('selp.f32', self.values[branch.value], value, condition, kind='f')
+                value = self.instruction('selp.f32', self.as_float(self.values[branch.value]), value, condition, kind='f')
             self.values[stmt.name] = value
         elif isinstance(stmt, Let):
             bounds = self.index_interval(stmt.value)
             if isinstance(stmt.value, Literal):
                 dtype = stmt.dtype.name if stmt.dtype is not None else stmt.value.dtype
                 if dtype in ('int','i32','u32'):
-                    self.values[stmt.name] = self.instruction('mov.b32',int(stmt.value.value))
+                    literal = int(stmt.value.value)
+                    self.values[stmt.name] = self.instruction('mov.b32', literal)
+                    bounds = (literal, literal) if -(1 << 31) <= literal < (1 << 31) else None
                 else:
                     self.values[stmt.name] = self.instruction('mov.f32', self.floating(stmt.value.value), kind='f')
             else:
-                value = self.integer(stmt.value)
-                if isinstance(stmt.value, Var):
+                value = self.expression(stmt.value)
+                if stmt.dtype is not None:
+                    value = (self.as_float(value) if stmt.dtype.name == 'f32'
+                             else self.as_integer(value, cast_float=True))
+                if isinstance(stmt.value, Var) and value == self.values[stmt.value.name]:
                     # A pure binding captures the current value. Aliasing the
                     # source register would observe later accumulator updates.
                     kind = 'f' if value.startswith('%f') else 'p' if value.startswith('%p') else 'r'
@@ -560,7 +618,7 @@ class Compiler:
                 address = self.address(stmt.output, stmt.index, i)
                 space = 'shared' if stmt.output in self.shared else 'global'
                 opcode = f'red.{space}.add.f32' if stmt.atomic else f'st.{space}.f32'
-                self.emit(f'{opcode} [{address}], {self.values[value]};')
+                self.emit(f'{opcode} [{address}], {self.as_float(self.values[value])};')
         else:
             raise NotImplementedError(f'Statement {type(stmt).__name__}')
 
@@ -607,9 +665,11 @@ class Compiler:
 
     def accumulate(self, stmt, product=None):
         dest = self.values[stmt.name]
-        base = self.values[stmt.base] if stmt.base is not None else dest
+        if not dest.startswith('%f'):
+            raise ValueError(f'Kernel {self.node.op.name}: unsupported non-f32 accumulator {stmt.name}')
+        base = self.as_float(self.values[stmt.base] if stmt.base is not None else dest)
         if product is not None:
-            result = self.instruction('fma.rn.f32', *(self.values[a] for a in product.args), base, kind='f')
+            result = self.instruction('fma.rn.f32', *(self.as_float(self.values[a]) for a in product.args), base, kind='f')
         else:
             result = self.arithmetic(stmt.op.name, [base, self.values[stmt.value]])
         self.emit(f'mov.f32 {dest}, {result};')

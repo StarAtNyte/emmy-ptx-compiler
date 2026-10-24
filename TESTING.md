@@ -443,3 +443,33 @@ hashes, all 20 baseline assembly failures, 40 local/hosted passes, 458 prior
 byte-identical kernels, selected sanitizer/model/runtime checks and vector
 eligibility proof. CPU CI adds the committed shared-vector predicate fixture;
 four positive fixtures plus three negative probes now make seven checks.
+
+## f32 expression, condition and conversion probes
+
+```sh
+.venv/bin/python tools/generate_float_expression_cases.py
+.venv/bin/python tools/generate_float_expression_cases.py --seed 12671 --out artifacts/float-expressions-fresh
+.venv/bin/python tools/validate_isolated.py artifacts/float-expressions/*/ artifacts/float-expressions-fresh/*/ --report artifacts/float-expressions-local.json
+.venv/bin/python tools/check_scalar_expression_rejections.py --report artifacts/scalar-expression-rejections.json
+```
+
+Thirteen families with renamed counterparts cover fractional literal/loaded
+comparisons, signed-zero truthiness, mixed comparisons/ternaries, separate f32
+arithmetic, explicit f32/i32 casts and integer→float rounding near 2^24, NaN truth/
+equality, mixed-type folded FMA and integer scalar writes into f32 buffers. NumPy
+oracles explicitly round f32 operations and truncate in-range conversions. Finite
+input data stays JSON-safe; IR division of zero by zero generates NaN internally.
+Distinct sentinel values make wrong predicate selection numerically observable.
+
+The final source is frozen before fresh seeds. Iteration9 records 26 baseline
+failures (wrong results, invalid PTX or unsupported integer-value stores), 52
+local/hosted passes, four sanitizers on 26 selected cases, nine transformer runs,
+three no-Torch compilation checks and 498 prior byte-identical kernels.
+Scalar diagnostic probes reject floating indices and floating Expr division with
+zero stdout and a concise unsupported-feature error. The Expr division boundary
+does not remove supported scalar Assign divide. Nonfinite/out-of-range f32→i32
+casts are outside this checked domain; integer-buffer storage remains unsupported.
+
+CPU CI adds NaN truth, numeric casts, f32 arithmetic and mixed-comparison fixtures.
+All four prior PTX goldens stay unchanged. Eight positive fixtures plus four
+negative probes now make twelve CPU contract checks; these do not execute PTX.

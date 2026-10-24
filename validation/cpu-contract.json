@@ -1,6 +1,6 @@
 {
-  "baseline_compiler_sha256": "b13ccba603f9e74bef1f65254284d7172a929eddeeba2ec48b22ba0f24028b26",
-  "snapshot_provenance": "GPU-verified retained fixtures; predicate shared-vector index fixture added after production-iteration8 gates",
+  "baseline_compiler_sha256": "393d7600af297b365c6653e0b8dca84017a9c9d4dd9c482d845bf6e329cb5483",
+  "snapshot_provenance": "GPU-verified fixtures; four scalar f32 fixtures added after production-iteration9. Existing four goldens unchanged.",
   "fixtures": [
     {
       "folder": "validation/counterexamples/2026-10-24-scope-shrunk",
@@ -41,6 +41,46 @@
         "expected.npz": "2fe1de840ad9fe7e7ab9bb0b50b711e077828c8a5f6475fcc8873e0a029875a5"
       },
       "ptx_sha256": "66aa5809246c005c37a822359527f949697a523f6abcce0ea63c7af8013c9b2e"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-24-f32-float-arithmetic",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "k_sum_1_reduce.ir.json": "dd4a1738b0c83e1e9651a4f4eb55d063cb1fcc97864104127a01a8d3718d21c4",
+        "meta.json": "d53a9e4d3bd53c94d4319e6e41390a89e659c7b81a3fdbf942d86580a6ceef1c",
+        "expected.npz": "3c53108c428746df556bbee17e2f4fcc70f6eee6722ffa109438d458d83f954e"
+      },
+      "ptx_sha256": "298d2f0b086051ddbb84aadc062bf720835e63c0d3c3570872930a2659172e8c"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-24-f32-float-to-int",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "k_sum_1_reduce.ir.json": "b4a099ddf4fcbd9f6b1160b1613c3c330dc40e222b19d6dc140ef64c71482583",
+        "meta.json": "a9699746db11e806353a3ea78d9801bdbaabf0bcd4f8a83406992c8214b5636f",
+        "expected.npz": "77d43bbcf0a52ea5aefb10649746809ab791870d5fd83fb98b50dd83e411935e"
+      },
+      "ptx_sha256": "d29a0ed56fbc94d56d79dbc72f68c924fbab8bf0b7af175927d40cc2438fa3f7"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-24-f32-mixed-compare",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "k_sum_1_reduce.ir.json": "6ab195b994db4ae3859b010b078236af97bfb5f516b925a588e2eb33a0ade64c",
+        "meta.json": "eb534b43c997c4b6d69c408be1faf67ab609b11fde2754db77dd714786c9aef5",
+        "expected.npz": "db26d37076a744fad2d7b8ed246a3c0ddf69c00562a0fdbabcb1cea72e83b9c9"
+      },
+      "ptx_sha256": "2ea2baa1bf50960f933b72527b1242da8f3362ecb11de133670448e6de8f2d82"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-24-f32-nan-truth",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "k_sum_1_reduce.ir.json": "da607fd79842b22dda69b5496022c95be892dc184ef02fa86eb096eb3b341206",
+        "meta.json": "9f1f3578992117b30491a11582064d7c9f3a583a64fd46c37c7d4eafb8e91bb4",
+        "expected.npz": "d445a180e73a5bcfa262cfc2dc77bf4bddb7834244b876bf26f0289e4230678f"
+      },
+      "ptx_sha256": "34a9e8da648ec8f7d9b7d0e6447c500378c0191b6cf86b6f7ecd846205ab6ddd"
     }
   ]
 }

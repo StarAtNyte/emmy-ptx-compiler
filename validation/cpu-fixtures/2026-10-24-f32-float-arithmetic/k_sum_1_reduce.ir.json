@@ -1,0 +1,47 @@
+{
+  "inputs": [
+    "x"
+  ],
+  "outputs": [
+    "sum_1"
+  ],
+  "nodes": {
+    "x": {
+      "op": "InputOp",
+      "op_fields": {},
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "x",
+          "shape": [
+            128
+          ],
+          "dtype": "f32"
+        }
+      ]
+    },
+    "sum_1": {
+      "op": "KernelOp",
+      "op_fields": {
+        "body": [
+          "Tile(axes=(Axis(name='i', extent=Dim(64), window=None),), body=(Load(names=('value',), input='x', index=(Var(name='i'),), dtype=DataType(name='f32', np=dtype('float32'), nbytes=4)), Let(name='out', value=BinaryExpr(op='-', left=BinaryExpr(op='*', left=BinaryExpr(op='+', left=Var(name='value'), right=Literal(value=0.5, dtype='float')), right=Literal(value=2, dtype='int')), right=Literal(value=1.0, dtype='float')), dtype=DataType(name='f32', np=dtype('float32'), nbytes=4)), Write(output='sum_1', index=(Var(name='i'),), values=('out',), value_dtype=DataType(name='f32', np=dtype('float32'), nbytes=4), atomic=False, swizzle='NONE')), block_threads=None, aux_threads=0, raster_axes=None, raster_group=None, raster_orient='m')"
+        ],
+        "name": "k_sum_1_reduce",
+        "zero_delegated": [],
+        "serial": []
+      },
+      "inputs": [
+        "x"
+      ],
+      "outputs": [
+        {
+          "name": "sum_1",
+          "shape": [
+            64
+          ],
+          "dtype": "f32"
+        }
+      ]
+    }
+  }
+}

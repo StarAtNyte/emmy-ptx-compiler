@@ -110,6 +110,12 @@ fixes invalid PTX when booleans are used numerically. Forty new cases pass on bo
 GPUs, with selected sanitizer/model checks; all 458 prior kernels retain
 byte-identical PTX. This correctness fix does not claim a fresh speedup.
 
+The [scalar-expression iteration](validation/2026-10-24-production-iteration9.json)
+adds f32 expressions/conditions and numeric casts: 52 new cases pass on both GPUs,
+with selected sanitizer/model/runtime checks. All 498 prior kernels retain
+byte-identical PTX. Floating indices reject cleanly; integer-buffer storage and
+floating Expr division remain unsupported.
+
 ## Measured performance
 
 Alternating paired RTX 5090 trials checked both compilers' outputs. Clocks were
@@ -138,7 +144,8 @@ research direction, profiling limits and remaining production work.
 
 ## Scope and submission
 
-The current storage/arithmetic path is f32, with static shapes, 32-bit index math
+The storage/data-arithmetic path is f32; scalar i32 bindings and numeric casts
+are supported. Shapes are static, with 32-bit index math
 and 64-bit global addresses. Additional dtypes, auxiliary thread bands, shared
 swizzles and some operations remain unsupported. Grouped accesses are scalarized.
 No hidden-set result or prize outcome is claimed.

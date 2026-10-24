@@ -925,3 +925,36 @@ Completed 2026-10-24:
   report current-package.json; older report preserved as power2-package.json.
 - Updated current handoff/README. No submission or general production-readiness
   claim. Next: broader type/rank/ABI validation and target bottleneck/lower bounds.
+
+## Step 35 — scalar f32 expressions, predicates and casts corrected
+
+Completed 2026-10-24:
+
+- Installed Let/Cond/Expr contracts permit typed scalar bindings and conditions
+  over existing SSA values. Prior b13ccba6 truncates float expression literals,
+  compares float registers as integers, and copies bits for typed numeric casts.
+- Added generate_float_expression_cases.py: thirteen renamed families / 26 cases
+  with independent explicit f32 NumPy formulas. Covers fractional comparisons,
+  signed zeros, mixed ternaries/arithmetic, numeric casts/rounding, NaN truth and
+  equality, integer-operand FMA and integer values stored into f32 buffers.
+  Preliminary equal-zero sentinels were replaced before final corpora so wrong
+  predicate selection is observable. All 26 final baseline probes fail.
+- Accepted frozen 393d7600af297b365c6653e0b8dca84017a9c9d4dd9c482d845bf6e329cb5483.
+  Float expression types follow bindings/literals, mixed operands promote to f32,
+  predicates use float comparisons/truthiness, explicit Let conversions emit cvt.
+  Floating scalar arguments, Select branches, folded FMA operands and integer
+  writes into f32 storage convert numerically. Fold state remains f32.
+- Final 26 original + 26 frozen fresh cases pass on both GPUs. Four sanitizers
+  clean on 26 selected cases; nine transformer runs and three no-Torch /tmp
+  compilation checks pass. All 498 prior kernels emit byte-identical PTX; no new
+  performance claim. Eight existing and three scalar-expression diagnostics pass.
+- Float indices now reject rather than silently truncate/emit invalid PTX. Floating
+  Expr /,//,% explicitly unsupported; typed Assign divide remains supported.
+  f32→i32 casts are checked only for finite in-range values. No integer buffers or
+  full-type-checker claim. Limits/reports/hashes in production-iteration9.json.
+- Added four GPU-checked scalar fixtures and one float-index negative CPU probe.
+  Existing four goldens unchanged; all twelve no-Torch CPU checks pass locally.
+
+Next: publish, verify actual twelve-check CI matrix and refresh changed-code
+archive. Broader rank/ABI/static-shape validation and target roofline work remain;
+production readiness unproven and submission still deferred.

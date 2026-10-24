@@ -28,9 +28,9 @@ http://runner.riftstack.ai:48701. Compiler emits PTX 8.0 sm89; local runner chan
 that target to sm86. Local performance cannot select contest optimizations.
 
 **Current accepted compile.py SHA-256:**
-b13ccba603f9e74bef1f65254284d7172a929eddeeba2ec48b22ba0f24028b26.
-Exact source frozen/tested as artifacts/compiler-predicate-index.py. Prior accepted
-04b50e69 is reproducible from 074d4f9:compile.py; bb3a72b2 from 1ad0dbf.
+393d7600af297b365c6653e0b8dca84017a9c9d4dd9c482d845bf6e329cb5483.
+Exact source frozen/tested as artifacts/compiler-float-expressions.py. Prior
+b13ccba6 is reproducible from 35208cf:compile.py; 04b50e69 from 074d4f9.
 
 ## Contract/current implementation
 
@@ -56,6 +56,21 @@ executes after body; axis_end is body-visible. See DESIGN.md for details.
 
 ## Latest acceptance evidence
 
+production-iteration9.json corrects scalar f32 expressions/conditions/casts.
+Accepted 393d7600 supports f32 +,-,*, mixed comparisons/ternaries, IEEE float
+truthiness, explicit numeric f32/i32 Let conversion, mixed scalar/FMA operands and
+integer scalar writes into f32 storage. Floating indices reject; floating Expr
+/,//,% unsupported (typed Assign divide still supported). Nonfinite/out-of-range
+f32→i32 casts and integer-buffer storage remain outside scope.
+
+26 final baseline cases fail on b13ccba6. Final 26 original + 26 frozen fresh cases
+pass on both GPUs; four sanitizers clean on 26 selected cases, nine transformer
+runs, three no-Torch compilations and eleven diagnostic probes pass. All 498 prior
+kernels emit identical PTX, preserving prior codegen/timing evidence. Current CPU
+manifest has eight positive fixtures/four negatives: twelve local no-Torch checks
+pass; actual updated Actions matrix pending. Existing four goldens unchanged.
+
+Previous predicate-index acceptance:
 validation/2026-10-24-production-iteration8.json fixes predicate-valued indices.
 Scalar booleans materialize integer 0/1 for arithmetic, comparisons, ternary
 branches, integer Lets and memory offsets. Conditions retain .pred registers.
@@ -150,3 +165,8 @@ on documentation pushes; existing accepted-code seven-check matrix is verified.
 Entry drafts SUBMISSION.md/WALKTHROUGH.md reflect current measured optimizations.
 **No contest entry submitted.** Personal fields/video still missing; don't invent
 them or contact organizers. General production readiness remains unproven.
+
+Current packaging note supersedes earlier archive section: current verified ZIP
+still contains prior b13ccba6. After committing scalar fix, verify twelve-check CI
+and rebuild/check the archive for accepted 393d7600. Keep submission deferred.
+All scalar-fix GPU/sanitizer/model/runtime gates completed; no need to restart them.

@@ -145,8 +145,9 @@ numeric corner case has been tested.
 
 Before lowering, explicit tensor dtypes must be f32, shared declarations must use
 float/f32 storage, scalar arithmetic declarations must be f32, and Let may also
-bind i32 index values. Explicit non-f32 write types and swizzled writes are
-rejected. Missing/inferred scalar dtypes retain their existing interpretation.
+bind i32 index values. Writes accept f32/i32 scalar values into f32 storage;
+integer values are numerically converted. Other explicit write types and swizzled
+writes are rejected. Missing/inferred scalar dtypes retain their existing interpretation.
 Errors identify the kernel and nested statement location before any PTX reaches
 stdout; expected ValueError/NotImplementedError failures print a concise CLI
 message. This is a feature boundary check, not a complete IR type checker.
@@ -189,3 +190,23 @@ arithmetic, numeric comparisons, ternary branches, integer Let bindings or memor
 addressing. Condition contexts retain native predicates, preserving existing
 branch lowering. This also applies to aligned paired shared-read addresses; no
 predicate register can be used directly as an integer byte/element offset.
+
+## Scalar expression types and conversions
+
+Expression inference follows literals and actual bound register types, including
+mixed branches. Floating +, -, * and comparisons promote integer/predicate operands
+to f32; mixed ternaries select f32 values. Separate .rn operations preserve
+pointwise rounding. Float truthiness uses unordered not-equal to zero, so NaN is
+true and both signed zeros false. Conditions retain native predicate registers.
+
+Explicit Let f32/i32 bindings numerically convert values (integer→float nearest,
+float→integer toward zero) rather than copying their bits. Same-type variable
+bindings still snapshot with a move. Floating elementwise arguments, Select
+branches, folded FMA operands and integer scalar writes into f32 storage follow
+these conversions. Mutable fold state itself remains f32.
+
+Index expressions must be integer-valued; floating offsets reject before PTX
+output. Floating Expr /, // and % are explicitly unsupported because this AST's
+contract specifies integer index division; use typed scalar Assign divide for
+f32 division. Float→integer casts are supported for finite in-range values; no
+nonfinite/out-of-range cast guarantee or general type-checker claim is made.

@@ -18,6 +18,7 @@ from pathlib import Path
 
 from emmy.compiler.dtype import F16
 from emmy.compiler.graph import Graph
+from emmy.compiler.ir.expr import Literal
 from emmy.compiler.ir.stmt import Write
 
 
@@ -70,7 +71,7 @@ def main():
         # Real CLI negative probes on the first committed typed fixture.
         template = root/manifest['fixtures'][0]['folder']
         ir_name = manifest['fixtures'][0]['ir']
-        for kind in ('tensor_f16','write_f16','write_swizzle'):
+        for kind in ('tensor_f16','write_f16','write_swizzle','floating_index'):
             graph = Graph.from_dict(json.loads((template/ir_name).read_text()))
             changed = False
             def mutate(body):
@@ -78,7 +79,10 @@ def main():
                 result = []
                 for stmt in body:
                     if not changed and isinstance(stmt,Write):
-                        stmt = replace(stmt,**({'value_dtype':F16} if kind=='write_f16' else {'swizzle':'B32'}))
+                        changes = ({'value_dtype':F16} if kind=='write_f16'
+                                   else {'swizzle':'B32'} if kind=='write_swizzle'
+                                   else {'index':(Literal(.5),)})
+                        stmt = replace(stmt,**changes)
                         changed = True
                     for field in ('body','else_body'):
                         if hasattr(stmt,field):
