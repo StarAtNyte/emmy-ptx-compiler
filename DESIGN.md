@@ -150,3 +150,15 @@ rejected. Missing/inferred scalar dtypes retain their existing interpretation.
 Errors identify the kernel and nested statement location before any PTX reaches
 stdout; expected ValueError/NotImplementedError failures print a concise CLI
 message. This is a feature boundary check, not a complete IR type checker.
+
+## Signed index expressions
+
+Both `/` and `//` floor signed index division, matching Emmy 0.3.11's expression
+contract; `%` returns a remainder with the divisor's sign. Lowering computes the
+PTX truncating remainder and corrects quotient/remainder when the remainder is
+nonzero and operand signs differ. Conservative signed-int32 interval proofs skip
+this work only for a proven nonnegative dividend and positive divisor. Bounds
+belong to register identities, with tile/loop bounds and integer Let snapshots;
+unknown expressions and possible arithmetic overflow discard the proof. This
+retains public matmul code generation while supporting negative index arithmetic.
+Division by zero and signed division overflow are outside supported behavior.

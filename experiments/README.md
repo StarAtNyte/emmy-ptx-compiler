@@ -92,3 +92,14 @@ runtime checks and the final seven-pair timing: m01 66.176 → 64.160 µs (1.031
 independent vectorizing matmul 35.488 → 31.392 µs (1.130x). Attention and scalar
 controls remain within noise. This bounded evidence does not establish general
 load-motion safety for every possible IR or production readiness.
+
+## Signed index floor correction — accepted bounded variant
+
+`signed-index-floor.patch` reconstructs the accepted range-aware fix from compiler
+at aa668e2. Installed Emmy 0.3.11's expression evaluator floors signed division,
+unlike PTX div/rem. Unconditional correction fixed numerical probes but slowed
+public m01 from 64.160 to 80.544 µs. Conservative signed-int32 bounds omit correction
+when signs prove truncation equivalent; final seven-pair m01/m02 medians remain
+64.160/5.056 µs. The fifth production iteration records exact-candidate semantic,
+range-shadowing/overflow, sanitizer, transformer and standalone-runtime gates.
+This correctness change is not a new speedup claim.

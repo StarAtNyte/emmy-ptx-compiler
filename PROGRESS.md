@@ -570,3 +570,52 @@ Preserved reconstructible v2 patch in experiments/signed-index-floor.patch.
 Exact v2 full regression session 29029, selected sanitizer session 78413, and
 transformer session 51894 are now live. Main stays accepted until these gates and
 adversarial range-proof scope checks finish.
+
+## Step 20 — adversarial range proofs pass; final gates approaching completion
+
+Completed 2026-10-24 for frozen v2 e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073:
+
+- Added tools/generate_index_scope_cases.py with six families and renamed pairs:
+  branch/loop axis shadowing, negative strided-loop starts, shadowed divisors,
+  int32-add overflow, and ternary indices. Independent NumPy oracles and a second
+  output half check restored enclosing bindings. All 12 pass locally and hosted.
+- Nine transformer seed/depth checks pass. Three selected no-Torch isolated /tmp
+  compilation checks emit byte-identical PTX (m01, negative remainder, overflow).
+- Full exact-v2 regression and final sanitizer tools are still live; latest
+  observation was 221/255 regression cases passing, three sanitizer tools clean
+  on the original selected suite and two on the new scope suite. Do not promote
+  these observations into completed gate claims.
+- Original/fresh signed suites and prior target timing evidence remain unchanged.
+  Main compile.py stays accepted 5af51dc2; candidate is isolated and frozen.
+
+Live handles: 29029 regression, 78413 original selected sanitizer suite,
+34022 new scope sanitizers, 47277 fresh hosted signed suite. Original scope hosted
+session 26913 and local 70863 completed, runtime 8305 completed. Next: collect final
+reports, preserve exact-hash acceptance evidence, then accept only if all pass.
+
+## Step 21 — signed-floor correction accepted after full coverage audit
+
+Completed 2026-10-24:
+
+- Accepted exact frozen e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073.
+  All 255 selected regression cases pass. Case-name audit against older 232-case
+  corpus found 59 omitted cases (schedules/shared tails/body budgets etc.); reran
+  all 59 successfully before acceptance. 314 prior fixtures total, correlated.
+- 24 original/fresh signed cases and 12 scope/overflow probes pass locally;
+  36 signed/scope hosted checks pass. Nine transformer runs pass. Four sanitizers
+  clean on 52 selected original/semantic/pair cases and 12 new scope cases.
+- Three no-Torch /tmp compilation checks match byte-for-byte. 14/15 public kernels
+  retain identical PTX to prior compiler; m02 differs. Seven paired target medians
+  remain m01 64.160 µs and m02 5.056 µs, both unchanged. No new speedup claim.
+- Preserved final hashes, fixture inventory, coverage audit and all gate reports in
+  validation/2026-10-24-production-iteration5.json. Unconditional correction timing
+  and excluded nonfrozen run remain disclosed in discovery record.
+- Updated DESIGN/TESTING/experiments notes and rewrote HANDOFF's active snapshot
+  to remove obsolete live-session instructions. All these sessions are complete.
+
+Next: adversarial strided-loop lexical-binding and index/control-flow typing
+checks, systematic shrinking, target profiling and sustained CI. Production
+readiness remains unproven. Submission deferred; packaged release still stale.
+
+Active-path follow-up: all eight unsupported-feature CLI probes still reject
+cleanly with current e0348966; report included in iteration-five evidence.

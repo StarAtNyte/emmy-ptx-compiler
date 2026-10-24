@@ -266,3 +266,26 @@ features. Supported f32 storage/arithmetic and i32 Let bindings remain accepted.
 This validation does not replace a full type checker or add reduced-precision
 support. `validation/2026-10-24-feature-validation.json` preserves baseline silent
 acceptance, final rejection results and supported PTX-equivalence evidence.
+
+## Signed index division and range proofs
+
+Emmy 0.3.11 `ir/expr.py:apply_binop` defines both `/` and `//` as integer floor
+operations and `%` as Python remainder. These differ from PTX truncating signed
+operations when operand signs differ. Development fixtures use independent NumPy
+references, including negative divisors, with all accessed addresses in bounds:
+
+```sh
+.venv/bin/python tools/generate_signed_index_cases.py
+.venv/bin/python tools/generate_signed_index_cases.py --seed 2049 --out artifacts/signed-index-fresh
+.venv/bin/python tools/generate_index_scope_cases.py
+.venv/bin/python tools/validate_isolated.py artifacts/signed-index/*/ artifacts/index-scopes/*/ --compiler artifacts/compiler-signed-ranged-v2.py --report artifacts/signed-range-local.json
+```
+
+The candidate can be reconstructed from the accepted compiler at `aa668e2` using
+`experiments/signed-index-floor.patch`; the exact candidate is now accepted in
+`validation/2026-10-24-production-iteration5.json`. The scope generator
+checks branch/loop axis shadowing, divisor shadowing, a negative strided-loop start,
+signed-int32 addition overflow, and ternaries. Its second output half observes the
+outer binding after the scope. Overflow references explicitly wrap through int32
+before applying NumPy remainder. These bounded probes do not define division by
+zero or signed division overflow as supported behavior.

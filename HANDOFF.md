@@ -20,7 +20,7 @@ https://github.com/cloudrift-ai/emmy-hackathon-2026.
 - Workspace `/home/nitiz/Projects/Self/Challenges/emmy`; branch `master`, origin
   https://github.com/StarAtNyte/emmy-ptx-compiler. Check git status/log before work.
 - Current accepted compiler SHA-256:
-  `5af51dc2b497f8acd42f378eff27ed03c518ed4bd2952aedb940972eb4ac2998`.
+  `e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073`.
 - Use `.venv/bin/python` (3.12); host default is 3.14. Pinned Emmy 0.3.11,
   NumPy 2.5.4, CPU Torch 2.14.1. Runtime compiler does not need Torch or a GPU.
 - Local RTX 3050 Laptop 6 GiB, sm_86; hosted RTX 5090, sm_120:
@@ -120,84 +120,39 @@ Sanitizer binary:
 `artifacts/vendor/cuda_sanitizer_api-linux-x86_64-13.0.85-archive/compute-sanitizer/compute-sanitizer`.
 Use tools/sanitize.py; TESTING.md documents full suites and reconstruction.
 
-## Next concrete work
+## Current acceptance and next work
 
-Aligned shared-read pairing is now accepted. Latest combined evidence:
-`validation/2026-10-24-production-iteration4.json`. Optimization compiler da4f12dd... preceded the feature-validation change.
-Current compiler preserves its PTX on the verified supported inputs. Prior baseline source is reproducible from
-5791ed6 and saved as artifacts/compiler-before-pair.py. Historical experiment
-patch is preserved; do not apply it to the newly active compiler.
+Current compiler e0348966... is accepted after signed-index correction. Latest
+combined record: validation/2026-10-24-production-iteration5.json. The original
+5af51dc2 compiler failed all 12 signed-division/remainder probes. PTX truncates
+signed division; Emmy 0.3.11 expr.apply_binop floors both / and // and uses Python
+remainder. Current code corrects signs unless conservative signed-int32 bounds
+prove nonnegative dividend and positive divisor. Bounds belong to register
+identities; scopes preserve shadowed names. Unknown/overflow bounds take correction.
 
-Completed gates: 232 prior local regressions, 26 each one-trip/seven-trip/fresh
-three-trip cases on both GPUs, 78 codegen checks, nine transformer runs,
-four independent matmuls on both GPUs. Four sanitizer tools clean on 27 selected
-motion/public cases and separately four matmuls. Three standalone no-Torch
-compilation checks emit byte-identical PTX from /tmp.
+Gates: 255 selected prior local fixtures plus 59 older cases found by case-name
+coverage audit; 24 original/fresh signed cases and 12 new scope/overflow cases
+pass locally. 36 signed/scope checks pass hosted. Nine transformer runs pass.
+Four sanitizer tools clean on 52 selected original/semantic/pairing fixtures and
+12 new scope probes. Three standalone no-Torch /tmp compilation checks match PTX.
+14/15 public kernels emit byte-identical PTX to prior compiler (m02 differs).
+Seven paired RTX 5090 trials preserve m01 64.160 µs and m02 5.056 µs. Unlocked
+clocks; full first output, prefixes thereafter. Candidate is now active exactly.
 
-Final seven-pair RTX 5090 timings: public m01 66.176 → 64.160 µs (1.031x),
-independent 384×256×320 matmul 35.488 → 31.392 µs (1.130x). Attention and three
-scalar control matmuls change by at most 0.032 µs (noise). Only the independent
-384×256×320 schedule vectorizes (32 static vector instructions). Clocks unlocked;
-full output first trial, prefixes thereafter. All generation/validation/timing
-sessions listed in old progress entries are complete.
+The unconditional sign-correction control passed correctness but slowed m01
+64.160 → 80.544 µs; rejected. Earlier nonfrozen ranged timing is excluded.
+Historical candidate patch experiments/signed-index-floor.patch applies to
+compiler at aa668e2; do not apply to new main. All prior live handles completed.
 
-Next: broaden adversarial IR probes and strengthen unsupported-feature
-validation/diagnostics before further expression/address reuse. Preserve these
-semantic gates and avoid interpreting bounded grammar coverage as general safety.
-
-Afterward consider SSA-aware integer/address reuse and loop-invariant addressing;
-never cache expressions by text across mutable axes/state. Broaden fuzzing and
-add actual statement shrinking as further correctness work.
-
-Open production gaps: general shrinking/fuzzing, operation/dtype coverage,
-unsupported-feature diagnostics, target instruction/counter/roofline analysis,
-and sustained CI. Current tests do not establish production readiness.
+Next: broaden control-flow/index typing and strided-loop lexical binding probes;
+add systematic failure shrinking, target instruction/roofline analysis and CI.
+Division by zero and signed division overflow are not supported behavior.
+Explicit unsupported dtypes/layouts fail before PTX output; this boundary check
+is not a full type checker. Production readiness remains unproven.
 
 Entry drafts: SUBMISSION.md and WALKTHROUGH.md. **Existing
 artifacts/emmy-ptx-submission.zip is stale (several compiler iterations behind).**
 No final release or entry submission has occurred. Deadline is Oct 27 23:59 AoE,
 Oct 28 17:44 Nepal time; do not silently submit against the user's deferral.
 
-Latest implementation/evidence publication: 2306028, pushed and remote-ref verified.
-Active compile.py hash da4f12dd... matches tested candidate. Active-path 26-case
-codegen rerun passes. No final archive rebuild or competition submission.
-
-## Step 18 — current compiler feature validation
-
-Current hash 5af51dc2...; evidence validation/2026-10-24-feature-validation.json.
-Eight explicit unsupported declarations previously silently emitted f32/unswizzled
-PTX; now reject before output with kernel/statement paths and concise CLI errors.
-This covers f16 tensor/Write/Assign/Init/Accum/Let, double shared storage and
-B32-swizzled Write. It is a feature boundary check, not a full type checker.
-255 selected kernels plus 338 fixture folders covering all 232 prior regression
-names emit byte-identical PTX to da4f12dd (overlapping, duplicate copies included).
-Tools: check_feature_rejections.py and check_codegen_equivalence.py; TESTING.md
-has reproduction. No fresh timing claim. Next: adversarial control-flow/index
-typing probes and fuller validation, then systematic shrinking and target profiling.
-
-## Step 19 — active signed-index correctness investigation
-
-Accepted compiler is still 5af51dc2 (aa668e2). Working compile.py currently holds
-UNACCEPTED generic signed-floor correction, hash 51fc430f..., because generic
-regression session 31758 still reads it. Do not confuse this with acceptance.
-All 12 signed-index baseline probes fail numerically; generic fix passes all 12
-locally/hosted and four sanitizers but slows m01 64.160 → 80.544 µs, rejected as
-final performance solution. Evidence: validation/2026-10-24-signed-index-discovery.json.
-Installed 0.3.11 expr.apply_binop specifies floor division and Python remainder.
-
-Frozen range candidate artifacts/compiler-signed-ranged-v2.py uses conservative
-signed-int32 bounds to omit correction when signs prove truncation equivalent.
-14/15 public PTX outputs match baseline (m01 included; m02 differs). Live handles:
-88887 original/fresh seed-2049 local checks; 30214 hosted original; 76614 paired
-m01/m02 timings. Generic regression session 31758 remains separate. Check exact
-hashes; the earlier nonfrozen ranged timing is excluded. Next: finish these gates,
-adversarial lexical/mutable range probes, full exact-candidate regressions,
-sanitizers and transformer before accepting. No submission or release rebuild.
-
-Latest Step 19 state supersedes the temporary worktree note above: generic
-regression finished 255/255 and compile.py is RESTORED to accepted 5af51dc2.
-Frozen v2 finished 24 local, 12 hosted, target m01/m02 timing unchanged exactly.
-Preserved experiments/signed-index-floor.patch reconstructs v2 from current main.
-Discovery record includes completed v2 and generic regression results.
-Remaining live sessions: 29029 exact-v2 regression; 78413 selected sanitizers;
-51894 transformer. Next also add adversarial range-proof scope/mutation probes.
+No final archive rebuild or competition submission has occurred.
