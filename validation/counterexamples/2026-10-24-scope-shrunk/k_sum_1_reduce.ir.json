@@ -1,0 +1,47 @@
+{
+  "inputs": [
+    "x"
+  ],
+  "outputs": [
+    "sum_1"
+  ],
+  "nodes": {
+    "x": {
+      "op": "InputOp",
+      "op_fields": {},
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "x",
+          "shape": [
+            97
+          ],
+          "dtype": "f32"
+        }
+      ]
+    },
+    "sum_1": {
+      "op": "KernelOp",
+      "op_fields": {
+        "body": [
+          "Tile(axes=(Axis(name='thread', extent=Dim(97), window=None),), body=(Let(name='destination', value=Var(name='thread'), dtype=DataType(name='i32', np=dtype('int32'), nbytes=4)), Load(names=('value',), input='x', index=(Var(name='thread'),), dtype=DataType(name='f32', np=dtype('float32'), nbytes=4)), Init(name='acc', identity=0.0, dtype=DataType(name='f32', np=dtype('float32'), nbytes=4)), Cond(cond=BinaryExpr(op='==', left=BinaryExpr(op='%', left=Var(name='thread'), right=Literal(value=3, dtype='int')), right=Literal(value=0, dtype='int')), body=(Load(names=('value',), input='x', index=(BinaryExpr(op='%', left=BinaryExpr(op='+', left=Var(name='thread'), right=Literal(value=50, dtype='int')), right=Literal(value=97, dtype='int')),), dtype=DataType(name='f32', np=dtype('float32'), nbytes=4)), Accum(name='acc', value='value', op=ElementwiseImpl('add'), dtype=DataType(name='f32', np=dtype('float32'), nbytes=4), axes=(), base=None)), else_body=(Accum(name='acc', value='value', op=ElementwiseImpl('add'), dtype=DataType(name='f32', np=dtype('float32'), nbytes=4), axes=(), base=None),)), Assign(name='result', op=ElementwiseImpl('add'), args=('value', 'acc'), dtype=DataType(name='f32', np=dtype('float32'), nbytes=4)), Write(output='sum_1', index=(Var(name='destination'),), values=('result',), value_dtype=DataType(name='f32', np=dtype('float32'), nbytes=4), atomic=False, swizzle='NONE')), block_threads=None, aux_threads=0, raster_axes=None, raster_group=None, raster_orient='m')"
+        ],
+        "name": "k_sum_1_reduce",
+        "zero_delegated": [],
+        "serial": []
+      },
+      "inputs": [
+        "x"
+      ],
+      "outputs": [
+        {
+          "name": "sum_1",
+          "shape": [
+            97
+          ],
+          "dtype": "f32"
+        }
+      ]
+    }
+  }
+}

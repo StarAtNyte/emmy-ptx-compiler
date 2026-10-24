@@ -308,3 +308,34 @@ and implicit-binding contract. Iteration-six evidence includes baseline numerica
 failures and missing-binding errors, final original/fresh cases on both GPUs,
 selected sanitizer, transformer, standalone-runtime and 350-kernel byte-identical
 PTX checks. This changes new-case correctness without a fresh speedup claim.
+
+## Predicate-preserving statement reduction
+
+`tools/shrink_failure.py` attempts hierarchical deletion of statement chunks in
+one-kernel fixtures. Every retained trial must compile on both compilers, pass the
+fixture's **unchanged** independent numerical oracle on the reference compiler,
+and produce a numerical mismatch on the suspect compiler. GPU executions run in
+separate processes/contexts. Compilation failures, memory faults and timeouts do
+not substitute for the numerical defect. A final independent replay is required;
+compiler-source changes invalidate publication. Reports are saved incrementally.
+
+```sh
+git show bb8d2c8:compile.py > artifacts/compiler-before-scope-fix.py
+.venv/bin/python tools/fuzz_semantics.py --count 7 --out artifacts/shrink-inputs
+.venv/bin/python tools/shrink_failure.py artifacts/shrink-inputs/branch_value_s0 --suspect artifacts/compiler-before-scope-fix.py --out artifacts/reduced-scope --max-trials 100
+```
+
+Use a new output directory. The tool leaves launch metadata, inputs and expected
+outputs unchanged; it does not recompute an oracle from either compiler. Thus it
+can delete unused arithmetic but cannot discard an observable output half or
+change dimensions. A completed deletion fixed point means no tried single
+statement deletion preserved this predicate; it is not global minimality. A
+budget-limited search or one containing timeouts explicitly avoids that claim.
+This is a bounded deletion reducer, not a general valid-IR generator/type checker.
+
+`validation/2026-10-24-statement-shrinking.json` records an actual historical scope
+failure reduced 11 → 10 statements, a strided-loop failure retained at 8 statements,
+all trial classifications, and checks for passing-input rejection and trial-budget
+reporting. Self-contained retained fixtures are under `validation/counterexamples`.
+The numerical oracle remains independent, but reference-compiler acceptance is
+only an observed validity filter. The reducer does not prove arbitrary IR valid.

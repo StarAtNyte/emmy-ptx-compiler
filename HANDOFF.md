@@ -165,3 +165,15 @@ No final release or entry submission has occurred. Deadline is Oct 27 23:59 AoE,
 Oct 28 17:44 Nepal time; do not silently submit against the user's deferral.
 
 No final archive rebuild or competition submission has occurred.
+
+## Step 23 — statement reducer available
+
+Compiler remains bb3a72b2... unchanged. tools/shrink_failure.py now removes nested
+statement chunks only while the reference compiler passes the original independent
+oracle and the historical suspect retains a numerical mismatch. Final isolated
+replay required; source changes invalidate publication; budgets/timeouts avoid
+unsupported minimality claims. Actual scope failure 11 → 10 statements, strided
+failure 8 → 8, both observed deletion fixed points. Passing-input/budget CLI checks
+pass. Evidence validation/2026-10-24-statement-shrinking.json and self-contained
+fixtures validation/counterexamples; TESTING.md has commands/limits. All reducer
+jobs completed. Next: CPU CI on committed fixtures, broader typing, target profiling.

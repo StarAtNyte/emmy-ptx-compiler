@@ -646,3 +646,28 @@ Completed 2026-10-24:
 
 Next: control-flow/index typing, systematic shrinking and target profiling/CI.
 Production readiness unproven. Submission deferred and release ZIP still stale.
+
+## Step 23 — systematic predicate-preserving statement deletion
+
+Completed 2026-10-24, compiler unchanged bb3a72b2...:
+
+- Added tools/shrink_failure.py: hierarchical chunk/single-statement deletion
+  across nested bodies. Both compilers must compile each retained trial; current
+  reference must pass the original independent fixture oracle; historical suspect
+  must retain a numerical mismatch. Errors/timeouts do not count as the defect.
+  Each GPU run uses a separate context, and final independent replay is required.
+- Historical scope failure reduced 11 → 10 statements by deleting unused arithmetic.
+  Historical strided failure remained 8 → 8. Both completed with no further single
+  deletion preserving the predicate, zero timeouts, and successful final replays.
+  This is a deletion fixed point, not globally smallest IR or parameter shrinking.
+- Verified CLI refuses a passing input without publishing a fixture, and a two-
+  trial budget reports budget exhaustion rather than a minimality/fixed-point claim.
+  Reports are incremental; changed compiler sources invalidate fixture publication.
+- Preserved self-contained IR/meta/oracle fixtures under validation/counterexamples
+  and all final reducer/compiler hashes, trial classifications and CLI gate reports
+  in validation/2026-10-24-statement-shrinking.json. TESTING documents reproduction
+  and the limits of an unchanged-oracle/reference-acceptance validity filter.
+
+Next: sustained CPU CI using committed fixtures/isolated runtime contract, broader
+index/control-flow type validation, and target bottleneck profiling. General IR
+shrinking and production readiness remain unproven; submission still deferred.

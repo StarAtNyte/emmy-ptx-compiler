@@ -1,0 +1,47 @@
+{
+  "inputs": [
+    "x"
+  ],
+  "outputs": [
+    "sum_1"
+  ],
+  "nodes": {
+    "x": {
+      "op": "InputOp",
+      "op_fields": {},
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "x",
+          "shape": [
+            128
+          ],
+          "dtype": "f32"
+        }
+      ]
+    },
+    "sum_1": {
+      "op": "KernelOp",
+      "op_fields": {
+        "body": [
+          "Tile(axes=(Axis(name='i', extent=Dim(64), window=None),), body=(Let(name='saved_coordinate', value=Var(name='i'), dtype=DataType(name='i32', np=dtype('int32'), nbytes=4)), StridedLoop(axis=Axis(name='j', extent=Dim(128), window=None), start=BinaryExpr(op='%', left=Var(name='i'), right=Literal(value=3, dtype='int')), step=BinaryExpr(op='+', left=BinaryExpr(op='*', left=BinaryExpr(op='%', left=Var(name='j'), right=Literal(value=3, dtype='int')), right=BinaryExpr(op='%', left=Var(name='j'), right=Literal(value=3, dtype='int'))), right=Literal(value=1, dtype='int')), body=(Load(names=('v',), input='x', index=(Var(name='j'),), dtype=None), Accum(name='total', value='v', op=ElementwiseImpl('add'), dtype=None, axes=('j',), base=None)), unroll=False, end=BinaryExpr(op='+', left=BinaryExpr(op='%', left=Var(name='j'), right=Literal(value=3, dtype='int')), right=Literal(value=4, dtype='int')), seed=True), Write(output='sum_1', index=(Var(name='saved_coordinate'),), values=('total',), value_dtype=None, atomic=False, swizzle='NONE'), Load(names=('post',), input='x', index=(Var(name='i'),), dtype=None), Write(output='sum_1', index=(BinaryExpr(op='+', left=Var(name='saved_coordinate'), right=Literal(value=64, dtype='int')),), values=('post',), value_dtype=None, atomic=False, swizzle='NONE')), block_threads=None, aux_threads=0, raster_axes=None, raster_group=None, raster_orient='m')"
+        ],
+        "name": "k_sum_1_reduce",
+        "zero_delegated": [],
+        "serial": []
+      },
+      "inputs": [
+        "x"
+      ],
+      "outputs": [
+        {
+          "name": "sum_1",
+          "shape": [
+            128
+          ],
+          "dtype": "f32"
+        }
+      ]
+    }
+  }
+}
