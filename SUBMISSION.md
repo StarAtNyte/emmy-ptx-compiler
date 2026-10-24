@@ -44,8 +44,7 @@ Approach:
 ## Human fields still required
 
 - Entrant's preferred name and email, and any teammate details.
-- Public repository URL. Proposed name: `StarAtNyte/emmy-ptx-compiler`; it has not
-  been created or published yet.
+- Public repository URL: https://github.com/StarAtNyte/emmy-ptx-compiler (published).
 - A public-link 3–5 minute own-voice video. See `WALKTHROUGH.md`.
 - The entrant's own age, rule and video-understanding confirmations.
 
