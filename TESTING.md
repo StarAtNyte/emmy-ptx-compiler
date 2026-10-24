@@ -57,7 +57,42 @@ stage, with three independent input seeds and depths of one, two and four
 repeated blocks. It is an untrained numerical test. Host transfers are part of
 this integration harness, so it is not a model performance benchmark.
 
-## Frozen-compiler follow-up
+## Seeded lexical-scope differential cases
+
+```sh
+.venv/bin/python tools/fuzz_semantics.py --count 7 --minimal --out artifacts/fuzz-reduced
+.venv/bin/python tools/fuzz_semantics.py --count 28 --out artifacts/fuzz-scopes
+.venv/bin/python tools/validate_isolated.py artifacts/fuzz-reduced/*/ artifacts/fuzz-scopes/*/ --report artifacts/fuzz-local.json
+.venv/bin/python tools/validate.py --problems artifacts/fuzz-scopes --report artifacts/fuzz-hosted.json
+```
+
+The generator constructs typed IR for seven bounded families: branch float/index
+bindings, loop float/axis bindings, captured mutable state, conditional full-warp
+reductions, and conditional named-barrier shared trees. Integer-valued f32 inputs
+give exact independent NumPy formulas, without using the compiler or an Emmy
+renderer as the oracle. Every seed has a renamed counterpart with the same inputs
+and expected output. Cooperative cases use full participating warps and explicit
+barrier counts. Scalar tiles use the IR's `block_threads=None` contract.
+
+`--minimal` reduces family parameters and removes optional arithmetic. It is
+not a general statement minimizer or a proof of the globally smallest failure.
+For fresh seeds, freeze both compiler and generator hashes before generating:
+
+```sh
+.venv/bin/python tools/fuzz_semantics.py --start 1000 --count 14 --out artifacts/fuzz-fresh
+.venv/bin/python tools/validate_isolated.py artifacts/fuzz-fresh/*/ --report artifacts/fuzz-fresh-local.json
+```
+
+An illegal access poisons a CUDA context. `validate_isolated.py` runs each case
+in a new process/context and records hashes, stdout, stderr and exit status.
+Use it when probing unknown IR combinations; failures after the first fault in
+an unisolated process are not independent evidence. Compare a different compiler
+using `--compiler path/to/compiler.py`; failed cases remain on disk.
+
+The new-seed suite stays within this grammar. It does not measure unseen operator
+families, arbitrary IR support or hidden-test success.
+
+## Frozen expression follow-up
 
 ```sh
 .venv/bin/python challenge/tools/generate.py tools/expressions_holdout.py --emmy .venv/bin/emmy --out artifacts/holdout-reproduced

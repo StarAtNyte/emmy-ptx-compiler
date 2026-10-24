@@ -210,3 +210,108 @@ Torch installed and emits byte-identical PTX to the development environment for
 p00, m01 and a01 when invoked from `/tmp`. This checks current standalone
 compilation only; it does not rebuild the stale archive or claim a new hosted
 execution from a packaged release.
+
+## Step 6 — lexical-scope differential probes found real failures
+
+Completed 2026-10-24:
+
+- Added `tools/fuzz_semantics.py`: four typed lexical-binding families, seeded
+  extents/inputs, independent exact NumPy formulas, name-renamed counterparts,
+  and a reduced two-element/no-noise mode. No compiler or Emmy renderer is used
+  for the numerical oracle. This is a bounded grammar, not general IR fuzzing.
+- Installed Emmy 0.3.11's Let/Cond/Loop definitions explicitly scope ordinary
+  bindings to their lexical block and allow nested shadowing. Existing flat
+  compiler value maps leak branch/loop-local names into later code.
+- All eight reduced cases fail with the accepted `a180f7ec...` compiler in
+  separate processes: branch integer bindings can cause illegal memory access;
+  branch/loop float and nested-axis bindings give incorrect values.
+- An initial shared-context run suffered CUDA context poisoning after the first
+  illegal access. Its subsequent failures are NOT independent observations.
+  Added `tools/validate_isolated.py` and reran each case in its own process;
+  `artifacts/fuzz-scopes-before-isolated.json` is the authoritative baseline.
+- Saved baseline source as ignored `artifacts/compiler-before-scope-fix.py`.
+
+Next: implement lexical environment restoration while preserving explicitly
+mutable carried states, then rerun reduced/full probes and prior semantic,
+model, sanitizer and target-performance gates. Production readiness is disproven
+by these concrete cases until the issue is fixed.
+
+## Step 7 — scope restoration works; snapshot aliasing is a second bug
+
+Completed 2026-10-24:
+
+- Intermediate scope-only compiler `094c269a...` passes the eight original reduced
+  probes, all 48 original four-family seeded/renamed cases, and 57 existing local
+  regressions. These are intermediate results, not final acceptance evidence.
+- Cond and Loop now restore private SSA/index bindings. External carried states
+  rebound by reduction primitives are copied to enclosing registers; loop folds
+  remain exported, while shadowed outer axis bindings are restored.
+- Added a fifth family: Let binds a snapshot of an externally mutable accumulator.
+  The scope-only compiler fails both reduced cases because Let(Var(...)) aliases
+  the mutable register instead of copying its value. Source saved separately as
+  `artifacts/compiler-scope-only.py` before changing that behavior.
+- Reran the original accepted compiler on all ten reduced cases, each isolated:
+  0/10 pass (`artifacts/fuzz-scopes-v2-before.json`). Added per-case IR hashes to
+  isolated reports to disambiguate generator revisions.
+- Expanded the grammar with conditional full-warp and named-barrier shared-tree
+  state updates, including observed/dead scratch variants; checks pending.
+
+Next: fix Let snapshot capture, then verify the exact final compiler against the
+expanded grammar, baseline counterexamples, previous suites, sanitizers and target
+paired timing. Do not present intermediate results as testing the final hash.
+
+## Step 8 — final scope/snapshot candidate passes prior gates
+
+Completed 2026-10-24:
+
+- Candidate compiler `7a1a3dfe68ada47c57a2ec49da97a40cf752ec88fe3f35480956ea0638d2f94e`
+  restores lexical environments and emits a value copy for Let(Var(...)).
+- 74/74 prior local regressions pass, plus nine complete transformer runs / 147
+  stages, maximum absolute stage error 4.292e-6.
+- Seven paired RTX 5090 trials each against accepted bounded baseline: m01
+  66.208 → 66.208 µs; a01 90.752 → 90.752; softmax 2.976 → 2.976;
+  r02 21.152 → 21.152. No measured regression on these four workloads.
+- Seven-family grammar now includes conditional warp reductions and named-barrier
+  trees with observable/dead scratch. Small-integer arithmetic gives exact f32
+  oracles; renamed counterparts share inputs and expected results.
+- Corrected generator metadata: scalar Tile.block_threads must be None, not 0.
+  Earlier expanded runs with marker 0 are excluded from acceptance, even though
+  the compiler treated it as false. Corrected corpora are `artifacts/fuzz-proof*`;
+  their isolated baseline/final, hosted and sanitizer checks are in progress.
+- The --minimal mode is family-specific parameter reduction, NOT an arbitrary
+  statement delta-debugger or a claim of globally smallest failures.
+
+Next: complete corrected-corpus gates, freeze compiler for fresh seeds, preserve
+all provenance and update active design/validation documentation before accepting.
+
+## Step 9 — scope and snapshot fixes accepted
+
+Completed 2026-10-24:
+
+- Accepted compiler `7a1a3dfe68ada47c57a2ec49da97a40cf752ec88fe3f35480956ea0638d2f94e`.
+  The previous accepted compiler fails all 14 corrected reduced counterexamples,
+  each in an isolated process; the fixed compiler passes all 14.
+- Final local checks: 74 prior regressions + 14 reduced + 56 seeded/renamed +
+  28 frozen fresh-seed cases = 172 cases. Final hosted checks: 15 public + 56
+  seeded/renamed + 28 fresh = 99. All pass. The counts are correlated suites,
+  not independent random samples or hidden-test success estimates.
+- Complete transformer: nine seed/depth runs, 147 stage checks, maximum absolute
+  error 4.292e-6. All four sanitizer tools clean on 15 cases (14 corrected
+  reduced cases plus m01), including conditional full-warp and named-barrier
+  shared-tree state publication. Three no-Torch standalone compilation checks
+  produce byte-identical PTX from `/tmp`.
+- All four paired target medians preserve the previous accepted performance:
+  m01 66.208 µs, a01 90.752, row softmax 2.976, large sum 21.152. Clocks unlocked.
+- Combined evidence with per-case IR/meta/oracle hashes, generator manifests,
+  baseline failures, compiler freeze, runtime and timing records:
+  `validation/2026-10-24-production-iteration2.json`.
+- Generator marker correction and context-poisoned preliminary runs remain
+  disclosed and excluded. Reduced mode is bounded parameter reduction; no claim
+  of general fuzzing or automatic arbitrary-program minimization.
+- Updated active design, testing and reviewer overview. Rewrote HANDOFF as a
+  concise current snapshot; this file retains the chronological evidence trail.
+
+Next: broaden the grammar to nested shared/buffer scopes and loop-carried-state
+interactions, add systematic shrinking of genuinely new failures, then evaluate
+SSA-aware integer/address CSE against these gates and target timing. Production
+readiness is still unproven. Submission stays deferred; existing ZIP is stale.

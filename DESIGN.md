@@ -31,6 +31,17 @@ to registers. ptxas performs physical register allocation. Index trees lower
 recursively, including arithmetic, comparisons, logical conditions and selection.
 Grouped memory operations currently become individual scalar accesses.
 
+Branches and loop bodies have lexical value environments. Ordinary local
+bindings cannot replace an enclosing name after the block, and a nested loop
+axis may shadow an enclosing axis without destroying its binding. Each branch
+starts from the same enclosing environment. Loop results export their carried
+accumulators; other locals remain private, including between expanded bodies.
+When a reduction primitive rebinds an externally carried state to a fresh
+register, a copy into the enclosing register publishes its runtime update before
+restoring the environment. Nested seeded folds and local declarations stay local.
+A Let bound to a variable captures its current value with a copy; it must not
+alias a register that an accumulator can mutate later.
+
 Loop axis bounds and strides come from IR. A seeded loop initializes the folds
 carried by its axis before the loop. A non-seeding loop updates existing state,
 which matters for matmul's accumulation across shared-memory chunks. Outer-loop
@@ -105,7 +116,9 @@ record a SHA-256 of the compiler used for each run.
 Tile exits use fresh labels, including repeated tiles. Let literals preserve their
 integer/floating type. Ordinary branch-local SSA values do not need phi nodes:
 the IR scopes them to their branch, while mutable accumulators use already-bound
-registers. A conditional-accumulator regression checks this boundary.
+registers. Conditional-accumulator regressions and a seeded seven-family
+lexical-scope corpus check this boundary, including captured values, nested axes,
+conditional full-warp reductions and named-barrier trees with observed scratch.
 
 Remaining priorities include held-out computations, wider dtype/operation
 coverage and additional measured performance work. The supported compute/storage

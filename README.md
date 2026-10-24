@@ -52,10 +52,18 @@ the previous compiler hash and measured scope:
 | Selected semantic audit, four sanitizer tools | 11 cases, no errors/hazards |
 
 The [production optimization iteration](validation/2026-10-24-production-iteration1.json)
-records the current compiler separately: 50 hosted cases, 74 local cases,
+records the earlier bounded-expansion compiler separately: 50 hosted cases, 74 local cases,
 nine complete transformer checks (147 stage outputs), and all four sanitizer
 tools clean on seven selected shared-memory cases. These totals overlap the
 baseline corpus; they must not be added as independent generalization evidence.
+
+The latest [scope-correctness iteration](validation/2026-10-24-production-iteration2.json)
+records 99 hosted cases and 172 local cases, nine complete transformer checks,
+and four sanitizer tools clean on 15 selected cases. A seven-family typed-IR
+generator exposed leaked lexical bindings and aliased captured values; the old
+compiler fails all 14 reduced counterexamples and the current compiler passes.
+Inputs have independent exact numerical oracles and renamed counterparts.
+The grammar is bounded; this is not evidence of arbitrary IR support.
 
 Corpora cover shapes, operation mixes, schedules, finite-value stress inputs,
 alignment layouts, loop tails, actual PyTorch MLP/transformer comparisons and

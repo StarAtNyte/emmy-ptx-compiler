@@ -187,6 +187,46 @@ class Compiler:
                 value = self.instruction('selp.f32', old_right, self.values[name], empty[0], kind='f')
                 self.values[name] = self.instruction('selp.f32', old_left, value, empty[1], kind='f')
 
+    def mutable_states(self, statements):
+        """States assigned across a lexical boundary, excluding nested seeds."""
+        names = set()
+        for stmt in statements:
+            if isinstance(stmt, Accum):
+                names.add(stmt.name)
+            elif isinstance(stmt, (TreeHalve, WarpShuffle)):
+                names.update(stmt.state)
+            elif isinstance(stmt, Cond):
+                names.update(self.mutable_states(stmt.body))
+                names.update(self.mutable_states(stmt.else_body))
+            elif isinstance(stmt, (Loop, StridedLoop)):
+                nested = self.mutable_states(stmt.body)
+                if stmt.seed:
+                    nested.difference_update(self.accumulators(stmt.body, stmt.axis.name))
+                names.update(nested)
+        return names
+
+    def scoped_body(self, statements):
+        """Keep block-local SSA bindings private and external state writable.
+
+        Reduction primitives can rebind a carried name to a fresh register.
+        Copy their final values into the enclosing register before restoring
+        the map, so branches and repeated loop iterations see runtime updates.
+        """
+        values, identities = self.values.copy(), self.identities.copy()
+        declarations = set()
+        for stmt in statements:
+            if isinstance(stmt, Load):
+                declarations.update(stmt.names)
+            elif isinstance(stmt, (Let, Assign, Select, Init)):
+                declarations.add(stmt.name)
+            elif isinstance(stmt, (Loop, StridedLoop)) and stmt.seed:
+                declarations.update(self.accumulators(stmt.body, stmt.axis.name))
+        self.body(statements)
+        for name in sorted(self.mutable_states(statements) - declarations):
+            if name in values and name in self.values and values[name] != self.values[name]:
+                self.emit(f'mov.f32 {values[name]}, {self.values[name]};')
+        self.values, self.identities = values, identities
+
     def statement(self, stmt):
         if isinstance(stmt, Tile):
             if stmt.aux_threads:
@@ -245,10 +285,10 @@ class Compiler:
             other, end = self.label('else'), self.label('endif')
             predicate = self.predicate(stmt.cond)
             self.emit(f'@!{predicate} bra {other};')
-            self.body(stmt.body)
+            self.scoped_body(stmt.body)
             self.emit(f'bra {end};')
             self.emit(other + ':')
-            self.body(stmt.else_body)
+            self.scoped_body(stmt.else_body)
             self.emit(end + ':')
         elif isinstance(stmt, WarpShuffle):
             distance = stmt.length // 2
@@ -282,7 +322,9 @@ class Compiler:
             if stmt.length > 1:
                 self.statement(Sync(barrier_id=stmt.barrier_id,count=stmt.barrier_count))
         elif isinstance(stmt, (Loop, StridedLoop)):
-            folds = self.accumulators(stmt.body, stmt.axis.name) if stmt.seed else {}
+            enclosing_values, enclosing_identities = self.values.copy(), self.identities.copy()
+            carried = self.accumulators(stmt.body, stmt.axis.name)
+            folds = carried if stmt.seed else {}
             for name, fold in folds.items():
                 register = self.reg('f')
                 self.values[name] = register
@@ -316,17 +358,21 @@ class Compiler:
             self.emit(f'@{done} bra {tail};')
             for offset in range(factor):
                 self.values[stmt.axis.name] = axis if offset == 0 else self.instruction('add.s32', axis, offset)
-                self.body(stmt.body)
+                self.scoped_body(stmt.body)
             self.values[stmt.axis.name] = axis
             self.emit(f'add.s32 {axis}, {axis}, {step};')
             self.emit(f'bra {head};')
             self.emit(tail + ':')
             for offset in range(remainder):
                 self.values[stmt.axis.name] = axis if offset == 0 else self.instruction('add.s32', axis, offset)
-                self.body(stmt.body)
+                self.scoped_body(stmt.body)
             if remainder:
                 self.emit(f'add.s32 {axis}, {axis}, {remainder};')
             self.values[stmt.axis.name] = axis
+            results = {name: self.values[name] for name in carried}
+            neutrals = {name: self.identities[name] for name in carried if name in self.identities}
+            self.values = enclosing_values | results
+            self.identities = enclosing_identities | neutrals
         elif isinstance(stmt, Select):
             value = self.values[stmt.branches[-1].value]
             for branch in reversed(stmt.branches[:-1]):
@@ -341,7 +387,14 @@ class Compiler:
                 else:
                     self.values[stmt.name] = self.instruction('mov.f32', self.floating(stmt.value.value), kind='f')
             else:
-                self.values[stmt.name] = self.integer(stmt.value)
+                value = self.integer(stmt.value)
+                if isinstance(stmt.value, Var):
+                    # A pure binding captures the current value. Aliasing the
+                    # source register would observe later accumulator updates.
+                    kind = 'f' if value.startswith('%f') else 'p' if value.startswith('%p') else 'r'
+                    opcode = {'f': 'mov.f32', 'p': 'mov.pred', 'r': 'mov.b32'}[kind]
+                    value = self.instruction(opcode, value, kind=kind)
+                self.values[stmt.name] = value
         elif isinstance(stmt, Accum):
             self.accumulate(stmt)
         elif isinstance(stmt, Load):

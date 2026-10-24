@@ -23,6 +23,8 @@ Approach:
 > existing IR-to-code compiler. It uses the supplied metadata's parameter order
 > and launch contract, and explicitly tracks tile coordinates, loop-owned
 > accumulators, address spaces, shared-memory allocation and virtual registers.
+> Lexical environments preserve shadowed bindings and captured values while
+> explicitly carried reduction states remain writable across control flow.
 >
 > Reduction lowering supports coupled online-softmax state and neutral-state
 > handling for empty lanes. Binary tree order and synchronization are preserved.
@@ -43,6 +45,9 @@ Approach:
 > schedule variations, finite-value stress cases, semantic regressions, actual
 > PyTorch MLP and staged transformer comparisons, and selected memory/race/sync/
 > initialization checks. Records identify the compiler hash and test scope.
+> Seeded typed-IR probes use independent exact numerical formulas, renamed
+> counterparts and per-case process isolation; they exposed and fixed lexical
+> binding leakage and captured-value aliasing.
 > Hidden-test results are unknown. AI coding assistance was used.
 
 ## Human fields still required
