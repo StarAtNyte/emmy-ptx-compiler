@@ -123,3 +123,27 @@ Completed 2026-10-24:
 Next: target paired timing of the expansion sweep, correctness on independent
 shared-loop tails, and cache-conditioned local measurement support. Do not call
 resource inspection a SASS/counter profile or claim hardware efficiency yet.
+
+## Step 3 — target expansion sweep and cache-conditioned diagnostics
+
+Completed 2026-10-24:
+
+- Seven alternating paired RTX 5090 trials each: factors 8/16/32/64 gave m01
+  speedups 1.056x / 1.057x / 1.088x / 1.122x over the existing factor four.
+  Factor 64 measured 74.272 → 66.208 µs. Full outputs checked first trial,
+  checked prefixes thereafter; clocks unlocked. This is candidate evidence,
+  not an accepted compiler change. PTX grew to 187,430 bytes for this case.
+- Added optional local `--evict-l2`: query device L2, zero twice that size and
+  synchronize outside captured events. Label it eviction-conditioned, not a
+  guaranteed cold-cache measurement. Default timing behavior remains available.
+- Verified both modes on r02, atomic m02, large add and large scale (31 timed
+  iterations each, full final output checks). Local r02: warm 34.816 vs
+  eviction-conditioned 66.560 µs. Separate runs, unlocked clocks: diagnostic,
+  not a paired speedup claim. Large bandwidth cases were effectively unchanged.
+- Published resource evidence under `validation/2026-10-24-resources-baseline-*.json`;
+  combined sweep/cache samples in `validation/2026-10-24-production-sweep.json`.
+- Documented commands and measurement limits in `TESTING.md`.
+
+Next: constrain factor 64 by extent/body-size budget, validate the exact candidate
+on independent cases and both GPUs, check sanitizers, then decide whether to
+merge. `compile.py` remains the baseline until these checks establish acceptance.

@@ -140,3 +140,20 @@ These change only the existing shared-leaf-loop expansion factor. Check PTX size
 registers, independent tail cases and model/sanitizer gates before acceptance.
 `compile.py` remains unchanged. Add cache-conditioned local timing afterward;
 keep cache-conditioning operations outside the measured graph events.
+
+## Step 3 checkpoint — 2026-10-24
+
+Sweep completed: factors 8/16/32/64 improve hosted m01 by 5.6/5.7/8.8/12.2%.
+Factor 64 is a promising **unmerged** candidate (187,430-byte PTX for m01).
+Raw and combined evidence is committed under `validation/2026-10-24-production-sweep.json`.
+
+Local benchmark now accepts `--evict-l2`; allocation/memset/synchronization stays
+outside captured event interval. Four workloads, including atomic m02, pass full
+output checks in both modes. r02's cache sensitivity is diagnostic only; reports
+are not paired and clocks are unlocked. See TESTING for interpretation.
+
+**Immediate next:** bound expansion by extent and a body-size budget, run exact
+candidate against public and independent tail/schedule/model cases, sanitize
+changed shared-loop behavior and recheck target timings. Only then merge if green.
+A factor-16 exploratory local suite may still have a running process; it is not
+acceptance for the exact new candidate. Production compiler still `6fb720f...`.

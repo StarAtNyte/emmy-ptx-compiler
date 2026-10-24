@@ -73,6 +73,32 @@ compiler hash are recorded in `validation/2026-10-24-holdout.json`.
 
 ## Performance
 
+Compile-only resource inspection (no kernel execution):
+
+```sh
+.venv/bin/python tools/profile_resources.py challenge/problems/*/ --report artifacts/resources-local.json
+.venv/bin/python tools/profile_resources.py challenge/problems/*/ --hosted --report artifacts/resources-hosted.json
+```
+
+The local report queries actual JIT function registers, local-memory bytes,
+shared memory and resource-limited occupancy. Occupancy is a theoretical ceiling,
+not measured utilization. Hosted mode exposes register counts only; it cannot
+establish hosted spill bytes, occupancy or instruction bottlenecks. Static PTX
+instruction counts are not dynamic instruction counts or SASS.
+
+Compare local cache conditions explicitly:
+
+```sh
+.venv/bin/python tools/benchmark.py artifacts/bandwidth/* --report artifacts/cache-warm.json
+.venv/bin/python tools/benchmark.py artifacts/bandwidth/* --evict-l2 --report artifacts/cache-evict.json
+```
+
+`--evict-l2` zeros twice the queried device L2 size before each graph replay and
+synchronizes before timing. This work and atomic-output resets remain outside
+the captured events. It is eviction conditioning, not proof of a fully cold L2.
+Both modes check full final outputs after timing. The hosted API does not expose
+cache conditioning or clock locking; do not label its timings cold-cache.
+
 ```sh
 mkdir -p artifacts
 git show 4a8c225:compile.py > artifacts/compiler-before-fma.py

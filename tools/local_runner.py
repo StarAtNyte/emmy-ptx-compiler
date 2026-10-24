@@ -76,7 +76,7 @@ class Driver:
     def close(self):
         self.call('cuCtxDestroy_v2', self.context)
 
-    def run(self, ptx, kernel, inputs, timed_iters=0):
+    def run(self, ptx, kernel, inputs, timed_iters=0, eviction_bytes=0):
         module = ct.c_void_p()
         allocations = []
         events = []
@@ -114,6 +114,11 @@ class Driver:
                       kernel['smem_bytes'], None, addresses, None)
             self.call('cuCtxSynchronize')
             if timed_iters:
+                eviction = None
+                if eviction_bytes:
+                    eviction = ct.c_uint64()
+                    self.call('cuMemAlloc_v2', ct.byref(eviction), eviction_bytes)
+                    allocations.append(eviction)
                 for _ in range(2):
                     event = ct.c_void_p()
                     self.call('cuEventCreate', ct.byref(event), 0)
@@ -132,7 +137,11 @@ class Driver:
                     for name in kernel['zero_outputs']:
                         array, pointer = arrays[name]
                         self.call('cuMemsetD8_v2', pointer, 0, array.nbytes)
-                    if kernel['zero_outputs']:
+                    if eviction is not None:
+                        # Eviction conditioning, not a guaranteed cold-cache
+                        # state. Keep it outside captured timing events.
+                        self.call('cuMemsetD8_v2', eviction, 0, eviction_bytes)
+                    if kernel['zero_outputs'] or eviction is not None:
                         # The graph stream is nonblocking and does not inherit
                         # legacy default-stream ordering from these memsets.
                         self.call('cuCtxSynchronize')
