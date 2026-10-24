@@ -16141,5 +16141,377 @@
     "validation/cpu-fixtures/2026-10-24-power2-int32-extremes/k_sum_1_reduce.ir.json": "1cac0ffaac5a1019f968788a10eb98b4ce0aaabd0262a092c3015eeaf0a5a17e",
     "validation/cpu-fixtures/2026-10-24-power2-int32-extremes/meta.json": "67fe1ce7c696e9c1b913755e86a3adbab423d93a7f4bf7c7d3728442cfaae3b9",
     "validation/cpu-fixtures/2026-10-24-power2-int32-extremes/expected.npz": "de111f24317a98f68e43a80dfed4772e948e1fc7f71443158b602190ddd38444"
+  },
+  "hosted_cpu_ci": {
+    "run": {
+      "conclusion": "success",
+      "headSha": "074d4f9812e0d70b852a897b023eff509cbcbecf",
+      "jobs": [
+        {
+          "completedAt": "2026-10-24T12:07:17Z",
+          "conclusion": "success",
+          "databaseId": 120868114621,
+          "name": "compiler-contract (3.12)",
+          "startedAt": "2026-10-24T12:06:39Z",
+          "status": "completed",
+          "steps": [
+            {
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "number": 2,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+              "number": 3,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Install pinned CPU runtime",
+              "number": 4,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Check isolated CLI and committed PTX snapshots without Torch",
+              "number": 5,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Retain contract evidence",
+              "number": 6,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Post Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+              "number": 11,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "number": 12,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 13,
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/StarAtNyte/emmy-ptx-compiler/actions/runs/40092577026/job/120868114621"
+        },
+        {
+          "completedAt": "2026-10-24T12:07:16Z",
+          "conclusion": "success",
+          "databaseId": 120868114747,
+          "name": "compiler-contract (3.13)",
+          "startedAt": "2026-10-24T12:06:39Z",
+          "status": "completed",
+          "steps": [
+            {
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "number": 2,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+              "number": 3,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Install pinned CPU runtime",
+              "number": 4,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Check isolated CLI and committed PTX snapshots without Torch",
+              "number": 5,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Retain contract evidence",
+              "number": 6,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Post Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+              "number": 11,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "number": 12,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 13,
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/StarAtNyte/emmy-ptx-compiler/actions/runs/40092577026/job/120868114747"
+        },
+        {
+          "completedAt": "2026-10-24T12:07:23Z",
+          "conclusion": "success",
+          "databaseId": 120868114848,
+          "name": "compiler-contract (3.14)",
+          "startedAt": "2026-10-24T12:06:39Z",
+          "status": "completed",
+          "steps": [
+            {
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "number": 2,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+              "number": 3,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Install pinned CPU runtime",
+              "number": 4,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Check isolated CLI and committed PTX snapshots without Torch",
+              "number": 5,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Retain contract evidence",
+              "number": 6,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Post Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+              "number": 11,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "number": 12,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 13,
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/StarAtNyte/emmy-ptx-compiler/actions/runs/40092577026/job/120868114848"
+        }
+      ],
+      "status": "completed",
+      "url": "https://github.com/StarAtNyte/emmy-ptx-compiler/actions/runs/40092577026"
+    },
+    "reports": {
+      "cpu-contract-python-3.12": {
+        "compiler_sha256": "04b50e69438a15973a590a881562b78dc41f3fd23c0f870352e63ab334019979",
+        "manifest_sha256": "873a5408271efc7c14cde69106e9d937fd7791001999e15f7bdce4500e95e1c6",
+        "python": "3.12.15 (main, Oct  1 2026, 02:35:59) [GCC 13.3.0]",
+        "torch_present": false,
+        "packages": {
+          "emmy-ml": "0.3.11",
+          "numpy": "2.5.4"
+        },
+        "scope": "CPU CLI/code-generation contract, not GPU execution",
+        "results": [
+          {
+            "case": "2026-10-24-scope-shrunk",
+            "passed": true,
+            "ptx_sha256": "808b7dd2be9067300a0d7d6a873675ea26a09ecdc4288202dc07b74a22b759c3",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-strided-shrunk",
+            "passed": true,
+            "ptx_sha256": "d978ffa0ed5c3a837c6d36ce061dedd966ad8ba03ef64fb20c1000d4eb504a68",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-power2-int32-extremes",
+            "passed": true,
+            "ptx_sha256": "1bfd5c4f54e3ceff6a220c2b70ebbb8994b77a070908ac2dffa44501218fe5eb",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "tensor_f16",
+            "passed": true,
+            "stderr": "compile.py: Kernel k_sum_1_reduce, tensor x: unsupported tensor dtype f16\n"
+          },
+          {
+            "case": "write_f16",
+            "passed": true,
+            "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write dtype f16\n"
+          },
+          {
+            "case": "write_swizzle",
+            "passed": true,
+            "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write swizzle B32\n"
+          }
+        ]
+      },
+      "cpu-contract-python-3.13": {
+        "compiler_sha256": "04b50e69438a15973a590a881562b78dc41f3fd23c0f870352e63ab334019979",
+        "manifest_sha256": "873a5408271efc7c14cde69106e9d937fd7791001999e15f7bdce4500e95e1c6",
+        "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+        "torch_present": false,
+        "packages": {
+          "emmy-ml": "0.3.11",
+          "numpy": "2.5.4"
+        },
+        "scope": "CPU CLI/code-generation contract, not GPU execution",
+        "results": [
+          {
+            "case": "2026-10-24-scope-shrunk",
+            "passed": true,
+            "ptx_sha256": "808b7dd2be9067300a0d7d6a873675ea26a09ecdc4288202dc07b74a22b759c3",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-strided-shrunk",
+            "passed": true,
+            "ptx_sha256": "d978ffa0ed5c3a837c6d36ce061dedd966ad8ba03ef64fb20c1000d4eb504a68",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-power2-int32-extremes",
+            "passed": true,
+            "ptx_sha256": "1bfd5c4f54e3ceff6a220c2b70ebbb8994b77a070908ac2dffa44501218fe5eb",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "tensor_f16",
+            "passed": true,
+            "stderr": "compile.py: Kernel k_sum_1_reduce, tensor x: unsupported tensor dtype f16\n"
+          },
+          {
+            "case": "write_f16",
+            "passed": true,
+            "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write dtype f16\n"
+          },
+          {
+            "case": "write_swizzle",
+            "passed": true,
+            "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write swizzle B32\n"
+          }
+        ]
+      },
+      "cpu-contract-python-3.14": {
+        "compiler_sha256": "04b50e69438a15973a590a881562b78dc41f3fd23c0f870352e63ab334019979",
+        "manifest_sha256": "873a5408271efc7c14cde69106e9d937fd7791001999e15f7bdce4500e95e1c6",
+        "python": "3.14.8 (main, Oct  1 2026, 02:38:33) [GCC 13.3.0]",
+        "torch_present": false,
+        "packages": {
+          "emmy-ml": "0.3.11",
+          "numpy": "2.5.4"
+        },
+        "scope": "CPU CLI/code-generation contract, not GPU execution",
+        "results": [
+          {
+            "case": "2026-10-24-scope-shrunk",
+            "passed": true,
+            "ptx_sha256": "808b7dd2be9067300a0d7d6a873675ea26a09ecdc4288202dc07b74a22b759c3",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-strided-shrunk",
+            "passed": true,
+            "ptx_sha256": "d978ffa0ed5c3a837c6d36ce061dedd966ad8ba03ef64fb20c1000d4eb504a68",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-power2-int32-extremes",
+            "passed": true,
+            "ptx_sha256": "1bfd5c4f54e3ceff6a220c2b70ebbb8994b77a070908ac2dffa44501218fe5eb",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "tensor_f16",
+            "passed": true,
+            "stderr": "compile.py: Kernel k_sum_1_reduce, tensor x: unsupported tensor dtype f16\n"
+          },
+          {
+            "case": "write_f16",
+            "passed": true,
+            "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write dtype f16\n"
+          },
+          {
+            "case": "write_swizzle",
+            "passed": true,
+            "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write swizzle B32\n"
+          }
+        ]
+      }
+    }
   }
 }

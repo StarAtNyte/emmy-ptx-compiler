@@ -195,7 +195,7 @@ Commit source changes before packaging:
 
 ```sh
 uv venv --python 3.12 artifacts/submission-runtime
-uv pip install --python artifacts/submission-runtime/bin/python -r requirements.txt
+uv pip install --python artifacts/submission-runtime/bin/python -r requirements.txt -c requirements-ci.lock
 .venv/bin/python tools/package_submission.py --python artifacts/submission-runtime/bin/python
 ```
 

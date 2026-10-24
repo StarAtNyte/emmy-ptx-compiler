@@ -10,7 +10,7 @@ Python 3.12 or newer is required. Compilation needs neither Torch nor a GPU.
 
 ```sh
 uv venv --python 3.12 .venv
-uv pip install --python .venv/bin/python -r requirements.txt
+uv pip install --python .venv/bin/python -r requirements.txt -c requirements-ci.lock
 .venv/bin/python compile.py path/to/kernel.ir.json > out.ptx
 ```
 

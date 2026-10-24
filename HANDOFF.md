@@ -107,18 +107,17 @@ partial safety sweep stopped after rejection, patch/evidence preserved.
 CPU Actions run on push/PR/manual/nightly across Python 3.12–3.14. First matrix
 40089837329 passed all five checks without Torch; evidence in cpu-ci.json.
 Current manifest adds a third GPU-verified INT32-boundary fixture under
-validation/cpu-fixtures; all six checks pass locally without Torch. Existing two
-PTX goldens are unchanged. New accepted implementation/manifest must now be pushed
-and actual Actions matrix verified. One push run is not sustained CI history.
+validation/cpu-fixtures. Existing two goldens unchanged. Accepted source published
+as 074d4f9; Actions run 40092577026 passed six checks on all three Python versions.
+Downloaded reports confirm compiler 04b50e69 and no Torch; saved in iteration7.
+One push run is not sustained CI history.
 
 ## Next concrete action / open scope
 
-1. Finish publishing accepted signed-power-of-two implementation/evidence and
-   verify the six-check Actions matrix for that commit.
-2. Refresh/test the stale release archive from the accepted compiler in a fresh
+1. Refresh/test the stale release archive from the accepted compiler in a fresh
    no-Torch environment. Packaging is not competition submission; keep submission
    deferred. Existing artifacts/emmy-ptx-submission.zip is several iterations stale.
-3. Broaden index/control-flow type validation and dtype/operation support; continue
+2. Broaden index/control-flow type validation and dtype/operation support; continue
    target-appropriate profiling and measured optimization. General shrinking,
    hardware roofline/counters, dynamic shapes and sustained CI remain open.
 

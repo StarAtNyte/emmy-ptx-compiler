@@ -847,3 +847,17 @@ Completed 2026-10-24:
 
 Next: publish and verify actual six-check CI matrix, then refresh/test stale
 release archive without submitting. Broader production gaps remain open.
+
+## Step 31 — accepted implementation published; six-check CPU matrix verified
+
+Completed 2026-10-24:
+
+- Published signed-index acceptance source/evidence and third CPU fixture as
+  074d4f9. GitHub Actions run 40092577026 passed all six checks on Python
+  3.12/3.13/3.14. Downloaded artifacts confirm exact compiler 04b50e69, no Torch,
+  and all fixture/diagnostic checks pass. Hosted reports now join iteration7.
+- Updated default runtime installation commands to consume the tested version
+  constraints in requirements-ci.lock, matching the verified CI install path.
+
+Next: refresh stale archive from this committed checkpoint and run extracted
+no-Torch hosted smoke checks. Packaging does not authorize contest submission.
