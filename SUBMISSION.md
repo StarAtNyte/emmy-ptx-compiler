@@ -39,7 +39,12 @@ Approach:
 > with scalar tails. FMA measured about 1.32x for one attention kernel. Shared
 > expansion improved one matmul step by 1.33x, then a further 1.12x in later
 > paired trials; these are separate measurements, not a combined benchmark.
-> Broader unrolling and an explicit vector pass were rejected after measurement.
+> Aligned shared-read pairing adds a measured 1.03x public matmul gain. Exact
+> signed power-of-two index shifts/masks then measure 2.57x on that matmul and
+> 2.18x/2.09x on two independent shapes. These remain separate paired observations.
+> A broader unsigned tile rewrite regressed attention and was rejected; the
+> accepted signed refinement preserves its latency. Broader unrolling and an
+> explicit global-vector pass were also rejected after measurement.
 >
 > Validation includes all public categories, independent shape/operation and
 > schedule variations, finite-value stress cases, semantic regressions, actual

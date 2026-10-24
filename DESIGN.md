@@ -173,3 +173,10 @@ the captured end binding are also resolved there. Independent immutable steps
 retain their existing lowering. Range proofs for axis-dependent bounds/steps
 remain conservative rather than treating their initial values as whole-loop
 bounds. Exiting the loop restores enclosing bindings and exports carried states.
+
+For a proven singleton positive power-of-two divisor, signed floor division lowers
+to arithmetic right shift and remainder to a mask. This is exact for negative
+numerators as well. Boundary fixtures observe both sign and low bits near INT_MIN
+and INT_MAX, excluding division overflow. The corresponding unsigned Tile rewrite
+was not adopted: it regressed one target attention workload despite fewer native
+instructions. Current tile-coordinate lowering retains its prior behavior.

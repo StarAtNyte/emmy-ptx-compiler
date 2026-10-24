@@ -395,3 +395,28 @@ For the rejected address-CSE candidate, vector add, attention and large sum have
 identical disassembly despite reduced PTX in both sm86/sm120 local-driver outputs.
 Matmul code changes without a measured target win. These observations motivate
 examining native code before selecting further PTX-size optimizations.
+
+## Accepted signed power-of-two index lowering
+
+The exact signed-only refinement is recorded in production-iteration7.json.
+Historical `power2-index-signed.patch` reconstructs it from compiler at 1ad0dbf.
+The broader unsigned+signed patch remains an unaccepted performance control.
+
+```sh
+.venv/bin/python tools/generate_signed_index_cases.py --seed 5731 --divisor 32 --out artifacts/power2-proof-d32
+.venv/bin/python tools/generate_signed_index_cases.py --seed 9079 --divisor 32 --extremes --out artifacts/power2-extremes-d32
+```
+
+Repeat divisors 1/2/8/32 to recreate 48 normal and 42 boundary fixtures. Boundary
+oracles observe quotient sign and low bits, so logical shifts cannot silently pass
+a modulo-only oracle. INT_MIN/-1 is excluded as unsupported division overflow.
+No compiler computes the NumPy reference. The new committed CPU fixture under
+validation/cpu-fixtures preserves the independently verified signed-boundary case;
+CPU CI now has three PTX fixtures and three negative probes (six checks).
+
+Final seven-pair measurements cover all 15 public kernels and four independent
+matmuls. Full outputs are checked on the first trial, prefixes subsequently;
+clocks are unlocked. The accepted variant improves three matmuls; other 16 gaps
+are at most 0.032 µs and treated as noise. The original unsigned rewrite's 7.6%
+attention128 regression and its rejected identity-control follow-up are retained
+in discovery/refinement evidence, not hidden by the accepted results.

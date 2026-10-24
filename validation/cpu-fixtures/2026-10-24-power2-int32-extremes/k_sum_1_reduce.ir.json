@@ -1,0 +1,47 @@
+{
+  "inputs": [
+    "x"
+  ],
+  "outputs": [
+    "sum_1"
+  ],
+  "nodes": {
+    "x": {
+      "op": "InputOp",
+      "op_fields": {},
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "x",
+          "shape": [
+            128
+          ],
+          "dtype": "f32"
+        }
+      ]
+    },
+    "sum_1": {
+      "op": "KernelOp",
+      "op_fields": {
+        "body": [
+          "Tile(axes=(Axis(name='i', extent=Dim(64), window=None),), body=(Load(names=('v',), input='x', index=(BinaryExpr(op='+', left=TernaryExpr(cond=BinaryExpr(op='<', left=BinaryExpr(op='//', left=TernaryExpr(cond=BinaryExpr(op='<', left=Var(name='i'), right=Literal(value=32, dtype='int')), if_true=BinaryExpr(op='+', left=Literal(value=-2147483648, dtype='int'), right=Var(name='i')), if_false=BinaryExpr(op='+', left=Literal(value=2147483584, dtype='int'), right=Var(name='i'))), right=Literal(value=32, dtype='int')), right=Literal(value=0, dtype='int')), if_true=Literal(value=0, dtype='int'), if_false=Literal(value=64, dtype='int')), right=BinaryExpr(op='%', left=BinaryExpr(op='//', left=TernaryExpr(cond=BinaryExpr(op='<', left=Var(name='i'), right=Literal(value=32, dtype='int')), if_true=BinaryExpr(op='+', left=Literal(value=-2147483648, dtype='int'), right=Var(name='i')), if_false=BinaryExpr(op='+', left=Literal(value=2147483584, dtype='int'), right=Var(name='i'))), right=Literal(value=32, dtype='int')), right=Literal(value=64, dtype='int'))),), dtype=None), Write(output='sum_1', index=(Var(name='i'),), values=('v',), value_dtype=None, atomic=False, swizzle='NONE')), block_threads=None, aux_threads=0, raster_axes=None, raster_group=None, raster_orient='m')"
+        ],
+        "name": "k_sum_1_reduce",
+        "zero_delegated": [],
+        "serial": []
+      },
+      "inputs": [
+        "x"
+      ],
+      "outputs": [
+        {
+          "name": "sum_1",
+          "shape": [
+            64
+          ],
+          "dtype": "f32"
+        }
+      ]
+    }
+  }
+}

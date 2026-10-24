@@ -793,3 +793,57 @@ and independent matmul 4/4; nine transformer checks; three no-Torch /tmp compila
 checks all pass for frozen 8da911f2. These completed reports now join discovery
 record. Full prior regression, hosted proof suites and sanitizer gates remain live;
 no acceptance. Profiling/experiment checkpoint published as 0d2d442.
+
+## Step 29 — full correctness gates pass; unsigned tile rewrite regresses attention
+
+Completed original-candidate checks, 2026-10-24:
+
+- Original 8da911f2 passes all 366 prior isolated cases, 48 frozen divisor probes,
+  42 added INT_MIN/INT_MAX probes, two committed CPU fixtures, 67 hosted checks,
+  nine transformer runs, three no-Torch runtime checks and four sanitizers on 45
+  selected cases. Extreme oracle observes sign and low bits; excludes INT_MIN/-1.
+- Seven-pair repeat across all 15 public and four independent matmuls confirms
+  m01 64.160 → 23.232 and second shared matmul 31.392 → 15.008, but a02 attention
+  regresses consistently 53.920 → 58.016 (7.6%). Hold original candidate, not adopted.
+- Signed-only control keeps a02 at baseline and m01 64.160 → 24.896 (2.577x).
+  Eliminating unsigned divisor-one identities does NOT heal a02 (58.016), so that
+  alternate control is also not adopted. Local-driver a02 resources remain REG56,
+  LOCAL0; fewer native instructions alone do not explain execution latency.
+- Freeze signed-only refinement 04b50e69438a15973a590a881562b78dc41f3fd23c0f870352e63ab334019979.
+  Preserved experiments/power2-index-signed.patch and control reports in
+  validation/2026-10-24-power2-refinement.json. Main still accepted bb3a72b2.
+
+New exact-refinement gates live: 65578 all-19 target timing; 32213 prior 366 isolated
+regressions; 83434 90 signed/extreme + 2 committed-fixture local checks; 54301
+transformer; 91765 hosted proof/extreme/committed; 80476 sanitizers; 46395 no-Torch
+runtime; 94789 rejection probes. Current reports use power2-signed-*.
+Next: finish those exact-hash gates, then acceptance decision and reviewed CPU
+snapshot update. Do not substitute original-candidate gates for refinement hashes.
+
+## Step 30 — signed power-of-two lowering accepted without attention regression
+
+Completed 2026-10-24:
+
+- Accepted frozen refinement 04b50e69438a15973a590a881562b78dc41f3fd23c0f870352e63ab334019979.
+  Exact signed floor/remainder strength reduction applies to positive singleton
+  power-of-two divisors. Unsigned Tile rewrite remains rejected/archived.
+- Exact-refinement gates: 366 prior isolated local cases + 90 signed/extreme
+  probes + two committed fixtures pass (458 executions); 92 hosted direct cases
+  plus 19 fully checked first timing trials (111 cases). Nine transformer runs,
+  three no-Torch runtime checks, eight CLI rejections pass. Four sanitizers clean
+  on 45 selected cases. These correlated cases are not hidden-set estimates.
+- Final seven target pairs: public m01 64.160 → 24.928 µs (2.574x); independent
+  256×512×384 37.760 → 17.344 (2.177x); 384×256×320 31.392 → 15.008 (2.092x).
+  Other 16 workloads differ at most 0.032 µs, treated as noise. Full outputs first
+  trial/prefixes later; clocks unlocked. Prior signed-only m01 24.896 corroborates.
+- Local-driver sm120 m01 static entry 26960 → 1546 instructions, REG48 → 40;
+  attention128 disassembly matches baseline. No hosted SASS/utilization claim.
+- Combined acceptance/fixture/oracle hashes: production-iteration7.json. Broader
+  unsigned+signed attention regression 53.920 → 58.016 remains disclosed in its
+  discovery/refinement records. No kernel-name tuning selects the accepted pass.
+- Added a GPU-verified INT32-extreme fixture to CPU CI manifest. Existing two
+  goldens unchanged; new six-check no-Torch CPU contract passes locally. Updated
+  README/DESIGN/TESTING and rewrote HANDOFF as the current snapshot.
+
+Next: publish and verify actual six-check CI matrix, then refresh/test stale
+release archive without submitting. Broader production gaps remain open.

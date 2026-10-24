@@ -1,0 +1,232 @@
+{
+  "status": "original unsigned+signed candidate held for attention128 regression; exact signed-only refinement gates live",
+  "original_candidate_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+  "signed_candidate_sha256": "04b50e69438a15973a590a881562b78dc41f3fd23c0f870352e63ab334019979",
+  "controls": {
+    "power2-signed-only-benchmark": {
+      "clock_locked": false,
+      "warmup": 8,
+      "iters": 75,
+      "compilers": {
+        "baseline": "bb3a72b276f87396b15e9e8e5d0d984b9f1eb86330c43cb6189d6856b85f22fb",
+        "candidate": "04b50e69438a15973a590a881562b78dc41f3fd23c0f870352e63ab334019979"
+      },
+      "timing_return_limit": 64,
+      "results": [
+        {
+          "problem": "a02_attention_128",
+          "samples_us": {
+            "baseline": [
+              53.92,
+              53.92,
+              53.92,
+              53.888,
+              53.888,
+              53.888,
+              53.888
+            ],
+            "candidate": [
+              53.92,
+              53.888,
+              53.888,
+              53.92,
+              53.888,
+              53.888,
+              53.92
+            ]
+          },
+          "baseline_median_us": 53.888,
+          "candidate_median_us": 53.888,
+          "speedup": 1.0,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_softmax_reduce_6f0029": {
+                "k_matmul_softmax_reduce_6f0029": 56
+              }
+            },
+            "candidate": {
+              "k_matmul_softmax_reduce_6f0029": {
+                "k_matmul_softmax_reduce_6f0029": 56
+              }
+            }
+          }
+        },
+        {
+          "problem": "m01_matmul_512",
+          "samples_us": {
+            "baseline": [
+              64.16,
+              64.16,
+              64.16,
+              64.16,
+              64.16,
+              64.128,
+              64.16
+            ],
+            "candidate": [
+              24.96,
+              23.264,
+              23.232,
+              23.232,
+              25.056,
+              25.152,
+              24.896
+            ]
+          },
+          "baseline_median_us": 64.16,
+          "candidate_median_us": 24.896,
+          "speedup": 2.5771208226221076,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_2967be": {
+                "k_matmul_2967be": 48
+              }
+            },
+            "candidate": {
+              "k_matmul_2967be": {
+                "k_matmul_2967be": 40
+              }
+            }
+          }
+        }
+      ]
+    },
+    "power2-identities-benchmark": {
+      "clock_locked": false,
+      "warmup": 8,
+      "iters": 75,
+      "compilers": {
+        "baseline": "bb3a72b276f87396b15e9e8e5d0d984b9f1eb86330c43cb6189d6856b85f22fb",
+        "candidate": "703284320392b9a2d98ff5dae01f16b2fed18a53149107d339d195c6a831823b"
+      },
+      "timing_return_limit": 64,
+      "results": [
+        {
+          "problem": "a02_attention_128",
+          "samples_us": {
+            "baseline": [
+              53.888,
+              53.92,
+              53.888,
+              53.92,
+              53.92,
+              53.888,
+              53.92
+            ],
+            "candidate": [
+              58.016,
+              57.984,
+              58.016,
+              58.016,
+              58.016,
+              57.984,
+              58.016
+            ]
+          },
+          "baseline_median_us": 53.92,
+          "candidate_median_us": 58.016,
+          "speedup": 0.9293987865416438,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_softmax_reduce_6f0029": {
+                "k_matmul_softmax_reduce_6f0029": 56
+              }
+            },
+            "candidate": {
+              "k_matmul_softmax_reduce_6f0029": {
+                "k_matmul_softmax_reduce_6f0029": 56
+              }
+            }
+          }
+        },
+        {
+          "problem": "m01_matmul_512",
+          "samples_us": {
+            "baseline": [
+              64.128,
+              64.16,
+              64.192,
+              64.192,
+              64.16,
+              64.16,
+              64.192
+            ],
+            "candidate": [
+              23.2,
+              23.84,
+              23.776,
+              23.232,
+              23.936,
+              23.456,
+              23.2
+            ]
+          },
+          "baseline_median_us": 64.16,
+          "candidate_median_us": 23.456,
+          "speedup": 2.7353342428376535,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_2967be": {
+                "k_matmul_2967be": 48
+              }
+            },
+            "candidate": {
+              "k_matmul_2967be": {
+                "k_matmul_2967be": 40
+              }
+            }
+          }
+        },
+        {
+          "problem": "m_shared_384_256_320",
+          "samples_us": {
+            "baseline": [
+              31.392,
+              31.36,
+              31.392,
+              31.392,
+              31.36,
+              31.392,
+              31.392
+            ],
+            "candidate": [
+              15.008,
+              15.008,
+              14.976,
+              15.008,
+              15.008,
+              15.008,
+              15.008
+            ]
+          },
+          "baseline_median_us": 31.392,
+          "candidate_median_us": 15.008,
+          "speedup": 2.091684434968017,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_1b049d": {
+                "k_matmul_1b049d": 40
+              }
+            },
+            "candidate": {
+              "k_matmul_1b049d": {
+                "k_matmul_1b049d": 40
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "scope": "mathematical signed floor strength reduction retained; unsigned tile-coordinate rewrite omitted for measured target regression"
+}

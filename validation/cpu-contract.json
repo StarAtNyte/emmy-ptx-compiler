@@ -1,6 +1,6 @@
 {
-  "baseline_compiler_sha256": "bb3a72b276f87396b15e9e8e5d0d984b9f1eb86330c43cb6189d6856b85f22fb",
-  "snapshot_provenance": "GPU-checked fixtures from 2026-10-24-statement-shrinking.json, accepted compiler 1ad0dbf",
+  "baseline_compiler_sha256": "04b50e69438a15973a590a881562b78dc41f3fd23c0f870352e63ab334019979",
+  "snapshot_provenance": "GPU-verified fixtures in production-iteration7, independent oracle preserved; signed INT32 extrema added",
   "fixtures": [
     {
       "folder": "validation/counterexamples/2026-10-24-scope-shrunk",
@@ -21,6 +21,16 @@
         "expected.npz": "d58965aea44df0e483c79cd4563d3066650ab180fc314d5b19dced246ad4f2e1"
       },
       "ptx_sha256": "d978ffa0ed5c3a837c6d36ce061dedd966ad8ba03ef64fb20c1000d4eb504a68"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-24-power2-int32-extremes",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "k_sum_1_reduce.ir.json": "1cac0ffaac5a1019f968788a10eb98b4ce0aaabd0262a092c3015eeaf0a5a17e",
+        "meta.json": "67fe1ce7c696e9c1b913755e86a3adbab423d93a7f4bf7c7d3728442cfaae3b9",
+        "expected.npz": "de111f24317a98f68e43a80dfed4772e948e1fc7f71443158b602190ddd38444"
+      },
+      "ptx_sha256": "1bfd5c4f54e3ceff6a220c2b70ebbb8994b77a070908ac2dffa44501218fe5eb"
     }
   ]
 }

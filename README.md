@@ -35,7 +35,9 @@ extra allocation. This also handles repeated lanes and named-barrier groups.
 Targeted FMA contraction applies to adjacent multiply/add reduction steps.
 Bounded scalar loops reading shared memory expand by up to 64 iterations, capped
 by extent and body size, with ordered scalar tails.
-Both optimizations use typed IR properties, without problem-name recognition.
+Aligned shared reads can pair into vector loads. Positive power-of-two signed
+index divisors use exact arithmetic shifts/masks, including negative numerators.
+These optimizations use typed IR properties, without problem-name recognition.
 [DESIGN.md](DESIGN.md) explains the lowering and its tradeoffs.
 
 ## Validation
@@ -96,6 +98,13 @@ additional valid cases on both GPUs without compiler changes. It records two
 upstream tracing failures and a corrected callable-boundary fixture, including
 the initial results.
 
+The [latest signed-index iteration](validation/2026-10-24-production-iteration7.json)
+records 458 local fixture executions, 111 hosted cases (including full-output
+first timing trials), nine transformer runs, and four sanitizers on 45 selected
+cases. These are correlated development checks. An unsigned tile-coordinate
+rewrite was rejected after a repeatable attention regression; the accepted signed
+refinement preserves that workload while improving three measured matmuls.
+
 ## Measured performance
 
 Alternating paired RTX 5090 trials checked both compilers' outputs. Clocks were
@@ -108,6 +117,9 @@ not locked; these are observations on named kernels, not universal speedups.
 | Larger bounded shared expansion | Public m01 matmul | 74.304 → 66.176 µs | 1.123× |
 | Aligned shared-read pairing | Public m01 matmul | 66.176 → 64.160 µs | 1.031× |
 | Aligned shared-read pairing | Independent 384×256×320 matmul | 35.488 → 31.392 µs | 1.130× |
+| Signed power-of-two index lowering | Public m01 matmul | 64.160 → 24.928 µs | 2.574× |
+| Signed power-of-two index lowering | Independent 256×512×384 matmul | 37.760 → 17.344 µs | 2.177× |
+| Signed power-of-two index lowering | Independent 384×256×320 matmul | 31.392 → 15.008 µs | 2.092× |
 
 The semantic audit retained those performance levels. Raw samples are preserved
 in the validation records. Explicit vector accesses were timing-neutral, and

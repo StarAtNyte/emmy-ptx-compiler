@@ -58,6 +58,11 @@ Show the paired timing records. FMA improved an attention kernel from about
 99 to 74 microseconds; later bounded expansion brought it to about 66.
 A broader unroll pass slowed attention, and explicit
 vector memory instructions were timing-neutral, so those versions were rejected.
+Aligned shared-read pairing reaches about 64 microseconds. Local native-code
+inspection then motivates exact signed power-of-two index lowering: public matmul
+64.160 → 24.928 microseconds, with 2.18x/2.09x on two independent shapes. A broader
+unsigned rewrite regressed attention; the accepted signed refinement avoids that
+regression. Native inspection is local-driver output, not hosted SASS or counters.
 Clocks were not locked; these are measured cases rather than universal speedups.
 
 ## 3:00–4:00 — Validation and limits
