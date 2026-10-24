@@ -246,3 +246,23 @@ pairing in this set; the other three are controls, not positive vector coverage.
 Use `--compiler` on sanitizer and transformer tools as well. Run fresh frozen-seed
 fixtures and paired hosted timings before adopting; these commands alone do not
 establish acceptance or production readiness.
+
+## Unsupported-feature diagnostics
+
+After generating `artifacts/pair-cases`, run CPU-only typed-IR probes through the
+real CLI. They require rejected inputs to produce no stdout/PTX, a nonzero exit,
+and a concise unsupported-feature diagnostic without a traceback:
+
+```sh
+.venv/bin/python tools/check_feature_rejections.py --report artifacts/feature-rejections.json
+.venv/bin/python tools/check_codegen_equivalence.py challenge/problems/*/ artifacts/pair-cases/*/ --baseline artifacts/compiler-before-feature-validation.py --report artifacts/feature-equivalence.json
+```
+
+The baseline compiler for this iteration is reproducible from `2306028:compile.py`.
+The probes cover eight explicit unsupported declarations: f16 tensors, f16
+Write/Assign/Init/Accum/Let, double shared storage and a B32-swizzled write. They
+are typed-reader-valid fixtures, not numerical evidence for those unsupported
+features. Supported f32 storage/arithmetic and i32 Let bindings remain accepted.
+This validation does not replace a full type checker or add reduced-precision
+support. `validation/2026-10-24-feature-validation.json` preserves baseline silent
+acceptance, final rejection results and supported PTX-equivalence evidence.

@@ -20,7 +20,7 @@ https://github.com/cloudrift-ai/emmy-hackathon-2026.
 - Workspace `/home/nitiz/Projects/Self/Challenges/emmy`; branch `master`, origin
   https://github.com/StarAtNyte/emmy-ptx-compiler. Check git status/log before work.
 - Current accepted compiler SHA-256:
-  `da4f12dd4522262b5f6919e132a74725f10e024f3316debfbb7134cde2c5c33a`.
+  `5af51dc2b497f8acd42f378eff27ed03c518ed4bd2952aedb940972eb4ac2998`.
 - Use `.venv/bin/python` (3.12); host default is 3.14. Pinned Emmy 0.3.11,
   NumPy 2.5.4, CPU Torch 2.14.1. Runtime compiler does not need Torch or a GPU.
 - Local RTX 3050 Laptop 6 GiB, sm_86; hosted RTX 5090, sm_120:
@@ -81,7 +81,7 @@ New tools:
 - `tools/benchmark.py --evict-l2`: optional eviction conditioning outside captured
   events; not a guarantee of cold L2. Hosted cache/clock control is unavailable.
 
-**Authoritative current evidence:**
+**Prior nested-correctness evidence:**
 `validation/2026-10-24-production-iteration3.json`:
 - 232 local: 172 prior + 8 reduced + 32 seeded nested + 4 dynamic + 16 fresh.
 - 52 new hosted: 32 seeded + 4 dynamic + 16 fresh. All pass.
@@ -123,8 +123,8 @@ Use tools/sanitize.py; TESTING.md documents full suites and reconstruction.
 ## Next concrete work
 
 Aligned shared-read pairing is now accepted. Latest combined evidence:
-`validation/2026-10-24-production-iteration4.json`. Candidate compiler da4f12dd...
-is byte-identical to active compile.py. Prior baseline source is reproducible from
+`validation/2026-10-24-production-iteration4.json`. Optimization compiler da4f12dd... preceded the feature-validation change.
+Current compiler preserves its PTX on the verified supported inputs. Prior baseline source is reproducible from
 5791ed6 and saved as artifacts/compiler-before-pair.py. Historical experiment
 patch is preserved; do not apply it to the newly active compiler.
 
@@ -161,3 +161,16 @@ Oct 28 17:44 Nepal time; do not silently submit against the user's deferral.
 Latest implementation/evidence publication: 2306028, pushed and remote-ref verified.
 Active compile.py hash da4f12dd... matches tested candidate. Active-path 26-case
 codegen rerun passes. No final archive rebuild or competition submission.
+
+## Step 18 — current compiler feature validation
+
+Current hash 5af51dc2...; evidence validation/2026-10-24-feature-validation.json.
+Eight explicit unsupported declarations previously silently emitted f32/unswizzled
+PTX; now reject before output with kernel/statement paths and concise CLI errors.
+This covers f16 tensor/Write/Assign/Init/Accum/Let, double shared storage and
+B32-swizzled Write. It is a feature boundary check, not a full type checker.
+255 selected kernels plus 338 fixture folders covering all 232 prior regression
+names emit byte-identical PTX to da4f12dd (overlapping, duplicate copies included).
+Tools: check_feature_rejections.py and check_codegen_equivalence.py; TESTING.md
+has reproduction. No fresh timing claim. Next: adversarial control-flow/index
+typing probes and fuller validation, then systematic shrinking and target profiling.

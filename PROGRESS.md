@@ -505,3 +505,28 @@ as 2306028 and pushed to origin/master. Remote ref verified equal to the full lo
 commit. Active compiler hash remains da4f12dd...; active-path codegen rerun passes
 all 26 one-trip eligibility checks. This is repository publication, not entry
 submission or a rebuilt release archive.
+
+## Step 18 — explicit unsupported features now fail before PTX emission
+
+Completed 2026-10-24:
+
+- Eight typed-reader-valid probes found silent acceptance in da4f12dd: f16
+  tensor/Write/Assign/Init/Accum/Let, double shared storage, and B32-swizzled Write.
+  All exited zero and emitted f32/unswizzled PTX despite those declarations.
+- Added recursive feature validation before lowering with kernel/statement paths.
+  Rejects these unsupported explicit types/layouts, preserving f32 storage and
+  arithmetic, inferred dtypes, and i32 Let bindings. This is not a full type
+  checker or an implementation of reduced precision/swizzles.
+- CLI catches expected ValueError/NotImplementedError with concise stderr and
+  nonzero exit. All eight final probes reject with zero stdout and no traceback.
+- Final compiler hash 5af51dc2b497f8acd42f378eff27ed03c518ed4bd2952aedb940972eb4ac2998.
+  255 selected kernels emit byte-identical PTX to da4f12dd. A separate 338-folder
+  check covers all 232 prior regression names, including duplicate fixture copies,
+  also byte-identical. No fresh timing claim or broad generalization from counts.
+- Added reusable CPU-only CLI rejection and two-compiler PTX-equivalence tools.
+  Preserved baseline/final results, hashes and equivalence driver in
+  validation/2026-10-24-feature-validation.json. Updated DESIGN/TESTING.
+
+Next: strengthen control-flow/index type validation and genuinely new adversarial
+IR probes, then systematic failure shrinking and target profiling. Compiler dtype
+coverage remains f32; production readiness unproven, submission deferred, ZIP stale.

@@ -22,6 +22,7 @@ class Compiler:
         self.graph = graph
         self.launch = launch
         self.node = next(n for n in graph.nodes.values() if type(n.op).__name__ == 'KernelOp')
+        self.validate_features()
         self.lines = []
         self.counts = Counter()
         self.values = {}
@@ -82,6 +83,38 @@ class Compiler:
         for node in graph.nodes.values():
             for tensor in node.outputs:
                 self.shapes[tensor.name] = tuple(d.value for d in tensor.shape)
+
+    def validate_features(self):
+        """Reject unsupported storage/arithmetic types before emitting any PTX."""
+        def unsupported(location, detail):
+            raise ValueError(f'Kernel {self.node.op.name}, {location}: unsupported {detail}')
+
+        for node in self.graph.nodes.values():
+            for tensor in node.outputs:
+                if tensor.dtype.name != 'f32':
+                    unsupported(f'tensor {tensor.name}', f'tensor dtype {tensor.dtype}')
+
+        def walk(body, location):
+            for index, stmt in enumerate(body):
+                here = f'{location}[{index}]/{type(stmt).__name__}'
+                dtype = getattr(stmt, 'dtype', None)
+                name = getattr(dtype, 'name', dtype)
+                allowed = ('f32',)
+                if isinstance(stmt, Smem):
+                    allowed = ('float', 'f32')
+                elif isinstance(stmt, Let):
+                    allowed = ('f32', 'i32')
+                if name is not None and name not in allowed:
+                    unsupported(here, f'dtype {name}')
+                if isinstance(stmt, Write):
+                    if stmt.value_dtype is not None and stmt.value_dtype.name != 'f32':
+                        unsupported(here, f'write dtype {stmt.value_dtype}')
+                    if stmt.swizzle != 'NONE':
+                        unsupported(here, f'write swizzle {stmt.swizzle}')
+                for field in ('body', 'else_body'):
+                    if hasattr(stmt, field):
+                        walk(getattr(stmt, field), f'{here}.{field}')
+        walk(self.node.op.body, 'body')
 
     def reg(self, kind='r'):
         self.counts[kind] += 1
@@ -625,4 +658,8 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except (ValueError, NotImplementedError) as error:
+        print(f'compile.py: {error}', file=sys.stderr)
+        sys.exit(1)

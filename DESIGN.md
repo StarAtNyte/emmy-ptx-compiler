@@ -140,3 +140,13 @@ Remaining priorities include held-out computations, wider dtype/operation
 coverage and additional measured performance work. The supported compute/storage
 path is f32; this document does not claim every possible IR field combination or
 numeric corner case has been tested.
+
+## Unsupported features
+
+Before lowering, explicit tensor dtypes must be f32, shared declarations must use
+float/f32 storage, scalar arithmetic declarations must be f32, and Let may also
+bind i32 index values. Explicit non-f32 write types and swizzled writes are
+rejected. Missing/inferred scalar dtypes retain their existing interpretation.
+Errors identify the kernel and nested statement location before any PTX reaches
+stdout; expected ValueError/NotImplementedError failures print a concise CLI
+message. This is a feature boundary check, not a complete IR type checker.
