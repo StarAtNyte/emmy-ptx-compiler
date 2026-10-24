@@ -64,7 +64,8 @@ mismatches. Baseline emits PTX for all 25 invalid/unsupported probes; accepted
 compiler rejects them without PTX and passes three valid controls. All 594 retained
 kernels emit identical PTX; twelve committed GPU fixtures pass locally. Existing
 sixteen no-Torch checks pass; new 28-case launch CLI suite passes without Torch.
-CI now includes both suites; actual changed-code CI and archive refresh pending.
+Actions run 40106607610 passes both suites on Python 3.12/3.13/3.14; downloaded
+reports verify 1dfcf75f and no Torch. Archive from 0fea2c0 passes three hosted checks.
 No new timing/sanitizer/hosted numerical claim; retained PTX remains identical.
 Argument ABI/schema, grid coverage and general bounds validation remain open.
 
@@ -168,28 +169,29 @@ roofline study. Address CSE reduced PTX but five target timings were neutral;
 partial safety sweep stopped after rejection, patch/evidence preserved.
 
 CPU Actions run on push/PR/manual/nightly across Python 3.12–3.14. Current
-manifest has twelve GPU-verified fixtures and four negative probes. Address fix
-published as 998f3b0; Actions run 40099484929 passes all sixteen checks on all three
-versions. Downloaded reports confirm accepted bf07d517 and no Torch, preserved in
-iteration10. Existing eight goldens unchanged. Push matrices are an initial
-history, not sustained-nightly proof.
+manifest has twelve GPU-verified fixtures and four negative feature probes; the
+separate launch suite adds 25 negative and three valid controls. Published source
+0fea2c0 passes both suites (16+28) on all three versions in run 40106607610.
+Downloaded reports verify compiler 1dfcf75f and no Torch; retained in iteration11.
+All existing PTX goldens unchanged. Push matrices are an initial history, not
+sustained-nightly proof.
 
 ## Packaging and next work
 
-Prior verified archive built from 998f3b0, compiler bf07d517. Uses the existing
+Current verified archive built from 0fea2c0, compiler 1dfcf75f. Uses the existing
 isolated no-Torch Python 3.12.13 runtime from the earlier pinned fresh install;
 dependencies unchanged. Extracted scalar-add, matmul and attention hosted checks
 pass. Latest evidence: validation/2026-10-24-current-package.json. Archive aliases
-artifacts/emmy-ptx-address-checkpoint.zip, artifacts/emmy-ptx-current-checkpoint.zip,
-and artifacts/emmy-ptx-submission.zip hold identical verified bytes. Prior scalar
-archive/report retained; evidence validation/2026-10-24-scalar-package.json.
+artifacts/emmy-ptx-launch-checkpoint.zip, artifacts/emmy-ptx-current-checkpoint.zip,
+and artifacts/emmy-ptx-submission.zip hold identical verified bytes. Prior address
+archive/report retained; evidence validation/2026-10-24-address-package.json.
 No rebuild needed for documentation-only changes. No entry submitted.
 
 Next: broaden index/control-flow type validation, operation/dtype coverage and
 bounded failure shrinking. Continue target hardware lower-bound/bottleneck work;
 no hosted counter/roofline evidence yet. Add future retained cases to CPU CI.
 No candidate jobs remain live from this acceptance step. New CI runs may trigger
-on documentation pushes; existing accepted-code sixteen-check matrix is verified.
+on documentation pushes; existing accepted-code 16+28-check matrix is verified.
 
 Entry drafts SUBMISSION.md/WALKTHROUGH.md reflect current measured optimizations.
 **No contest entry submitted.** Personal fields/video still missing; don't invent
@@ -198,5 +200,8 @@ them or contact organizers. General production readiness remains unproven.
 Next ABI/static-shape/launch validation must preserve permissive flat/additive
 coordinates, physical/logical views and valid parameter-order permutations.
 
-Packaging/CI state for latest source: archive still bf07d517, latest geometry
-source 1dfcf75f needs published 16+28-check CI and refreshed archive verification.
+ABI follow-up evidence: challenge/submit.py builds run_args in args descriptor
+order, and tools/local_runner.py builds positional parameters the same way.
+Future validation should require agreement with arg_order, while permitting
+consistent permutations of both lists. Do not require logical/allocation rank
+identity. Full ABI/schema validation and required-grid coverage remain open.

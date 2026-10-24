@@ -5827,5 +5827,1589 @@
     "No full argument schema/ABI validation, required-grid coverage or bounds checker",
     "No new hosted GPU, sanitizer or performance evidence; 594 prior PTX snapshots unchanged",
     "CPU CLI rejection probes are 25 mutations of one committed fixture plus three valid controls, not independent random programs"
-  ]
+  ],
+  "hosted_cpu_ci": {
+    "run": {
+      "conclusion": "success",
+      "headSha": "0fea2c0990e4771d6f084b0141d0285aa580be98",
+      "jobs": [
+        {
+          "completedAt": "2026-10-24T15:22:36Z",
+          "conclusion": "success",
+          "databaseId": 120909488684,
+          "name": "compiler-contract (3.14)",
+          "startedAt": "2026-10-24T15:21:36Z",
+          "status": "completed",
+          "steps": [
+            {
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "number": 2,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+              "number": 3,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Install pinned CPU runtime",
+              "number": 4,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Check isolated CLI and committed PTX snapshots without Torch",
+              "number": 5,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Check launch diagnostics and valid ABI controls",
+              "number": 6,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Retain contract evidence",
+              "number": 7,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Post Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+              "number": 13,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "number": 14,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 15,
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/StarAtNyte/emmy-ptx-compiler/actions/runs/40106607610/job/120909488684"
+        },
+        {
+          "completedAt": "2026-10-24T15:22:32Z",
+          "conclusion": "success",
+          "databaseId": 120909488843,
+          "name": "compiler-contract (3.12)",
+          "startedAt": "2026-10-24T15:21:36Z",
+          "status": "completed",
+          "steps": [
+            {
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "number": 2,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+              "number": 3,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Install pinned CPU runtime",
+              "number": 4,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Check isolated CLI and committed PTX snapshots without Torch",
+              "number": 5,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Check launch diagnostics and valid ABI controls",
+              "number": 6,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Retain contract evidence",
+              "number": 7,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Post Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+              "number": 13,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "number": 14,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 15,
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/StarAtNyte/emmy-ptx-compiler/actions/runs/40106607610/job/120909488843"
+        },
+        {
+          "completedAt": "2026-10-24T15:22:34Z",
+          "conclusion": "success",
+          "databaseId": 120909488941,
+          "name": "compiler-contract (3.13)",
+          "startedAt": "2026-10-24T15:21:36Z",
+          "status": "completed",
+          "steps": [
+            {
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "number": 2,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+              "number": 3,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Install pinned CPU runtime",
+              "number": 4,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Check isolated CLI and committed PTX snapshots without Torch",
+              "number": 5,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Check launch diagnostics and valid ABI controls",
+              "number": 6,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Retain contract evidence",
+              "number": 7,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Post Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+              "number": 13,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "number": 14,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 15,
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/StarAtNyte/emmy-ptx-compiler/actions/runs/40106607610/job/120909488941"
+        }
+      ],
+      "status": "completed",
+      "url": "https://github.com/StarAtNyte/emmy-ptx-compiler/actions/runs/40106607610"
+    },
+    "reports": {
+      "3.12": {
+        "cpu": {
+          "compiler_sha256": "1dfcf75fe9d2ecb8d1f9aec50517b1583bc183c753bd594e61150997663df882",
+          "manifest_sha256": "51278724756b65bec76bfbfe4775bf2ffd1ab3d692707552b180ef08b465fd7e",
+          "python": "3.12.15 (main, Oct  1 2026, 02:35:59) [GCC 13.3.0]",
+          "torch_present": false,
+          "packages": {
+            "emmy-ml": "0.3.11",
+            "numpy": "2.5.4"
+          },
+          "scope": "CPU CLI/code-generation contract, not GPU execution",
+          "results": [
+            {
+              "case": "2026-10-24-scope-shrunk",
+              "passed": true,
+              "ptx_sha256": "808b7dd2be9067300a0d7d6a873675ea26a09ecdc4288202dc07b74a22b759c3",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-strided-shrunk",
+              "passed": true,
+              "ptx_sha256": "d978ffa0ed5c3a837c6d36ce061dedd966ad8ba03ef64fb20c1000d4eb504a68",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-power2-int32-extremes",
+              "passed": true,
+              "ptx_sha256": "1bfd5c4f54e3ceff6a220c2b70ebbb8994b77a070908ac2dffa44501218fe5eb",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-predicate-shared-pair",
+              "passed": true,
+              "ptx_sha256": "66aa5809246c005c37a822359527f949697a523f6abcce0ea63c7af8013c9b2e",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-f32-float-arithmetic",
+              "passed": true,
+              "ptx_sha256": "298d2f0b086051ddbb84aadc062bf720835e63c0d3c3570872930a2659172e8c",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-f32-float-to-int",
+              "passed": true,
+              "ptx_sha256": "d29a0ed56fbc94d56d79dbc72f68c924fbab8bf0b7af175927d40cc2438fa3f7",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-f32-mixed-compare",
+              "passed": true,
+              "ptx_sha256": "2ea2baa1bf50960f933b72527b1242da8f3362ecb11de133670448e6de8f2d82",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-f32-nan-truth",
+              "passed": true,
+              "ptx_sha256": "34a9e8da648ec8f7d9b7d0e6447c500378c0191b6cf86b6f7ecd846205ab6ddd",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-address-extra-load",
+              "passed": true,
+              "ptx_sha256": "f97d5b20d00422899305f365bb2d562eb4c57f41bfeb2271afc2be97129bf30a",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-address-scalar-flat",
+              "passed": true,
+              "ptx_sha256": "892b296b619d44b30fcc3d8e18dc1304474e64f6f1713287c3a80f8dd3e3a50c",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-address-shared-pair",
+              "passed": true,
+              "ptx_sha256": "64dfdc2da4071207ec81322c244ae60dbe9ba0fef72589e62cdb96e26de1323d",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-abi-reordered",
+              "passed": true,
+              "ptx_sha256": "c86f56f7882c9d797f637bcbd41e200efbf7ff4f5d28035427534bcc8d593b3c",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "tensor_f16",
+              "passed": true,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, tensor x: unsupported tensor dtype f16\n"
+            },
+            {
+              "case": "write_f16",
+              "passed": true,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write dtype f16\n"
+            },
+            {
+              "case": "write_swizzle",
+              "passed": true,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write swizzle B32\n"
+            },
+            {
+              "case": "floating_index",
+              "passed": true,
+              "stderr": "compile.py: Kernel k_sum_1_reduce: unsupported floating index expression Literal(value=0.5, dtype='float')\n"
+            }
+          ]
+        },
+        "launch": {
+          "compiler_sha256": "1dfcf75fe9d2ecb8d1f9aec50517b1583bc183c753bd594e61150997663df882",
+          "scope": "CPU CLI diagnostics and valid codegen controls; mutated launches never executed",
+          "results": [
+            {
+              "case": "grid_missing",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: grid must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "27b02379a3c3778c0105f7e0e1b917073703a26185b8a1d30fe8f92bead7b75e"
+            },
+            {
+              "case": "grid_short",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: grid must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "78a7c7b79a134ece2c2dee37d137af1c93ad93538f763e25f36890f2188453e4"
+            },
+            {
+              "case": "grid_zero",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: grid must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "f8b9805b35aea663b6e56eaadd97638c17916fe4ce0e866c4bdae2c25e9e63fe"
+            },
+            {
+              "case": "grid_negative",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: grid must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "6ffcb3c56ff12b2606ca99c9155eea76a54df459397f9be6bc28764449ee1485"
+            },
+            {
+              "case": "grid_float",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: grid must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "db011ff28e36882a84f4ff733c76b519aa46371241e28ce715b928aa999f654f"
+            },
+            {
+              "case": "grid_bool",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: grid must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "7a26af7f86c9b8ca9ed1a161320bf314cef7b79a895aa44137fdbc33dbee0c95"
+            },
+            {
+              "case": "grid_y",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: unsupported multidimensional grid; y and z must be 1\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "170eb1d9f9d14b86d090b540f881d3591942de114ca92429c9e4f8edb3823204"
+            },
+            {
+              "case": "grid_z",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: unsupported multidimensional grid; y and z must be 1\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "191620bb88cb5bfebdf628cbc08a7c9ee01439512589d550dc8b6c1cdc1c8e9f"
+            },
+            {
+              "case": "block_missing",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: block must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "460c8c5f56e1e94e5846781c9bfcb71b5a58c0ec5ecd93c15d51afd828470488"
+            },
+            {
+              "case": "block_short",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: block must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "bab20786e97d871b23e3ee0ee21fda8366a76f6dfe09b372014bf4527ef1f340"
+            },
+            {
+              "case": "block_zero",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: block must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "8d287d37d5c4f7f55cf93ba54f0893b8315b9c9e33496132c8e5d007b7806609"
+            },
+            {
+              "case": "block_negative",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: block must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "aff1bf1dfdcee09686ae957468ef0f82ebcf56f355e74c2c0314ccc39b13fb85"
+            },
+            {
+              "case": "block_float",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: block must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "246d9b546b299b19e5efa03c18a870a6b5e32818a33b2adbef3ba95f97dd46dc"
+            },
+            {
+              "case": "block_bool",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: block must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "a45c86bde5d640a6812727aadf266d806a14b45247ebb3d05d0847335ceed617"
+            },
+            {
+              "case": "block_y",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: unsupported multidimensional block; y and z must be 1\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "b6f3e7bf354455eed17aaa9da641957002b25973b1898939a4f769f326302d4c"
+            },
+            {
+              "case": "block_z",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: unsupported multidimensional block; y and z must be 1\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "229bef4dcdf1a11502850507946e90ea0c1aba93b3be58c3971e6cf32bd39c35"
+            },
+            {
+              "case": "block_limit",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: block.x exceeds 1024 threads\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "87743fce3069e38cf22d63cbe3ffc9a09fd1b16a8680d0f25f534d3e49121a6f"
+            },
+            {
+              "case": "grid_limit",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: grid.x exceeds 2147483647 blocks\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "6808416d94604b11e3adfef6c9f9be46a6a058b55ccab5bdd4d8a81b4ac8052c"
+            },
+            {
+              "case": "smem_missing",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: smem_bytes must be a nonnegative integer\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "4a708ebec0df942d5e93989609535c634ee10404c9d0ebc360de7f0ca21985d4"
+            },
+            {
+              "case": "smem_negative",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: smem_bytes must be a nonnegative integer\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "8ca20319a2bdba99100e17536fd321c902800b0807fe1cc0118d288eb8610c9f"
+            },
+            {
+              "case": "smem_float",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: smem_bytes must be a nonnegative integer\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "4888a9e04b90088dd3299fa87209037412692c0a0ba0a7853f5d115fd944c56e"
+            },
+            {
+              "case": "smem_bool",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: smem_bytes must be a nonnegative integer\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "1815aaa734c009d37fe7f86be09a4d99e71ce54574d9a9f0f55d192a0b8c6f0c"
+            },
+            {
+              "case": "cooperative_mismatch",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: block.x must equal cooperative Tile.block_threads\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "690d5b045c2743927713e99dcbe96902232c00ba73e20b8701ed595f10513169",
+              "meta_sha256": "415764c117f131d124e7238cf6e125195e86275d399685e336621b68e19e2703"
+            },
+            {
+              "case": "cooperative_zero",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: Tile.block_threads must be a positive integer\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "dde8158f253914840bbc82c7dbd3c66e42308a4f9f2c12fc5ca0cd4d67dca3ec",
+              "meta_sha256": "415764c117f131d124e7238cf6e125195e86275d399685e336621b68e19e2703"
+            },
+            {
+              "case": "cooperative_negative",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: Tile.block_threads must be a positive integer\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3cd0017a3915e3ea074f26080d07bb3b15075071671a2223b673e65c08127639",
+              "meta_sha256": "415764c117f131d124e7238cf6e125195e86275d399685e336621b68e19e2703"
+            },
+            {
+              "case": "cooperative_match",
+              "expected_valid": true,
+              "passed": true,
+              "returncode": 0,
+              "stderr": "",
+              "emitted_ptx": true,
+              "stdout_sha256": "a333b1365948d44d8968cb8d827ec9961efee9208b3c7cd7de4329113ad157ce",
+              "ir_sha256": "47c9f5ca4076d3a283a74939e0e6ac21e8b3a9a0c3099ec91f7a3d391a1e94f0",
+              "meta_sha256": "415764c117f131d124e7238cf6e125195e86275d399685e336621b68e19e2703"
+            },
+            {
+              "case": "reordered_abi",
+              "expected_valid": true,
+              "passed": true,
+              "returncode": 0,
+              "stderr": "",
+              "emitted_ptx": true,
+              "stdout_sha256": "c86f56f7882c9d797f637bcbd41e200efbf7ff4f5d28035427534bcc8d593b3c",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "415764c117f131d124e7238cf6e125195e86275d399685e336621b68e19e2703"
+            },
+            {
+              "case": "scalar_logical_view",
+              "expected_valid": true,
+              "passed": true,
+              "returncode": 0,
+              "stderr": ""
+            }
+          ]
+        }
+      },
+      "3.13": {
+        "cpu": {
+          "compiler_sha256": "1dfcf75fe9d2ecb8d1f9aec50517b1583bc183c753bd594e61150997663df882",
+          "manifest_sha256": "51278724756b65bec76bfbfe4775bf2ffd1ab3d692707552b180ef08b465fd7e",
+          "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+          "torch_present": false,
+          "packages": {
+            "emmy-ml": "0.3.11",
+            "numpy": "2.5.4"
+          },
+          "scope": "CPU CLI/code-generation contract, not GPU execution",
+          "results": [
+            {
+              "case": "2026-10-24-scope-shrunk",
+              "passed": true,
+              "ptx_sha256": "808b7dd2be9067300a0d7d6a873675ea26a09ecdc4288202dc07b74a22b759c3",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-strided-shrunk",
+              "passed": true,
+              "ptx_sha256": "d978ffa0ed5c3a837c6d36ce061dedd966ad8ba03ef64fb20c1000d4eb504a68",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-power2-int32-extremes",
+              "passed": true,
+              "ptx_sha256": "1bfd5c4f54e3ceff6a220c2b70ebbb8994b77a070908ac2dffa44501218fe5eb",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-predicate-shared-pair",
+              "passed": true,
+              "ptx_sha256": "66aa5809246c005c37a822359527f949697a523f6abcce0ea63c7af8013c9b2e",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-f32-float-arithmetic",
+              "passed": true,
+              "ptx_sha256": "298d2f0b086051ddbb84aadc062bf720835e63c0d3c3570872930a2659172e8c",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-f32-float-to-int",
+              "passed": true,
+              "ptx_sha256": "d29a0ed56fbc94d56d79dbc72f68c924fbab8bf0b7af175927d40cc2438fa3f7",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-f32-mixed-compare",
+              "passed": true,
+              "ptx_sha256": "2ea2baa1bf50960f933b72527b1242da8f3362ecb11de133670448e6de8f2d82",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-f32-nan-truth",
+              "passed": true,
+              "ptx_sha256": "34a9e8da648ec8f7d9b7d0e6447c500378c0191b6cf86b6f7ecd846205ab6ddd",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-address-extra-load",
+              "passed": true,
+              "ptx_sha256": "f97d5b20d00422899305f365bb2d562eb4c57f41bfeb2271afc2be97129bf30a",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-address-scalar-flat",
+              "passed": true,
+              "ptx_sha256": "892b296b619d44b30fcc3d8e18dc1304474e64f6f1713287c3a80f8dd3e3a50c",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-address-shared-pair",
+              "passed": true,
+              "ptx_sha256": "64dfdc2da4071207ec81322c244ae60dbe9ba0fef72589e62cdb96e26de1323d",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-abi-reordered",
+              "passed": true,
+              "ptx_sha256": "c86f56f7882c9d797f637bcbd41e200efbf7ff4f5d28035427534bcc8d593b3c",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "tensor_f16",
+              "passed": true,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, tensor x: unsupported tensor dtype f16\n"
+            },
+            {
+              "case": "write_f16",
+              "passed": true,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write dtype f16\n"
+            },
+            {
+              "case": "write_swizzle",
+              "passed": true,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write swizzle B32\n"
+            },
+            {
+              "case": "floating_index",
+              "passed": true,
+              "stderr": "compile.py: Kernel k_sum_1_reduce: unsupported floating index expression Literal(value=0.5, dtype='float')\n"
+            }
+          ]
+        },
+        "launch": {
+          "compiler_sha256": "1dfcf75fe9d2ecb8d1f9aec50517b1583bc183c753bd594e61150997663df882",
+          "scope": "CPU CLI diagnostics and valid codegen controls; mutated launches never executed",
+          "results": [
+            {
+              "case": "grid_missing",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: grid must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "27b02379a3c3778c0105f7e0e1b917073703a26185b8a1d30fe8f92bead7b75e"
+            },
+            {
+              "case": "grid_short",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: grid must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "78a7c7b79a134ece2c2dee37d137af1c93ad93538f763e25f36890f2188453e4"
+            },
+            {
+              "case": "grid_zero",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: grid must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "f8b9805b35aea663b6e56eaadd97638c17916fe4ce0e866c4bdae2c25e9e63fe"
+            },
+            {
+              "case": "grid_negative",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: grid must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "6ffcb3c56ff12b2606ca99c9155eea76a54df459397f9be6bc28764449ee1485"
+            },
+            {
+              "case": "grid_float",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: grid must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "db011ff28e36882a84f4ff733c76b519aa46371241e28ce715b928aa999f654f"
+            },
+            {
+              "case": "grid_bool",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: grid must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "7a26af7f86c9b8ca9ed1a161320bf314cef7b79a895aa44137fdbc33dbee0c95"
+            },
+            {
+              "case": "grid_y",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: unsupported multidimensional grid; y and z must be 1\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "170eb1d9f9d14b86d090b540f881d3591942de114ca92429c9e4f8edb3823204"
+            },
+            {
+              "case": "grid_z",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: unsupported multidimensional grid; y and z must be 1\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "191620bb88cb5bfebdf628cbc08a7c9ee01439512589d550dc8b6c1cdc1c8e9f"
+            },
+            {
+              "case": "block_missing",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: block must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "460c8c5f56e1e94e5846781c9bfcb71b5a58c0ec5ecd93c15d51afd828470488"
+            },
+            {
+              "case": "block_short",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: block must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "bab20786e97d871b23e3ee0ee21fda8366a76f6dfe09b372014bf4527ef1f340"
+            },
+            {
+              "case": "block_zero",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: block must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "8d287d37d5c4f7f55cf93ba54f0893b8315b9c9e33496132c8e5d007b7806609"
+            },
+            {
+              "case": "block_negative",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: block must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "aff1bf1dfdcee09686ae957468ef0f82ebcf56f355e74c2c0314ccc39b13fb85"
+            },
+            {
+              "case": "block_float",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: block must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "246d9b546b299b19e5efa03c18a870a6b5e32818a33b2adbef3ba95f97dd46dc"
+            },
+            {
+              "case": "block_bool",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: block must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "a45c86bde5d640a6812727aadf266d806a14b45247ebb3d05d0847335ceed617"
+            },
+            {
+              "case": "block_y",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: unsupported multidimensional block; y and z must be 1\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "b6f3e7bf354455eed17aaa9da641957002b25973b1898939a4f769f326302d4c"
+            },
+            {
+              "case": "block_z",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: unsupported multidimensional block; y and z must be 1\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "229bef4dcdf1a11502850507946e90ea0c1aba93b3be58c3971e6cf32bd39c35"
+            },
+            {
+              "case": "block_limit",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: block.x exceeds 1024 threads\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "87743fce3069e38cf22d63cbe3ffc9a09fd1b16a8680d0f25f534d3e49121a6f"
+            },
+            {
+              "case": "grid_limit",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: grid.x exceeds 2147483647 blocks\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "6808416d94604b11e3adfef6c9f9be46a6a058b55ccab5bdd4d8a81b4ac8052c"
+            },
+            {
+              "case": "smem_missing",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: smem_bytes must be a nonnegative integer\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "4a708ebec0df942d5e93989609535c634ee10404c9d0ebc360de7f0ca21985d4"
+            },
+            {
+              "case": "smem_negative",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: smem_bytes must be a nonnegative integer\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "8ca20319a2bdba99100e17536fd321c902800b0807fe1cc0118d288eb8610c9f"
+            },
+            {
+              "case": "smem_float",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: smem_bytes must be a nonnegative integer\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "4888a9e04b90088dd3299fa87209037412692c0a0ba0a7853f5d115fd944c56e"
+            },
+            {
+              "case": "smem_bool",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: smem_bytes must be a nonnegative integer\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "1815aaa734c009d37fe7f86be09a4d99e71ce54574d9a9f0f55d192a0b8c6f0c"
+            },
+            {
+              "case": "cooperative_mismatch",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: block.x must equal cooperative Tile.block_threads\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "690d5b045c2743927713e99dcbe96902232c00ba73e20b8701ed595f10513169",
+              "meta_sha256": "415764c117f131d124e7238cf6e125195e86275d399685e336621b68e19e2703"
+            },
+            {
+              "case": "cooperative_zero",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: Tile.block_threads must be a positive integer\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "dde8158f253914840bbc82c7dbd3c66e42308a4f9f2c12fc5ca0cd4d67dca3ec",
+              "meta_sha256": "415764c117f131d124e7238cf6e125195e86275d399685e336621b68e19e2703"
+            },
+            {
+              "case": "cooperative_negative",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: Tile.block_threads must be a positive integer\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3cd0017a3915e3ea074f26080d07bb3b15075071671a2223b673e65c08127639",
+              "meta_sha256": "415764c117f131d124e7238cf6e125195e86275d399685e336621b68e19e2703"
+            },
+            {
+              "case": "cooperative_match",
+              "expected_valid": true,
+              "passed": true,
+              "returncode": 0,
+              "stderr": "",
+              "emitted_ptx": true,
+              "stdout_sha256": "a333b1365948d44d8968cb8d827ec9961efee9208b3c7cd7de4329113ad157ce",
+              "ir_sha256": "47c9f5ca4076d3a283a74939e0e6ac21e8b3a9a0c3099ec91f7a3d391a1e94f0",
+              "meta_sha256": "415764c117f131d124e7238cf6e125195e86275d399685e336621b68e19e2703"
+            },
+            {
+              "case": "reordered_abi",
+              "expected_valid": true,
+              "passed": true,
+              "returncode": 0,
+              "stderr": "",
+              "emitted_ptx": true,
+              "stdout_sha256": "c86f56f7882c9d797f637bcbd41e200efbf7ff4f5d28035427534bcc8d593b3c",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "415764c117f131d124e7238cf6e125195e86275d399685e336621b68e19e2703"
+            },
+            {
+              "case": "scalar_logical_view",
+              "expected_valid": true,
+              "passed": true,
+              "returncode": 0,
+              "stderr": ""
+            }
+          ]
+        }
+      },
+      "3.14": {
+        "cpu": {
+          "compiler_sha256": "1dfcf75fe9d2ecb8d1f9aec50517b1583bc183c753bd594e61150997663df882",
+          "manifest_sha256": "51278724756b65bec76bfbfe4775bf2ffd1ab3d692707552b180ef08b465fd7e",
+          "python": "3.14.8 (main, Oct  1 2026, 02:38:33) [GCC 13.3.0]",
+          "torch_present": false,
+          "packages": {
+            "emmy-ml": "0.3.11",
+            "numpy": "2.5.4"
+          },
+          "scope": "CPU CLI/code-generation contract, not GPU execution",
+          "results": [
+            {
+              "case": "2026-10-24-scope-shrunk",
+              "passed": true,
+              "ptx_sha256": "808b7dd2be9067300a0d7d6a873675ea26a09ecdc4288202dc07b74a22b759c3",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-strided-shrunk",
+              "passed": true,
+              "ptx_sha256": "d978ffa0ed5c3a837c6d36ce061dedd966ad8ba03ef64fb20c1000d4eb504a68",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-power2-int32-extremes",
+              "passed": true,
+              "ptx_sha256": "1bfd5c4f54e3ceff6a220c2b70ebbb8994b77a070908ac2dffa44501218fe5eb",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-predicate-shared-pair",
+              "passed": true,
+              "ptx_sha256": "66aa5809246c005c37a822359527f949697a523f6abcce0ea63c7af8013c9b2e",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-f32-float-arithmetic",
+              "passed": true,
+              "ptx_sha256": "298d2f0b086051ddbb84aadc062bf720835e63c0d3c3570872930a2659172e8c",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-f32-float-to-int",
+              "passed": true,
+              "ptx_sha256": "d29a0ed56fbc94d56d79dbc72f68c924fbab8bf0b7af175927d40cc2438fa3f7",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-f32-mixed-compare",
+              "passed": true,
+              "ptx_sha256": "2ea2baa1bf50960f933b72527b1242da8f3362ecb11de133670448e6de8f2d82",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-f32-nan-truth",
+              "passed": true,
+              "ptx_sha256": "34a9e8da648ec8f7d9b7d0e6447c500378c0191b6cf86b6f7ecd846205ab6ddd",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-address-extra-load",
+              "passed": true,
+              "ptx_sha256": "f97d5b20d00422899305f365bb2d562eb4c57f41bfeb2271afc2be97129bf30a",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-address-scalar-flat",
+              "passed": true,
+              "ptx_sha256": "892b296b619d44b30fcc3d8e18dc1304474e64f6f1713287c3a80f8dd3e3a50c",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-address-shared-pair",
+              "passed": true,
+              "ptx_sha256": "64dfdc2da4071207ec81322c244ae60dbe9ba0fef72589e62cdb96e26de1323d",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "2026-10-24-abi-reordered",
+              "passed": true,
+              "ptx_sha256": "c86f56f7882c9d797f637bcbd41e200efbf7ff4f5d28035427534bcc8d593b3c",
+              "stderr": [
+                "",
+                ""
+              ]
+            },
+            {
+              "case": "tensor_f16",
+              "passed": true,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, tensor x: unsupported tensor dtype f16\n"
+            },
+            {
+              "case": "write_f16",
+              "passed": true,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write dtype f16\n"
+            },
+            {
+              "case": "write_swizzle",
+              "passed": true,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write swizzle B32\n"
+            },
+            {
+              "case": "floating_index",
+              "passed": true,
+              "stderr": "compile.py: Kernel k_sum_1_reduce: unsupported floating index expression Literal(value=0.5, dtype='float')\n"
+            }
+          ]
+        },
+        "launch": {
+          "compiler_sha256": "1dfcf75fe9d2ecb8d1f9aec50517b1583bc183c753bd594e61150997663df882",
+          "scope": "CPU CLI diagnostics and valid codegen controls; mutated launches never executed",
+          "results": [
+            {
+              "case": "grid_missing",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: grid must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "27b02379a3c3778c0105f7e0e1b917073703a26185b8a1d30fe8f92bead7b75e"
+            },
+            {
+              "case": "grid_short",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: grid must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "78a7c7b79a134ece2c2dee37d137af1c93ad93538f763e25f36890f2188453e4"
+            },
+            {
+              "case": "grid_zero",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: grid must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "f8b9805b35aea663b6e56eaadd97638c17916fe4ce0e866c4bdae2c25e9e63fe"
+            },
+            {
+              "case": "grid_negative",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: grid must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "6ffcb3c56ff12b2606ca99c9155eea76a54df459397f9be6bc28764449ee1485"
+            },
+            {
+              "case": "grid_float",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: grid must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "db011ff28e36882a84f4ff733c76b519aa46371241e28ce715b928aa999f654f"
+            },
+            {
+              "case": "grid_bool",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: grid must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "7a26af7f86c9b8ca9ed1a161320bf314cef7b79a895aa44137fdbc33dbee0c95"
+            },
+            {
+              "case": "grid_y",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: unsupported multidimensional grid; y and z must be 1\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "170eb1d9f9d14b86d090b540f881d3591942de114ca92429c9e4f8edb3823204"
+            },
+            {
+              "case": "grid_z",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: unsupported multidimensional grid; y and z must be 1\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "191620bb88cb5bfebdf628cbc08a7c9ee01439512589d550dc8b6c1cdc1c8e9f"
+            },
+            {
+              "case": "block_missing",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: block must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "460c8c5f56e1e94e5846781c9bfcb71b5a58c0ec5ecd93c15d51afd828470488"
+            },
+            {
+              "case": "block_short",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: block must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "bab20786e97d871b23e3ee0ee21fda8366a76f6dfe09b372014bf4527ef1f340"
+            },
+            {
+              "case": "block_zero",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: block must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "8d287d37d5c4f7f55cf93ba54f0893b8315b9c9e33496132c8e5d007b7806609"
+            },
+            {
+              "case": "block_negative",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: block must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "aff1bf1dfdcee09686ae957468ef0f82ebcf56f355e74c2c0314ccc39b13fb85"
+            },
+            {
+              "case": "block_float",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: block must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "246d9b546b299b19e5efa03c18a870a6b5e32818a33b2adbef3ba95f97dd46dc"
+            },
+            {
+              "case": "block_bool",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: block must contain three positive integer dimensions\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "a45c86bde5d640a6812727aadf266d806a14b45247ebb3d05d0847335ceed617"
+            },
+            {
+              "case": "block_y",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: unsupported multidimensional block; y and z must be 1\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "b6f3e7bf354455eed17aaa9da641957002b25973b1898939a4f769f326302d4c"
+            },
+            {
+              "case": "block_z",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: unsupported multidimensional block; y and z must be 1\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "229bef4dcdf1a11502850507946e90ea0c1aba93b3be58c3971e6cf32bd39c35"
+            },
+            {
+              "case": "block_limit",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: block.x exceeds 1024 threads\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "87743fce3069e38cf22d63cbe3ffc9a09fd1b16a8680d0f25f534d3e49121a6f"
+            },
+            {
+              "case": "grid_limit",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: grid.x exceeds 2147483647 blocks\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "6808416d94604b11e3adfef6c9f9be46a6a058b55ccab5bdd4d8a81b4ac8052c"
+            },
+            {
+              "case": "smem_missing",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: smem_bytes must be a nonnegative integer\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "4a708ebec0df942d5e93989609535c634ee10404c9d0ebc360de7f0ca21985d4"
+            },
+            {
+              "case": "smem_negative",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: smem_bytes must be a nonnegative integer\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "8ca20319a2bdba99100e17536fd321c902800b0807fe1cc0118d288eb8610c9f"
+            },
+            {
+              "case": "smem_float",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: smem_bytes must be a nonnegative integer\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "4888a9e04b90088dd3299fa87209037412692c0a0ba0a7853f5d115fd944c56e"
+            },
+            {
+              "case": "smem_bool",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: smem_bytes must be a nonnegative integer\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "1815aaa734c009d37fe7f86be09a4d99e71ce54574d9a9f0f55d192a0b8c6f0c"
+            },
+            {
+              "case": "cooperative_mismatch",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: block.x must equal cooperative Tile.block_threads\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "690d5b045c2743927713e99dcbe96902232c00ba73e20b8701ed595f10513169",
+              "meta_sha256": "415764c117f131d124e7238cf6e125195e86275d399685e336621b68e19e2703"
+            },
+            {
+              "case": "cooperative_zero",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: Tile.block_threads must be a positive integer\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "dde8158f253914840bbc82c7dbd3c66e42308a4f9f2c12fc5ca0cd4d67dca3ec",
+              "meta_sha256": "415764c117f131d124e7238cf6e125195e86275d399685e336621b68e19e2703"
+            },
+            {
+              "case": "cooperative_negative",
+              "expected_valid": false,
+              "passed": true,
+              "returncode": 1,
+              "stderr": "compile.py: Kernel k_sum_1_reduce, launch: Tile.block_threads must be a positive integer\n",
+              "emitted_ptx": false,
+              "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ir_sha256": "3cd0017a3915e3ea074f26080d07bb3b15075071671a2223b673e65c08127639",
+              "meta_sha256": "415764c117f131d124e7238cf6e125195e86275d399685e336621b68e19e2703"
+            },
+            {
+              "case": "cooperative_match",
+              "expected_valid": true,
+              "passed": true,
+              "returncode": 0,
+              "stderr": "",
+              "emitted_ptx": true,
+              "stdout_sha256": "a333b1365948d44d8968cb8d827ec9961efee9208b3c7cd7de4329113ad157ce",
+              "ir_sha256": "47c9f5ca4076d3a283a74939e0e6ac21e8b3a9a0c3099ec91f7a3d391a1e94f0",
+              "meta_sha256": "415764c117f131d124e7238cf6e125195e86275d399685e336621b68e19e2703"
+            },
+            {
+              "case": "reordered_abi",
+              "expected_valid": true,
+              "passed": true,
+              "returncode": 0,
+              "stderr": "",
+              "emitted_ptx": true,
+              "stdout_sha256": "c86f56f7882c9d797f637bcbd41e200efbf7ff4f5d28035427534bcc8d593b3c",
+              "ir_sha256": "3082614cff38a7b34228fdbe0ece5c30c30bf47e6e75f057fdc2341a3b842039",
+              "meta_sha256": "415764c117f131d124e7238cf6e125195e86275d399685e336621b68e19e2703"
+            },
+            {
+              "case": "scalar_logical_view",
+              "expected_valid": true,
+              "passed": true,
+              "returncode": 0,
+              "stderr": ""
+            }
+          ]
+        }
+      }
+    }
+  }
 }

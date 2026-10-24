@@ -1,26 +1,26 @@
 {
-  "status": "verified address-rank code checkpoint; no entry submission or production-readiness claim",
+  "status": "verified launch-validation code checkpoint; no entry submission or production-readiness claim",
   "package_report": {
-    "commit": "998f3b05cdafd6796d69870b6431cf6789199b47",
-    "compiler_sha256": "bf07d517f3a31619ce7f46514def0e8cedfdf1ea4f0f5b1206bb76fd4c85fac3",
-    "archive_sha256": "79e840c54d289418c909fbf1aa04ec1a6ca807ea39cf606d7c8b1f6c72916b05",
+    "commit": "0fea2c0990e4771d6f084b0141d0285aa580be98",
+    "compiler_sha256": "1dfcf75fe9d2ecb8d1f9aec50517b1583bc183c753bd594e61150997663df882",
+    "archive_sha256": "c15871976ee0cebb5f6e7458a4e37084fa15b6b35b2acc2ed37f63f2819c0662",
     "checks": [
       {
         "problem": "p00_scalar_add",
         "passed": true,
-        "stdout": "[k_add_pointwise] 22 registers\n[k_add_pointwise] PASS  add: max abs err 0.000e+00  (23.68 us)\n",
+        "stdout": "[k_add_pointwise] 22 registers\n[k_add_pointwise] PASS  add: max abs err 0.000e+00  (23.488 us)\n",
         "stderr": ""
       },
       {
         "problem": "m01_matmul_512",
         "passed": true,
-        "stdout": "[k_matmul_2967be] 40 registers\n[k_matmul_2967be] PASS  matmul: max abs err 8.392e-05  (36.8 us)\n",
+        "stdout": "[k_matmul_2967be] 40 registers\n[k_matmul_2967be] PASS  matmul: max abs err 8.392e-05  (40.96 us)\n",
         "stderr": ""
       },
       {
         "problem": "a01_attention",
         "passed": true,
-        "stdout": "[k_matmul_softmax_reduce_b55365] 128 registers\n[k_matmul_softmax_reduce_b55365] PASS  matmul_1: max abs err 6.557e-07  (100.672 us)\n",
+        "stdout": "[k_matmul_softmax_reduce_b55365] 128 registers\n[k_matmul_softmax_reduce_b55365] PASS  matmul_1: max abs err 6.557e-07  (102.432 us)\n",
         "stderr": ""
       }
     ],
@@ -30,11 +30,11 @@
     }
   },
   "archive_paths": [
-    "artifacts/emmy-ptx-address-checkpoint.zip",
+    "artifacts/emmy-ptx-launch-checkpoint.zip",
     "artifacts/emmy-ptx-current-checkpoint.zip",
     "artifacts/emmy-ptx-submission.zip"
   ],
-  "archive_bytes": 889083,
+  "archive_bytes": 965731,
   "environment_note": "existing isolated no-Torch Python 3.12.13 runtime from pinned fresh installation; dependencies unchanged",
-  "previous_checkpoint_record": "2026-10-24-scalar-package.json"
+  "previous_checkpoint_record": "2026-10-24-address-package.json"
 }

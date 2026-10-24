@@ -1019,8 +1019,8 @@ Completed 2026-10-24:
   and packaged compiler match verified bytes. Extracted hosted scalar-add, matmul
   and attention checks pass in the existing isolated no-Torch 3.12.13 runtime.
 - Address/current/submission ZIP aliases hold identical verified bytes. Preserved
-  prior scalar evidence as scalar-package.json; current-package.json now records
-  the address checkpoint. Updated README and current handoff.
+  prior scalar evidence as scalar-package.json; address-package.json preserves
+  the address checkpoint after the later launch update. Updated README and current handoff.
 - No entry submitted. Broad ABI/static-shape/launch diagnostics, operation/dtype
   coverage and target hardware lower-bound work remain; readiness unproven.
 
@@ -1047,3 +1047,22 @@ Completed 2026-10-24:
 Next: publish and verify actual expanded CI, refresh archive; complete argument
 ABI/static-shape/coverage diagnostics and hardware bottleneck work. Submission
 remains deferred; full production readiness unproven.
+
+## Step 40 — expanded CI and launch-validation archive verified
+
+Completed 2026-10-24:
+
+- Published source 0fea2c0. Actions run 40106607610 passes sixteen snapshot/feature
+  checks plus 28 launch checks on each of Python 3.12/3.13/3.14. Downloaded reports
+  verify exact 1dfcf75f compiler and Torch absent; preserved in iteration11.
+- Archived committed 0fea2c0, compiler hash unchanged. Verified archive SHA256
+  c15871976ee0cebb5f6e7458a4e37084fa15b6b35b2acc2ed37f63f2819c0662.
+  Extracted hosted scalar-add, matmul and attention checks pass in the reused
+  isolated no-Torch 3.12.13 runtime. Launch/current/submission aliases identical.
+- Preserved prior address package record separately; current-package.json points
+  to the launch checkpoint. Updated README and current handoff.
+- Official submit.py and local runner both pass args descriptors positionally;
+  next ABI checks must require agreement with arg_order and permit consistent
+  reordering. Logical/allocation rank equality remains an invalid constraint.
+- Submission deferred. Full ABI/static-shape/coverage checks, broader operations
+  and hardware lower-bound analysis remain; general readiness unproven.
