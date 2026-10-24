@@ -94,3 +94,32 @@ Do not copy a CUDA/Triton/LLVM compiler lowering path into the submission.
 Next: read the primary material and selected source at pinned revisions, create
 a target-specific evidence-to-experiment matrix, and establish an RTX 5090
 profiling/benchmark baseline before modifying the frozen compiler.
+
+## Step 2 — primary-source review and reproducible resource baseline
+
+Completed 2026-10-24:
+
+- Read PufferAI's engineering retrospective, current PufferLib profiling source,
+  GPU MODE's evaluator, SOL-ExecBench timing implementation and paper, selected
+  FastKernels paper sections and README, and Atrex's primary abstract.
+- Pinned five repository revisions in `RESEARCH_PRODUCTION.md`. PufferLib's
+  current default is 5.0, not the retrospective's 4.0. SOL implementation uses
+  twice device L2 size despite an older 256 MB comment. Do not transfer stale
+  documentation or reduced-precision/datacenter results blindly.
+- Added `tools/profile_resources.py`: compile-only static PTX inventory, local
+  CUDA-driver resource/occupancy queries and hosted compilation register counts.
+  Preserves compiler, IR, metadata and PTX hashes. No compiler changes.
+- Local all-15 inspection succeeded: zero reported local bytes per thread on all
+  public kernels. This rules out local-memory spills for this local JIT result,
+  not hosted spills. Local m01 has one resource-resident block/SM (73,728-byte
+  dynamic shared launch); a01 grid has only four blocks.
+- Hosted all-15 compilation succeeded. a01 uses 128 registers/thread versus 48
+  locally; m01 uses 38 versus 40 locally. Hardware/backend differences matter.
+- Raw reports: `artifacts/resources-baseline-local.json` and
+  `artifacts/resources-baseline-hosted.json`; compiler remains `6fb720f...`.
+- Created bounded shared-loop expansion candidates 8/16/32/64 under ignored
+  artifacts, leaving `compile.py` frozen. Timing/acceptance is pending.
+
+Next: target paired timing of the expansion sweep, correctness on independent
+shared-loop tails, and cache-conditioned local measurement support. Do not call
+resource inspection a SASS/counter profile or claim hardware efficiency yet.

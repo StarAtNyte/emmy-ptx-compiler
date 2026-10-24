@@ -122,3 +122,21 @@ After the step, update both continuity files, commit the evidence and push the
 approved project. Do not manufacture progress by rerunning green tests without
 a changed hypothesis or concern. Do not finish or block the goal merely because
 video fields are absent while this technical improvement phase remains active.
+
+## Step 2 checkpoint — 2026-10-24
+
+Primary review and resource baseline completed; see `RESEARCH_PRODUCTION.md`
+for pinned revisions, inspected scope, experiment matrix and release gates.
+New tool: `tools/profile_resources.py`. Reports in ignored artifacts:
+`resources-baseline-local.json` and `resources-baseline-hosted.json`, all 15
+public kernels. Local reported local memory is zero throughout. Attention a01
+uses 128 hosted registers/thread vs 48 local; m01 uses 38 hosted vs 40 local.
+Do not infer hosted spill bytes or occupancy: API exposes register counts only.
+
+**Next action supersedes earlier discovery instructions:** measure ignored
+`artifacts/compiler-unroll{8,16,32,64}.py` against
+`artifacts/compiler-production-baseline.py` using paired hosted benchmarks.
+These change only the existing shared-leaf-loop expansion factor. Check PTX size,
+registers, independent tail cases and model/sanitizer gates before acceptance.
+`compile.py` remains unchanged. Add cache-conditioned local timing afterward;
+keep cache-conditioning operations outside the measured graph events.
