@@ -103,3 +103,17 @@ when signs prove truncation equivalent; final seven-pair m01/m02 medians remain
 64.160/5.056 µs. The fifth production iteration records exact-candidate semantic,
 range-shadowing/overflow, sanitizer, transformer and standalone-runtime gates.
 This correctness change is not a new speedup claim.
+
+## Integer/address CSE — rejected after neutral target timing
+
+`address-cse.patch` applies to accepted compiler at 1ad0dbf. It reuses pure integer
+instructions by actual register identity and clears reuse at raw mutation/control
+boundaries. Static PTX shrinks (m01 4547 → 4252 instructions), but seven paired
+RTX 5090 trials on five workloads show no win. Main remains unchanged. Partial
+80-case prior and 20-case fresh checks passed; the rest of the acceptance sweep
+was intentionally stopped after timing rejection. No full safety claim.
+
+`validation/2026-10-24-address-cse.json` preserves timings/resources/partial checks;
+`validation/2026-10-24-native-instructions.json` compares local-driver-linked
+sm86/sm120 cubins. Three workloads have identical disassembly; matmul native code
+changes without a target win. These are not hosted SASS or counter measurements.

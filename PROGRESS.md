@@ -713,3 +713,77 @@ Next: target instruction/occupancy/bottleneck profiling and measured optimizatio
 plus broader index/control-flow typing probes. CPU CI covers only two committed
 fixtures/three diagnostics; expand it with future retained counterexamples.
 Submission remains deferred, release archive stale, production readiness unproven.
+
+## Step 26 — conservative integer CSE rejected after target measurement
+
+Completed 2026-10-24; accepted compiler unchanged bb3a72b2...:
+
+- Built isolated instruction-level integer/address CSE keyed by opcode, actual
+  operand registers/immediates and type. Raw emission (branches/labels/in-place
+  updates) clears reuse; no text-based axis/value-name cache.
+- Fifteen public PTX/resource inspections succeed. PTX instructions drop, e.g.
+  m01 4547 → 4252 and vector add 61 → 44. This is static PTX, not machine-code
+  execution count, utilization or an established bottleneck improvement.
+- Seven alternating RTX 5090 pairs: m01 64.160 → 64.160 µs, a01 90.752 → 90.752,
+  large sum 21.152 → 21.152, vector add 2.976 → 2.976, independent shared matmul
+  31.392 → 31.424. No measured win; reject rather than adopt added compiler logic.
+- 80 prior isolated cases and 20 frozen fresh scope/strided cases completed and
+  passed. Intentionally stopped remaining 366-case acceptance sweep after timing
+  rejection. These partial gates are NOT full candidate acceptance evidence.
+- Preserved patch experiments/address-cse.patch and measurements/resources/partial
+  gates in validation/2026-10-24-address-cse.json. Main remains unchanged.
+
+Next: development-only driver-linked cubin/SASS inspection to distinguish static
+PTX changes from native code. Installed verified NVIDIA cuobjdump/nvdisasm 13.0.85
+redistributables under ignored artifacts/vendor. Prototype profile_sass.py uses
+cuLink and disassembly without kernel execution; verify it and document link-path
+and hardware limits before drawing conclusions. Hosted SASS/counters remain absent.
+
+## Step 27 — local-driver native instruction inspection established
+
+Completed 2026-10-24, compiler unchanged bb3a72b2:
+
+- Added development-only tools/profile_sass.py using documented cuLink APIs and
+  hash-verified NVIDIA cuobjdump/nvdisasm 13.0.85 redistributables. Inspects local
+  sm86 and explicit sm120 output without executing kernels or changing lowering.
+- Five before/after workloads inspected on each architecture. Vector add,
+  attention and large sum have identical full disassembly despite smaller CSE
+  PTX. Matmul code differs without a target timing win; rejected CSE remains out.
+- Captures separate entry/helper counts, resources and full binary/disassembly
+  hashes. Static counts include padding and are not dynamic execution counts.
+  Raw outputs remain ignored artifacts; compact reports, hashes and official
+  download provenance are in validation/2026-10-24-native-instructions.json.
+- Local driver 595.99.02, CUDA API 13020. cuLink relocatable compilation can differ
+  from direct module JIT, and is not hosted cubin capture. No hardware counters,
+  utilization, roofline or target spill-traffic claim. Explicit optimization-level
+  four control gives identical vector-add output to the default link settings.
+
+Next: native code highlights expensive integer division/remainder lowering;
+measure explicit power-of-two shift/mask lowering with exact signed semantics.
+
+## Step 28 — power-of-two index candidate shows large target gains; gates live
+
+Frozen unaccepted candidate 8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32:
+
+- Unsigned constant power-of-two division/remainder emits shifts/masks. Signed
+  floor division by a proven positive power of two uses arithmetic shift; Python
+  remainder uses a mask, including negative numerators. No kernel-name selection.
+- Seven paired RTX 5090 trials: m01 64.160 → 23.232 µs (2.762x), independent
+  shared matmul 31.392 → 15.008 (2.092x). Attention/sum/vector-add remain within
+  0.032 µs. Full first-trial outputs and later prefixes checked; clocks unlocked.
+- Local-driver sm120 m01 entry falls 26960 → 1458 static SASS instructions, REG
+  48 → 40. This codegen-path observation is not dynamic work or hosted SASS proof.
+- Discovery record validation/2026-10-24-power2-index-discovery.json; reconstructible
+  experiments/power2-index.patch applies to current accepted compiler. Main stays
+  bb3a72b2 until all exact-candidate correctness/performance gates pass.
+- Extended signed-index generator with explicit divisors and manifest parameters.
+  Final proof corpora power2-index-proof-d{1,2,8,32} have unique case IDs; generated
+  after candidate freeze. Earlier fresh-* directories have duplicate IDs across
+  roots and are preliminary, excluded from acceptance provenance.
+
+Live handles: 10753 final 48-case proof local checks; 92307 full 366 prior isolated
+regressions; 85282 hosted public/matmul/proof suites; 96497 transformer; 61493
+selected sanitizers. Reports use power2-index-* under artifacts. Also preliminary
+43011 may finish independently; do not confuse it with final proof corpus.
+Next: inspect those exact-hash gates, runtime equivalence, paired timing repeat,
+then accept or reject. CPU snapshots will need reviewed updates only if adopted.

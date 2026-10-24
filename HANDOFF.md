@@ -196,3 +196,40 @@ validation/2026-10-24-cpu-ci.json. Nightly schedule is configured, but sustained
 history and GPU coverage are not established by this first matrix. No live jobs
 remain from this implementation step. Next: target bottleneck profiling/measured
 optimization and broader typing probes. Submission remains deferred.
+
+## Step 26 — address CSE rejected, SASS inspection underway
+
+Main remains bb3a72b2. experiments/address-cse.patch preserves a conservative
+register-identity CSE candidate. Static PTX shrinks, but five seven-pair RTX 5090
+workloads have no gain (at most 0.032 µs gap). 80 prior/20 fresh cases passed;
+remaining acceptance sweep intentionally stopped after rejection. Evidence:
+validation/2026-10-24-address-cse.json. Do not adopt or claim complete safety gates.
+Development-only profile_sass.py prototype uses local driver cuLink and verified
+NVIDIA cuobjdump/nvdisasm 13.0.85 binaries in artifacts/vendor. Baseline/candidate
+sm86 inspections sessions 77930/60969 are live. Next verify outputs, test explicit
+sm120 code generation if supported, preserve exact instruction/resource evidence.
+These are local-driver link outputs, not hosted SASS or measured hardware counters.
+
+## Current work — native profiling and unaccepted power-of-two index candidate
+
+Main stays accepted bb3a72b2. Address-CSE candidate rejected: five target timings
+neutral despite smaller PTX; 80 prior/20 fresh checks passed before remaining
+acceptance sweep intentionally stopped. Patch/evidence address-cse.* retained.
+profile_sass.py now inspects local-driver-linked sm86/sm120 cubins. Native reports
+and verified NVIDIA tool provenance: validation/2026-10-24-native-instructions.json.
+These are local cuLink outputs, not hosted SASS/counters. TESTING documents limits.
+
+Frozen candidate artifacts/compiler-power2-index.py, hash
+8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32,
+emits exact shifts/masks for power-of-two unsigned and signed-floor indices.
+experiments/power2-index.patch reconstructs it from main. First seven-pair target
+medians: m01 64.160 → 23.232 µs (2.762x); independent shared matmul 31.392 → 15.008
+(2.092x). Attention/sum/vector add within noise. UNACCEPTED: correctness gates live.
+Discovery: validation/2026-10-24-power2-index-discovery.json.
+
+Live sessions: 10753 final proof-local; 92307 prior 366 isolated regressions;
+85282 hosted public/matmul/four proof suites; 96497 transformer; 61493 selected
+sanitizers. Final frozen proof dirs are power2-index-proof-d{1,2,8,32}; earlier
+fresh-* preliminary dirs have duplicate case IDs and are excluded from acceptance.
+Next collect gates, standalone runtime, repeat target timing, then decide adoption
+and update CPU snapshots only with numerical evidence. Submission deferred.

@@ -1,0 +1,333 @@
+{
+  "status": "unaccepted frozen candidate; correctness/sanitizer/model/hosted gates in progress",
+  "baseline_sha256": "bb3a72b276f87396b15e9e8e5d0d984b9f1eb86330c43cb6189d6856b85f22fb",
+  "candidate_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+  "target_timing": {
+    "clock_locked": false,
+    "warmup": 8,
+    "iters": 75,
+    "compilers": {
+      "baseline": "bb3a72b276f87396b15e9e8e5d0d984b9f1eb86330c43cb6189d6856b85f22fb",
+      "candidate": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32"
+    },
+    "timing_return_limit": 64,
+    "results": [
+      {
+        "problem": "m01_matmul_512",
+        "samples_us": {
+          "baseline": [
+            64.16,
+            64.16,
+            64.128,
+            64.16,
+            64.16,
+            64.16,
+            64.16
+          ],
+          "candidate": [
+            23.232,
+            23.168,
+            23.264,
+            23.232,
+            23.2,
+            23.232,
+            23.232
+          ]
+        },
+        "baseline_median_us": 64.16,
+        "candidate_median_us": 23.232,
+        "speedup": 2.7617079889807163,
+        "outputs_passed": true,
+        "output_check": "full first trial; returned prefix thereafter",
+        "registers": {
+          "baseline": {
+            "k_matmul_2967be": {
+              "k_matmul_2967be": 48
+            }
+          },
+          "candidate": {
+            "k_matmul_2967be": {
+              "k_matmul_2967be": 40
+            }
+          }
+        }
+      },
+      {
+        "problem": "a01_attention",
+        "samples_us": {
+          "baseline": [
+            90.784,
+            90.752,
+            90.72,
+            90.752,
+            90.784,
+            90.784,
+            90.784
+          ],
+          "candidate": [
+            90.752,
+            90.752,
+            90.752,
+            90.752,
+            90.784,
+            90.752,
+            90.784
+          ]
+        },
+        "baseline_median_us": 90.784,
+        "candidate_median_us": 90.752,
+        "speedup": 1.000352609308886,
+        "outputs_passed": true,
+        "output_check": "full first trial; returned prefix thereafter",
+        "registers": {
+          "baseline": {
+            "k_matmul_softmax_reduce_b55365": {
+              "k_matmul_softmax_reduce_b55365": 128
+            }
+          },
+          "candidate": {
+            "k_matmul_softmax_reduce_b55365": {
+              "k_matmul_softmax_reduce_b55365": 128
+            }
+          }
+        }
+      },
+      {
+        "problem": "r02_big_sum",
+        "samples_us": {
+          "baseline": [
+            21.152,
+            21.152,
+            21.152,
+            21.152,
+            21.152,
+            21.152,
+            21.184
+          ],
+          "candidate": [
+            21.152,
+            21.152,
+            21.152,
+            21.184,
+            21.152,
+            21.152,
+            21.152
+          ]
+        },
+        "baseline_median_us": 21.152,
+        "candidate_median_us": 21.152,
+        "speedup": 1.0,
+        "outputs_passed": true,
+        "output_check": "full first trial; returned prefix thereafter",
+        "registers": {
+          "baseline": {
+            "k_sum_1_reduce": {
+              "k_sum_1_reduce": 18
+            }
+          },
+          "candidate": {
+            "k_sum_1_reduce": {
+              "k_sum_1_reduce": 17
+            }
+          }
+        }
+      },
+      {
+        "problem": "p01_vector_add",
+        "samples_us": {
+          "baseline": [
+            2.976,
+            2.944,
+            2.944,
+            3.008,
+            2.976,
+            3.008,
+            2.944
+          ],
+          "candidate": [
+            3.04,
+            2.976,
+            3.008,
+            2.976,
+            3.008,
+            2.976,
+            2.976
+          ]
+        },
+        "baseline_median_us": 2.976,
+        "candidate_median_us": 2.976,
+        "speedup": 1.0,
+        "outputs_passed": true,
+        "output_check": "full first trial; returned prefix thereafter",
+        "registers": {
+          "baseline": {
+            "k_add_pointwise": {
+              "k_add_pointwise": 22
+            }
+          },
+          "candidate": {
+            "k_add_pointwise": {
+              "k_add_pointwise": 22
+            }
+          }
+        }
+      },
+      {
+        "problem": "m_shared_384_256_320",
+        "samples_us": {
+          "baseline": [
+            31.392,
+            31.36,
+            31.392,
+            31.392,
+            31.392,
+            31.392,
+            31.392
+          ],
+          "candidate": [
+            15.04,
+            15.008,
+            15.008,
+            15.008,
+            15.008,
+            15.008,
+            15.008
+          ]
+        },
+        "baseline_median_us": 31.392,
+        "candidate_median_us": 15.008,
+        "speedup": 2.091684434968017,
+        "outputs_passed": true,
+        "output_check": "full first trial; returned prefix thereafter",
+        "registers": {
+          "baseline": {
+            "k_matmul_1b049d": {
+              "k_matmul_1b049d": 40
+            }
+          },
+          "candidate": {
+            "k_matmul_1b049d": {
+              "k_matmul_1b049d": 40
+            }
+          }
+        }
+      }
+    ]
+  },
+  "local_driver_sm120_native_inspection": {
+    "profiler_sha256": "c26f7e4ae8898780e997b27c194b123ed4e650e8ba573581f1bf88f0b9ba9916",
+    "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+    "local_arch": "sm_86",
+    "requested_codegen_target": "sm_120",
+    "driver_version": 13020,
+    "cuobjdump_sha256": "1763b5367167e73939c853f6c71bdec7be0ea4a1cfb6625e4c81d7c7a1f801ae",
+    "nvdisasm_sha256": "3c27bded09bd877807207b62db8186a0a9a359d10311ab6e2c885f9b418c9f41",
+    "cuobjdump_version": "cuobjdump: NVIDIA (R) fat binary listing tool\nCopyright (c) 2005-2025 NVIDIA Corporation\nBuilt on Thu_Aug_14_07:26:37_PM_PDT_2025\nCuda compilation tools, release 13.0, V13.0.85\nBuild cuda_13.0.r13.0/compiler.36400806_0\n",
+    "executes_kernels": false,
+    "path": "local driver cuLink relocatable PTX compilation; not hosted cubin capture",
+    "results": [
+      {
+        "problem": "m01_matmul_512",
+        "entry": "k_matmul_2967be",
+        "ir_sha256": "ed9ab32776ce0de8b0d1f0367da54c586bf993c964efc01482666247a976dc02",
+        "meta_sha256": "3324370a2d29614c6c7ff7cf549563f9afb22bab0ed31ed62d8ffd27c59dcd57",
+        "emitted_ptx_sha256": "33f7cf7a0b25eccea4d0ffb6abf6e8566d2d8f0d10e2bc5bf63365c57fae1235",
+        "effective_ptx_sha256": "33f7cf7a0b25eccea4d0ffb6abf6e8566d2d8f0d10e2bc5bf63365c57fae1235",
+        "cubin_sha256": "98e675f22ff537775f75a977ae28e23fd183c64e75ad3eb6668e447dbb0da683",
+        "sass_sha256": "6e4aca728dfca814889813eb27f0a7e0246de685bb1022eaa5f1b5f4fa59aee4",
+        "instruction_sequence_sha256": "d079cdef6c21c7dfb436431de19f969109c92f7816e80a8ef86a96a8894d0412",
+        "static_instruction_count": 1458,
+        "entry_instruction_count": 1458,
+        "function_instruction_counts": {
+          "k_matmul_2967be": 1458
+        },
+        "counts_include": "all functions and padding, not dynamic execution counts",
+        "opcodes": {
+          "BAR.SYNC.DEFER_BLOCKING": 2,
+          "BRA": 2,
+          "CS2R": 1,
+          "DEPBAR.LE": 1,
+          "EXIT": 2,
+          "F2I.FTZ.U32.TRUNC.NTZ": 2,
+          "FFMA": 256,
+          "HFMA2": 2,
+          "IABS": 2,
+          "IADD": 274,
+          "IMAD": 163,
+          "IMAD.HI.U32": 4,
+          "IMAD.SHL.U32": 4,
+          "IMAD.WIDE": 13,
+          "ISETP.GE.AND": 4,
+          "ISETP.GE.U32.AND": 5,
+          "LDC": 1,
+          "LDC.64": 5,
+          "LDCU.64": 1,
+          "LDGDEPBAR": 3,
+          "LDGSTS.E.128": 9,
+          "LDS": 128,
+          "LDS.64": 64,
+          "LEA": 266,
+          "LEA.HI.SX32": 7,
+          "LOP3.LUT": 6,
+          "MOV": 200,
+          "MUFU.RCP": 2,
+          "NOP": 8,
+          "S2R": 2,
+          "S2UR": 1,
+          "SEL": 1,
+          "SHF.L.U32": 1,
+          "SHF.R.S32.HI": 3,
+          "SHF.R.U32.HI": 3,
+          "STG.E": 4,
+          "UI2F.U32.RP": 2,
+          "UIADD3": 1,
+          "ULEA": 1,
+          "UMOV": 2
+        },
+        "resources": "\nResource usage:\n Common:\n  GLOBAL:0\n Function k_matmul_2967be:\n  REG:40 STACK:0 SHARED:1024 LOCAL:0 CONSTANT[0]:920 TEXTURE:0 SURFACE:0 SAMPLER:0\n"
+      },
+      {
+        "problem": "p01_vector_add",
+        "entry": "k_add_pointwise",
+        "ir_sha256": "90088bc4c7346b9a5916205fdb96926f52cc0f5e3c5c08527d7b0796b0c47fc5",
+        "meta_sha256": "4607a6a14553ec256b2073ff8fef18a850e315033f4fdace21f26fdcc2a867c6",
+        "emitted_ptx_sha256": "43fb8ee814aafc31e193216e08449a809d28ad92cf77dd93948768e347214cfe",
+        "effective_ptx_sha256": "43fb8ee814aafc31e193216e08449a809d28ad92cf77dd93948768e347214cfe",
+        "cubin_sha256": "46735346979224c0b4382c9f172fe83ae2793086a26c5e573ff8459035b592d9",
+        "sass_sha256": "a455b94e5f504fe29de4332187604181e7f63c310b41ceeac9e08396979c0e51",
+        "instruction_sequence_sha256": "df1a678af38a6b3fcf219013270db6befa5b7cb5b4bb5c51b7a3afa51a6758b5",
+        "static_instruction_count": 40,
+        "entry_instruction_count": 40,
+        "function_instruction_counts": {
+          "k_add_pointwise": 40
+        },
+        "counts_include": "all functions and padding, not dynamic execution counts",
+        "opcodes": {
+          "BRA": 1,
+          "EXIT": 2,
+          "FADD": 2,
+          "IADD": 1,
+          "IMAD": 1,
+          "IMAD.WIDE": 6,
+          "ISETP.GE.U32.AND": 1,
+          "LDC": 2,
+          "LDC.64": 3,
+          "LDCU.64": 1,
+          "LDG.E": 4,
+          "LOP3.LUT": 1,
+          "NOP": 10,
+          "S2R": 1,
+          "S2UR": 1,
+          "SHF.L.U32": 1,
+          "STG.E": 2
+        },
+        "resources": "\nResource usage:\n Common:\n  GLOBAL:0\n Function k_add_pointwise:\n  REG:22 STACK:0 SHARED:0 LOCAL:0 CONSTANT[0]:920 TEXTURE:0 SURFACE:0 SAMPLER:0\n"
+      }
+    ]
+  },
+  "limits": [
+    "Unlocked target clocks, full outputs first trial and prefixes thereafter",
+    "Native inspection is local-driver cuLink, not hosted SASS or dynamic executed instruction counts",
+    "No candidate acceptance until all exact-hash gates complete"
+  ]
+}

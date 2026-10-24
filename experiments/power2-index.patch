@@ -1,0 +1,26 @@
+--- a/compile.py
++++ b/compile.py
+@@ -154,6 +154,11 @@
+         return found
+ 
+     def instruction(self, opcode, *args, kind='r'):
++        if opcode in ('div.u32', 'rem.u32') and str(args[1]).isdigit():
++            divisor = int(args[1])
++            if divisor > 0 and divisor & (divisor-1) == 0:
++                opcode, args = (('shr.u32', (args[0], divisor.bit_length()-1))
++                                if opcode == 'div.u32' else ('and.b32', (args[0], divisor-1)))
+         result = self.reg(kind)
+         self.emit(f'{opcode} {result}, ' + ', '.join(map(str, args)) + ';')
+         return result
+@@ -207,6 +212,11 @@
+                 return self.instruction(f'setp.{comparisons[expr.op]}.s32', left, right, kind='p')
+             if expr.op in ('/', '//', '%'):
+                 a, b = self.index_interval(expr.left), self.index_interval(expr.right)
++                if b is not None and b[0] == b[1] and b[0] > 0 and b[0] & (b[0]-1) == 0:
++                    # Arithmetic shift floors signed division, including negative
++                    # numerators; masking gives the divisor-signed remainder.
++                    return (self.instruction('and.b32', left, b[0]-1) if expr.op == '%'
++                            else self.instruction('shr.s32', left, b[0].bit_length()-1))
+                 if a is not None and b is not None and a[0] >= 0 and b[0] > 0:
+                     return self.instruction('rem.s32' if expr.op == '%' else 'div.s32', left, right)
+                 # PTX rounds signed division toward zero. The IR expression

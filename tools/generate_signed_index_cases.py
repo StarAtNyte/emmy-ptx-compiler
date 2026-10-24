@@ -18,6 +18,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--out', type=Path, default=Path('artifacts/signed-index'))
     parser.add_argument('--seed', type=int, default=0)
+    parser.add_argument('--divisor', type=int, choices=(1,2,4,8,16,32),
+                        help='Use a fixed power-of-two divisor instead of a varying divisor')
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     template = root / 'challenge/problems/r01_array_sum'
@@ -34,6 +36,8 @@ def main():
                 b = lambda o, l, r: BinaryExpr(o, l, r)
                 numerator = b('-', Var(axis), k(32))
                 divisor = b('+', k(3), b('%', Var(axis), k(5)))
+                if args.divisor is not None:
+                    divisor = k(args.divisor)
                 if negative:
                     divisor = b('-', k(0), divisor)
                 index = b('+', b(op, numerator, divisor), k(64))
@@ -45,6 +49,8 @@ def main():
                     if type(node.op).__name__ == 'KernelOp':
                         node.op = replace(node.op, body=(tile,))
                 label = f'{dict(zip(("/", "//", "%"), ("divide", "floor", "mod")))[op]}_{"negative" if negative else "positive"}_s{args.seed}' + ('_renamed' if renamed else '')
+                if args.divisor is not None:
+                    label += f'_d{args.divisor}'
                 folder = args.out / label
                 folder.mkdir(parents=True, exist_ok=True)
                 raw = json.dumps(graph.to_dict(), indent=2, default=str)+'\n'
@@ -62,11 +68,14 @@ def main():
                 (folder/'meta.json').write_text(json.dumps(meta,indent=2)+'\n')
                 n = np.arange(64,dtype=np.int64)-32
                 d = 3+np.arange(64,dtype=np.int64)%5
+                if args.divisor is not None:
+                    d = np.full(64,args.divisor,dtype=np.int64)
                 if negative:
                     d = -d
                 coordinates = (np.remainder(n,d) if op=='%' else np.floor_divide(n,d))+64
                 np.savez(folder/'expected.npz', sum_1=x[coordinates])
-                cases.append({'problem':label, 'ir_sha256':hashlib.sha256(raw.encode()).hexdigest(), 'oracle':'NumPy floor_divide/remainder on signed int64; all coordinates in bounds'})
+                cases.append({'problem':label, 'seed':args.seed, 'divisor':args.divisor, 'operator':op,
+                              'negative_divisor':negative, 'ir_sha256':hashlib.sha256(raw.encode()).hexdigest(), 'oracle':'NumPy floor_divide/remainder on signed int64; all coordinates in bounds'})
     (args.out/'manifest.json').write_text(json.dumps({'generator_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'cases':cases},indent=2)+'\n')
     print('Generated',len(cases),'signed-index fixtures')
 

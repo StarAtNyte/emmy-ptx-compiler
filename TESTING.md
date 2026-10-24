@@ -364,3 +364,34 @@ automatically refreshes snapshots. Intentional codegen changes require reviewed
 snapshot updates backed by numerical GPU gates. CI reports are retained as Actions
 artifacts for 14 days. This is compilation/CLI coverage on two fixtures, not GPU
 correctness, sanitization, throughput or proof of long-running CI stability.
+
+## Native instruction inspection (development only)
+
+`tools/profile_sass.py` uses CUDA driver `cuLink*` to generate cubins and NVIDIA
+`cuobjdump`/`nvdisasm` to inspect them without executing kernels. It does not change
+submission lowering. An explicit `--target sm_120` can inspect local-driver codegen
+for that architecture even on the local sm_86 GPU. This is **not** a captured cubin
+from the hosted runner; the relocatable link path can also differ from the
+runner's direct module-loading JIT. Never infer target utilization from it.
+
+NVIDIA's [CUDA 13.0.2 redistribution manifest](https://developer.download.nvidia.com/compute/cuda/redist/redistrib_13.0.2.json)
+pins both linux-x86_64 tools at 13.0.85. Archive URLs and verified SHA-256 values
+are preserved in `validation/2026-10-24-native-instructions.json`. Download those
+archives, verify hashes and extract under `artifacts/vendor`, then:
+
+```sh
+.venv/bin/python tools/profile_sass.py challenge/problems/m01_matmul_512 --target sm_120 --cuobjdump artifacts/vendor/cuda_cuobjdump-linux-x86_64-13.0.85-archive/bin/cuobjdump --nvdisasm artifacts/vendor/cuda_nvdisasm-linux-x86_64-13.0.85-archive/bin/nvdisasm --out artifacts/sass-m01-sm120
+```
+
+The output directory retains PTX, cubin, full disassembly, resource text and a JSON
+report. Reports include compiler/IR/meta/tool/cubin/disassembly hashes, local driver
+version, requested codegen architecture, opcode counts, total static counts and
+per-function counts. Counts include padding; cubin totals can include helper
+functions. They are not dynamic instruction counts, spill traffic or counters.
+Primary contracts: [CUDA module/link APIs](https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/group__CUDA__MODULE.html),
+[binary utilities](https://docs.nvidia.com/cuda/cuda-binary-utilities/).
+
+For the rejected address-CSE candidate, vector add, attention and large sum have
+identical disassembly despite reduced PTX in both sm86/sm120 local-driver outputs.
+Matmul code changes without a measured target win. These observations motivate
+examining native code before selecting further PTX-size optimizations.
