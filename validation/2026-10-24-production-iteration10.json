@@ -6867,5 +6867,635 @@
         ]
       }
     ]
+  },
+  "hosted_cpu_ci": {
+    "run": {
+      "conclusion": "success",
+      "headSha": "998f3b05cdafd6796d69870b6431cf6789199b47",
+      "jobs": [
+        {
+          "completedAt": "2026-10-24T13:45:52Z",
+          "conclusion": "success",
+          "databaseId": 120888496621,
+          "name": "compiler-contract (3.13)",
+          "startedAt": "2026-10-24T13:45:09Z",
+          "status": "completed",
+          "steps": [
+            {
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "number": 2,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+              "number": 3,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Install pinned CPU runtime",
+              "number": 4,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Check isolated CLI and committed PTX snapshots without Torch",
+              "number": 5,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Retain contract evidence",
+              "number": 6,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Post Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+              "number": 11,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "number": 12,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 13,
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/StarAtNyte/emmy-ptx-compiler/actions/runs/40099484929/job/120888496621"
+        },
+        {
+          "completedAt": "2026-10-24T13:46:01Z",
+          "conclusion": "success",
+          "databaseId": 120888496718,
+          "name": "compiler-contract (3.12)",
+          "startedAt": "2026-10-24T13:45:10Z",
+          "status": "completed",
+          "steps": [
+            {
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "number": 2,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+              "number": 3,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Install pinned CPU runtime",
+              "number": 4,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Check isolated CLI and committed PTX snapshots without Torch",
+              "number": 5,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Retain contract evidence",
+              "number": 6,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Post Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+              "number": 11,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "number": 12,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 13,
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/StarAtNyte/emmy-ptx-compiler/actions/runs/40099484929/job/120888496718"
+        },
+        {
+          "completedAt": "2026-10-24T13:45:46Z",
+          "conclusion": "success",
+          "databaseId": 120888496786,
+          "name": "compiler-contract (3.14)",
+          "startedAt": "2026-10-24T13:45:09Z",
+          "status": "completed",
+          "steps": [
+            {
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "number": 2,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+              "number": 3,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Install pinned CPU runtime",
+              "number": 4,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Check isolated CLI and committed PTX snapshots without Torch",
+              "number": 5,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Retain contract evidence",
+              "number": 6,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Post Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+              "number": 11,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "number": 12,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 13,
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/StarAtNyte/emmy-ptx-compiler/actions/runs/40099484929/job/120888496786"
+        }
+      ],
+      "status": "completed",
+      "url": "https://github.com/StarAtNyte/emmy-ptx-compiler/actions/runs/40099484929"
+    },
+    "reports": {
+      "3.12": {
+        "compiler_sha256": "bf07d517f3a31619ce7f46514def0e8cedfdf1ea4f0f5b1206bb76fd4c85fac3",
+        "manifest_sha256": "51278724756b65bec76bfbfe4775bf2ffd1ab3d692707552b180ef08b465fd7e",
+        "python": "3.12.15 (main, Oct  1 2026, 02:35:59) [GCC 13.3.0]",
+        "torch_present": false,
+        "packages": {
+          "emmy-ml": "0.3.11",
+          "numpy": "2.5.4"
+        },
+        "scope": "CPU CLI/code-generation contract, not GPU execution",
+        "results": [
+          {
+            "case": "2026-10-24-scope-shrunk",
+            "passed": true,
+            "ptx_sha256": "808b7dd2be9067300a0d7d6a873675ea26a09ecdc4288202dc07b74a22b759c3",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-strided-shrunk",
+            "passed": true,
+            "ptx_sha256": "d978ffa0ed5c3a837c6d36ce061dedd966ad8ba03ef64fb20c1000d4eb504a68",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-power2-int32-extremes",
+            "passed": true,
+            "ptx_sha256": "1bfd5c4f54e3ceff6a220c2b70ebbb8994b77a070908ac2dffa44501218fe5eb",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-predicate-shared-pair",
+            "passed": true,
+            "ptx_sha256": "66aa5809246c005c37a822359527f949697a523f6abcce0ea63c7af8013c9b2e",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-f32-float-arithmetic",
+            "passed": true,
+            "ptx_sha256": "298d2f0b086051ddbb84aadc062bf720835e63c0d3c3570872930a2659172e8c",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-f32-float-to-int",
+            "passed": true,
+            "ptx_sha256": "d29a0ed56fbc94d56d79dbc72f68c924fbab8bf0b7af175927d40cc2438fa3f7",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-f32-mixed-compare",
+            "passed": true,
+            "ptx_sha256": "2ea2baa1bf50960f933b72527b1242da8f3362ecb11de133670448e6de8f2d82",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-f32-nan-truth",
+            "passed": true,
+            "ptx_sha256": "34a9e8da648ec8f7d9b7d0e6447c500378c0191b6cf86b6f7ecd846205ab6ddd",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-address-extra-load",
+            "passed": true,
+            "ptx_sha256": "f97d5b20d00422899305f365bb2d562eb4c57f41bfeb2271afc2be97129bf30a",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-address-scalar-flat",
+            "passed": true,
+            "ptx_sha256": "892b296b619d44b30fcc3d8e18dc1304474e64f6f1713287c3a80f8dd3e3a50c",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-address-shared-pair",
+            "passed": true,
+            "ptx_sha256": "64dfdc2da4071207ec81322c244ae60dbe9ba0fef72589e62cdb96e26de1323d",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-abi-reordered",
+            "passed": true,
+            "ptx_sha256": "c86f56f7882c9d797f637bcbd41e200efbf7ff4f5d28035427534bcc8d593b3c",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "tensor_f16",
+            "passed": true,
+            "stderr": "compile.py: Kernel k_sum_1_reduce, tensor x: unsupported tensor dtype f16\n"
+          },
+          {
+            "case": "write_f16",
+            "passed": true,
+            "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write dtype f16\n"
+          },
+          {
+            "case": "write_swizzle",
+            "passed": true,
+            "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write swizzle B32\n"
+          },
+          {
+            "case": "floating_index",
+            "passed": true,
+            "stderr": "compile.py: Kernel k_sum_1_reduce: unsupported floating index expression Literal(value=0.5, dtype='float')\n"
+          }
+        ]
+      },
+      "3.13": {
+        "compiler_sha256": "bf07d517f3a31619ce7f46514def0e8cedfdf1ea4f0f5b1206bb76fd4c85fac3",
+        "manifest_sha256": "51278724756b65bec76bfbfe4775bf2ffd1ab3d692707552b180ef08b465fd7e",
+        "python": "3.13.16 (main, Oct  1 2026, 02:37:54) [GCC 13.3.0]",
+        "torch_present": false,
+        "packages": {
+          "emmy-ml": "0.3.11",
+          "numpy": "2.5.4"
+        },
+        "scope": "CPU CLI/code-generation contract, not GPU execution",
+        "results": [
+          {
+            "case": "2026-10-24-scope-shrunk",
+            "passed": true,
+            "ptx_sha256": "808b7dd2be9067300a0d7d6a873675ea26a09ecdc4288202dc07b74a22b759c3",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-strided-shrunk",
+            "passed": true,
+            "ptx_sha256": "d978ffa0ed5c3a837c6d36ce061dedd966ad8ba03ef64fb20c1000d4eb504a68",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-power2-int32-extremes",
+            "passed": true,
+            "ptx_sha256": "1bfd5c4f54e3ceff6a220c2b70ebbb8994b77a070908ac2dffa44501218fe5eb",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-predicate-shared-pair",
+            "passed": true,
+            "ptx_sha256": "66aa5809246c005c37a822359527f949697a523f6abcce0ea63c7af8013c9b2e",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-f32-float-arithmetic",
+            "passed": true,
+            "ptx_sha256": "298d2f0b086051ddbb84aadc062bf720835e63c0d3c3570872930a2659172e8c",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-f32-float-to-int",
+            "passed": true,
+            "ptx_sha256": "d29a0ed56fbc94d56d79dbc72f68c924fbab8bf0b7af175927d40cc2438fa3f7",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-f32-mixed-compare",
+            "passed": true,
+            "ptx_sha256": "2ea2baa1bf50960f933b72527b1242da8f3362ecb11de133670448e6de8f2d82",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-f32-nan-truth",
+            "passed": true,
+            "ptx_sha256": "34a9e8da648ec8f7d9b7d0e6447c500378c0191b6cf86b6f7ecd846205ab6ddd",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-address-extra-load",
+            "passed": true,
+            "ptx_sha256": "f97d5b20d00422899305f365bb2d562eb4c57f41bfeb2271afc2be97129bf30a",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-address-scalar-flat",
+            "passed": true,
+            "ptx_sha256": "892b296b619d44b30fcc3d8e18dc1304474e64f6f1713287c3a80f8dd3e3a50c",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-address-shared-pair",
+            "passed": true,
+            "ptx_sha256": "64dfdc2da4071207ec81322c244ae60dbe9ba0fef72589e62cdb96e26de1323d",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-abi-reordered",
+            "passed": true,
+            "ptx_sha256": "c86f56f7882c9d797f637bcbd41e200efbf7ff4f5d28035427534bcc8d593b3c",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "tensor_f16",
+            "passed": true,
+            "stderr": "compile.py: Kernel k_sum_1_reduce, tensor x: unsupported tensor dtype f16\n"
+          },
+          {
+            "case": "write_f16",
+            "passed": true,
+            "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write dtype f16\n"
+          },
+          {
+            "case": "write_swizzle",
+            "passed": true,
+            "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write swizzle B32\n"
+          },
+          {
+            "case": "floating_index",
+            "passed": true,
+            "stderr": "compile.py: Kernel k_sum_1_reduce: unsupported floating index expression Literal(value=0.5, dtype='float')\n"
+          }
+        ]
+      },
+      "3.14": {
+        "compiler_sha256": "bf07d517f3a31619ce7f46514def0e8cedfdf1ea4f0f5b1206bb76fd4c85fac3",
+        "manifest_sha256": "51278724756b65bec76bfbfe4775bf2ffd1ab3d692707552b180ef08b465fd7e",
+        "python": "3.14.8 (main, Oct  1 2026, 02:38:33) [GCC 13.3.0]",
+        "torch_present": false,
+        "packages": {
+          "emmy-ml": "0.3.11",
+          "numpy": "2.5.4"
+        },
+        "scope": "CPU CLI/code-generation contract, not GPU execution",
+        "results": [
+          {
+            "case": "2026-10-24-scope-shrunk",
+            "passed": true,
+            "ptx_sha256": "808b7dd2be9067300a0d7d6a873675ea26a09ecdc4288202dc07b74a22b759c3",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-strided-shrunk",
+            "passed": true,
+            "ptx_sha256": "d978ffa0ed5c3a837c6d36ce061dedd966ad8ba03ef64fb20c1000d4eb504a68",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-power2-int32-extremes",
+            "passed": true,
+            "ptx_sha256": "1bfd5c4f54e3ceff6a220c2b70ebbb8994b77a070908ac2dffa44501218fe5eb",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-predicate-shared-pair",
+            "passed": true,
+            "ptx_sha256": "66aa5809246c005c37a822359527f949697a523f6abcce0ea63c7af8013c9b2e",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-f32-float-arithmetic",
+            "passed": true,
+            "ptx_sha256": "298d2f0b086051ddbb84aadc062bf720835e63c0d3c3570872930a2659172e8c",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-f32-float-to-int",
+            "passed": true,
+            "ptx_sha256": "d29a0ed56fbc94d56d79dbc72f68c924fbab8bf0b7af175927d40cc2438fa3f7",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-f32-mixed-compare",
+            "passed": true,
+            "ptx_sha256": "2ea2baa1bf50960f933b72527b1242da8f3362ecb11de133670448e6de8f2d82",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-f32-nan-truth",
+            "passed": true,
+            "ptx_sha256": "34a9e8da648ec8f7d9b7d0e6447c500378c0191b6cf86b6f7ecd846205ab6ddd",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-address-extra-load",
+            "passed": true,
+            "ptx_sha256": "f97d5b20d00422899305f365bb2d562eb4c57f41bfeb2271afc2be97129bf30a",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-address-scalar-flat",
+            "passed": true,
+            "ptx_sha256": "892b296b619d44b30fcc3d8e18dc1304474e64f6f1713287c3a80f8dd3e3a50c",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-address-shared-pair",
+            "passed": true,
+            "ptx_sha256": "64dfdc2da4071207ec81322c244ae60dbe9ba0fef72589e62cdb96e26de1323d",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-abi-reordered",
+            "passed": true,
+            "ptx_sha256": "c86f56f7882c9d797f637bcbd41e200efbf7ff4f5d28035427534bcc8d593b3c",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "tensor_f16",
+            "passed": true,
+            "stderr": "compile.py: Kernel k_sum_1_reduce, tensor x: unsupported tensor dtype f16\n"
+          },
+          {
+            "case": "write_f16",
+            "passed": true,
+            "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write dtype f16\n"
+          },
+          {
+            "case": "write_swizzle",
+            "passed": true,
+            "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write swizzle B32\n"
+          },
+          {
+            "case": "floating_index",
+            "passed": true,
+            "stderr": "compile.py: Kernel k_sum_1_reduce: unsupported floating index expression Literal(value=0.5, dtype='float')\n"
+          }
+        ]
+      }
+    }
   }
 }

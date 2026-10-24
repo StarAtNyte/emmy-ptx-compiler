@@ -972,7 +972,7 @@ Completed 2026-10-24:
   existing isolated no-Torch 3.12.13 runtime; dependencies unchanged.
 - Scalar/current/submission ZIP aliases now hold the same verified archive. Old
   predicate archive remains available and its record is preserved separately as
-  predicate-package.json. Latest package evidence is current-package.json.
+  predicate-package.json. Historical package evidence is scalar-package.json.
 - Updated README/current handoff. No contest entry submitted or broad production
   readiness claimed. Next: rank/ABI/static-shape validation, additional operations
   and target hardware lower-bound/bottleneck work.
@@ -1006,3 +1006,20 @@ Completed 2026-10-24:
 Next: publish and verify actual sixteen-check CI, refresh changed-code archive;
 then broad ABI/static-shape diagnostics that preserve these valid layouts.
 Submission deferred and general production readiness unproven.
+
+## Step 38 — address-fix sixteen-check CI and archive verified
+
+Completed 2026-10-24:
+
+- Published address fix as 998f3b0. Actions run 40099484929 passes sixteen checks
+  on Python 3.12/3.13/3.14. Downloaded reports verify bf07d517, Torch absent and
+  all twelve positive/four negative checks; full evidence joins iteration10.
+- Archived committed 998f3b0. Archive SHA256
+  79e840c54d289418c909fbf1aa04ec1a6ca807ea39cf606d7c8b1f6c72916b05
+  and packaged compiler match verified bytes. Extracted hosted scalar-add, matmul
+  and attention checks pass in the existing isolated no-Torch 3.12.13 runtime.
+- Address/current/submission ZIP aliases hold identical verified bytes. Preserved
+  prior scalar evidence as scalar-package.json; current-package.json now records
+  the address checkpoint. Updated README and current handoff.
+- No entry submitted. Broad ABI/static-shape/launch diagnostics, operation/dtype
+  coverage and target hardware lower-bound work remain; readiness unproven.

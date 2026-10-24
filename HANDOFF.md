@@ -67,8 +67,9 @@ valid scalar logical-view/allocation rank differences, no order/coop mismatch.
 Do not impose strict shape-rank equality in future validation.
 
 Current CPU manifest adds four addressing/ABI fixtures; existing eight goldens
-unchanged, sixteen no-Torch checks pass locally. Updated Actions matrix and code
-archive still pending publication. No full bounds/ABI validator claim.
+unchanged. Sixteen no-Torch checks pass locally and on Python 3.12/3.13/3.14
+in Actions run 40099484929; downloaded reports verify bf07d517. Archive verified
+from 998f3b0. No full bounds/ABI validator claim.
 
 Previous scalar acceptance:
 production-iteration9.json corrects scalar f32 expressions/conditions/casts.
@@ -152,35 +153,32 @@ roofline study. Address CSE reduced PTX but five target timings were neutral;
 partial safety sweep stopped after rejection, patch/evidence preserved.
 
 CPU Actions run on push/PR/manual/nightly across Python 3.12–3.14. Current
-manifest has eight GPU-verified fixtures and four negative probes. Scalar fix
-published as 48793dc; Actions run 40096495312 passes all twelve checks on all three
-versions. Downloaded reports confirm accepted 393d7600 and no Torch, preserved in
-iteration9. Existing four goldens unchanged; four f32 fixtures added. Push matrices
-are an initial history, not sustained-nightly proof.
+manifest has twelve GPU-verified fixtures and four negative probes. Address fix
+published as 998f3b0; Actions run 40099484929 passes all sixteen checks on all three
+versions. Downloaded reports confirm accepted bf07d517 and no Torch, preserved in
+iteration10. Existing eight goldens unchanged. Push matrices are an initial
+history, not sustained-nightly proof.
 
 ## Packaging and next work
 
-Current verified archive built from 48793dc, compiler 393d7600. Uses the existing
+Current verified archive built from 998f3b0, compiler bf07d517. Uses the existing
 isolated no-Torch Python 3.12.13 runtime from the earlier pinned fresh install;
 dependencies unchanged. Extracted scalar-add, matmul and attention hosted checks
 pass. Latest evidence: validation/2026-10-24-current-package.json. Archive aliases
-artifacts/emmy-ptx-scalar-checkpoint.zip, artifacts/emmy-ptx-current-checkpoint.zip,
-and artifacts/emmy-ptx-submission.zip hold identical verified bytes. Prior predicate
-archive/report retained; evidence validation/2026-10-24-predicate-package.json.
+artifacts/emmy-ptx-address-checkpoint.zip, artifacts/emmy-ptx-current-checkpoint.zip,
+and artifacts/emmy-ptx-submission.zip hold identical verified bytes. Prior scalar
+archive/report retained; evidence validation/2026-10-24-scalar-package.json.
 No rebuild needed for documentation-only changes. No entry submitted.
 
 Next: broaden index/control-flow type validation, operation/dtype coverage and
 bounded failure shrinking. Continue target hardware lower-bound/bottleneck work;
 no hosted counter/roofline evidence yet. Add future retained cases to CPU CI.
 No candidate jobs remain live from this acceptance step. New CI runs may trigger
-on documentation pushes; existing accepted-code twelve-check matrix is verified.
+on documentation pushes; existing accepted-code sixteen-check matrix is verified.
 
 Entry drafts SUBMISSION.md/WALKTHROUGH.md reflect current measured optimizations.
 **No contest entry submitted.** Personal fields/video still missing; don't invent
 them or contact organizers. General production readiness remains unproven.
 
-Latest packaging state supersedes earlier current-archive paragraph: archived
-compiler remains prior 393d7600. Commit address fix, verify sixteen-check Actions
-and rebuild the archive for bf07d517. All address-fix semantic gates completed.
 Next ABI/static-shape/launch validation must preserve permissive flat/additive
 coordinates, physical/logical views and valid parameter-order permutations.
