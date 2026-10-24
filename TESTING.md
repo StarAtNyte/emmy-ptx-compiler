@@ -579,3 +579,26 @@ because of account payments/spending-limit state. Local matrix results are not
 hosted CI evidence. Reports and GitHub annotation are in production-iteration13.json.
 The archive from 07f4851 passes extracted hosted scalar-add/matmul/attention checks;
 current-package.json records exact bytes and compiler. Repository remains private.
+
+Typed static dimensions and empty tile domains:
+
+```sh
+python tools/check_static_shapes.py --report artifacts/shape-contract-result.json
+python tools/generate_zero_tile_cases.py --out artifacts/zero-tile-original --seed 0
+python tools/generate_zero_tile_cases.py --out artifacts/zero-tile-fresh --seed 17011
+```
+
+The CLI suite has 27 rejection probes and four valid scalar/zero-view/alignment
+controls. The numerical generator has nine renamed families, including zero
+outer/inner/multiple axes, nested conditional/loop tiles, a zero logical input
+view, and nonempty singleton/empty-axis-list controls. Baseline 40a1de84 fails
+fourteen zero-domain cases and passes four controls. Final 36 original/frozen-fresh
+cases pass locally and hosted, after correcting an initial floating-index mistake
+in the generator's sentinel control. Those invalid-fixture runs are excluded.
+All 658 retained kernels emit identical PTX; nine transformer runs pass. No new
+shared/async instruction motion or performance claim. Full evidence: iteration14.
+Four numerical fixtures join CPU snapshots; existing 16 goldens stay unchanged.
+Twenty-four snapshot/feature + 28 launch + 42 ABI + 31 shape checks total 125 per Python
+version, all passing locally without Torch on 3.12/3.13/3.14. Hosted CPU CI remains
+subject to the previously recorded account billing restriction; local results are
+not hosted CI success. Packaging state is recorded in current-package.json.

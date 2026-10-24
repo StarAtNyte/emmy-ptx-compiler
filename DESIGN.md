@@ -250,3 +250,14 @@ paired position. The first iteration emits ld.shared.v2.f32; its second register
 supplies the next iteration's scalar binding. Pair state is cleared before scalar
 tails. Only the existing straight-line shared-read-only expansion is eligible;
 there is no motion across writes, global reads, barriers or control flow.
+
+Typed tensor, Tile and loop dimensions must be static nonnegative integers. An
+empty tile domain (any axis extent zero) emits no work before coordinate decoding,
+which avoids zero-divisor strides. An empty axis LIST instead has product one,
+so it still executes one logical cell. Zero logical tensor dimensions and scalar
+views remain valid independently of the physical metadata allocation. Shared
+allocation extents must be positive integers (scalar shape () allocates one f32);
+zero-sized shared arrays remain explicitly unsupported. Shared alignment must be
+zero for natural alignment or a positive power of two. Checks run before shared
+allocation/address arithmetic, including nested and else bodies. This does not
+establish cardinality/address overflow safety, grid coverage or access bounds.

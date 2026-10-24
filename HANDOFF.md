@@ -29,8 +29,9 @@ http://runner.riftstack.ai:48701. Compiler emits PTX 8.0 sm89; local runner chan
 that target to sm86. Local performance cannot select contest optimizations.
 
 **Current accepted compile.py SHA-256:**
-40a1de84e3813cb1377d1dcdd0c0e369666c5638332d6cb18155cb31fcfc678c.
-Exact source frozen/tested as artifacts/compiler-cross-pair.py. Prior
+7ebf4ff2395ddd9bd4f7c2eb2aa213c8cd24c505149c2c757edf159c0cbf5a61.
+Exact source frozen/tested as artifacts/compiler-static-shapes.py. Prior
+40a1de84 is reproducible from 07f4851:compile.py. Prior
 7fbe5ee4 is reproducible from b2a1b19:compile.py. Prior
 1dfcf75f is reproducible from 0fea2c0:compile.py. Prior
 bf07d517 is reproducible from 998f3b0:compile.py. Prior 393d7600
@@ -58,9 +59,31 @@ are fixed. Predicates in integer contexts become numeric 0/1, while conditions
 retain predicate registers. Strided end capture happens after axis initialization; dependent step
 executes after body; axis_end is body-visible. See DESIGN.md for details.
 
-## Latest accepted optimization — cross-iteration shared pairing
+## Latest shape correction
 
-Accepted compiler is 40a1de84. Exact frozen source
+production-iteration14.json supports zero-domain tiles as no-ops before coordinate
+decoding. Empty axis LIST has product one and still executes one cell. Static
+nonnegative typed tensor/Tile/loop extents are validated; symbolic extents fail
+clearly. Shared extents must be positive integer dimensions (scalar() is one f32),
+alignment zero/natural or power of two. Zero-sized shared arrays unsupported.
+Preserves logical/physical allocation views and valid ABI permutations.
+
+Baseline 40a1de84 passes four controls, fails fourteen zero-domain probes. Final 36
+original/frozen-fresh cases pass on both GPUs;27 negative/four valid CLI shape
+controls pass. Initial generator used float index 0 in the sentinel control;
+corrected to integer and retained invalid initial runs separately, excluded from
+acceptance. Candidate source unchanged. All 658 prior kernels emit identical PTX;
+nine transformer runs pass. No fresh speedup or changed shared-memory motion.
+
+Four GPU-checked fixtures retained; existing sixteen goldens unchanged. Local
+matrix 24+28+42+31=125 passes on Python 3.12.13/3.13.14/3.14.4 without Torch.
+Next publish, inspect actual hosted job state and refresh archive for 7ebf4ff2.
+Current archive still 40a1de84; hosted CPU CI last rejected for account billing.
+All semantic/local test jobs terminal. Repo private; submission deferred.
+
+## Previous accepted optimization — cross-iteration shared pairing
+
+This optimization was accepted as 40a1de84. Exact frozen source
 artifacts/compiler-cross-pair.py SHA256
 40a1de84e3813cb1377d1dcdd0c0e369666c5638332d6cb18155cb31fcfc678c.
 Reconstruct via experiments/cross-iteration-pair.patch against prior 7fbe5ee4.
@@ -253,7 +276,7 @@ run 40107112159 passed 7fbe5ee4, not the current compiler. Nightly history unpro
 
 ## Packaging and next work
 
-Current verified archive built from 07f4851, compiler 40a1de84. Uses the existing
+Prior verified archive built from 07f4851, compiler 40a1de84. Uses the existing
 isolated no-Torch Python 3.12.13 runtime from the earlier pinned fresh install;
 dependencies unchanged. Extracted scalar-add, matmul and attention hosted checks
 pass. Latest evidence: validation/2026-10-24-current-package.json. Archive aliases
@@ -288,4 +311,4 @@ Next performance priority: investigate matmul instruction/address work, shared
 traffic/dependencies and available warp parallelism using the calibrated gap.
 Prescribed grids have 80–128 CTAs vs 170 SMs. Further optimization still needs
 independent safety gates and target paired timing; no counter-proven bottleneck.
-Current cross-iteration package is verified; prior ABI archive is historical.
+Latest static-shape source needs refreshed packaging; prior cross-iteration archive is historical.

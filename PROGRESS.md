@@ -1218,3 +1218,28 @@ Completed 2026-10-24:
   Broader shape/type/role/bounds coverage, sustained CI and hardware-counter
   analysis remain. Hosted CPU CI needs account state fixed externally. Full
   objective remains active; repository private and entry submission deferred.
+
+## Step 48 — empty tile domains and typed static-shape diagnostics
+
+Completed 2026-10-24:
+
+- Accepted compiler 7ebf4ff2 lowers any zero-extent Tile as no-op before stride
+  decoding. Empty axis list still represents one logical cell. Baseline 40a1de84
+  fails 14 zero-domain cases and passes four nonempty controls.
+- Added typed static nonnegative tensor/Tile/Loop/StridedLoop extent checks and
+  positive shared extents / zero-or-power-of-two alignment diagnostics before
+  layout arithmetic, including nested/else bodies. Zero logical dimensions and
+  scalar views stay valid; zero-sized shared allocations explicitly unsupported.
+- CLI 27 negative/four valid controls pass. Generator nine families × two naming variants, seeds 0
+  and 17011: all 36 cases pass on both GPUs. Initial sentinel used float index 0;
+  nonempty controls caught it. Fixed generator, preserved invalid initial runs
+  separately and excluded them from acceptance. Compiler source unchanged.
+- All 658prior kernels emit byte-identical PTX, preserving previous performance
+  codegen. Nine transformer runs pass. No new shared/async motion or speedup claim.
+- Four GPU-verified empty-domain/nested/empty-axis/zero-view CPU fixtures retained;
+  existing 16goldens unchanged. Local 24 snapshot/feature+ 28 launch+ 42 ABI+ 31 shape
+  checks pass on all three Python versions without Torch (375 results). Added shape
+  suite to workflow. Actual hosted CPU CI still account-restricted, not claimed.
+- Evidence: production-iteration14.json. Next publish/refresh package and inspect
+  hosted job state. Full type/schema/role/bounds/grid/overflow coverage and general
+  production readiness remain open. Repo private; entry submission deferred.

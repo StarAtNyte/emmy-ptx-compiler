@@ -43,6 +43,7 @@ class Compiler:
         self.validate_abi()
         self.validate_launch()
         self.validate_features()
+        self.validate_shapes()
         self.cross_loads = set()
         self.cross_cache = {}
         self.cross_phase = 0
@@ -198,6 +199,43 @@ class Compiler:
                         unsupported(here, f'write dtype {stmt.value_dtype}')
                     if stmt.swizzle != 'NONE':
                         unsupported(here, f'write swizzle {stmt.swizzle}')
+                for field in ('body', 'else_body'):
+                    if hasattr(stmt, field):
+                        walk(getattr(stmt, field), f'{here}.{field}')
+        walk(self.node.op.body, 'body')
+
+    def validate_shapes(self):
+        """Validate supported static extents before layout arithmetic."""
+        def invalid(location, detail):
+            raise ValueError(f'Kernel {self.node.op.name}, shape {location}: {detail}')
+
+        def extent(dim, location):
+            try:
+                value = dim.as_static()
+            except (TypeError, ValueError):
+                invalid(location, 'requires a static integer extent')
+            if type(value) is not int or value < 0:
+                invalid(location, 'requires a nonnegative integer extent')
+
+        for node in self.graph.nodes.values():
+            for tensor in node.outputs:
+                for index, dim in enumerate(tensor.shape):
+                    extent(dim, f'tensor {tensor.name}[{index}]')
+
+        def walk(body, location):
+            for index, stmt in enumerate(body):
+                here = f'{location}[{index}]/{type(stmt).__name__}'
+                if isinstance(stmt, Tile):
+                    for axis in stmt.axes:
+                        extent(axis.extent, f'{here}/{axis.name}')
+                elif isinstance(stmt, (Loop, StridedLoop)):
+                    extent(stmt.axis.extent, f'{here}/{stmt.axis.name}')
+                elif isinstance(stmt, Smem):
+                    if any(type(d) is not int or d <= 0 for d in stmt.extents):
+                        invalid(here, 'shared extents must be positive integers; zero-sized shared allocations unsupported')
+                    if (type(stmt.align) is not int or stmt.align < 0
+                            or (stmt.align and stmt.align & (stmt.align - 1))):
+                        invalid(here, 'shared alignment must be zero or a positive power of two')
                 for field in ('body', 'else_body'):
                     if hasattr(stmt, field):
                         walk(getattr(stmt, field), f'{here}.{field}')
@@ -494,6 +532,9 @@ class Compiler:
         if isinstance(stmt, Tile):
             if stmt.aux_threads:
                 raise NotImplementedError('Auxiliary threads')
+            extents = [a.extent.value for a in stmt.axes]
+            if 0 in extents:
+                return
             # Raster grouping permutes block visitation for locality. Canonical
             # row-major visitation covers the same independent logical tiles.
             tid = self.instruction('mov.u32', '%tid.x')
@@ -502,7 +543,6 @@ class Compiler:
             bid = self.instruction('mov.u32', '%ctaid.x')
             width = str(stmt.block_threads) if stmt.block_threads else self.instruction('mov.u32', '%ntid.x')
             gid = self.instruction('mad.lo.s32', bid, width, tid)
-            extents = [a.extent.value for a in stmt.axes]
             guard = self.instruction('setp.ge.u32', gid, math.prod(extents), kind='p')
             end = self.label('tile_end')
             self.emit(f'@{guard} bra {end};')

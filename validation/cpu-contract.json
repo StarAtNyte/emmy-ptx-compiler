@@ -1,6 +1,6 @@
 {
-  "baseline_compiler_sha256": "40a1de84e3813cb1377d1dcdd0c0e369666c5638332d6cb18155cb31fcfc678c",
-  "snapshot_provenance": "GPU-verified fixtures; cross-iteration positive/tail/write/local-index guards added after cross-iteration-discovery. Existing twelve snapshots unchanged.",
+  "baseline_compiler_sha256": "7ebf4ff2395ddd9bd4f7c2eb2aa213c8cd24c505149c2c757edf159c0cbf5a61",
+  "snapshot_provenance": "GPU-verified zero-domain, nested, empty-axis and zero-view fixtures added after iteration14; sixteen existing PTX goldens unchanged.",
   "fixtures": [
     {
       "folder": "validation/counterexamples/2026-10-24-scope-shrunk",
@@ -161,6 +161,46 @@
         "meta.json": "1e2abfd5d8d8cf07d71822f7ac7da38d3899b6d5c2267650223aa50aacc47065"
       },
       "ptx_sha256": "fc4e9622917dd5809468526f3f934f933daf5c5f91d3c0fe36facb106531e39b"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-24-zero-tile-inner",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "expected.npz": "dc390e99b4029573c69211087ce108a9d76c75d63681aa3651fb1d00b47b8c2e",
+        "k_sum_1_reduce.ir.json": "a936e36de471c8895950b35ab7fb6b9f41d28657447b526d3b6986144587a343",
+        "meta.json": "1069db75565884bd3b0b0540082ef02a50728d196f6b19612339976b715cceff"
+      },
+      "ptx_sha256": "5f538b93c0b1afc79b9899486d14c7f8d6b9d563f73b28d3c70cc21943439e3c"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-24-zero-tile-nested",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "expected.npz": "dc390e99b4029573c69211087ce108a9d76c75d63681aa3651fb1d00b47b8c2e",
+        "k_sum_1_reduce.ir.json": "8cff8648023477ab013f6a67cc4a4a4ba812dfbaf06ebc7b0039f726b8425e31",
+        "meta.json": "40c5c83f05a4c7bffba62dc345439567ee5e7322088b08ba5af59e8c00b58e2d"
+      },
+      "ptx_sha256": "6a99c641c505f7a91cd87818615cff2ec73c09fc61d9f0122c191e31375fea83"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-24-zero-tile-empty-axis-control",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "expected.npz": "f795ef150e0b2f160196388074625e1989c210d81319f941891d0ff79da3770f",
+        "k_sum_1_reduce.ir.json": "975a8e13b419e81990fdf87daa4415064f6b41f3d78890b13d560fb9ed413b33",
+        "meta.json": "b1ededed4332dba4977cb9e485611ce1b52bd69d276ebfdd9e242672bc3638a2"
+      },
+      "ptx_sha256": "ac3b06f992aebcb3ffcdd7b20a7b7870bab6473ff62416ca4066c4ec2092b761"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-24-zero-tile-zero-view",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "expected.npz": "dc390e99b4029573c69211087ce108a9d76c75d63681aa3651fb1d00b47b8c2e",
+        "k_sum_1_reduce.ir.json": "40b88fdd3c98f33eadaaf7b1d30f819a2c237d7dc3b94b74ba93d52713763cfe",
+        "meta.json": "b9178affda8dac6f6b2229bba9b1a633a7383a4c1ec4e380171484c8a66b4083"
+      },
+      "ptx_sha256": "228da31b3deae466ef140e09b19dcf360db9581bc70ab4eaa85bb33776c1a36e"
     }
   ]
 }

@@ -187,3 +187,12 @@ GitHub [run 40109402820](https://github.com/StarAtNyte/emmy-ptx-compiler/actions
 did not start any jobs because of an account billing/spending-limit rejection;
 current hosted CPU CI remains unverified. The refreshed archive separately passes
 three hosted GPU smoke checks.
+
+The [static-shape iteration](validation/2026-10-24-production-iteration14.json)
+fixes zero-domain tiles as no-ops while preserving one-cell empty-axis-list tiles.
+Thirty-six numerical cases pass on both GPUs; 658 prior kernels retain identical
+PTX. Typed symbolic/negative dimensions and malformed shared extents/alignment
+now fail before PTX output. Scalar and zero logical views remain supported;
+zero-sized shared allocations remain explicitly unsupported. The expanded
+125-check suite passes locally on Python 3.12–3.14 without Torch. Hosted CPU CI
+still needs verification once account billing permits jobs to start.

@@ -1,0 +1,48 @@
+{
+  "inputs": [
+    "x"
+  ],
+  "outputs": [
+    "sum_1"
+  ],
+  "nodes": {
+    "x": {
+      "op": "InputOp",
+      "op_fields": {},
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "x",
+          "shape": [
+            64
+          ],
+          "dtype": "f32"
+        }
+      ]
+    },
+    "sum_1": {
+      "op": "KernelOp",
+      "op_fields": {
+        "body": [
+          "Tile(axes=(Axis(name='i', extent=Dim(64), window=None),), body=(Load(names=('item',), input='x', index=(Var(name='i'),), dtype=None), Write(output='sum_1', index=(Var(name='i'),), values=('item',), value_dtype=None, atomic=False, swizzle='NONE')), block_threads=None, aux_threads=0, raster_axes=None, raster_group=None, raster_orient='m')",
+          "Tile(axes=(Axis(name='z0', extent=Dim(64), window=None), Axis(name='z1', extent=Dim(0), window=None)), body=(Let(name='sentinel', value=Literal(value=-999.0, dtype='float'), dtype=None), Write(output='sum_1', index=(Literal(value=0, dtype='int'),), values=('sentinel',), value_dtype=None, atomic=False, swizzle='NONE')), block_threads=None, aux_threads=0, raster_axes=None, raster_group=None, raster_orient='m')"
+        ],
+        "name": "k_sum_1_reduce",
+        "zero_delegated": [],
+        "serial": []
+      },
+      "inputs": [
+        "x"
+      ],
+      "outputs": [
+        {
+          "name": "sum_1",
+          "shape": [
+            64
+          ],
+          "dtype": "f32"
+        }
+      ]
+    }
+  }
+}
