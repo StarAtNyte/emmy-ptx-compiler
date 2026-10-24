@@ -630,3 +630,10 @@ cover the two retained numerical fixtures. An audit of 705 retained/model kernel
 descriptors finds no non-output zero targets, preserving their prior initialization
 scope. Evidence: runner-initialization.json. Compiler/PTX and CPU suite unchanged;
 these GPU fixtures are not added as misleading CPU snapshot coverage.
+
+The c95beb5 archive includes the corrected runner and these GPU fixtures. Archive
+member hashes are checked against tested source in current-package.json; three
+extracted hosted emitter smoke checks pass without Torch using the existing pinned
+Python 3.12 runtime. Compiler7ebf4ff2 is unchanged. Prior local 125-check CPU results
+remain compiler evidence; they do not test CUDA host initialization or establish
+hosted CI success.

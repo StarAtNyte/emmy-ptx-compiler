@@ -1285,3 +1285,21 @@ Completed 2026-10-24:
   represented as CPU snapshot checks, which cannot test host zeroing. Next publish
   and refresh the archive with the corrected harness. Wider role/payload/schema
   and compiler coverage remain open. Repo private; entry submission deferred.
+
+## Step 51 — archived corrected harness and verified packaged runtime
+
+Completed 2026-10-24:
+
+- Published harness change as c95beb5. Compiler remains 7ebf4ff2; corrected runner
+  SHA256 90a494a357d0368265a06fffdcdfd3895eaa87d3a19f8d51b6dd492b10531872.
+- Archived committed c95beb5 and independently read ZIP member bytes to verify
+  compiler, fixed runner, probe and both GPU fixtures match their tested hashes.
+  Archive SHA256 4b0847b1d0bbd969705d8617cbc0369ceed075327e2a8e1d6e3f967c85ffb1bf.
+- Extracted hosted scalar-add/matmul/attention checks pass in the existing isolated
+  no-Torch 3.12.13 runtime; no fresh environment or compiler change claimed.
+  Runner/current/submission aliases hold identical bytes. Previous static-shape
+  package record retained separately; updated current-package and handoff.
+- Local 125-check compiler matrix remains the previously verified source; GPU
+  harness parity/regressions/public/model/sanitizer evidence recorded separately.
+  Hosted CPU CI remains unverified because of account restriction. Full goal stays
+  active; broader compiler/metadata coverage remains open. Repo private, no entry.

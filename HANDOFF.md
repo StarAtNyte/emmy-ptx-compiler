@@ -75,8 +75,11 @@ regression: control passes, zero-input case returns 7 instead of 0. New runner p
 both. Fifteen public and nine transformer checks pass; memcheck/synccheck clean
 on both fixtures. Audit 705 retained/model descriptors: zero affected non-output
 zero targets. Compiler remains 7ebf4ff2; existing 125-check local matrix still applies.
-All gate jobs terminal. New tool/harness checkpoint needs committed-source archive
-refresh; do not claim hosted CPU CI success. Repo private; submission deferred.
+All gate jobs terminal. Published harness checkpoint c95beb5; archive contains
+verified fixed runner/probe/fixtures and unchanged compiler 7ebf4ff2. Three
+extracted hosted GPU smoke checks pass. Local 125-check compiler suite remains
+valid from prior acceptance; no hosted CPU CI success claimed. Repo private;
+submission deferred.
 
 ## Latest shape correction
 
@@ -296,13 +299,14 @@ Nightly history remains unproven.
 
 ## Packaging and next work
 
-Current verified archive built from 7a7f518, compiler 7ebf4ff2. Uses the existing
+Current verified archive built from c95beb5, compiler 7ebf4ff2, fixed local runner
+90a494a3. Archive member hashes verify the runner, probe and GPU fixtures. Uses the existing
 isolated no-Torch Python 3.12.13 runtime from the earlier pinned fresh install;
 dependencies unchanged. Extracted scalar-add, matmul and attention hosted checks
 pass. Latest evidence: validation/2026-10-24-current-package.json. Archive aliases
-artifacts/emmy-ptx-static-shapes-checkpoint.zip, artifacts/emmy-ptx-current-checkpoint.zip,
-and artifacts/emmy-ptx-submission.zip hold identical verified bytes. Prior cross-iteration
-archive/report retained; evidence validation/2026-10-24-cross-iteration-package.json.
+artifacts/emmy-ptx-runner-checkpoint.zip, artifacts/emmy-ptx-current-checkpoint.zip,
+and artifacts/emmy-ptx-submission.zip hold identical verified bytes. Prior static-shape
+archive/report retained; evidence validation/2026-10-24-static-shapes-package.json.
 No rebuild needed for documentation-only changes. No entry submitted.
 
 Next: broaden index/control-flow type validation, operation/dtype coverage and
@@ -331,4 +335,4 @@ Next performance priority: investigate matmul instruction/address work, shared
 traffic/dependencies and available warp parallelism using the calibrated gap.
 Prescribed grids have 80–128 CTAs vs 170 SMs. Further optimization still needs
 independent safety gates and target paired timing; no counter-proven bottleneck.
-Current static-shape package is verified; prior cross-iteration archive is historical.
+Current runner checkpoint is verified; prior static-shape archive is historical.

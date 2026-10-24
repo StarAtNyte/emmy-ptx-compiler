@@ -5787,5 +5787,22 @@
     "passed": true,
     "stderr": "usage: probe_runner_initialization.py [-h] [--out OUT] [--server SERVER]\n                                      [--first-value FIRST_VALUE]\n                                      [--require-match]\nprobe_runner_initialization.py: error: first-value underflows to zero in f32\n"
   },
-  "baseline_source": "98022f7:tools/local_runner.py"
+  "baseline_source": "98022f7:tools/local_runner.py",
+  "package_verification": {
+    "record": "2026-10-24-current-package.json",
+    "source_commit": "c95beb5496859aaaa847b687955e830193e7ef81",
+    "archive_sha256": "4b0847b1d0bbd969705d8617cbc0369ceed075327e2a8e1d6e3f967c85ffb1bf",
+    "archived_source_hashes": {
+      "compile.py": "7ebf4ff2395ddd9bd4f7c2eb2aa213c8cd24c505149c2c757edf159c0cbf5a61",
+      "tools/local_runner.py": "90a494a357d0368265a06fffdcdfd3895eaa87d3a19f8d51b6dd492b10531872",
+      "tools/probe_runner_initialization.py": "e9863612e8ea63777ec2977fc56f9844830adb6b9c89b76854ade7ca26bfa0a4",
+      "validation/runner-fixtures/2026-10-24-zero-input/k_sum_1_reduce.ir.json": "36e53a795383a4f2f43efa4f8a17a093a14e810bfc71ffa188545dbb231e7cff",
+      "validation/runner-fixtures/2026-10-24-zero-input/meta.json": "e80b4cae12fb3c62152a812759317f1588d5c95df80aedef5e7db7ead0c2133d",
+      "validation/runner-fixtures/2026-10-24-zero-input/expected.npz": "ed03962284111f2eeb064c728e023bffff8c4398e02148e548b8d601809030f9",
+      "validation/runner-fixtures/2026-10-24-nonzero-input-control/k_sum_1_reduce.ir.json": "36e53a795383a4f2f43efa4f8a17a093a14e810bfc71ffa188545dbb231e7cff",
+      "validation/runner-fixtures/2026-10-24-nonzero-input-control/meta.json": "7c6b3e648e3f1fa21e7cc3d37f51d385e4948e8040afb9cb26ab719143addf04",
+      "validation/runner-fixtures/2026-10-24-nonzero-input-control/expected.npz": "0dc159f418f0b689ddd39d8ed9110b41142ebce43903e35365871c3d57d35cd8"
+    },
+    "hosted_smoke_checks_passed": 3
+  }
 }
