@@ -28,8 +28,9 @@ http://runner.riftstack.ai:48701. Compiler emits PTX 8.0 sm89; local runner chan
 that target to sm86. Local performance cannot select contest optimizations.
 
 **Current accepted compile.py SHA-256:**
-bf07d517f3a31619ce7f46514def0e8cedfdf1ea4f0f5b1206bb76fd4c85fac3.
-Exact source frozen/tested as artifacts/compiler-index-rank.py. Prior 393d7600
+1dfcf75fe9d2ecb8d1f9aec50517b1583bc183c753bd594e61150997663df882.
+Exact source frozen/tested as artifacts/compiler-launch-validation.py. Prior
+bf07d517 is reproducible from 998f3b0:compile.py. Prior 393d7600
 is reproducible from 48793dc:compile.py; b13ccba6 from 35208cf.
 
 ## Contract/current implementation
@@ -55,6 +56,20 @@ retain predicate registers. Strided end capture happens after axis initializatio
 executes after body; axis_end is body-visible. See DESIGN.md for details.
 
 ## Latest acceptance evidence
+
+production-iteration11.json adds pre-emission launch geometry diagnostics. Rejects
+invalid/missing dimension triples, nonpositive/noninteger dimensions, y/z != 1,
+block.x > 1024, grid.x > 2147483647, invalid smem_bytes and cooperative block-width
+mismatches. Baseline emits PTX for all 25 invalid/unsupported probes; accepted
+compiler rejects them without PTX and passes three valid controls. All 594 retained
+kernels emit identical PTX; twelve committed GPU fixtures pass locally. Existing
+sixteen no-Torch checks pass; new 28-case launch CLI suite passes without Torch.
+CI now includes both suites; actual changed-code CI and archive refresh pending.
+No new timing/sanitizer/hosted numerical claim; retained PTX remains identical.
+Argument ABI/schema, grid coverage and general bounds validation remain open.
+
+Previous address acceptance:
+
 
 production-iteration10.json fixes address rank semantics per installed render_index:
 empty=zero, single=flat, full rank=row-major, otherwise additive coordinate sum.
@@ -161,7 +176,7 @@ history, not sustained-nightly proof.
 
 ## Packaging and next work
 
-Current verified archive built from 998f3b0, compiler bf07d517. Uses the existing
+Prior verified archive built from 998f3b0, compiler bf07d517. Uses the existing
 isolated no-Torch Python 3.12.13 runtime from the earlier pinned fresh install;
 dependencies unchanged. Extracted scalar-add, matmul and attention hosted checks
 pass. Latest evidence: validation/2026-10-24-current-package.json. Archive aliases
@@ -182,3 +197,6 @@ them or contact organizers. General production readiness remains unproven.
 
 Next ABI/static-shape/launch validation must preserve permissive flat/additive
 coordinates, physical/logical views and valid parameter-order permutations.
+
+Packaging/CI state for latest source: archive still bf07d517, latest geometry
+source 1dfcf75f needs published 16+28-check CI and refreshed archive verification.

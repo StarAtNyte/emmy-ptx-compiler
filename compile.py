@@ -22,6 +22,7 @@ class Compiler:
         self.graph = graph
         self.launch = launch
         self.node = next(n for n in graph.nodes.values() if type(n.op).__name__ == 'KernelOp')
+        self.validate_launch()
         self.validate_features()
         self.lines = []
         self.counts = Counter()
@@ -84,6 +85,39 @@ class Compiler:
         for node in graph.nodes.values():
             for tensor in node.outputs:
                 self.shapes[tensor.name] = tuple(d.value for d in tensor.shape)
+
+    def validate_launch(self):
+        """Validate geometry used by our one-dimensional tile mapping."""
+        def invalid(detail):
+            raise ValueError(f'Kernel {self.node.op.name}, launch: {detail}')
+
+        for field in ('grid', 'block'):
+            dimensions = self.launch.get(field)
+            if (not isinstance(dimensions, (list, tuple)) or len(dimensions) != 3
+                    or any(type(d) is not int or d <= 0 for d in dimensions)):
+                invalid(f'{field} must contain three positive integer dimensions')
+            if dimensions[1:] not in ([1, 1], (1, 1)):
+                invalid(f'unsupported multidimensional {field}; y and z must be 1')
+        if self.launch['block'][0] > 1024:
+            invalid('block.x exceeds 1024 threads')
+        if self.launch['grid'][0] > 2147483647:
+            invalid('grid.x exceeds 2147483647 blocks')
+        shared = self.launch.get('smem_bytes')
+        if type(shared) is not int or shared < 0:
+            invalid('smem_bytes must be a nonnegative integer')
+
+        def walk(body):
+            for stmt in body:
+                if isinstance(stmt, Tile) and stmt.block_threads is not None:
+                    if (type(stmt.block_threads) is not int or stmt.block_threads <= 0):
+                        invalid('Tile.block_threads must be a positive integer')
+                    # Auxiliary bands have separate unsupported-feature handling.
+                    if not stmt.aux_threads and stmt.block_threads != self.launch['block'][0]:
+                        invalid('block.x must equal cooperative Tile.block_threads')
+                for field in ('body', 'else_body'):
+                    if hasattr(stmt, field):
+                        walk(getattr(stmt, field))
+        walk(self.node.op.body)
 
     def validate_features(self):
         """Reject unsupported storage/arithmetic types before emitting any PTX."""

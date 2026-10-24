@@ -1023,3 +1023,27 @@ Completed 2026-10-24:
   the address checkpoint. Updated README and current handoff.
 - No entry submitted. Broad ABI/static-shape/launch diagnostics, operation/dtype
   coverage and target hardware lower-bound work remain; readiness unproven.
+
+## Step 39 — validate launch geometry before PTX generation
+
+Completed 2026-10-24:
+
+- Baseline bf07d517 emits PTX for 25 malformed or unsupported launch probes,
+  including multidimensional launches ignored by the one-dimensional mapping
+  and cooperative Tile.block_threads mismatches. Invalid launches never executed.
+- Accepted compiler 1dfcf75fe9d2ecb8d1f9aec50517b1583bc183c753bd594e61150997663df882
+  checks dimension triples/types/positivity, x limits, one-dimensional y/z,
+  nonnegative integer smem_bytes and matching positive cooperative width.
+- All 25 probes now fail cleanly with empty stdout; three valid controls pass.
+  Matching cooperative and reordered-ABI controls keep identical PTX. Scalar
+  logical views remain legal. No argument-order or shape-equality restriction.
+- All 594 retained kernels emit identical PTX; twelve committed GPU fixtures pass
+  locally. Existing sixteen and new 28 launch checks pass in the isolated no-Torch
+  runtime. Added launch suite to all three CPU CI versions. No fresh performance,
+  sanitizer or hosted numerical claim. Evidence: production-iteration11.json.
+- Initial local GPU command accidentally included cpu-fixtures/README.md after
+  ten passes; reran all twelve manifest-selected fixtures successfully.
+
+Next: publish and verify actual expanded CI, refresh archive; complete argument
+ABI/static-shape/coverage diagnostics and hardware bottleneck work. Submission
+remains deferred; full production readiness unproven.

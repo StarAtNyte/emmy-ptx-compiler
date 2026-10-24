@@ -221,3 +221,11 @@ No coordinate is silently dropped. Logical view dimensions need not equal the
 allocation descriptor's rank; metadata supplies actual buffer capacity/ABI order.
 In particular, a scalar logical view can use flat coordinates into a larger
 provided allocation. This is not a general bounds checker or launch validator.
+
+Launch geometry is checked before PTX generation: grid and block are three
+positive integer dimensions, y/z are one for this compiler's one-dimensional
+mapping, block.x is at most 1024 and grid.x at most 2147483647. smem_bytes is a
+nonnegative integer. Cooperative Tile.block_threads must be positive and match
+block.x when no auxiliary band is present. Auxiliary bands remain unsupported.
+These checks do not infer required grid coverage, validate argument descriptors,
+or establish dynamic memory safety. Logical tensor/allocation ranks may differ.

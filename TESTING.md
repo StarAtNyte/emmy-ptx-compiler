@@ -502,3 +502,17 @@ These observations constrain future validation: preserve valid views and paramet
 permutations. They do not establish general launch/ABI validation or memory bounds.
 CPU CI adds four GPU-verified addressing/ABI fixtures; twelve positive snapshots
 and four negative probes make sixteen checks. Existing eight goldens unchanged.
+
+Launch diagnostics use only committed fixtures and run without a GPU:
+
+```sh
+python tools/check_launch_contract.py --report artifacts/launch-contract-result.json
+```
+
+Twenty-five malformed/unsupported launch probes must fail with a launch diagnostic
+and empty stdout. Three valid controls preserve a matching cooperative width,
+reordered ABI and scalar logical view. Mutated invalid launches are never executed.
+The accepted launch-only change emits identical PTX for 594 retained kernels;
+twelve committed numerical fixtures pass locally. CPU CI runs this 28-case suite
+in addition to the existing sixteen snapshot/feature checks. Evidence is recorded
+in production-iteration11.json; this does not establish full ABI/bounds validation.
