@@ -10,7 +10,8 @@ https://github.com/cloudrift-ai/emmy-hackathon-2026.
   findings. RESEARCH_PRODUCTION.md pins inspected sources and acceptance gates.
 - Update PROGRESS.md and HANDOFF.md after each meaningful completed step. This
   file is the current snapshot; PROGRESS retains the chronological evidence trail.
-- Public repository publication and routine pushes already approved. Origin:
+- Repository is PRIVATE by user request (2026-10-24), confirmed through GitHub API.
+  Routine pushes remain authorized; do not make it public again without instruction. Origin:
   https://github.com/StarAtNyte/emmy-ptx-compiler, branch master.
 - No organizer outreach/messages authorized. Entrant fields/video remain missing;
   do not invent them. Deadline Oct 27 23:59 AoE / Oct 28 17:44 Nepal time.
@@ -55,6 +56,38 @@ Let snapshots, declaration-identity shared allocation and nested fold discovery
 are fixed. Predicates in integer contexts become numeric 0/1, while conditions
 retain predicate registers. Strided end capture happens after axis initialization; dependent step
 executes after body; axis_end is body-visible. See DESIGN.md for details.
+
+## Pending optimization checkpoint — cross-iteration shared pairing
+
+Accepted compiler remains 7fbe5ee4; DO NOT lose the candidate. Frozen candidate
+artifacts/compiler-cross-pair.py SHA256
+40a1de84e3813cb1377d1dcdd0c0e369666c5638332d6cb18155cb31fcfc678c.
+Reconstruct via experiments/cross-iteration-pair.patch against current compile.py.
+Candidate adds aligned v2 shared reads across even/odd positions in the existing
+bounded unroll. Requires affine unit axis coefficient, even remaining terms,
+>=8-byte allocation alignment and immutable index dependencies. Skips within-body
+pairs, shadowed/local indices, writes/global reads/control; tails stay scalar.
+
+Evidence: validation/2026-10-24-cross-iteration-discovery.json. 30 baseline controls
+pass; candidate 30 original +30 frozen fresh probes pass on both GPUs. 60 explicit
+vector eligibility checks pass. Of 594 retained kernels, 561 emit identical PTX;
+all 33 changed kernels pass locally and hosted. Four sanitizers clean on 30 new
+cases plus separate exact-allocation odd-tail 5/65 checks. Nine transformer,
+existing 86 no-Torch CPU checks, eleven diagnostic probes and three isolated /tmp
+compilations pass. All sessions from these gates are terminal; do not restart them.
+
+Final SEQUENTIAL hosted 7-pair /19-workload timing (after correctness requests
+finished): m01 25.088→16.928 us (1.482x), independent 256×512×384
+19.040→12.992 (1.466x), 384×256×320 14.912→10.752 (1.387x). Other 16 within 0.032 us.
+Full outputs first trial/prefixes later; unlocked clocks. Separate exploratory
+broad timing overlapped correctness; retain but use final timing for acceptance.
+Local-driver sm120 native diagnostics differ from actual hosted code; public
+static entry grows 1546→4976 despite speedup, so static counts are not dynamic work.
+
+NEXT: review/adopt this candidate, add retained GPU-verified positive/tail/guard
+CPU fixtures (existing goldens unchanged), verify actual CI, refresh archive.
+Current package still accepted 7fbe5ee4. Compiler change is not yet in main.
+Broader goal/readiness gaps remain. Keep repository private; submission deferred.
 
 ## Latest acceptance evidence
 

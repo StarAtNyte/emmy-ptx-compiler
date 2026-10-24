@@ -158,7 +158,7 @@ No hidden-set result or prize outcome is claimed.
 
 [SUBMISSION.md](SUBMISSION.md) holds the entry draft and required entrant fields.
 [WALKTHROUGH.md](WALKTHROUGH.md) is an own-voice recording outline with understanding
-questions. The public repository is https://github.com/StarAtNyte/emmy-ptx-compiler.
+questions. The private repository is https://github.com/StarAtNyte/emmy-ptx-compiler.
 The competition entry still requires the entrant details and own-voice video.
 
 CPU contract checks run on pushes, pull requests and nightly across Python

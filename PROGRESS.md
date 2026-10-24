@@ -1138,3 +1138,43 @@ Completed 2026-10-24:
   research, testing, README and handoff. Next examine address/instruction/shared
   traffic and available warp parallelism, then measure any candidate on target.
   Submission deferred; broader validation/production coverage remains open.
+
+## Step 44 — repository made private at user request
+
+Completed 2026-10-24:
+
+- User explicitly requested private visibility. GitHub PATCH returned private=true,
+  visibility=private; independent gh repo view confirmed isPrivate=true for
+  StarAtNyte/emmy-ptx-compiler. Routine pushes stay authorized; do not republish.
+- Updated current handoff and repository/entry draft wording. Submission remains
+  deferred. Earlier public-publication records are historical, not current state.
+
+## Step 45 — cross-iteration shared pairing candidate validated
+
+Completed 2026-10-24:
+
+- Frozen candidate 40a1de84 pairs affine adjacent shared scalar reads across even/odd
+  iterations of the existing bounded unroll, retaining alignment/immutable-index
+  guards, within-body pairs and scalar tails. Main remains 7fbe5ee4 pending adoption.
+- Added independent exact generator: 15 families × two naming variants, original
+  seed 0 / frozen fresh 9161. Guards cover odd/weak alignment, local/shadowed/
+  nonlinear/nonunit indices, writes/global reads, additive/flat layouts and
+  4/5/64/65 trip boundaries. All 30 baseline controls and all 60 candidate cases
+  pass on both GPUs; 60 positive/negative vector eligibility checks pass.
+- 561/594 prior kernels retain identical PTX; all 33 changed kernels pass locally
+  and hosted. Four sanitizers clean on 30 new cases and separate exact-allocation
+  5/65 boundaries. Nine transformer runs, 86 existing no-Torch CPU checks,
+  11 diagnostics and three isolated /tmp compilation comparisons pass.
+- Final seven alternating target pairs across 19 workloads, after correctness:
+  public m01 25.088 → 16.928 us (1.482x), independent 256×512×384
+  19.040 → 12.992 (1.466x), 384×256×320 14.912 → 10.752 (1.387x).
+  Other 16 workloads differ by at most 0.032 us. Full first-trial outputs and
+  later prefixes pass. Earlier exploratory broad run overlapped correctness;
+  acceptance must use final run. Clocks unlocked, no cache eviction/counters.
+- Local-driver sm120 static entry counts: public 1546 → 4976; independent 384 shape
+  1658 → 1402. Different JIT path, not hosted SASS or dynamic instruction proof.
+  Public scalar shared-load PTX count 128 → 0, v2 count 64 → 128;
+  PTX bytes 151318 → 115545.
+- Preserved patch and complete evidence in cross-iteration-discovery.json. All
+  gate jobs terminal. Next review/adopt, add CPU fixtures, verify updated CI and
+  refresh archive. Repository private; no entry submission/readiness claim.

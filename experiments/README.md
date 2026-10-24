@@ -117,3 +117,12 @@ was intentionally stopped after timing rejection. No full safety claim.
 `validation/2026-10-24-native-instructions.json` compares local-driver-linked
 sm86/sm120 cubins. Three workloads have identical disassembly; matmul native code
 changes without a target win. These are not hosted SASS or counter measurements.
+
+## Cross-iteration shared reads — validated, adoption pending
+
+cross-iteration-pair.patch applies to compiler 7fbe5ee4 (current main source) and
+reconstructs candidate 40a1de84. It pairs aligned affine unit-stride shared reads
+across two unrolled iterations with immutable index dependencies. Final target
+matmul gains are 1.387–1.482x; full safety and timing scope is recorded in
+validation/2026-10-24-cross-iteration-discovery.json. Main has not yet adopted it;
+CPU fixture retention, actual updated CI and refreshed packaging remain.

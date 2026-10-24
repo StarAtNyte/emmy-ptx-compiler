@@ -9,7 +9,7 @@ The deadline is October 27 at 23:59 AoE, October 28 at 17:44 in Nepal.
 
 ## Technical fields ready to use
 
-Public repository: https://github.com/StarAtNyte/emmy-ptx-compiler
+Private repository: https://github.com/StarAtNyte/emmy-ptx-compiler
 
 Tech stack:
 
