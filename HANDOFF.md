@@ -157,3 +157,7 @@ Entry drafts: SUBMISSION.md and WALKTHROUGH.md. **Existing
 artifacts/emmy-ptx-submission.zip is stale (several compiler iterations behind).**
 No final release or entry submission has occurred. Deadline is Oct 27 23:59 AoE,
 Oct 28 17:44 Nepal time; do not silently submit against the user's deferral.
+
+Latest implementation/evidence publication: 2306028, pushed and remote-ref verified.
+Active compile.py hash da4f12dd... matches tested candidate. Active-path 26-case
+codegen rerun passes. No final archive rebuild or competition submission.

@@ -499,3 +499,9 @@ Next: broaden adversarial IR correctness and improve unsupported-feature
 validation/diagnostics before further address reuse; production readiness remains
 unproven. Keep target profiling/roofline and long-running CI gaps explicit.
 Submission remains deferred and the existing ZIP stale.
+
+Step 17 publication: source, tools, documentation and acceptance evidence committed
+as 2306028 and pushed to origin/master. Remote ref verified equal to the full local
+commit. Active compiler hash remains da4f12dd...; active-path codegen rerun passes
+all 26 one-trip eligibility checks. This is repository publication, not entry
+submission or a rebuilt release archive.
