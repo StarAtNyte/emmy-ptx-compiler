@@ -46,6 +46,9 @@ Loop axis bounds and strides come from IR. A seeded loop initializes the folds
 carried by its axis before the loop. A non-seeding loop updates existing state,
 which matters for matmul's accumulation across shared-memory chunks. Outer-loop
 accumulators and inner-loop accumulators have different reset points.
+Discovery respects lexical scope: a nested axis of the same name shadows the
+outer axis, and a locally seeded inner fold cannot choose the outer fold's
+identity. True updates to an externally seeded state still cross inner loops.
 
 The code deliberately uses separately rounded add and multiply rather than
 contracting arbitrary arithmetic into FMA. This preserves exact public pointwise
@@ -100,6 +103,10 @@ instructions; the launcher handles the metadata's zero-initialization contract.
 Static shared allocations above 48 KiB fail assembly. Such kernels use one
 aligned external shared pool with computed per-buffer offsets. The prescribed
 launch supplies the dynamic allocation. Shared swizzles remain unsupported.
+Allocation belongs to each declaration, so nested arrays with equal source names
+have distinct live storage and header symbols. Lexical exit restores pointer,
+shape and address-space bindings. The dynamic pool honors declaration alignment;
+an undersized prescribed dynamic allocation fails compilation with a size error.
 
 ## Evidence and limits
 

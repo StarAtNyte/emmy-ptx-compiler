@@ -20,7 +20,7 @@ https://github.com/cloudrift-ai/emmy-hackathon-2026.
 - Workspace `/home/nitiz/Projects/Self/Challenges/emmy`; branch `master`, origin
   https://github.com/StarAtNyte/emmy-ptx-compiler. Check git status/log before work.
 - Current accepted compiler SHA-256:
-  `7a1a3dfe68ada47c57a2ec49da97a40cf752ec88fe3f35480956ea0638d2f94e`.
+  `f99ea2445222a65e737a0b75dde99ee73c50d41dd546d30b8390abcec6f135c2`.
 - Use `.venv/bin/python` (3.12); host default is 3.14. Pinned Emmy 0.3.11,
   NumPy 2.5.4, CPU Torch 2.14.1. Runtime compiler does not need Torch or a GPU.
 - Local RTX 3050 Laptop 6 GiB, sm_86; hosted RTX 5090, sm_120:
@@ -52,13 +52,20 @@ Global unrolling, explicit vector memory (neutral), and blanket backend nounroll
 (regressions) are archived in experiments. Avoid repeating rejected hypotheses
 without a new reason.
 
-## Latest correctness findings and verified fix
+## Correctness findings and verified fixes
 
 Flat value maps leaked ordinary branch/loop bindings and destroyed shadowed outer
 axes. Let(Var(acc)) also aliased a mutable register instead of capturing its value.
 Current compiler restores lexical environments; publishes externally carried
 reduction states into stable enclosing registers; exports loop folds; snapshots
 variable Lets with copies. Both bugs are fixed generally, not by case names.
+
+The next iteration found shared declarations collapsed by source name and a
+nested maximum selecting an outer sum seed. Storage now belongs to declaration
+identity; lexical exit restores pointers, shapes and address-space membership.
+Nested axes and locally seeded folds no longer leak into outer seed discovery.
+Dynamic pool alignment follows declarations; undersized launch allocation fails
+with required/provided byte counts.
 
 New tools:
 - `tools/fuzz_semantics.py`: seven bounded families with exact independent NumPy
@@ -74,20 +81,21 @@ New tools:
   events; not a guarantee of cold L2. Hosted cache/clock control is unavailable.
 
 **Authoritative current evidence:**
-`validation/2026-10-24-production-iteration2.json`:
-- 172 local: 74 prior + 14 reduced + 56 seeded/renamed + 28 frozen fresh seeds.
-- 99 hosted: 15 public + 56 seeded/renamed + 28 fresh. All pass.
-- Previous compiler fails all 14 reduced probes, isolated; current passes them.
-- Nine full staged transformer runs, 147 stage checks, max absolute error 4.292e-6.
-- memcheck/racecheck/synccheck/initcheck clean on 15 selected cases, not all IR.
-- Four paired target medians retained: m01 66.208, a01 90.752, softmax 2.976,
-  large sum 21.152 µs, unlocked clocks. Three no-Torch identical-PTX smoke checks.
+`validation/2026-10-24-production-iteration3.json`:
+- 232 local: 172 prior + 8 reduced + 32 seeded nested + 4 dynamic + 16 fresh.
+- 52 new hosted: 32 seeded + 4 dynamic + 16 fresh. All pass.
+- Previous compiler fails 6/8 reduced nested probes; both controls pass.
+- Nine transformer runs / 147 stages, maximum absolute error 4.292e-6.
+- Four sanitizer tools clean on 12 selected nested cases (8 reduced + 4 dynamic).
+- All 15 public kernels emit byte-identical PTX to cca5bf2; prior measured
+  performance applies to identical generated code, not a new timing claim.
+- Three isolated no-Torch byte-identical compilation checks from `/tmp`, including
+  static and dynamic nested shared kernels. Underallocation diagnostic checked.
 
-These are correlated development cases, not a hidden-test pass-rate estimate.
-Fresh seeds are within existing grammar, not held-out operation families.
-`--minimal` is family parameter reduction, not general statement delta debugging.
-Earlier `fuzz-final*` marker-0 corpora and context-poisoned runs are excluded.
-Use corrected `artifacts/fuzz-proof*`. Freeze compiler+generator before fresh tests.
+Prior scope corpus/evidence remains in production-iteration2.json and the current
+172-case regression run. Counts are correlated development cases, not hidden-test
+estimates. Fresh seeds are within existing families; reduced mode is parameter
+reduction, not arbitrary program delta debugging.
 
 ## Commands and important local files
 
@@ -102,7 +110,8 @@ Use corrected `artifacts/fuzz-proof*`. Freeze compiler+generator before fresh te
 Pre-fix accepted source: `artifacts/compiler-before-scope-fix.py`, hash `a180f7ec...`;
 reproducible from public commit `bb8d2c8`. Scope-only intermediate
 `artifacts/compiler-scope-only.py`, hash `094c269a...`, still has snapshot aliasing.
-Current raw reports use `scope-final-*` and `fuzz-proof-*` prefixes. Baseline
+Current raw reports use `nested-*`; previous accepted source is
+`artifacts/compiler-before-nested-fix.py` from cca5bf2 (7a1a3dfe...). Baseline
 resource reports: local a01 48 registers vs hosted 128; do not assume allocation,
 spills or performance transfer between GPUs.
 
@@ -112,17 +121,32 @@ Use tools/sanitize.py; TESTING.md documents full suites and reconstruction.
 
 ## Next concrete work
 
-Broaden semantic generation to nested shared-buffer scopes and carried-state
-interactions; retain/shrink new failures with independent oracles. Then experiment
-with SSA-aware integer/address expression reuse and loop-invariant addressing,
-using the new binding tests as mandatory gates. Do not cache expressions by their
-text across mutable axis/accumulator updates. Preserve measured fallback code.
+Test the **unmerged paired-shared-load candidate** in
+`experiments/paired-shared-loads.patch`. It applies to current f99ea244... source.
+Local ignored candidate: `artifacts/compiler-paired-shared.py`; builder:
+`artifacts/build-paired-shared-candidate.py`. Candidate source can be reconstructed
+from the committed patch if ignored artifacts are absent.
+
+Seven paired RTX 5090 trials measured m01 66.208 → 64.128 µs (1.032x), attention
+unchanged at 90.784. M01 registers rise 40 → 48 and PTX falls 187430 → 151531 bytes.
+This pairs separate aligned shared reads across pure arithmetic, not the rejected
+global grouped-access pass. **NOT ACTIVE OR ACCEPTED.** Before adoption, add
+negative eligibility probes: intervening uses/redefinitions, mutable index
+bindings, weak base/index alignment, shared writes/barriers, shadowed shared
+names and valid but nonadjacent addresses. Then run independent matmul shapes,
+all current semantic gates, sanitizer checks and paired target repetitions.
+Preserve current compiler as fallback. A 3.2% timing observation alone does not
+prove safe general load motion or justify weakening correctness.
+
+Afterward consider SSA-aware integer/address reuse and loop-invariant addressing;
+never cache expressions by text across mutable axes/state. Broaden fuzzing and
+add actual statement shrinking as further correctness work.
 
 Open production gaps: general shrinking/fuzzing, operation/dtype coverage,
 unsupported-feature diagnostics, target instruction/counter/roofline analysis,
 and sustained CI. Current tests do not establish production readiness.
 
 Entry drafts: SUBMISSION.md and WALKTHROUGH.md. **Existing
-artifacts/emmy-ptx-submission.zip is stale (two compiler iterations behind).**
+artifacts/emmy-ptx-submission.zip is stale (several compiler iterations behind).**
 No final release or entry submission has occurred. Deadline is Oct 27 23:59 AoE,
 Oct 28 17:44 Nepal time; do not silently submit against the user's deferral.

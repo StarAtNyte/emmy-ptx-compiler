@@ -57,13 +57,21 @@ nine complete transformer checks (147 stage outputs), and all four sanitizer
 tools clean on seven selected shared-memory cases. These totals overlap the
 baseline corpus; they must not be added as independent generalization evidence.
 
-The latest [scope-correctness iteration](validation/2026-10-24-production-iteration2.json)
+The [scope-correctness iteration](validation/2026-10-24-production-iteration2.json)
 records 99 hosted cases and 172 local cases, nine complete transformer checks,
 and four sanitizer tools clean on 15 selected cases. A seven-family typed-IR
 generator exposed leaked lexical bindings and aliased captured values; the old
 compiler fails all 14 reduced counterexamples and the current compiler passes.
 Inputs have independent exact numerical oracles and renamed counterparts.
 The grammar is bounded; this is not evidence of arbitrary IR support.
+
+The latest [nested-scope iteration](validation/2026-10-24-production-iteration3.json)
+records 232 local cases and 52 new hosted cases, including four 96 KiB dynamic
+shared-memory probes, plus nine transformer checks and four sanitizer tools on
+12 selected cases. It fixes declaration-specific shared storage and nested fold
+seed discovery. All 15 public kernels emit byte-identical PTX to the previous
+accepted compiler; their existing timing results are unchanged code-generation
+evidence, rather than fresh measurements in this iteration.
 
 Corpora cover shapes, operation mixes, schedules, finite-value stress inputs,
 alignment layouts, loop tails, actual PyTorch MLP/transformer comparisons and

@@ -92,6 +92,28 @@ using `--compiler path/to/compiler.py`; failed cases remain on disk.
 The new-seed suite stays within this grammar. It does not measure unseen operator
 families, arbitrary IR support or hidden-test success.
 
+## Nested shared storage and fold seeds
+
+```sh
+.venv/bin/python tools/fuzz_nested.py --count 4 --minimal --out artifacts/nested-reduced
+.venv/bin/python tools/fuzz_nested.py --count 16 --out artifacts/nested-seeded
+.venv/bin/python tools/fuzz_nested.py --count 2 --minimal --dynamic --out artifacts/nested-dynamic
+.venv/bin/python tools/validate_isolated.py artifacts/nested-reduced/*/ artifacts/nested-seeded/*/ artifacts/nested-dynamic/*/ --report artifacts/nested-local.json
+.venv/bin/python tools/validate.py --problems artifacts/nested-seeded --report artifacts/nested-hosted.json
+```
+
+The four families test branch/loop shared declarations with shadowed names and
+different shapes, a nested maximum whose name/axis shadows an outer sum, and
+an outer state updated through an inner loop. Independent small-integer NumPy
+formulas give exact f32 expectations; renamed counterparts test name invariance.
+All shared participants execute full-block barriers uniformly. Dynamic variants
+request exactly 98,304 launch bytes for two simultaneously live 48 KiB arrays.
+This is explicit test metadata, not an invented replacement for a supplied launch.
+
+Freeze compiler and generator before adding fresh seeds with `--start 1000`.
+These are bounded synthetic cases, not a general program generator or a hidden
+test estimate. `--minimal` reduces family parameters, not arbitrary statements.
+
 ## Frozen expression follow-up
 
 ```sh

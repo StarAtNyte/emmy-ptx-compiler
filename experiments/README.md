@@ -69,3 +69,23 @@ prefixes thereafter, unlocked clocks:
 Raw samples and both compiler hashes are preserved in the production validation
 record. This rejects blanket backend-unroll suppression; it does not establish
 that every possible per-loop policy would be slower.
+
+## Paired shared reads — measured candidate, not accepted
+
+`paired-shared-loads.patch` applies to the nested-scope compiler. It pairs
+separate aligned adjacent shared-memory scalar reads across pure arithmetic in
+straight-line read-only leaf bodies. The earlier neutral vector-memory patch
+handled grouped global accesses; this is a different memory-space/scheduling
+hypothesis. It requires proven 8-byte alignment for `ld.shared.v2.f32`, consistent
+with [NVIDIA PTX access-size alignment rules](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#addresses-as-operands).
+
+Seven alternating paired RTX 5090 trials checked full outputs first and prefixes
+thereafter: m01 66.208 → 64.128 µs (1.032x); a01 90.784 → 90.784. Hosted registers
+rise from 40 to 48 for m01. Its PTX shrinks from 187,430 to 151,531 bytes and
+contains 64 paired shared reads. Clocks were unlocked; no general speedup claim.
+
+**Not active compiler code.** Before adoption, verify dependency/alias guards,
+intervening value uses/rebindings, weak alignment, shared writes, independent
+matmul shapes and all semantic/sanitizer gates. The measured improvement alone
+does not establish correct general load motion. Raw samples and hashes are in
+the third production iteration record; keep its accepted compiler as fallback.

@@ -30,6 +30,9 @@ class Compiler:
         self.label_count = 0
         self.shared = {}
         self.shared_offsets = {}
+        self.shared_symbols = {}
+        self.shared_declarations = []
+        self.shared_alignment = 16
         self.identities = {}
         self.observed_tree_buffers = set()
         tree_counts = Counter()
@@ -51,11 +54,18 @@ class Compiler:
         self.observed_tree_buffers.update(b for b,n in tree_counts.items() if n > 1 or b in read_buffers)
         def collect_shared(body):
             for stmt in body:
-                if isinstance(stmt, Smem) and stmt.name not in self.shared_offsets:
+                if isinstance(stmt, Smem) and id(stmt) not in self.shared_offsets:
                     alignment = max(4, stmt.align)
+                    self.shared_alignment = max(self.shared_alignment, alignment)
                     current = self.shared_size
                     offset = (current + alignment - 1) // alignment * alignment
-                    self.shared_offsets[stmt.name] = offset
+                    # Equal source names may declare distinct live arrays in
+                    # nested lexical scopes. Storage belongs to the declaration.
+                    self.shared_offsets[id(stmt)] = offset
+                    symbol = f'shared_{len(self.shared_symbols)}'
+                    self.shared_symbols[id(stmt)] = symbol
+                    self.shared_declarations.append(
+                        f'.shared .align {alignment} .b8 {symbol}[{4 * math.prod(stmt.extents)}];')
                     self.shared_size = offset + 4 * math.prod(stmt.extents)
                 if hasattr(stmt, 'body'):
                     collect_shared(stmt.body)
@@ -64,6 +74,9 @@ class Compiler:
         self.shared_size = 0
         collect_shared(self.node.op.body)
         self.dynamic_shared = self.shared_size > 48 * 1024
+        if self.dynamic_shared and self.shared_size > launch['smem_bytes']:
+            raise ValueError(f"Shared allocations need {self.shared_size} dynamic bytes; "
+                             f"launch provides {launch['smem_bytes']}")
         for node in graph.nodes.values():
             for tensor in node.outputs:
                 self.shapes[tensor.name] = tuple(d.value for d in tensor.shape)
@@ -89,6 +102,16 @@ class Compiler:
         for stmt in body:
             if isinstance(stmt, Accum) and axis in stmt.axes:
                 found[stmt.name] = stmt
+            if isinstance(stmt, (Loop, StridedLoop)):
+                if stmt.axis.name == axis:
+                    # The nested axis shadows this axis, including its folds.
+                    continue
+                nested = self.accumulators(stmt.body, axis)
+                if stmt.seed:
+                    for name in self.accumulators(stmt.body, stmt.axis.name):
+                        nested.pop(name, None)
+                found.update(nested)
+                continue
             for field in ('body', 'else_body'):
                 if hasattr(stmt, field):
                     found.update(self.accumulators(getattr(stmt, field), axis))
@@ -213,6 +236,7 @@ class Compiler:
         the map, so branches and repeated loop iterations see runtime updates.
         """
         values, identities = self.values.copy(), self.identities.copy()
+        pointers, shapes, shared = self.pointers.copy(), self.shapes.copy(), self.shared.copy()
         declarations = set()
         for stmt in statements:
             if isinstance(stmt, Load):
@@ -226,6 +250,7 @@ class Compiler:
             if name in values and name in self.values and values[name] != self.values[name]:
                 self.emit(f'mov.f32 {values[name]}, {self.values[name]};')
         self.values, self.identities = values, identities
+        self.pointers, self.shapes, self.shared = pointers, shapes, shared
 
     def statement(self, stmt):
         if isinstance(stmt, Tile):
@@ -268,11 +293,11 @@ class Compiler:
             self.emit(f'cp.async.wait_group {stmt.group};')
         elif isinstance(stmt, Smem):
             self.shapes[stmt.name] = tuple(stmt.extents)
-            self.shared[stmt.name] = f'.shared .align {max(4, stmt.align)} .b8 shared_{len(self.shared)}[{4 * math.prod(stmt.extents)}];'
-            symbol = f'shared_{len(self.shared) - 1}'
+            symbol = self.shared_symbols[id(stmt)]
+            self.shared[stmt.name] = symbol
             if self.dynamic_shared:
                 base = self.instruction('mov.u32', 'shared_pool')
-                self.pointers[stmt.name] = self.instruction('add.u32', base, self.shared_offsets[stmt.name])
+                self.pointers[stmt.name] = self.instruction('add.u32', base, self.shared_offsets[id(stmt)])
             else:
                 self.pointers[stmt.name] = self.instruction('mov.u32', symbol)
         elif isinstance(stmt, Sync):
@@ -495,9 +520,9 @@ class Compiler:
         for kind, count in self.counts.items():
             header.append(f'    .reg {types[kind]} %{kind}<{count + 1}>;')
         if self.dynamic_shared:
-            header.insert(3, '.extern .shared .align 16 .b8 shared_pool[];')
+            header.insert(3, f'.extern .shared .align {self.shared_alignment} .b8 shared_pool[];')
         else:
-            header.extend('    ' + declaration for declaration in self.shared.values())
+            header.extend('    ' + declaration for declaration in self.shared_declarations)
         return '\n'.join(header + self.lines + ['}', ''])
 
 

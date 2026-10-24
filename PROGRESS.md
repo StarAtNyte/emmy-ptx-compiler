@@ -315,3 +315,97 @@ Next: broaden the grammar to nested shared/buffer scopes and loop-carried-state
 interactions, add systematic shrinking of genuinely new failures, then evaluate
 SSA-aware integer/address CSE against these gates and target timing. Production
 readiness is still unproven. Submission stays deferred; existing ZIP is stale.
+
+## Step 10 — nested scopes expose allocation and seed-analysis bugs
+
+Completed 2026-10-24:
+
+- Added tools/fuzz_nested.py with four typed-IR families and independent exact
+  NumPy oracles: nested shared declarations in branches/loops, shadowed fold
+  seeds/axes, and a control that carries an outer state through an inner loop.
+- On accepted compiler 7a1a3dfe..., 6/8 reduced renamed probes fail in isolated
+  processes. Shared shadowing produces invalid PTX (outer declarations lost);
+  nested maximum incorrectly seeds the outer additive fold with -infinity.
+  Both outer-through-inner control cases pass.
+- Authoritative baseline: artifacts/nested-before-reduced.json. Saved source at
+  artifacts/compiler-before-nested-fix.py, reproducible from commit cca5bf2.
+- Generator also supports explicit 96 KiB dynamic shared-memory cases (two live
+  48 KiB declarations); these are not yet verified.
+
+Next: allocate shared storage per declaration, restore pointer/shape/address-space
+bindings on scope exit, and make accumulator discovery respect shadowed axes and
+locally seeded nested folds. Then run both new and previous semantic gates.
+
+## Step 11 — declaration identity and nested fold discovery fixed
+
+Completed 2026-10-24:
+
+- All eight reduced nested cases now pass locally, including the two controls.
+- Shared storage is allocated by declaration identity, with deterministic symbols
+  and offsets. Header declarations are persistent, independent of lexical names.
+  Scope exit restores buffer pointers, shapes and address-space membership.
+- Accumulator discovery stops at a shadowing axis and excludes locally seeded
+  nested folds, while retaining true updates to an externally carried state.
+- Dynamic shared-pool alignment follows its declarations. A clear compile error
+  rejects required dynamic allocation larger than the prescribed launch provides.
+- All 15 public kernels emit byte-identical PTX versus the accepted compiler;
+  artifacts/nested-public-equivalence.json records both hashes per entry. This
+  establishes unchanged public code generation; no fresh speedup is claimed.
+- Further completed checks: 32 seeded nested cases and four 96 KiB dynamic
+  cases pass locally; nine transformer seed/depth runs / 147 stages pass.
+  Full regression and hosted checks remain in flight.
+
+Next: finish 96 KiB dynamic, semantic, sanitizer and frozen fresh-seed gates;
+then evaluate the next performance hypothesis without weakening those checks.
+
+## Step 12 — nested fixes clear their gates; shared-load experiment measured
+
+Completed 2026-10-24:
+
+- Nested-fix compiler f99ea244... passes 172 previous local regressions plus
+  8 reduced, 32 seeded, 4 explicit dynamic and 16 frozen fresh nested cases:
+  232 local cases. Hosted: 32 seeded + 4 dynamic + 16 fresh = 52 new checks.
+- Four sanitizer tools clean on 12 selected nested cases (8 reduced + 4 dynamic).
+  Nine transformer seed/depth checks / 147 stages pass. Dynamic underallocation
+  is rejected before PTX emission with the required/provided byte counts.
+- All 15 public outputs are byte-identical PTX to cca5bf2, preserving its prior
+  code generation; this is not a newly timed speed measurement.
+- Tested a separate shared-read-only leaf optimization: prove adjacent aligned
+  scalar reads, preload them as ld.shared.v2.f32, and preserve data dependencies
+  and original FMA adjacency boundaries. Unlike the rejected earlier GLOBAL
+  grouped-access pass, this pairs separate SHARED loads across pure arithmetic.
+- Seven alternating paired RTX 5090 trials: m01 66.208 → 64.128 µs (1.032x),
+  a01 90.784 → 90.784. Candidate remains isolated in
+  artifacts/compiler-paired-shared.py and is NOT merged or generally verified.
+  Source-builder and raw report are in artifacts; alignment follows NVIDIA PTX
+  access-size requirements. Do not adopt before negative eligibility tests,
+  independent cases and sanitizer checks.
+
+Next: accept/archive nested-fix evidence, then validate the shared-pair hypothesis
+against aliasing, intervening bindings/uses, weak alignment and shared writes;
+keep main compiler as a measured fallback until candidate gates pass.
+
+## Step 13 — nested correctness iteration accepted and preserved
+
+Completed 2026-10-24:
+
+- Accepted compiler SHA-256
+  f99ea2445222a65e737a0b75dde99ee73c50d41dd546d30b8390abcec6f135c2.
+  Combined verified evidence: validation/2026-10-24-production-iteration3.json.
+- 232 local and 52 new hosted checks pass, with explicit 96 KiB dynamic cases;
+  all four sanitizers clean on 12 selected cases. Nine full staged transformer
+  runs / 147 stages and three no-Torch compilation checks pass.
+- Source, case/oracle hashes, generator manifests, prior 6/8 failures, two passing
+  controls, byte-identical public PTX proof, fresh freeze and underallocation
+  diagnostic are preserved. No fresh public timing claim or final release.
+- Preserved the separately measured, unaccepted shared-read pairing patch under
+  experiments, with raw target samples and compiler/patch hashes in the record.
+  M01 register count increases 40 → 48; PTX bytes fall 187430 → 151531. Its 3.2%
+  target timing improvement still requires semantic eligibility testing.
+- Updated README, DESIGN, TESTING and the current HANDOFF snapshot.
+
+Next concrete step: validate paired shared reads with positive/negative motion,
+mutation, alignment and alias cases; check independent matmul workloads,
+regressions/sanitizers, then repeat target timings before any adoption. Main stays
+at the accepted nested fix. General shrinking, broader IR/dtype support, target
+counter/roofline work and production readiness remain open. Submission deferred.
