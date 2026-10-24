@@ -28,9 +28,9 @@ http://runner.riftstack.ai:48701. Compiler emits PTX 8.0 sm89; local runner chan
 that target to sm86. Local performance cannot select contest optimizations.
 
 **Current accepted compile.py SHA-256:**
-393d7600af297b365c6653e0b8dca84017a9c9d4dd9c482d845bf6e329cb5483.
-Exact source frozen/tested as artifacts/compiler-float-expressions.py. Prior
-b13ccba6 is reproducible from 35208cf:compile.py; 04b50e69 from 074d4f9.
+bf07d517f3a31619ce7f46514def0e8cedfdf1ea4f0f5b1206bb76fd4c85fac3.
+Exact source frozen/tested as artifacts/compiler-index-rank.py. Prior 393d7600
+is reproducible from 48793dc:compile.py; b13ccba6 from 35208cf.
 
 ## Contract/current implementation
 
@@ -56,6 +56,21 @@ executes after body; axis_end is body-visible. See DESIGN.md for details.
 
 ## Latest acceptance evidence
 
+production-iteration10.json fixes address rank semantics per installed render_index:
+empty=zero, single=flat, full rank=row-major, otherwise additive coordinate sum.
+Shared pairing proofs use the same flattening. Previous compiler passes six controls
+but fails ten numerical rank probes. Final 32 original/fresh cases pass on both
+GPUs, plus two reordered-ABI candidate controls. Four sanitizers clean on 16 cases;
+nine transformer runs, three no-Torch compilations and eleven diagnostics pass.
+550 prior kernels emit identical PTX; no new timing claim. Metadata audit finds 38
+valid scalar logical-view/allocation rank differences, no order/coop mismatch.
+Do not impose strict shape-rank equality in future validation.
+
+Current CPU manifest adds four addressing/ABI fixtures; existing eight goldens
+unchanged, sixteen no-Torch checks pass locally. Updated Actions matrix and code
+archive still pending publication. No full bounds/ABI validator claim.
+
+Previous scalar acceptance:
 production-iteration9.json corrects scalar f32 expressions/conditions/casts.
 Accepted 393d7600 supports f32 +,-,*, mixed comparisons/ternaries, IEEE float
 truthiness, explicit numeric f32/i32 Let conversion, mixed scalar/FMA operands and
@@ -163,3 +178,9 @@ on documentation pushes; existing accepted-code twelve-check matrix is verified.
 Entry drafts SUBMISSION.md/WALKTHROUGH.md reflect current measured optimizations.
 **No contest entry submitted.** Personal fields/video still missing; don't invent
 them or contact organizers. General production readiness remains unproven.
+
+Latest packaging state supersedes earlier current-archive paragraph: archived
+compiler remains prior 393d7600. Commit address fix, verify sixteen-check Actions
+and rebuild the archive for bf07d517. All address-fix semantic gates completed.
+Next ABI/static-shape/launch validation must preserve permissive flat/additive
+coordinates, physical/logical views and valid parameter-order permutations.

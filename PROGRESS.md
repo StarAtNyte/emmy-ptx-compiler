@@ -976,3 +976,33 @@ Completed 2026-10-24:
 - Updated README/current handoff. No contest entry submitted or broad production
   readiness claimed. Next: rank/ABI/static-shape validation, additional operations
   and target hardware lower-bound/bottleneck work.
+
+## Step 37 — index-rank contract corrected; metadata views audited
+
+Completed 2026-10-24:
+
+- Installed render_index explicitly defines empty=zero, one coordinate=flat,
+  matched rank=row-major, otherwise sum of additive coordinates. Strictly rejecting
+  all rank differences would reject valid IR. Previous address()/flat_linear()
+  zipped against shape and dropped coordinates or ignored scalar-view flat indices.
+- Added generate_address_cases.py, eight renamed families / 16 cases with independent
+  NumPy formulas, including global/shared reads, additive writes, flat/empty/full
+  controls and scalar logical view backed by an adequate physical allocation.
+  Previous 393d7600 passes six controls and fails ten probes numerically.
+- Accepted bf07d517f3a31619ce7f46514def0e8cedfdf1ea4f0f5b1206bb76fd4c85fac3.
+  Address emission and shared-pair linear proofs now agree on additive mapping.
+- All 32 original/frozen-fresh cases pass on both GPUs. Two reordered-ABI controls
+  pass on both compilers locally and candidate hosted. Four sanitizers clean on
+  16 originals; nine transformer runs, three no-Torch compilations and eleven
+  diagnostic probes pass. Shared cases positively emit vector reads.
+- All 550 prior kernels emit identical PTX, preserving prior codegen/performance
+  evidence; no fresh speedup claim. Metadata audit found 38 valid scalar logical
+  views vs allocation descriptors; no order/coop-width mismatch in that corpus.
+  This is not full ABI/static-shape/launch validation or a bounds checker.
+- Preserved gates/IR/oracle hashes/audit in production-iteration10.json. Added four
+  GPU-verified addressing/reordered-ABI CPU fixtures; existing eight goldens stay
+  unchanged. Sixteen local no-Torch contract checks pass.
+
+Next: publish and verify actual sixteen-check CI, refresh changed-code archive;
+then broad ABI/static-shape diagnostics that preserve these valid layouts.
+Submission deferred and general production readiness unproven.

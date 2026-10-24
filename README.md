@@ -116,6 +116,12 @@ with selected sanitizer/model/runtime checks. All 498 prior kernels retain
 byte-identical PTX. Floating indices reject cleanly; integer-buffer storage and
 floating Expr division remain unsupported.
 
+The [address-rank iteration](validation/2026-10-24-production-iteration10.json)
+fixes additive and scalar-view flat offsets, including shared vector reads.
+Thirty-two new address cases and two ABI-order controls pass on both GPUs; all
+550 prior kernels retain byte-identical PTX. Logical view rank can differ from
+physical allocation rank. Full ABI and memory-bounds validation remain open.
+
 ## Measured performance
 
 Alternating paired RTX 5090 trials checked both compilers' outputs. Clocks were

@@ -1,6 +1,6 @@
 {
-  "baseline_compiler_sha256": "393d7600af297b365c6653e0b8dca84017a9c9d4dd9c482d845bf6e329cb5483",
-  "snapshot_provenance": "GPU-verified fixtures; four scalar f32 fixtures added after production-iteration9. Existing four goldens unchanged.",
+  "baseline_compiler_sha256": "bf07d517f3a31619ce7f46514def0e8cedfdf1ea4f0f5b1206bb76fd4c85fac3",
+  "snapshot_provenance": "GPU-verified fixtures; additive, shared-pair, scalar-flat and reordered ABI cases added after production-iteration10. Existing eight goldens unchanged.",
   "fixtures": [
     {
       "folder": "validation/counterexamples/2026-10-24-scope-shrunk",
@@ -81,6 +81,46 @@
         "expected.npz": "d445a180e73a5bcfa262cfc2dc77bf4bddb7834244b876bf26f0289e4230678f"
       },
       "ptx_sha256": "34a9e8da648ec8f7d9b7d0e6447c500378c0191b6cf86b6f7ecd846205ab6ddd"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-24-address-extra-load",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "k_sum_1_reduce.ir.json": "e5716aaa838f93cb298f5c6332d71c65d74d6de65ba27b34843238ffadebe79c",
+        "meta.json": "fa5b64cdf0ae90b05ab716b1888362805116eb95e9a880cb18bab38edabb944b",
+        "expected.npz": "24650da0254bf72e23f8fcbb598de406d8864b1cba0cd0b0f50adfb1d1e4f790"
+      },
+      "ptx_sha256": "f97d5b20d00422899305f365bb2d562eb4c57f41bfeb2271afc2be97129bf30a"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-24-address-scalar-flat",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "k_sum_1_reduce.ir.json": "5dae6db1221c1e01619dbb28d5fcb56b4376c2f9822405674701254e23a6d767",
+        "meta.json": "1103379df407ac7e2139ae5d14ecef7812d1da55760ee66f7d86090b5b5a9ebd",
+        "expected.npz": "2bec740462c36cb6c76f6a29054da9bd1c55565857636376f3b90753ff1b071c"
+      },
+      "ptx_sha256": "892b296b619d44b30fcc3d8e18dc1304474e64f6f1713287c3a80f8dd3e3a50c"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-24-address-shared-pair",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "k_sum_1_reduce.ir.json": "049a89ef725100a7465875bfeca59fadf86b98c877782eec0c35ec2fcb8da538",
+        "meta.json": "e244705ee4fe9fdf2c4513e568f5bbbf4199289fbc581136005aa50daadde750",
+        "expected.npz": "02e187a576f6e3929f0bc1a570581e738dea2a70058d013e0aeffc55c66e8279"
+      },
+      "ptx_sha256": "64dfdc2da4071207ec81322c244ae60dbe9ba0fef72589e62cdb96e26de1323d"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-24-abi-reordered",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "k_sum_1_reduce.ir.json": "70be180ff631e8b8a6a54135a4615246baa92edb4300bc7912ca2483b5263f13",
+        "meta.json": "3942f9994dcb523e56870199da208846c5e964f5fbb222ba8abf478789371f7c",
+        "expected.npz": "2bec740462c36cb6c76f6a29054da9bd1c55565857636376f3b90753ff1b071c"
+      },
+      "ptx_sha256": "c86f56f7882c9d797f637bcbd41e200efbf7ff4f5d28035427534bcc8d593b3c"
     }
   ]
 }

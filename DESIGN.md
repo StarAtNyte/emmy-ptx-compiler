@@ -210,3 +210,14 @@ output. Floating Expr /, // and % are explicitly unsupported because this AST's
 contract specifies integer index division; use typed scalar Assign divide for
 f32 division. Float→integer casts are supported for finite in-range values; no
 nonfinite/out-of-range cast guarantee or general type-checker claim is made.
+
+## Address rank and physical allocation views
+
+Addressing follows installed Emmy 0.3.11 `render_index`: empty coordinates select
+zero; one coordinate is a flat pointer offset regardless of logical rank; a full
+rank tuple uses row-major strides; other multi-coordinate tuples sum as additive
+flat offsets. Paired shared-read adjacency/alignment proofs use the same mapping.
+No coordinate is silently dropped. Logical view dimensions need not equal the
+allocation descriptor's rank; metadata supplies actual buffer capacity/ABI order.
+In particular, a scalar logical view can use flat coordinates into a larger
+provided allocation. This is not a general bounds checker or launch validator.

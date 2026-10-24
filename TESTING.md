@@ -473,3 +473,32 @@ casts are outside this checked domain; integer-buffer storage remains unsupporte
 CPU CI adds NaN truth, numeric casts, f32 arithmetic and mixed-comparison fixtures.
 All four prior PTX goldens stay unchanged. Eight positive fixtures plus four
 negative probes now make twelve CPU contract checks; these do not execute PTX.
+
+## Flat/additive rank addressing and ABI controls
+
+```sh
+.venv/bin/python tools/generate_address_cases.py
+.venv/bin/python tools/generate_address_cases.py --seed 8159 --out artifacts/address-ranks-fresh
+.venv/bin/python tools/validate_isolated.py artifacts/address-ranks/*/ artifacts/address-ranks-fresh/*/ --report artifacts/address-ranks-local.json
+```
+
+Eight families with renamed counterparts check extra/partial Load coordinates,
+flat/empty/full-rank controls, additive Write coordinates, paired shared loads and
+a scalar logical view with flat addressing into a physically larger buffer.
+Independent NumPy formulas check both primary results and a control output half.
+The contract is installed `ir/stmt/base.py:render_index`, not an assumed rank-equals-
+shape rule. Every access stays within the prescribed 128-element allocation.
+
+Prior compiler passes six controls but fails ten rank probes numerically. Final
+16 original/16 frozen fresh cases pass on both GPUs; four sanitizers cover the
+16 originals. Two additional controls reverse both arg_order and descriptors;
+they pass on both compilers locally and on the candidate hosted GPU. Vector
+eligibility checks require one shared vector read in the two shared-pair cases.
+550 prior kernels emit byte-identical PTX. Evidence: production-iteration10.json.
+
+The metadata audit also found 38 valid scalar-view/allocation rank differences
+in the older corpus, with no descriptor-order/cooperative-width mismatches.
+These observations constrain future validation: preserve valid views and parameter
+permutations. They do not establish general launch/ABI validation or memory bounds.
+CPU CI adds four GPU-verified addressing/ABI fixtures; twelve positive snapshots
+and four negative probes make sixteen checks. Existing eight goldens unchanged.

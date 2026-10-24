@@ -297,9 +297,15 @@ class Compiler:
     def address(self, buffer, index, offset=0):
         shape = self.shapes[buffer]
         flat = '0'
-        for coordinate, extent in zip(index, shape):
-            flat = self.instruction('mul.lo.s32', flat, extent)
-            flat = self.instruction('add.s32', flat, self.integer(coordinate))
+        if (len(index) > 1 and len(index) != len(shape)) or (index and not shape):
+            # IR render_index defines mismatched-rank coordinates as additive
+            # flat offsets. A single coordinate is flat even for a scalar view.
+            for coordinate in index:
+                flat = self.instruction('add.s32', flat, self.integer(coordinate))
+        else:
+            for coordinate, extent in zip(index, shape):
+                flat = self.instruction('mul.lo.s32', flat, extent)
+                flat = self.instruction('add.s32', flat, self.integer(coordinate))
         if offset:
             flat = self.instruction('add.s32', flat, offset)
         if buffer in self.shared:
@@ -697,7 +703,9 @@ class Compiler:
 
     def flat_linear(self, buffer, index):
         terms, constant = {}, 0
-        for coordinate, extent in zip(index, self.shapes[buffer]):
+        shape = self.shapes[buffer]
+        extents = shape if len(index) == len(shape) else (1,) * len(index)
+        for coordinate, extent in zip(index, extents):
             terms = {k:v*extent for k,v in terms.items()}
             constant *= extent
             extra, value = self.index_linear(coordinate)
