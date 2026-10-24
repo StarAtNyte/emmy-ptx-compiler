@@ -1,0 +1,3061 @@
+{
+  "status": "signed division bug reproduced; generic correctness fix unaccepted due timing regression; range candidate v2 verification in progress",
+  "reports": {
+    "signed-index-before": {
+      "compiler_sha256": "5af51dc2b497f8acd42f378eff27ed03c518ed4bd2952aedb940972eb4ac2998",
+      "isolation": "one subprocess and CUDA context per case",
+      "results": [
+        {
+          "problem": "divide_negative_s0",
+          "path": "artifacts/signed-index/divide_negative_s0",
+          "meta_sha256": "a8c71cb3cd01d45dfd14a70c2a4a9d63847673e7d01212da6ef3108709879f49",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "f38dcc7b31a08a4d981511a1ed15482c5a156692fbdd7169b94e5554be87f6d9"
+          },
+          "passed": false,
+          "exit_code": 1,
+          "stdout": "Local PTX target: sm_86\nFAIL divide_negative_s0: \nNot equal to tolerance rtol=0, atol=0\n\nMismatched elements: 19 / 64 (29.7%)\nFirst 5 mismatches are at indices:\n [33]: 75.0 (ACTUAL), -22.0 (DESIRED)\n [34]: 75.0 (ACTUAL), -22.0 (DESIRED)\n [40]: 41.0 (ACTUAL), 38.0 (DESIRED)\n [41]: 41.0 (ACTUAL), 38.0 (DESIRED)\n [43]: -22.0 (ACTUAL), 41.0 (DESIRED)\nMax absolute difference among violations: 97.\nMax relative difference among violations: 4.409091\n ACTUAL: array([ 44., -38., -25.,  69.,  69.,  -3., -25.,   5.,  69.,  45., -38.,\n         5.,  69.,  45.,  16.,   5.,  69.,  45.,  16., -73.,  69.,  16.,\n        16., -73., -73.,  16., -73., -73.,  75.,  75.,  75.,  75.,  75.,...\n DESIRED: array([ 44., -38., -25.,  69.,  69.,  -3., -25.,   5.,  69.,  45., -38.,\n         5.,  69.,  45.,  16.,   5.,  69.,  45.,  16., -73.,  69.,  16.,\n        16., -73., -73.,  16., -73., -73.,  75.,  75.,  75.,  75.,  75.,...\n0/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "5af51dc2b497f8acd42f378eff27ed03c518ed4bd2952aedb940972eb4ac2998",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_negative_s0",
+                "passed": false,
+                "error": "\nNot equal to tolerance rtol=0, atol=0\n\nMismatched elements: 19 / 64 (29.7%)\nFirst 5 mismatches are at indices:\n [33]: 75.0 (ACTUAL), -22.0 (DESIRED)\n [34]: 75.0 (ACTUAL), -22.0 (DESIRED)\n [40]: 41.0 (ACTUAL), 38.0 (DESIRED)\n [41]: 41.0 (ACTUAL), 38.0 (DESIRED)\n [43]: -22.0 (ACTUAL), 41.0 (DESIRED)\nMax absolute difference among violations: 97.\nMax relative difference among violations: 4.409091\n ACTUAL: array([ 44., -38., -25.,  69.,  69.,  -3., -25.,   5.,  69.,  45., -38.,\n         5.,  69.,  45.,  16.,   5.,  69.,  45.,  16., -73.,  69.,  16.,\n        16., -73., -73.,  16., -73., -73.,  75.,  75.,  75.,  75.,  75.,...\n DESIRED: array([ 44., -38., -25.,  69.,  69.,  -3., -25.,   5.,  69.,  45., -38.,\n         5.,  69.,  45.,  16.,   5.,  69.,  45.,  16., -73.,  69.,  16.,\n        16., -73., -73.,  16., -73., -73.,  75.,  75.,  75.,  75.,  75.,...",
+                "elapsed_s": 0.562
+              }
+            ]
+          },
+          "elapsed_s": 1.186
+        },
+        {
+          "problem": "divide_negative_s0_renamed",
+          "path": "artifacts/signed-index/divide_negative_s0_renamed",
+          "meta_sha256": "0be9e1a4e857f95e4bb5c91d687669156ff045389f633b1096ff468027321353",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "ce863364349950d23834f2f111e908839fc0a052a002b77f24145390ee75cee5"
+          },
+          "passed": false,
+          "exit_code": 1,
+          "stdout": "Local PTX target: sm_86\nFAIL divide_negative_s0_renamed: \nNot equal to tolerance rtol=0, atol=0\n\nMismatched elements: 19 / 64 (29.7%)\nFirst 5 mismatches are at indices:\n [33]: 75.0 (ACTUAL), -22.0 (DESIRED)\n [34]: 75.0 (ACTUAL), -22.0 (DESIRED)\n [40]: 41.0 (ACTUAL), 38.0 (DESIRED)\n [41]: 41.0 (ACTUAL), 38.0 (DESIRED)\n [43]: -22.0 (ACTUAL), 41.0 (DESIRED)\nMax absolute difference among violations: 97.\nMax relative difference among violations: 4.409091\n ACTUAL: array([ 44., -38., -25.,  69.,  69.,  -3., -25.,   5.,  69.,  45., -38.,\n         5.,  69.,  45.,  16.,   5.,  69.,  45.,  16., -73.,  69.,  16.,\n        16., -73., -73.,  16., -73., -73.,  75.,  75.,  75.,  75.,  75.,...\n DESIRED: array([ 44., -38., -25.,  69.,  69.,  -3., -25.,   5.,  69.,  45., -38.,\n         5.,  69.,  45.,  16.,   5.,  69.,  45.,  16., -73.,  69.,  16.,\n        16., -73., -73.,  16., -73., -73.,  75.,  75.,  75.,  75.,  75.,...\n0/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "5af51dc2b497f8acd42f378eff27ed03c518ed4bd2952aedb940972eb4ac2998",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_negative_s0_renamed",
+                "passed": false,
+                "error": "\nNot equal to tolerance rtol=0, atol=0\n\nMismatched elements: 19 / 64 (29.7%)\nFirst 5 mismatches are at indices:\n [33]: 75.0 (ACTUAL), -22.0 (DESIRED)\n [34]: 75.0 (ACTUAL), -22.0 (DESIRED)\n [40]: 41.0 (ACTUAL), 38.0 (DESIRED)\n [41]: 41.0 (ACTUAL), 38.0 (DESIRED)\n [43]: -22.0 (ACTUAL), 41.0 (DESIRED)\nMax absolute difference among violations: 97.\nMax relative difference among violations: 4.409091\n ACTUAL: array([ 44., -38., -25.,  69.,  69.,  -3., -25.,   5.,  69.,  45., -38.,\n         5.,  69.,  45.,  16.,   5.,  69.,  45.,  16., -73.,  69.,  16.,\n        16., -73., -73.,  16., -73., -73.,  75.,  75.,  75.,  75.,  75.,...\n DESIRED: array([ 44., -38., -25.,  69.,  69.,  -3., -25.,   5.,  69.,  45., -38.,\n         5.,  69.,  45.,  16.,   5.,  69.,  45.,  16., -73.,  69.,  16.,\n        16., -73., -73.,  16., -73., -73.,  75.,  75.,  75.,  75.,  75.,...",
+                "elapsed_s": 0.537
+              }
+            ]
+          },
+          "elapsed_s": 1.104
+        },
+        {
+          "problem": "divide_positive_s0",
+          "path": "artifacts/signed-index/divide_positive_s0",
+          "meta_sha256": "95e51f69793c2642340d956c65957368bf79c183dbca10f04263482993f3ab43",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "a95b9df862ea314478d0c58ba95a82d403c700f0ca12bff389309184bf0a3df2"
+          },
+          "passed": false,
+          "exit_code": 1,
+          "stdout": "Local PTX target: sm_86\nFAIL divide_positive_s0: \nNot equal to tolerance rtol=0, atol=0\n\nMismatched elements: 21 / 64 (32.8%)\nFirst 5 mismatches are at indices:\n [0]: 61.0 (ACTUAL), 100.0 (DESIRED)\n [1]: 37.0 (ACTUAL), -24.0 (DESIRED)\n [3]: 68.0 (ACTUAL), 30.0 (DESIRED)\n [6]: 90.0 (ACTUAL), 37.0 (DESIRED)\n [9]: 38.0 (ACTUAL), 68.0 (DESIRED)\nMax absolute difference among violations: 97.\nMax relative difference among violations: 4.409091\n ACTUAL: array([ 61.,  37.,  90.,  68.,  68.,  97.,  90.,  30.,  68.,  38.,  37.,\n        30.,  68.,  38.,  41.,  30.,  68.,  38.,  41., -22.,  68.,  41.,\n        41., -22., -22.,  41., -22., -22.,  75.,  75.,  75.,  75.,  75.,...\n DESIRED: array([100., -24.,  90.,  30.,  68.,  97.,  37.,  30.,  68.,  68., -24.,\n        90.,  68.,  68.,  38.,  90.,  68.,  38.,  38.,  41.,  68.,  38.,\n        41.,  41.,  41.,  38.,  41., -22., -22., -22., -22., -22.,  75.,...\n0/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "5af51dc2b497f8acd42f378eff27ed03c518ed4bd2952aedb940972eb4ac2998",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_positive_s0",
+                "passed": false,
+                "error": "\nNot equal to tolerance rtol=0, atol=0\n\nMismatched elements: 21 / 64 (32.8%)\nFirst 5 mismatches are at indices:\n [0]: 61.0 (ACTUAL), 100.0 (DESIRED)\n [1]: 37.0 (ACTUAL), -24.0 (DESIRED)\n [3]: 68.0 (ACTUAL), 30.0 (DESIRED)\n [6]: 90.0 (ACTUAL), 37.0 (DESIRED)\n [9]: 38.0 (ACTUAL), 68.0 (DESIRED)\nMax absolute difference among violations: 97.\nMax relative difference among violations: 4.409091\n ACTUAL: array([ 61.,  37.,  90.,  68.,  68.,  97.,  90.,  30.,  68.,  38.,  37.,\n        30.,  68.,  38.,  41.,  30.,  68.,  38.,  41., -22.,  68.,  41.,\n        41., -22., -22.,  41., -22., -22.,  75.,  75.,  75.,  75.,  75.,...\n DESIRED: array([100., -24.,  90.,  30.,  68.,  97.,  37.,  30.,  68.,  68., -24.,\n        90.,  68.,  68.,  38.,  90.,  68.,  38.,  38.,  41.,  68.,  38.,\n        41.,  41.,  41.,  38.,  41., -22., -22., -22., -22., -22.,  75.,...",
+                "elapsed_s": 0.605
+              }
+            ]
+          },
+          "elapsed_s": 1.187
+        },
+        {
+          "problem": "divide_positive_s0_renamed",
+          "path": "artifacts/signed-index/divide_positive_s0_renamed",
+          "meta_sha256": "9e086a87c3ca2ca45336a0c8b6931512da22568130af1c9ab6411900f11bb0b6",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "f6b3f90a349069013e2a452da3f974f1463f851ae451980c1a4a4754d4d9836d"
+          },
+          "passed": false,
+          "exit_code": 1,
+          "stdout": "Local PTX target: sm_86\nFAIL divide_positive_s0_renamed: \nNot equal to tolerance rtol=0, atol=0\n\nMismatched elements: 21 / 64 (32.8%)\nFirst 5 mismatches are at indices:\n [0]: 61.0 (ACTUAL), 100.0 (DESIRED)\n [1]: 37.0 (ACTUAL), -24.0 (DESIRED)\n [3]: 68.0 (ACTUAL), 30.0 (DESIRED)\n [6]: 90.0 (ACTUAL), 37.0 (DESIRED)\n [9]: 38.0 (ACTUAL), 68.0 (DESIRED)\nMax absolute difference among violations: 97.\nMax relative difference among violations: 4.409091\n ACTUAL: array([ 61.,  37.,  90.,  68.,  68.,  97.,  90.,  30.,  68.,  38.,  37.,\n        30.,  68.,  38.,  41.,  30.,  68.,  38.,  41., -22.,  68.,  41.,\n        41., -22., -22.,  41., -22., -22.,  75.,  75.,  75.,  75.,  75.,...\n DESIRED: array([100., -24.,  90.,  30.,  68.,  97.,  37.,  30.,  68.,  68., -24.,\n        90.,  68.,  68.,  38.,  90.,  68.,  38.,  38.,  41.,  68.,  38.,\n        41.,  41.,  41.,  38.,  41., -22., -22., -22., -22., -22.,  75.,...\n0/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "5af51dc2b497f8acd42f378eff27ed03c518ed4bd2952aedb940972eb4ac2998",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_positive_s0_renamed",
+                "passed": false,
+                "error": "\nNot equal to tolerance rtol=0, atol=0\n\nMismatched elements: 21 / 64 (32.8%)\nFirst 5 mismatches are at indices:\n [0]: 61.0 (ACTUAL), 100.0 (DESIRED)\n [1]: 37.0 (ACTUAL), -24.0 (DESIRED)\n [3]: 68.0 (ACTUAL), 30.0 (DESIRED)\n [6]: 90.0 (ACTUAL), 37.0 (DESIRED)\n [9]: 38.0 (ACTUAL), 68.0 (DESIRED)\nMax absolute difference among violations: 97.\nMax relative difference among violations: 4.409091\n ACTUAL: array([ 61.,  37.,  90.,  68.,  68.,  97.,  90.,  30.,  68.,  38.,  37.,\n        30.,  68.,  38.,  41.,  30.,  68.,  38.,  41., -22.,  68.,  41.,\n        41., -22., -22.,  41., -22., -22.,  75.,  75.,  75.,  75.,  75.,...\n DESIRED: array([100., -24.,  90.,  30.,  68.,  97.,  37.,  30.,  68.,  68., -24.,\n        90.,  68.,  68.,  38.,  90.,  68.,  38.,  38.,  41.,  68.,  38.,\n        41.,  41.,  41.,  38.,  41., -22., -22., -22., -22., -22.,  75.,...",
+                "elapsed_s": 0.534
+              }
+            ]
+          },
+          "elapsed_s": 1.094
+        },
+        {
+          "problem": "floor_negative_s0",
+          "path": "artifacts/signed-index/floor_negative_s0",
+          "meta_sha256": "1d3fad08e73345f64930c18b668eed21305a725f3f92bf037cc28c85d1757d7b",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "9051335d484794254706c74f3ae77654e7d22392209129c7e69b9bc74b26c647"
+          },
+          "passed": false,
+          "exit_code": 1,
+          "stdout": "Local PTX target: sm_86\nFAIL floor_negative_s0: \nNot equal to tolerance rtol=0, atol=0\n\nMismatched elements: 19 / 64 (29.7%)\nFirst 5 mismatches are at indices:\n [33]: 75.0 (ACTUAL), -22.0 (DESIRED)\n [34]: 75.0 (ACTUAL), -22.0 (DESIRED)\n [40]: 41.0 (ACTUAL), 38.0 (DESIRED)\n [41]: 41.0 (ACTUAL), 38.0 (DESIRED)\n [43]: -22.0 (ACTUAL), 41.0 (DESIRED)\nMax absolute difference among violations: 97.\nMax relative difference among violations: 4.409091\n ACTUAL: array([ 44., -38., -25.,  69.,  69.,  -3., -25.,   5.,  69.,  45., -38.,\n         5.,  69.,  45.,  16.,   5.,  69.,  45.,  16., -73.,  69.,  16.,\n        16., -73., -73.,  16., -73., -73.,  75.,  75.,  75.,  75.,  75.,...\n DESIRED: array([ 44., -38., -25.,  69.,  69.,  -3., -25.,   5.,  69.,  45., -38.,\n         5.,  69.,  45.,  16.,   5.,  69.,  45.,  16., -73.,  69.,  16.,\n        16., -73., -73.,  16., -73., -73.,  75.,  75.,  75.,  75.,  75.,...\n0/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "5af51dc2b497f8acd42f378eff27ed03c518ed4bd2952aedb940972eb4ac2998",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_negative_s0",
+                "passed": false,
+                "error": "\nNot equal to tolerance rtol=0, atol=0\n\nMismatched elements: 19 / 64 (29.7%)\nFirst 5 mismatches are at indices:\n [33]: 75.0 (ACTUAL), -22.0 (DESIRED)\n [34]: 75.0 (ACTUAL), -22.0 (DESIRED)\n [40]: 41.0 (ACTUAL), 38.0 (DESIRED)\n [41]: 41.0 (ACTUAL), 38.0 (DESIRED)\n [43]: -22.0 (ACTUAL), 41.0 (DESIRED)\nMax absolute difference among violations: 97.\nMax relative difference among violations: 4.409091\n ACTUAL: array([ 44., -38., -25.,  69.,  69.,  -3., -25.,   5.,  69.,  45., -38.,\n         5.,  69.,  45.,  16.,   5.,  69.,  45.,  16., -73.,  69.,  16.,\n        16., -73., -73.,  16., -73., -73.,  75.,  75.,  75.,  75.,  75.,...\n DESIRED: array([ 44., -38., -25.,  69.,  69.,  -3., -25.,   5.,  69.,  45., -38.,\n         5.,  69.,  45.,  16.,   5.,  69.,  45.,  16., -73.,  69.,  16.,\n        16., -73., -73.,  16., -73., -73.,  75.,  75.,  75.,  75.,  75.,...",
+                "elapsed_s": 0.586
+              }
+            ]
+          },
+          "elapsed_s": 1.169
+        },
+        {
+          "problem": "floor_negative_s0_renamed",
+          "path": "artifacts/signed-index/floor_negative_s0_renamed",
+          "meta_sha256": "2b11b74e616d14bb7966b55bc23cde8b51d613c6e10dcce96db91774614840b7",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "3079389ead06ec6f74af4a103119092958af2f23162012df2b8fbef29e586938"
+          },
+          "passed": false,
+          "exit_code": 1,
+          "stdout": "Local PTX target: sm_86\nFAIL floor_negative_s0_renamed: \nNot equal to tolerance rtol=0, atol=0\n\nMismatched elements: 19 / 64 (29.7%)\nFirst 5 mismatches are at indices:\n [33]: 75.0 (ACTUAL), -22.0 (DESIRED)\n [34]: 75.0 (ACTUAL), -22.0 (DESIRED)\n [40]: 41.0 (ACTUAL), 38.0 (DESIRED)\n [41]: 41.0 (ACTUAL), 38.0 (DESIRED)\n [43]: -22.0 (ACTUAL), 41.0 (DESIRED)\nMax absolute difference among violations: 97.\nMax relative difference among violations: 4.409091\n ACTUAL: array([ 44., -38., -25.,  69.,  69.,  -3., -25.,   5.,  69.,  45., -38.,\n         5.,  69.,  45.,  16.,   5.,  69.,  45.,  16., -73.,  69.,  16.,\n        16., -73., -73.,  16., -73., -73.,  75.,  75.,  75.,  75.,  75.,...\n DESIRED: array([ 44., -38., -25.,  69.,  69.,  -3., -25.,   5.,  69.,  45., -38.,\n         5.,  69.,  45.,  16.,   5.,  69.,  45.,  16., -73.,  69.,  16.,\n        16., -73., -73.,  16., -73., -73.,  75.,  75.,  75.,  75.,  75.,...\n0/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "5af51dc2b497f8acd42f378eff27ed03c518ed4bd2952aedb940972eb4ac2998",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_negative_s0_renamed",
+                "passed": false,
+                "error": "\nNot equal to tolerance rtol=0, atol=0\n\nMismatched elements: 19 / 64 (29.7%)\nFirst 5 mismatches are at indices:\n [33]: 75.0 (ACTUAL), -22.0 (DESIRED)\n [34]: 75.0 (ACTUAL), -22.0 (DESIRED)\n [40]: 41.0 (ACTUAL), 38.0 (DESIRED)\n [41]: 41.0 (ACTUAL), 38.0 (DESIRED)\n [43]: -22.0 (ACTUAL), 41.0 (DESIRED)\nMax absolute difference among violations: 97.\nMax relative difference among violations: 4.409091\n ACTUAL: array([ 44., -38., -25.,  69.,  69.,  -3., -25.,   5.,  69.,  45., -38.,\n         5.,  69.,  45.,  16.,   5.,  69.,  45.,  16., -73.,  69.,  16.,\n        16., -73., -73.,  16., -73., -73.,  75.,  75.,  75.,  75.,  75.,...\n DESIRED: array([ 44., -38., -25.,  69.,  69.,  -3., -25.,   5.,  69.,  45., -38.,\n         5.,  69.,  45.,  16.,   5.,  69.,  45.,  16., -73.,  69.,  16.,\n        16., -73., -73.,  16., -73., -73.,  75.,  75.,  75.,  75.,  75.,...",
+                "elapsed_s": 0.545
+              }
+            ]
+          },
+          "elapsed_s": 1.145
+        },
+        {
+          "problem": "floor_positive_s0",
+          "path": "artifacts/signed-index/floor_positive_s0",
+          "meta_sha256": "240d0777ae02a87d2ff6c341c028d52a115016b83fa2b13008fef93af2c1fcdb",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "db469f021d610a8165d7373c67f96fc94a078de9757dd35572629b7b73d7b8cf"
+          },
+          "passed": false,
+          "exit_code": 1,
+          "stdout": "Local PTX target: sm_86\nFAIL floor_positive_s0: \nNot equal to tolerance rtol=0, atol=0\n\nMismatched elements: 21 / 64 (32.8%)\nFirst 5 mismatches are at indices:\n [0]: 61.0 (ACTUAL), 100.0 (DESIRED)\n [1]: 37.0 (ACTUAL), -24.0 (DESIRED)\n [3]: 68.0 (ACTUAL), 30.0 (DESIRED)\n [6]: 90.0 (ACTUAL), 37.0 (DESIRED)\n [9]: 38.0 (ACTUAL), 68.0 (DESIRED)\nMax absolute difference among violations: 97.\nMax relative difference among violations: 4.409091\n ACTUAL: array([ 61.,  37.,  90.,  68.,  68.,  97.,  90.,  30.,  68.,  38.,  37.,\n        30.,  68.,  38.,  41.,  30.,  68.,  38.,  41., -22.,  68.,  41.,\n        41., -22., -22.,  41., -22., -22.,  75.,  75.,  75.,  75.,  75.,...\n DESIRED: array([100., -24.,  90.,  30.,  68.,  97.,  37.,  30.,  68.,  68., -24.,\n        90.,  68.,  68.,  38.,  90.,  68.,  38.,  38.,  41.,  68.,  38.,\n        41.,  41.,  41.,  38.,  41., -22., -22., -22., -22., -22.,  75.,...\n0/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "5af51dc2b497f8acd42f378eff27ed03c518ed4bd2952aedb940972eb4ac2998",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_positive_s0",
+                "passed": false,
+                "error": "\nNot equal to tolerance rtol=0, atol=0\n\nMismatched elements: 21 / 64 (32.8%)\nFirst 5 mismatches are at indices:\n [0]: 61.0 (ACTUAL), 100.0 (DESIRED)\n [1]: 37.0 (ACTUAL), -24.0 (DESIRED)\n [3]: 68.0 (ACTUAL), 30.0 (DESIRED)\n [6]: 90.0 (ACTUAL), 37.0 (DESIRED)\n [9]: 38.0 (ACTUAL), 68.0 (DESIRED)\nMax absolute difference among violations: 97.\nMax relative difference among violations: 4.409091\n ACTUAL: array([ 61.,  37.,  90.,  68.,  68.,  97.,  90.,  30.,  68.,  38.,  37.,\n        30.,  68.,  38.,  41.,  30.,  68.,  38.,  41., -22.,  68.,  41.,\n        41., -22., -22.,  41., -22., -22.,  75.,  75.,  75.,  75.,  75.,...\n DESIRED: array([100., -24.,  90.,  30.,  68.,  97.,  37.,  30.,  68.,  68., -24.,\n        90.,  68.,  68.,  38.,  90.,  68.,  38.,  38.,  41.,  68.,  38.,\n        41.,  41.,  41.,  38.,  41., -22., -22., -22., -22., -22.,  75.,...",
+                "elapsed_s": 0.511
+              }
+            ]
+          },
+          "elapsed_s": 1.086
+        },
+        {
+          "problem": "floor_positive_s0_renamed",
+          "path": "artifacts/signed-index/floor_positive_s0_renamed",
+          "meta_sha256": "271aaff9f0dc8aadd334d2fd238c9e8d7e77530c4e8989adc469992675499865",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "2ed219bf9b710f0f0d4138ea002e099d9381d997efeb1b10577a45bb9e3ad9e6"
+          },
+          "passed": false,
+          "exit_code": 1,
+          "stdout": "Local PTX target: sm_86\nFAIL floor_positive_s0_renamed: \nNot equal to tolerance rtol=0, atol=0\n\nMismatched elements: 21 / 64 (32.8%)\nFirst 5 mismatches are at indices:\n [0]: 61.0 (ACTUAL), 100.0 (DESIRED)\n [1]: 37.0 (ACTUAL), -24.0 (DESIRED)\n [3]: 68.0 (ACTUAL), 30.0 (DESIRED)\n [6]: 90.0 (ACTUAL), 37.0 (DESIRED)\n [9]: 38.0 (ACTUAL), 68.0 (DESIRED)\nMax absolute difference among violations: 97.\nMax relative difference among violations: 4.409091\n ACTUAL: array([ 61.,  37.,  90.,  68.,  68.,  97.,  90.,  30.,  68.,  38.,  37.,\n        30.,  68.,  38.,  41.,  30.,  68.,  38.,  41., -22.,  68.,  41.,\n        41., -22., -22.,  41., -22., -22.,  75.,  75.,  75.,  75.,  75.,...\n DESIRED: array([100., -24.,  90.,  30.,  68.,  97.,  37.,  30.,  68.,  68., -24.,\n        90.,  68.,  68.,  38.,  90.,  68.,  38.,  38.,  41.,  68.,  38.,\n        41.,  41.,  41.,  38.,  41., -22., -22., -22., -22., -22.,  75.,...\n0/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "5af51dc2b497f8acd42f378eff27ed03c518ed4bd2952aedb940972eb4ac2998",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_positive_s0_renamed",
+                "passed": false,
+                "error": "\nNot equal to tolerance rtol=0, atol=0\n\nMismatched elements: 21 / 64 (32.8%)\nFirst 5 mismatches are at indices:\n [0]: 61.0 (ACTUAL), 100.0 (DESIRED)\n [1]: 37.0 (ACTUAL), -24.0 (DESIRED)\n [3]: 68.0 (ACTUAL), 30.0 (DESIRED)\n [6]: 90.0 (ACTUAL), 37.0 (DESIRED)\n [9]: 38.0 (ACTUAL), 68.0 (DESIRED)\nMax absolute difference among violations: 97.\nMax relative difference among violations: 4.409091\n ACTUAL: array([ 61.,  37.,  90.,  68.,  68.,  97.,  90.,  30.,  68.,  38.,  37.,\n        30.,  68.,  38.,  41.,  30.,  68.,  38.,  41., -22.,  68.,  41.,\n        41., -22., -22.,  41., -22., -22.,  75.,  75.,  75.,  75.,  75.,...\n DESIRED: array([100., -24.,  90.,  30.,  68.,  97.,  37.,  30.,  68.,  68., -24.,\n        90.,  68.,  68.,  38.,  90.,  68.,  38.,  38.,  41.,  68.,  38.,\n        41.,  41.,  41.,  38.,  41., -22., -22., -22., -22., -22.,  75.,...",
+                "elapsed_s": 0.564
+              }
+            ]
+          },
+          "elapsed_s": 1.168
+        },
+        {
+          "problem": "mod_negative_s0",
+          "path": "artifacts/signed-index/mod_negative_s0",
+          "meta_sha256": "f6b30fe9f6127c6f9a2b24bb72ad22443c5bc93a71ed50f1794bfc4c9606ec17",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "4b37f745053a25bf2641e41dd2c004cbe2df67f5c061769ca42c1fb6c5b569e3"
+          },
+          "passed": false,
+          "exit_code": 1,
+          "stdout": "Local PTX target: sm_86\nFAIL mod_negative_s0: \nNot equal to tolerance rtol=0, atol=0\n\nMismatched elements: 19 / 64 (29.7%)\nFirst 5 mismatches are at indices:\n [33]: -73.0 (ACTUAL), 30.0 (DESIRED)\n [34]: 16.0 (ACTUAL), 30.0 (DESIRED)\n [40]: 16.0 (ACTUAL), -22.0 (DESIRED)\n [41]: -73.0 (ACTUAL), 38.0 (DESIRED)\n [43]: 5.0 (ACTUAL), -22.0 (DESIRED)\nMax absolute difference among violations: 163.\nMax relative difference among violations: 3.4333334\n ACTUAL: array([ 41.,  38.,  75.,  30.,  75.,  75.,  41.,  75.,  75.,  41., -22.,\n       -22.,  75., -22.,  68.,  41.,  75.,  75.,  41.,  90.,  75.,  38.,\n        75.,  38., -22., -22.,  41.,  75.,  68.,  38.,  41., -22.,  75.,...\n DESIRED: array([ 41.,  38.,  75.,  30.,  75.,  75.,  41.,  75.,  75.,  41., -22.,\n       -22.,  75., -22.,  68.,  41.,  75.,  75.,  41.,  90.,  75.,  38.,\n        75.,  38., -22., -22.,  41.,  75.,  68.,  38.,  41., -22.,  75.,...\n0/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "5af51dc2b497f8acd42f378eff27ed03c518ed4bd2952aedb940972eb4ac2998",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_negative_s0",
+                "passed": false,
+                "error": "\nNot equal to tolerance rtol=0, atol=0\n\nMismatched elements: 19 / 64 (29.7%)\nFirst 5 mismatches are at indices:\n [33]: -73.0 (ACTUAL), 30.0 (DESIRED)\n [34]: 16.0 (ACTUAL), 30.0 (DESIRED)\n [40]: 16.0 (ACTUAL), -22.0 (DESIRED)\n [41]: -73.0 (ACTUAL), 38.0 (DESIRED)\n [43]: 5.0 (ACTUAL), -22.0 (DESIRED)\nMax absolute difference among violations: 163.\nMax relative difference among violations: 3.4333334\n ACTUAL: array([ 41.,  38.,  75.,  30.,  75.,  75.,  41.,  75.,  75.,  41., -22.,\n       -22.,  75., -22.,  68.,  41.,  75.,  75.,  41.,  90.,  75.,  38.,\n        75.,  38., -22., -22.,  41.,  75.,  68.,  38.,  41., -22.,  75.,...\n DESIRED: array([ 41.,  38.,  75.,  30.,  75.,  75.,  41.,  75.,  75.,  41., -22.,\n       -22.,  75., -22.,  68.,  41.,  75.,  75.,  41.,  90.,  75.,  38.,\n        75.,  38., -22., -22.,  41.,  75.,  68.,  38.,  41., -22.,  75.,...",
+                "elapsed_s": 0.59
+              }
+            ]
+          },
+          "elapsed_s": 1.191
+        },
+        {
+          "problem": "mod_negative_s0_renamed",
+          "path": "artifacts/signed-index/mod_negative_s0_renamed",
+          "meta_sha256": "663f43abd78b543df80f8f528c90620f1c71f121cedfd83b5d75e0d24f90e6ee",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "6abc1de24888a27b2d05c3bdf16c6c664f767145eaacd8cc8e9791651e82b21b"
+          },
+          "passed": false,
+          "exit_code": 1,
+          "stdout": "Local PTX target: sm_86\nFAIL mod_negative_s0_renamed: \nNot equal to tolerance rtol=0, atol=0\n\nMismatched elements: 19 / 64 (29.7%)\nFirst 5 mismatches are at indices:\n [33]: -73.0 (ACTUAL), 30.0 (DESIRED)\n [34]: 16.0 (ACTUAL), 30.0 (DESIRED)\n [40]: 16.0 (ACTUAL), -22.0 (DESIRED)\n [41]: -73.0 (ACTUAL), 38.0 (DESIRED)\n [43]: 5.0 (ACTUAL), -22.0 (DESIRED)\nMax absolute difference among violations: 163.\nMax relative difference among violations: 3.4333334\n ACTUAL: array([ 41.,  38.,  75.,  30.,  75.,  75.,  41.,  75.,  75.,  41., -22.,\n       -22.,  75., -22.,  68.,  41.,  75.,  75.,  41.,  90.,  75.,  38.,\n        75.,  38., -22., -22.,  41.,  75.,  68.,  38.,  41., -22.,  75.,...\n DESIRED: array([ 41.,  38.,  75.,  30.,  75.,  75.,  41.,  75.,  75.,  41., -22.,\n       -22.,  75., -22.,  68.,  41.,  75.,  75.,  41.,  90.,  75.,  38.,\n        75.,  38., -22., -22.,  41.,  75.,  68.,  38.,  41., -22.,  75.,...\n0/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "5af51dc2b497f8acd42f378eff27ed03c518ed4bd2952aedb940972eb4ac2998",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_negative_s0_renamed",
+                "passed": false,
+                "error": "\nNot equal to tolerance rtol=0, atol=0\n\nMismatched elements: 19 / 64 (29.7%)\nFirst 5 mismatches are at indices:\n [33]: -73.0 (ACTUAL), 30.0 (DESIRED)\n [34]: 16.0 (ACTUAL), 30.0 (DESIRED)\n [40]: 16.0 (ACTUAL), -22.0 (DESIRED)\n [41]: -73.0 (ACTUAL), 38.0 (DESIRED)\n [43]: 5.0 (ACTUAL), -22.0 (DESIRED)\nMax absolute difference among violations: 163.\nMax relative difference among violations: 3.4333334\n ACTUAL: array([ 41.,  38.,  75.,  30.,  75.,  75.,  41.,  75.,  75.,  41., -22.,\n       -22.,  75., -22.,  68.,  41.,  75.,  75.,  41.,  90.,  75.,  38.,\n        75.,  38., -22., -22.,  41.,  75.,  68.,  38.,  41., -22.,  75.,...\n DESIRED: array([ 41.,  38.,  75.,  30.,  75.,  75.,  41.,  75.,  75.,  41., -22.,\n       -22.,  75., -22.,  68.,  41.,  75.,  75.,  41.,  90.,  75.,  38.,\n        75.,  38., -22., -22.,  41.,  75.,  68.,  38.,  41., -22.,  75.,...",
+                "elapsed_s": 0.558
+              }
+            ]
+          },
+          "elapsed_s": 1.142
+        },
+        {
+          "problem": "mod_positive_s0",
+          "path": "artifacts/signed-index/mod_positive_s0",
+          "meta_sha256": "7536079d268b591c2d13686bbb31e4778d3414ef51b2236c89ff485b66c82d55",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "b6a223c99c6b7b5cf1477bef8abcf229c13a6b1cb23d11e370cb1f918cc2d3f7"
+          },
+          "passed": false,
+          "exit_code": 1,
+          "stdout": "Local PTX target: sm_86\nFAIL mod_positive_s0: \nNot equal to tolerance rtol=0, atol=0\n\nMismatched elements: 21 / 64 (32.8%)\nFirst 5 mismatches are at indices:\n [0]: 41.0 (ACTUAL), -73.0 (DESIRED)\n [1]: 38.0 (ACTUAL), -73.0 (DESIRED)\n [3]: 30.0 (ACTUAL), -73.0 (DESIRED)\n [6]: 41.0 (ACTUAL), 16.0 (DESIRED)\n [9]: 41.0 (ACTUAL), 5.0 (DESIRED)\nMax absolute difference among violations: 163.\nMax relative difference among violations: 7.2\n ACTUAL: array([ 41.,  38.,  75.,  30.,  75.,  75.,  41.,  75.,  75.,  41., -22.,\n       -22.,  75., -22.,  68.,  41.,  75.,  75.,  41.,  90.,  75.,  38.,\n        75.,  38., -22., -22.,  41.,  75.,  68.,  38.,  41., -22.,  75.,...\n DESIRED: array([-73., -73.,  75., -73.,  75.,  75.,  16.,  75.,  75.,   5.,  16.,\n        45.,  75.,   5.,  45., -73.,  75.,  75.,  69., -73.,  75., -73.,\n        75.,  45., -25.,  16.,  16.,  75.,  16.,  69., -73.,  45.,  75.,...\n0/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "5af51dc2b497f8acd42f378eff27ed03c518ed4bd2952aedb940972eb4ac2998",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_positive_s0",
+                "passed": false,
+                "error": "\nNot equal to tolerance rtol=0, atol=0\n\nMismatched elements: 21 / 64 (32.8%)\nFirst 5 mismatches are at indices:\n [0]: 41.0 (ACTUAL), -73.0 (DESIRED)\n [1]: 38.0 (ACTUAL), -73.0 (DESIRED)\n [3]: 30.0 (ACTUAL), -73.0 (DESIRED)\n [6]: 41.0 (ACTUAL), 16.0 (DESIRED)\n [9]: 41.0 (ACTUAL), 5.0 (DESIRED)\nMax absolute difference among violations: 163.\nMax relative difference among violations: 7.2\n ACTUAL: array([ 41.,  38.,  75.,  30.,  75.,  75.,  41.,  75.,  75.,  41., -22.,\n       -22.,  75., -22.,  68.,  41.,  75.,  75.,  41.,  90.,  75.,  38.,\n        75.,  38., -22., -22.,  41.,  75.,  68.,  38.,  41., -22.,  75.,...\n DESIRED: array([-73., -73.,  75., -73.,  75.,  75.,  16.,  75.,  75.,   5.,  16.,\n        45.,  75.,   5.,  45., -73.,  75.,  75.,  69., -73.,  75., -73.,\n        75.,  45., -25.,  16.,  16.,  75.,  16.,  69., -73.,  45.,  75.,...",
+                "elapsed_s": 0.587
+              }
+            ]
+          },
+          "elapsed_s": 1.167
+        },
+        {
+          "problem": "mod_positive_s0_renamed",
+          "path": "artifacts/signed-index/mod_positive_s0_renamed",
+          "meta_sha256": "e0a2cf532584a0c35213db24819a71e9e63cdaf2b943e0ec87f600124851b486",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "c8397d7d5f6daed72f29aee952d62b73bc7e6d98d2037ed481fb9f4e734724f5"
+          },
+          "passed": false,
+          "exit_code": 1,
+          "stdout": "Local PTX target: sm_86\nFAIL mod_positive_s0_renamed: \nNot equal to tolerance rtol=0, atol=0\n\nMismatched elements: 21 / 64 (32.8%)\nFirst 5 mismatches are at indices:\n [0]: 41.0 (ACTUAL), -73.0 (DESIRED)\n [1]: 38.0 (ACTUAL), -73.0 (DESIRED)\n [3]: 30.0 (ACTUAL), -73.0 (DESIRED)\n [6]: 41.0 (ACTUAL), 16.0 (DESIRED)\n [9]: 41.0 (ACTUAL), 5.0 (DESIRED)\nMax absolute difference among violations: 163.\nMax relative difference among violations: 7.2\n ACTUAL: array([ 41.,  38.,  75.,  30.,  75.,  75.,  41.,  75.,  75.,  41., -22.,\n       -22.,  75., -22.,  68.,  41.,  75.,  75.,  41.,  90.,  75.,  38.,\n        75.,  38., -22., -22.,  41.,  75.,  68.,  38.,  41., -22.,  75.,...\n DESIRED: array([-73., -73.,  75., -73.,  75.,  75.,  16.,  75.,  75.,   5.,  16.,\n        45.,  75.,   5.,  45., -73.,  75.,  75.,  69., -73.,  75., -73.,\n        75.,  45., -25.,  16.,  16.,  75.,  16.,  69., -73.,  45.,  75.,...\n0/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "5af51dc2b497f8acd42f378eff27ed03c518ed4bd2952aedb940972eb4ac2998",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_positive_s0_renamed",
+                "passed": false,
+                "error": "\nNot equal to tolerance rtol=0, atol=0\n\nMismatched elements: 21 / 64 (32.8%)\nFirst 5 mismatches are at indices:\n [0]: 41.0 (ACTUAL), -73.0 (DESIRED)\n [1]: 38.0 (ACTUAL), -73.0 (DESIRED)\n [3]: 30.0 (ACTUAL), -73.0 (DESIRED)\n [6]: 41.0 (ACTUAL), 16.0 (DESIRED)\n [9]: 41.0 (ACTUAL), 5.0 (DESIRED)\nMax absolute difference among violations: 163.\nMax relative difference among violations: 7.2\n ACTUAL: array([ 41.,  38.,  75.,  30.,  75.,  75.,  41.,  75.,  75.,  41., -22.,\n       -22.,  75., -22.,  68.,  41.,  75.,  75.,  41.,  90.,  75.,  38.,\n        75.,  38., -22., -22.,  41.,  75.,  68.,  38.,  41., -22.,  75.,...\n DESIRED: array([-73., -73.,  75., -73.,  75.,  75.,  16.,  75.,  75.,   5.,  16.,\n        45.,  75.,   5.,  45., -73.,  75.,  75.,  69., -73.,  75., -73.,\n        75.,  45., -25.,  16.,  16.,  75.,  16.,  69., -73.,  45.,  75.,...",
+                "elapsed_s": 0.551
+              }
+            ]
+          },
+          "elapsed_s": 1.122
+        }
+      ]
+    },
+    "signed-index-after": {
+      "compiler_sha256": "51fc430f6bfb17558a02d35ebcad43da875c04907b0ce7f14d52e1afa354bd83",
+      "isolation": "one subprocess and CUDA context per case",
+      "results": [
+        {
+          "problem": "divide_negative_s0",
+          "path": "artifacts/signed-index/divide_negative_s0",
+          "meta_sha256": "a8c71cb3cd01d45dfd14a70c2a4a9d63847673e7d01212da6ef3108709879f49",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "f38dcc7b31a08a4d981511a1ed15482c5a156692fbdd7169b94e5554be87f6d9"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_negative_s0\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "51fc430f6bfb17558a02d35ebcad43da875c04907b0ce7f14d52e1afa354bd83",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_negative_s0",
+                "passed": true,
+                "elapsed_s": 0.597
+              }
+            ]
+          },
+          "elapsed_s": 1.26
+        },
+        {
+          "problem": "divide_negative_s0_renamed",
+          "path": "artifacts/signed-index/divide_negative_s0_renamed",
+          "meta_sha256": "0be9e1a4e857f95e4bb5c91d687669156ff045389f633b1096ff468027321353",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "ce863364349950d23834f2f111e908839fc0a052a002b77f24145390ee75cee5"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_negative_s0_renamed\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "51fc430f6bfb17558a02d35ebcad43da875c04907b0ce7f14d52e1afa354bd83",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_negative_s0_renamed",
+                "passed": true,
+                "elapsed_s": 0.603
+              }
+            ]
+          },
+          "elapsed_s": 1.178
+        },
+        {
+          "problem": "divide_positive_s0",
+          "path": "artifacts/signed-index/divide_positive_s0",
+          "meta_sha256": "95e51f69793c2642340d956c65957368bf79c183dbca10f04263482993f3ab43",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "a95b9df862ea314478d0c58ba95a82d403c700f0ca12bff389309184bf0a3df2"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_positive_s0\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "51fc430f6bfb17558a02d35ebcad43da875c04907b0ce7f14d52e1afa354bd83",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_positive_s0",
+                "passed": true,
+                "elapsed_s": 0.569
+              }
+            ]
+          },
+          "elapsed_s": 1.134
+        },
+        {
+          "problem": "divide_positive_s0_renamed",
+          "path": "artifacts/signed-index/divide_positive_s0_renamed",
+          "meta_sha256": "9e086a87c3ca2ca45336a0c8b6931512da22568130af1c9ab6411900f11bb0b6",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "f6b3f90a349069013e2a452da3f974f1463f851ae451980c1a4a4754d4d9836d"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_positive_s0_renamed\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "51fc430f6bfb17558a02d35ebcad43da875c04907b0ce7f14d52e1afa354bd83",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_positive_s0_renamed",
+                "passed": true,
+                "elapsed_s": 0.613
+              }
+            ]
+          },
+          "elapsed_s": 1.231
+        },
+        {
+          "problem": "floor_negative_s0",
+          "path": "artifacts/signed-index/floor_negative_s0",
+          "meta_sha256": "1d3fad08e73345f64930c18b668eed21305a725f3f92bf037cc28c85d1757d7b",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "9051335d484794254706c74f3ae77654e7d22392209129c7e69b9bc74b26c647"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_negative_s0\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "51fc430f6bfb17558a02d35ebcad43da875c04907b0ce7f14d52e1afa354bd83",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_negative_s0",
+                "passed": true,
+                "elapsed_s": 0.559
+              }
+            ]
+          },
+          "elapsed_s": 1.152
+        },
+        {
+          "problem": "floor_negative_s0_renamed",
+          "path": "artifacts/signed-index/floor_negative_s0_renamed",
+          "meta_sha256": "2b11b74e616d14bb7966b55bc23cde8b51d613c6e10dcce96db91774614840b7",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "3079389ead06ec6f74af4a103119092958af2f23162012df2b8fbef29e586938"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_negative_s0_renamed\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "51fc430f6bfb17558a02d35ebcad43da875c04907b0ce7f14d52e1afa354bd83",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_negative_s0_renamed",
+                "passed": true,
+                "elapsed_s": 0.566
+              }
+            ]
+          },
+          "elapsed_s": 1.163
+        },
+        {
+          "problem": "floor_positive_s0",
+          "path": "artifacts/signed-index/floor_positive_s0",
+          "meta_sha256": "240d0777ae02a87d2ff6c341c028d52a115016b83fa2b13008fef93af2c1fcdb",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "db469f021d610a8165d7373c67f96fc94a078de9757dd35572629b7b73d7b8cf"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_positive_s0\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "51fc430f6bfb17558a02d35ebcad43da875c04907b0ce7f14d52e1afa354bd83",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_positive_s0",
+                "passed": true,
+                "elapsed_s": 0.632
+              }
+            ]
+          },
+          "elapsed_s": 1.271
+        },
+        {
+          "problem": "floor_positive_s0_renamed",
+          "path": "artifacts/signed-index/floor_positive_s0_renamed",
+          "meta_sha256": "271aaff9f0dc8aadd334d2fd238c9e8d7e77530c4e8989adc469992675499865",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "2ed219bf9b710f0f0d4138ea002e099d9381d997efeb1b10577a45bb9e3ad9e6"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_positive_s0_renamed\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "51fc430f6bfb17558a02d35ebcad43da875c04907b0ce7f14d52e1afa354bd83",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_positive_s0_renamed",
+                "passed": true,
+                "elapsed_s": 0.637
+              }
+            ]
+          },
+          "elapsed_s": 1.311
+        },
+        {
+          "problem": "mod_negative_s0",
+          "path": "artifacts/signed-index/mod_negative_s0",
+          "meta_sha256": "f6b30fe9f6127c6f9a2b24bb72ad22443c5bc93a71ed50f1794bfc4c9606ec17",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "4b37f745053a25bf2641e41dd2c004cbe2df67f5c061769ca42c1fb6c5b569e3"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_negative_s0\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "51fc430f6bfb17558a02d35ebcad43da875c04907b0ce7f14d52e1afa354bd83",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_negative_s0",
+                "passed": true,
+                "elapsed_s": 0.664
+              }
+            ]
+          },
+          "elapsed_s": 1.365
+        },
+        {
+          "problem": "mod_negative_s0_renamed",
+          "path": "artifacts/signed-index/mod_negative_s0_renamed",
+          "meta_sha256": "663f43abd78b543df80f8f528c90620f1c71f121cedfd83b5d75e0d24f90e6ee",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "6abc1de24888a27b2d05c3bdf16c6c664f767145eaacd8cc8e9791651e82b21b"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_negative_s0_renamed\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "51fc430f6bfb17558a02d35ebcad43da875c04907b0ce7f14d52e1afa354bd83",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_negative_s0_renamed",
+                "passed": true,
+                "elapsed_s": 0.668
+              }
+            ]
+          },
+          "elapsed_s": 1.26
+        },
+        {
+          "problem": "mod_positive_s0",
+          "path": "artifacts/signed-index/mod_positive_s0",
+          "meta_sha256": "7536079d268b591c2d13686bbb31e4778d3414ef51b2236c89ff485b66c82d55",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "b6a223c99c6b7b5cf1477bef8abcf229c13a6b1cb23d11e370cb1f918cc2d3f7"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_positive_s0\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "51fc430f6bfb17558a02d35ebcad43da875c04907b0ce7f14d52e1afa354bd83",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_positive_s0",
+                "passed": true,
+                "elapsed_s": 0.668
+              }
+            ]
+          },
+          "elapsed_s": 1.343
+        },
+        {
+          "problem": "mod_positive_s0_renamed",
+          "path": "artifacts/signed-index/mod_positive_s0_renamed",
+          "meta_sha256": "e0a2cf532584a0c35213db24819a71e9e63cdaf2b943e0ec87f600124851b486",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "c8397d7d5f6daed72f29aee952d62b73bc7e6d98d2037ed481fb9f4e734724f5"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_positive_s0_renamed\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "51fc430f6bfb17558a02d35ebcad43da875c04907b0ce7f14d52e1afa354bd83",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_positive_s0_renamed",
+                "passed": true,
+                "elapsed_s": 0.644
+              }
+            ]
+          },
+          "elapsed_s": 1.307
+        }
+      ]
+    },
+    "signed-index-hosted": {
+      "compiler_sha256": "51fc430f6bfb17558a02d35ebcad43da875c04907b0ce7f14d52e1afa354bd83",
+      "results": [
+        {
+          "problem": "divide_negative_s0",
+          "passed": true,
+          "elapsed_s": 2.39,
+          "stdout": "[k_sum_1_reduce] 14 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (19.84 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "divide_negative_s0_renamed",
+          "passed": true,
+          "elapsed_s": 2.254,
+          "stdout": "[k_sum_1_reduce] 14 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (23.584 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "divide_positive_s0",
+          "passed": true,
+          "elapsed_s": 2.121,
+          "stdout": "[k_sum_1_reduce] 14 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (20.192 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "divide_positive_s0_renamed",
+          "passed": true,
+          "elapsed_s": 2.185,
+          "stdout": "[k_sum_1_reduce] 14 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (23.904 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "floor_negative_s0",
+          "passed": true,
+          "elapsed_s": 2.157,
+          "stdout": "[k_sum_1_reduce] 14 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (24.032 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "floor_negative_s0_renamed",
+          "passed": true,
+          "elapsed_s": 2.117,
+          "stdout": "[k_sum_1_reduce] 14 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (24.544 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "floor_positive_s0",
+          "passed": true,
+          "elapsed_s": 1.968,
+          "stdout": "[k_sum_1_reduce] 14 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (23.296 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "floor_positive_s0_renamed",
+          "passed": true,
+          "elapsed_s": 2.055,
+          "stdout": "[k_sum_1_reduce] 14 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (10.848 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "mod_negative_s0",
+          "passed": true,
+          "elapsed_s": 2.145,
+          "stdout": "[k_sum_1_reduce] 13 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (10.592 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "mod_negative_s0_renamed",
+          "passed": true,
+          "elapsed_s": 2.306,
+          "stdout": "[k_sum_1_reduce] 13 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (23.808 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "mod_positive_s0",
+          "passed": true,
+          "elapsed_s": 2.372,
+          "stdout": "[k_sum_1_reduce] 13 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (10.176 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "mod_positive_s0_renamed",
+          "passed": true,
+          "elapsed_s": 2.381,
+          "stdout": "[k_sum_1_reduce] 13 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (23.68 us)\n",
+          "stderr": ""
+        }
+      ]
+    },
+    "signed-index-benchmark": {
+      "clock_locked": false,
+      "warmup": 8,
+      "iters": 75,
+      "compilers": {
+        "baseline": "5af51dc2b497f8acd42f378eff27ed03c518ed4bd2952aedb940972eb4ac2998",
+        "candidate": "51fc430f6bfb17558a02d35ebcad43da875c04907b0ce7f14d52e1afa354bd83"
+      },
+      "timing_return_limit": 64,
+      "results": [
+        {
+          "problem": "m01_matmul_512",
+          "samples_us": {
+            "baseline": [
+              64.16,
+              64.16,
+              64.16,
+              64.16,
+              64.16,
+              64.16,
+              64.16
+            ],
+            "candidate": [
+              80.544,
+              80.512,
+              80.544,
+              80.544,
+              80.544,
+              80.544,
+              80.576
+            ]
+          },
+          "baseline_median_us": 64.16,
+          "candidate_median_us": 80.544,
+          "speedup": 0.7965832340087405,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_2967be": {
+                "k_matmul_2967be": 48
+              }
+            },
+            "candidate": {
+              "k_matmul_2967be": {
+                "k_matmul_2967be": 40
+              }
+            }
+          }
+        },
+        {
+          "problem": "a01_attention",
+          "samples_us": {
+            "baseline": [
+              90.784,
+              90.784,
+              90.752,
+              90.752,
+              90.752,
+              90.752,
+              90.784
+            ],
+            "candidate": [
+              90.784,
+              90.784,
+              90.784,
+              90.72,
+              90.752,
+              90.752,
+              90.784
+            ]
+          },
+          "baseline_median_us": 90.752,
+          "candidate_median_us": 90.784,
+          "speedup": 0.9996475149806132,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_softmax_reduce_b55365": {
+                "k_matmul_softmax_reduce_b55365": 128
+              }
+            },
+            "candidate": {
+              "k_matmul_softmax_reduce_b55365": {
+                "k_matmul_softmax_reduce_b55365": 128
+              }
+            }
+          }
+        },
+        {
+          "problem": "r02_big_sum",
+          "samples_us": {
+            "baseline": [
+              21.12,
+              21.12,
+              21.12,
+              21.12,
+              21.12,
+              21.152,
+              21.12
+            ],
+            "candidate": [
+              21.184,
+              21.152,
+              21.088,
+              21.152,
+              21.12,
+              21.152,
+              21.12
+            ]
+          },
+          "baseline_median_us": 21.12,
+          "candidate_median_us": 21.152,
+          "speedup": 0.9984871406959153,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_sum_1_reduce": {
+                "k_sum_1_reduce": 18
+              }
+            },
+            "candidate": {
+              "k_sum_1_reduce": {
+                "k_sum_1_reduce": 18
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "generic_sanitizers": {
+    "compiler_sha256": "51fc430f6bfb17558a02d35ebcad43da875c04907b0ce7f14d52e1afa354bd83",
+    "problems": [
+      "divide_negative_s0",
+      "divide_negative_s0_renamed",
+      "divide_positive_s0",
+      "divide_positive_s0_renamed",
+      "floor_negative_s0",
+      "floor_negative_s0_renamed",
+      "floor_positive_s0",
+      "floor_positive_s0_renamed",
+      "mod_negative_s0",
+      "mod_negative_s0_renamed",
+      "mod_positive_s0",
+      "mod_positive_s0_renamed"
+    ],
+    "results": [
+      {
+        "tool": "memcheck",
+        "exit_code": 0,
+        "passed": true,
+        "summaries": [
+          "========= LEAK SUMMARY: 0 bytes leaked in 0 allocations",
+          "========= ERROR SUMMARY: 0 errors"
+        ]
+      },
+      {
+        "tool": "racecheck",
+        "exit_code": 0,
+        "passed": true,
+        "summaries": [
+          "========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)"
+        ]
+      },
+      {
+        "tool": "synccheck",
+        "exit_code": 0,
+        "passed": true,
+        "summaries": [
+          "========= ERROR SUMMARY: 0 errors"
+        ]
+      },
+      {
+        "tool": "initcheck",
+        "exit_code": 0,
+        "passed": true,
+        "summaries": [
+          "========= ERROR SUMMARY: 0 errors"
+        ]
+      }
+    ]
+  },
+  "sources": {
+    "compiler-before-signed-index.py": "5af51dc2b497f8acd42f378eff27ed03c518ed4bd2952aedb940972eb4ac2998",
+    "compiler-signed-generic.py": "51fc430f6bfb17558a02d35ebcad43da875c04907b0ce7f14d52e1afa354bd83",
+    "compiler-signed-ranged-v2.py": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073"
+  },
+  "ranged_v2_public_equivalence": {
+    "baseline_sha256": "5af51dc2b497f8acd42f378eff27ed03c518ed4bd2952aedb940972eb4ac2998",
+    "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+    "results": [
+      {
+        "ir": "challenge/problems/a01_attention/k_matmul_softmax_reduce_b55365.ir.json",
+        "ir_sha256": "0a6925795c1b8e108befbdc3300c722ea5a7fb19d2337597eca860e9c36eff9a",
+        "meta_sha256": "c280c572744016ecf6ca2971312ad2ce8a10b28c0f3e38561c1a096c2ea7352f",
+        "identical_ptx": true,
+        "baseline_ptx_sha256": "017a6631721f9aa6cc3876966a62e8356e1b668ab419edca111a0833b0802ba3",
+        "candidate_ptx_sha256": "017a6631721f9aa6cc3876966a62e8356e1b668ab419edca111a0833b0802ba3"
+      },
+      {
+        "ir": "challenge/problems/a02_attention_128/k_matmul_softmax_reduce_6f0029.ir.json",
+        "ir_sha256": "a51792c9e4d920a493054fb2a6986d87766cc1b3717078f8e631a45d1b0bf1dd",
+        "meta_sha256": "adcc08994786076e7cb9835ab3bab19b0dc9c0d00a999adea124380f8300de18",
+        "identical_ptx": true,
+        "baseline_ptx_sha256": "b4dafae15c63e85ea79fa7ed2c514ca53510d7094636b527df92dadbf85a6af5",
+        "candidate_ptx_sha256": "b4dafae15c63e85ea79fa7ed2c514ca53510d7094636b527df92dadbf85a6af5"
+      },
+      {
+        "ir": "challenge/problems/f01_rmsnorm/k_mean_cbd1de.ir.json",
+        "ir_sha256": "a8e6819e3144b942d8983b52b6865fa692868105b20de30f6ba4df424a07862a",
+        "meta_sha256": "f45014c6b0963ec9727fc0f1c9bb585319c4ac94292260bc8f7c10557c1b8e1d",
+        "identical_ptx": true,
+        "baseline_ptx_sha256": "f2b8071f8e1ad3a6b12c23106ac378bdbf8512002c3eb8cc5d76757d4b8c90cc",
+        "candidate_ptx_sha256": "f2b8071f8e1ad3a6b12c23106ac378bdbf8512002c3eb8cc5d76757d4b8c90cc"
+      },
+      {
+        "ir": "challenge/problems/f02_row_softmax/k_softmax_05263d.ir.json",
+        "ir_sha256": "d48b030e9d9a765aa631287f72935bc59f20926f3ccb09dc7f7932106770af03",
+        "meta_sha256": "ddbe97ea42c7b077d30d140b751f8062caf47b5620cb423a02c1dd848cd61900",
+        "identical_ptx": true,
+        "baseline_ptx_sha256": "c75b4d29f006d89bec5a955406cfdf993d8f6f7924496b3cac7bbee9459ebfed",
+        "candidate_ptx_sha256": "c75b4d29f006d89bec5a955406cfdf993d8f6f7924496b3cac7bbee9459ebfed"
+      },
+      {
+        "ir": "challenge/problems/f03_l2norm/k_div_reduce.ir.json",
+        "ir_sha256": "34abdb33fe950100029930242777d0b22a12e523117de21bc9d78b43310c567d",
+        "meta_sha256": "cbf67c2d198f4fea1bb140083ec65c4bf14202090daaa4aac77f1514ecc60b95",
+        "identical_ptx": true,
+        "baseline_ptx_sha256": "df59f4c980c7372c6671e6870c47a286dadbd437cfb5ee64b9b66f7f1cb977ed",
+        "candidate_ptx_sha256": "df59f4c980c7372c6671e6870c47a286dadbd437cfb5ee64b9b66f7f1cb977ed"
+      },
+      {
+        "ir": "challenge/problems/m01_matmul_512/k_matmul_2967be.ir.json",
+        "ir_sha256": "ed9ab32776ce0de8b0d1f0367da54c586bf993c964efc01482666247a976dc02",
+        "meta_sha256": "3324370a2d29614c6c7ff7cf549563f9afb22bab0ed31ed62d8ffd27c59dcd57",
+        "identical_ptx": true,
+        "baseline_ptx_sha256": "38e5e1df71351e69f5ede5f54b1d9657d13caf179ffb54bab773023d5f11a5f4",
+        "candidate_ptx_sha256": "38e5e1df71351e69f5ede5f54b1d9657d13caf179ffb54bab773023d5f11a5f4"
+      },
+      {
+        "ir": "challenge/problems/m02_matmul_rect/k_matmul.ir.json",
+        "ir_sha256": "c47bb47c529e7362c9272784ac21a31f2a5d79546cc11b19beff891278d22206",
+        "meta_sha256": "a82fd8d7f5933749868035254537b962d3d0140c8bf3e22f7f8a54a289a9c365",
+        "identical_ptx": false,
+        "baseline_ptx_sha256": "804bfba178a0382f405706bb4b7b3942f49993f8881c394ea560b63c54b1ba73",
+        "candidate_ptx_sha256": "c9e2983ee8867d78ff29bc144f6743920d6cdc15f72402e2e0aaf1809f5a5059"
+      },
+      {
+        "ir": "challenge/problems/p00_scalar_add/k_add_pointwise.ir.json",
+        "ir_sha256": "d93c0b232c48f7161c88f0276ea8a69481b06608a24b6e8ed2d5025bd17f4e32",
+        "meta_sha256": "67f4c80a5c78c9fa571f4088633acc56cae0a758d2a65e7c89c07a96e665709c",
+        "identical_ptx": true,
+        "baseline_ptx_sha256": "f8a694682593ae4252a0009787dd933acac27a61842a9e4b1c4b5959de3ecf20",
+        "candidate_ptx_sha256": "f8a694682593ae4252a0009787dd933acac27a61842a9e4b1c4b5959de3ecf20"
+      },
+      {
+        "ir": "challenge/problems/p01_vector_add/k_add_pointwise.ir.json",
+        "ir_sha256": "90088bc4c7346b9a5916205fdb96926f52cc0f5e3c5c08527d7b0796b0c47fc5",
+        "meta_sha256": "4607a6a14553ec256b2073ff8fef18a850e315033f4fdace21f26fdcc2a867c6",
+        "identical_ptx": true,
+        "baseline_ptx_sha256": "79e86b5e9510105c29d28bab31a2424503c9faa04728153e8e04610bc0b2de77",
+        "candidate_ptx_sha256": "79e86b5e9510105c29d28bab31a2424503c9faa04728153e8e04610bc0b2de77"
+      },
+      {
+        "ir": "challenge/problems/p02_scale_shift/k_add_pointwise.ir.json",
+        "ir_sha256": "2bae0a54cbcd037d6c13e70b5c4f5728f2f94af163a53ebe35b88ab8f68ec021",
+        "meta_sha256": "7c1c3ea69e4d61128d72fbaf3a82a76125a5273c3ced6197ac2f150d03d121e1",
+        "identical_ptx": true,
+        "baseline_ptx_sha256": "30f866d3f73c3ee12531695e2f11cbb8cef4c05950de91cc229ddc81f60a1842",
+        "candidate_ptx_sha256": "30f866d3f73c3ee12531695e2f11cbb8cef4c05950de91cc229ddc81f60a1842"
+      },
+      {
+        "ir": "challenge/problems/p03_relu_mul/k_mul_pointwise.ir.json",
+        "ir_sha256": "b2429e790dac9fd0db9fafadaa3624cafaeff85c834851a9034a730a1620a892",
+        "meta_sha256": "a2dbbe3a3cec7c45fcdde2c08f0d3276647c2a4b56ede3345be16404d1ded8c9",
+        "identical_ptx": true,
+        "baseline_ptx_sha256": "7462e04f33f0716c004499c8354f4aaafbb3d6a0f293165c47acffd04980a300",
+        "candidate_ptx_sha256": "7462e04f33f0716c004499c8354f4aaafbb3d6a0f293165c47acffd04980a300"
+      },
+      {
+        "ir": "challenge/problems/r01_array_sum/k_sum_1_reduce.ir.json",
+        "ir_sha256": "a5ad6af023562e1632e929afb8cd6387603c2edcd4d4b1590b1a3b2ee962675f",
+        "meta_sha256": "46cf07073f4e612e811decbc2ca900ea210811194a1e336053a6f179ecb4b00e",
+        "identical_ptx": true,
+        "baseline_ptx_sha256": "45d626645d8842e51aed2d60507918da01fc3fedd08e634b645605b89fcc97b0",
+        "candidate_ptx_sha256": "45d626645d8842e51aed2d60507918da01fc3fedd08e634b645605b89fcc97b0"
+      },
+      {
+        "ir": "challenge/problems/r02_big_sum/k_sum_1_reduce.ir.json",
+        "ir_sha256": "777e3f2dd170849133e19d303cdb3d273c135c9a9896786ee40fbc6a2ff4ec7c",
+        "meta_sha256": "db364be00e35402a3d6f10fcd55562115c7604dea94f8126a02179a80476d19e",
+        "identical_ptx": true,
+        "baseline_ptx_sha256": "88389b40d052005f7f9c4c18a28e0ef71a8af1355f50e2c259e9239394c78710",
+        "candidate_ptx_sha256": "88389b40d052005f7f9c4c18a28e0ef71a8af1355f50e2c259e9239394c78710"
+      },
+      {
+        "ir": "challenge/problems/r03_mean/k_mean_ffcca3.ir.json",
+        "ir_sha256": "7eeca2c7869ab2ddf880a0ac7fb689d3ab814d7523eab472ec80ad2458100b86",
+        "meta_sha256": "d7ab661c388ad447f5661a3b36cba448cf5142402756f1e1c35d110db06c84fe",
+        "identical_ptx": true,
+        "baseline_ptx_sha256": "779f07f81669d8d75f594f17eb2eeaa754f3a5329b9ca219b98487d4a1ec39f3",
+        "candidate_ptx_sha256": "779f07f81669d8d75f594f17eb2eeaa754f3a5329b9ca219b98487d4a1ec39f3"
+      },
+      {
+        "ir": "challenge/problems/r04_row_sum/k_sum_1_reduce.ir.json",
+        "ir_sha256": "4c7befc76b72c6c69be4675d69ccd14e336b9139fe22aaec1b94230858c8ab03",
+        "meta_sha256": "803cb710590156ad319eb44b2d2aa6c1ee9b0e3a666ebc09de259e50d83a3ba1",
+        "identical_ptx": true,
+        "baseline_ptx_sha256": "e5598144adcda33a99cd072929052f45f5b45c825815e655db9552e500d1ca91",
+        "candidate_ptx_sha256": "e5598144adcda33a99cd072929052f45f5b45c825815e655db9552e500d1ca91"
+      }
+    ]
+  },
+  "contract": {
+    "file": ".venv/lib/python3.12/site-packages/emmy/compiler/ir/expr.py",
+    "function": "apply_binop",
+    "semantics": "/ and // use integer floor division; % uses Python remainder"
+  },
+  "excluded": "First ranged timing run source changed before completion; do not use it as exact-final-hash acceptance evidence.",
+  "frozen_v2_completed": {
+    "signed-ranged-v2-local": {
+      "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+      "isolation": "one subprocess and CUDA context per case",
+      "results": [
+        {
+          "problem": "divide_negative_s0",
+          "path": "artifacts/signed-index/divide_negative_s0",
+          "meta_sha256": "a8c71cb3cd01d45dfd14a70c2a4a9d63847673e7d01212da6ef3108709879f49",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "f38dcc7b31a08a4d981511a1ed15482c5a156692fbdd7169b94e5554be87f6d9"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_negative_s0\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_negative_s0",
+                "passed": true,
+                "elapsed_s": 0.876
+              }
+            ]
+          },
+          "elapsed_s": 1.596
+        },
+        {
+          "problem": "divide_negative_s0_renamed",
+          "path": "artifacts/signed-index/divide_negative_s0_renamed",
+          "meta_sha256": "0be9e1a4e857f95e4bb5c91d687669156ff045389f633b1096ff468027321353",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "ce863364349950d23834f2f111e908839fc0a052a002b77f24145390ee75cee5"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_negative_s0_renamed\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_negative_s0_renamed",
+                "passed": true,
+                "elapsed_s": 0.973
+              }
+            ]
+          },
+          "elapsed_s": 1.683
+        },
+        {
+          "problem": "divide_positive_s0",
+          "path": "artifacts/signed-index/divide_positive_s0",
+          "meta_sha256": "95e51f69793c2642340d956c65957368bf79c183dbca10f04263482993f3ab43",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "a95b9df862ea314478d0c58ba95a82d403c700f0ca12bff389309184bf0a3df2"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_positive_s0\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_positive_s0",
+                "passed": true,
+                "elapsed_s": 0.908
+              }
+            ]
+          },
+          "elapsed_s": 1.757
+        },
+        {
+          "problem": "divide_positive_s0_renamed",
+          "path": "artifacts/signed-index/divide_positive_s0_renamed",
+          "meta_sha256": "9e086a87c3ca2ca45336a0c8b6931512da22568130af1c9ab6411900f11bb0b6",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "f6b3f90a349069013e2a452da3f974f1463f851ae451980c1a4a4754d4d9836d"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_positive_s0_renamed\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_positive_s0_renamed",
+                "passed": true,
+                "elapsed_s": 0.926
+              }
+            ]
+          },
+          "elapsed_s": 1.689
+        },
+        {
+          "problem": "floor_negative_s0",
+          "path": "artifacts/signed-index/floor_negative_s0",
+          "meta_sha256": "1d3fad08e73345f64930c18b668eed21305a725f3f92bf037cc28c85d1757d7b",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "9051335d484794254706c74f3ae77654e7d22392209129c7e69b9bc74b26c647"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_negative_s0\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_negative_s0",
+                "passed": true,
+                "elapsed_s": 0.909
+              }
+            ]
+          },
+          "elapsed_s": 1.655
+        },
+        {
+          "problem": "floor_negative_s0_renamed",
+          "path": "artifacts/signed-index/floor_negative_s0_renamed",
+          "meta_sha256": "2b11b74e616d14bb7966b55bc23cde8b51d613c6e10dcce96db91774614840b7",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "3079389ead06ec6f74af4a103119092958af2f23162012df2b8fbef29e586938"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_negative_s0_renamed\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_negative_s0_renamed",
+                "passed": true,
+                "elapsed_s": 0.87
+              }
+            ]
+          },
+          "elapsed_s": 1.686
+        },
+        {
+          "problem": "floor_positive_s0",
+          "path": "artifacts/signed-index/floor_positive_s0",
+          "meta_sha256": "240d0777ae02a87d2ff6c341c028d52a115016b83fa2b13008fef93af2c1fcdb",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "db469f021d610a8165d7373c67f96fc94a078de9757dd35572629b7b73d7b8cf"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_positive_s0\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_positive_s0",
+                "passed": true,
+                "elapsed_s": 0.848
+              }
+            ]
+          },
+          "elapsed_s": 1.679
+        },
+        {
+          "problem": "floor_positive_s0_renamed",
+          "path": "artifacts/signed-index/floor_positive_s0_renamed",
+          "meta_sha256": "271aaff9f0dc8aadd334d2fd238c9e8d7e77530c4e8989adc469992675499865",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "2ed219bf9b710f0f0d4138ea002e099d9381d997efeb1b10577a45bb9e3ad9e6"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_positive_s0_renamed\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_positive_s0_renamed",
+                "passed": true,
+                "elapsed_s": 0.728
+              }
+            ]
+          },
+          "elapsed_s": 1.475
+        },
+        {
+          "problem": "mod_negative_s0",
+          "path": "artifacts/signed-index/mod_negative_s0",
+          "meta_sha256": "f6b30fe9f6127c6f9a2b24bb72ad22443c5bc93a71ed50f1794bfc4c9606ec17",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "4b37f745053a25bf2641e41dd2c004cbe2df67f5c061769ca42c1fb6c5b569e3"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_negative_s0\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_negative_s0",
+                "passed": true,
+                "elapsed_s": 0.764
+              }
+            ]
+          },
+          "elapsed_s": 1.568
+        },
+        {
+          "problem": "mod_negative_s0_renamed",
+          "path": "artifacts/signed-index/mod_negative_s0_renamed",
+          "meta_sha256": "663f43abd78b543df80f8f528c90620f1c71f121cedfd83b5d75e0d24f90e6ee",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "6abc1de24888a27b2d05c3bdf16c6c664f767145eaacd8cc8e9791651e82b21b"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_negative_s0_renamed\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_negative_s0_renamed",
+                "passed": true,
+                "elapsed_s": 0.942
+              }
+            ]
+          },
+          "elapsed_s": 1.944
+        },
+        {
+          "problem": "mod_positive_s0",
+          "path": "artifacts/signed-index/mod_positive_s0",
+          "meta_sha256": "7536079d268b591c2d13686bbb31e4778d3414ef51b2236c89ff485b66c82d55",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "b6a223c99c6b7b5cf1477bef8abcf229c13a6b1cb23d11e370cb1f918cc2d3f7"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_positive_s0\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_positive_s0",
+                "passed": true,
+                "elapsed_s": 0.785
+              }
+            ]
+          },
+          "elapsed_s": 1.526
+        },
+        {
+          "problem": "mod_positive_s0_renamed",
+          "path": "artifacts/signed-index/mod_positive_s0_renamed",
+          "meta_sha256": "e0a2cf532584a0c35213db24819a71e9e63cdaf2b943e0ec87f600124851b486",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "c8397d7d5f6daed72f29aee952d62b73bc7e6d98d2037ed481fb9f4e734724f5"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_positive_s0_renamed\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_positive_s0_renamed",
+                "passed": true,
+                "elapsed_s": 0.724
+              }
+            ]
+          },
+          "elapsed_s": 1.521
+        },
+        {
+          "problem": "divide_negative_s2049",
+          "path": "artifacts/signed-index-fresh/divide_negative_s2049",
+          "meta_sha256": "14d917d8e8b2d8c6b12d58f8ef8ae0e80c54e19b5e9028a3faba2a98b4ec4086",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "f38dcc7b31a08a4d981511a1ed15482c5a156692fbdd7169b94e5554be87f6d9"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_negative_s2049\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_negative_s2049",
+                "passed": true,
+                "elapsed_s": 0.776
+              }
+            ]
+          },
+          "elapsed_s": 1.553
+        },
+        {
+          "problem": "divide_negative_s2049_renamed",
+          "path": "artifacts/signed-index-fresh/divide_negative_s2049_renamed",
+          "meta_sha256": "bf7598ce7fabdf9035543f13240c8a608b17d491d3a14fd52a1d5af5c4853c3c",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "59cd25c5b75cce6187eff858d934a82a840a987aa968cf056e4740f7b8d14bb0"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_negative_s2049_renamed\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_negative_s2049_renamed",
+                "passed": true,
+                "elapsed_s": 0.755
+              }
+            ]
+          },
+          "elapsed_s": 1.548
+        },
+        {
+          "problem": "divide_positive_s2049",
+          "path": "artifacts/signed-index-fresh/divide_positive_s2049",
+          "meta_sha256": "c04f3f5ed3f2cdfbe553b62006d624df9604ec36a0045dfd1f552f8cd650a350",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "a95b9df862ea314478d0c58ba95a82d403c700f0ca12bff389309184bf0a3df2"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_positive_s2049\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_positive_s2049",
+                "passed": true,
+                "elapsed_s": 0.767
+              }
+            ]
+          },
+          "elapsed_s": 1.52
+        },
+        {
+          "problem": "divide_positive_s2049_renamed",
+          "path": "artifacts/signed-index-fresh/divide_positive_s2049_renamed",
+          "meta_sha256": "7e2468b8bf1f3b0e5b4476d6e03c50caf4d3fbe86310f5aabe2c0dd29a73d931",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "3036abd675aa6a934f9a3529a526817da9bc04fade20989bff5936f269ddeef8"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_positive_s2049_renamed\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_positive_s2049_renamed",
+                "passed": true,
+                "elapsed_s": 0.885
+              }
+            ]
+          },
+          "elapsed_s": 1.613
+        },
+        {
+          "problem": "floor_negative_s2049",
+          "path": "artifacts/signed-index-fresh/floor_negative_s2049",
+          "meta_sha256": "ae41e46f7db6a3b71b0afdbfe1527239c5c201884aea8565fe5d71c215ed1ad9",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "9051335d484794254706c74f3ae77654e7d22392209129c7e69b9bc74b26c647"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_negative_s2049\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_negative_s2049",
+                "passed": true,
+                "elapsed_s": 0.744
+              }
+            ]
+          },
+          "elapsed_s": 1.466
+        },
+        {
+          "problem": "floor_negative_s2049_renamed",
+          "path": "artifacts/signed-index-fresh/floor_negative_s2049_renamed",
+          "meta_sha256": "c5740f74b9bb8994b2e335278d23b019399ec21f4218d5da8cc14417be3e9c0b",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "0a18d42dba69804296a2b9d6d758c254809b5bfc0cce3e34b662d58addbbb024"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_negative_s2049_renamed\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_negative_s2049_renamed",
+                "passed": true,
+                "elapsed_s": 0.866
+              }
+            ]
+          },
+          "elapsed_s": 1.653
+        },
+        {
+          "problem": "floor_positive_s2049",
+          "path": "artifacts/signed-index-fresh/floor_positive_s2049",
+          "meta_sha256": "39517f139c6f79ba3cd227a5e153e79cf82a523159855b39e8b7625edc53ec55",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "db469f021d610a8165d7373c67f96fc94a078de9757dd35572629b7b73d7b8cf"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_positive_s2049\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_positive_s2049",
+                "passed": true,
+                "elapsed_s": 0.779
+              }
+            ]
+          },
+          "elapsed_s": 1.488
+        },
+        {
+          "problem": "floor_positive_s2049_renamed",
+          "path": "artifacts/signed-index-fresh/floor_positive_s2049_renamed",
+          "meta_sha256": "4584c8997d1a3e3f32296e4d06fed9c9c71278a772b57a756c7d1fd6ee3e0a93",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "7f5e2b50ee6f22b9de7f90d3c45ead35772062fbc3dde78ea4a81d4e182a30b5"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_positive_s2049_renamed\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_positive_s2049_renamed",
+                "passed": true,
+                "elapsed_s": 0.701
+              }
+            ]
+          },
+          "elapsed_s": 1.42
+        },
+        {
+          "problem": "mod_negative_s2049",
+          "path": "artifacts/signed-index-fresh/mod_negative_s2049",
+          "meta_sha256": "13cf31096a31c5f5ce8fc05811b6653563a1b4f9ab661fef80cd1ae75265f6b9",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "4b37f745053a25bf2641e41dd2c004cbe2df67f5c061769ca42c1fb6c5b569e3"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_negative_s2049\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_negative_s2049",
+                "passed": true,
+                "elapsed_s": 0.733
+              }
+            ]
+          },
+          "elapsed_s": 1.422
+        },
+        {
+          "problem": "mod_negative_s2049_renamed",
+          "path": "artifacts/signed-index-fresh/mod_negative_s2049_renamed",
+          "meta_sha256": "01b1bf2db4d62d2086b4d8a7352502e0055c46f1770e19a86d856f5be40efbe4",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "4c8ad92f3b0afcf98ef9581c54454a0959f5bd10213a6fbb8bd8166c741c4d92"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_negative_s2049_renamed\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_negative_s2049_renamed",
+                "passed": true,
+                "elapsed_s": 0.736
+              }
+            ]
+          },
+          "elapsed_s": 1.44
+        },
+        {
+          "problem": "mod_positive_s2049",
+          "path": "artifacts/signed-index-fresh/mod_positive_s2049",
+          "meta_sha256": "7fac731fcaae464c1e8a3b10a6b41e10e83a23be7e5126641fc2af5e38f3fb05",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "b6a223c99c6b7b5cf1477bef8abcf229c13a6b1cb23d11e370cb1f918cc2d3f7"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_positive_s2049\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_positive_s2049",
+                "passed": true,
+                "elapsed_s": 0.695
+              }
+            ]
+          },
+          "elapsed_s": 1.369
+        },
+        {
+          "problem": "mod_positive_s2049_renamed",
+          "path": "artifacts/signed-index-fresh/mod_positive_s2049_renamed",
+          "meta_sha256": "efd9e5303f64b0fc533af7b74827d30e424bedd87110810163b2cfde47e72e7b",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "eddd8add2f90979d346fb73adce6d8a58ffbb6154197b6928d355073f3734d77"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_positive_s2049_renamed\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_positive_s2049_renamed",
+                "passed": true,
+                "elapsed_s": 0.713
+              }
+            ]
+          },
+          "elapsed_s": 1.388
+        }
+      ]
+    },
+    "signed-ranged-v2-hosted": {
+      "compiler_sha256": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073",
+      "results": [
+        {
+          "problem": "divide_negative_s0",
+          "passed": true,
+          "elapsed_s": 2.44,
+          "stdout": "[k_sum_1_reduce] 14 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (28.928 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "divide_negative_s0_renamed",
+          "passed": true,
+          "elapsed_s": 2.616,
+          "stdout": "[k_sum_1_reduce] 14 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (23.712 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "divide_positive_s0",
+          "passed": true,
+          "elapsed_s": 2.399,
+          "stdout": "[k_sum_1_reduce] 14 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (20.352 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "divide_positive_s0_renamed",
+          "passed": true,
+          "elapsed_s": 2.55,
+          "stdout": "[k_sum_1_reduce] 14 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (23.424 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "floor_negative_s0",
+          "passed": true,
+          "elapsed_s": 2.351,
+          "stdout": "[k_sum_1_reduce] 14 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (10.688 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "floor_negative_s0_renamed",
+          "passed": true,
+          "elapsed_s": 2.389,
+          "stdout": "[k_sum_1_reduce] 14 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (23.552 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "floor_positive_s0",
+          "passed": true,
+          "elapsed_s": 2.6,
+          "stdout": "[k_sum_1_reduce] 14 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (23.424 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "floor_positive_s0_renamed",
+          "passed": true,
+          "elapsed_s": 2.375,
+          "stdout": "[k_sum_1_reduce] 14 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (23.616 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "mod_negative_s0",
+          "passed": true,
+          "elapsed_s": 2.341,
+          "stdout": "[k_sum_1_reduce] 13 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (10.464 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "mod_negative_s0_renamed",
+          "passed": true,
+          "elapsed_s": 2.515,
+          "stdout": "[k_sum_1_reduce] 13 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (23.616 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "mod_positive_s0",
+          "passed": true,
+          "elapsed_s": 2.48,
+          "stdout": "[k_sum_1_reduce] 13 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (20.864 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "mod_positive_s0_renamed",
+          "passed": true,
+          "elapsed_s": 2.521,
+          "stdout": "[k_sum_1_reduce] 13 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (23.776 us)\n",
+          "stderr": ""
+        }
+      ]
+    },
+    "signed-ranged-v2-benchmark": {
+      "clock_locked": false,
+      "warmup": 8,
+      "iters": 75,
+      "compilers": {
+        "baseline": "5af51dc2b497f8acd42f378eff27ed03c518ed4bd2952aedb940972eb4ac2998",
+        "candidate": "e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073"
+      },
+      "timing_return_limit": 64,
+      "results": [
+        {
+          "problem": "m01_matmul_512",
+          "samples_us": {
+            "baseline": [
+              64.128,
+              64.16,
+              64.16,
+              64.16,
+              64.16,
+              64.16,
+              64.192
+            ],
+            "candidate": [
+              64.16,
+              64.16,
+              64.16,
+              64.16,
+              64.16,
+              64.192,
+              64.16
+            ]
+          },
+          "baseline_median_us": 64.16,
+          "candidate_median_us": 64.16,
+          "speedup": 1.0,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_2967be": {
+                "k_matmul_2967be": 48
+              }
+            },
+            "candidate": {
+              "k_matmul_2967be": {
+                "k_matmul_2967be": 48
+              }
+            }
+          }
+        },
+        {
+          "problem": "m02_matmul_rect",
+          "samples_us": {
+            "baseline": [
+              5.024,
+              5.088,
+              5.088,
+              5.056,
+              5.056,
+              5.056,
+              4.992
+            ],
+            "candidate": [
+              5.088,
+              5.056,
+              5.056,
+              5.088,
+              5.056,
+              5.024,
+              5.056
+            ]
+          },
+          "baseline_median_us": 5.056,
+          "candidate_median_us": 5.056,
+          "speedup": 1.0,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul": {
+                "k_matmul": 32
+              }
+            },
+            "candidate": {
+              "k_matmul": {
+                "k_matmul": 32
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "generic_regression": {
+    "compiler_sha256": "51fc430f6bfb17558a02d35ebcad43da875c04907b0ce7f14d52e1afa354bd83",
+    "arch": "sm_86",
+    "results": [
+      {
+        "problem": "a01_attention",
+        "passed": true,
+        "elapsed_s": 0.705
+      },
+      {
+        "problem": "a02_attention_128",
+        "passed": true,
+        "elapsed_s": 0.775
+      },
+      {
+        "problem": "f01_rmsnorm",
+        "passed": true,
+        "elapsed_s": 0.696
+      },
+      {
+        "problem": "f02_row_softmax",
+        "passed": true,
+        "elapsed_s": 0.715
+      },
+      {
+        "problem": "f03_l2norm",
+        "passed": true,
+        "elapsed_s": 0.627
+      },
+      {
+        "problem": "m01_matmul_512",
+        "passed": true,
+        "elapsed_s": 2.279
+      },
+      {
+        "problem": "m02_matmul_rect",
+        "passed": true,
+        "elapsed_s": 0.725
+      },
+      {
+        "problem": "p00_scalar_add",
+        "passed": true,
+        "elapsed_s": 0.61
+      },
+      {
+        "problem": "p01_vector_add",
+        "passed": true,
+        "elapsed_s": 0.636
+      },
+      {
+        "problem": "p02_scale_shift",
+        "passed": true,
+        "elapsed_s": 0.677
+      },
+      {
+        "problem": "p03_relu_mul",
+        "passed": true,
+        "elapsed_s": 0.728
+      },
+      {
+        "problem": "r01_array_sum",
+        "passed": true,
+        "elapsed_s": 0.626
+      },
+      {
+        "problem": "r02_big_sum",
+        "passed": true,
+        "elapsed_s": 0.594
+      },
+      {
+        "problem": "r03_mean",
+        "passed": true,
+        "elapsed_s": 0.609
+      },
+      {
+        "problem": "r04_row_sum",
+        "passed": true,
+        "elapsed_s": 0.568
+      },
+      {
+        "problem": "branch_index_s1003",
+        "passed": true,
+        "elapsed_s": 0.599
+      },
+      {
+        "problem": "branch_index_s1003_renamed",
+        "passed": true,
+        "elapsed_s": 0.576
+      },
+      {
+        "problem": "branch_index_s1010",
+        "passed": true,
+        "elapsed_s": 0.613
+      },
+      {
+        "problem": "branch_index_s1010_renamed",
+        "passed": true,
+        "elapsed_s": 0.597
+      },
+      {
+        "problem": "branch_value_s1001",
+        "passed": true,
+        "elapsed_s": 0.612
+      },
+      {
+        "problem": "branch_value_s1001_renamed",
+        "passed": true,
+        "elapsed_s": 0.595
+      },
+      {
+        "problem": "branch_value_s1008",
+        "passed": true,
+        "elapsed_s": 0.628
+      },
+      {
+        "problem": "branch_value_s1008_renamed",
+        "passed": true,
+        "elapsed_s": 0.588
+      },
+      {
+        "problem": "conditional_tree_s1000",
+        "passed": true,
+        "elapsed_s": 0.582
+      },
+      {
+        "problem": "conditional_tree_s1000_renamed",
+        "passed": true,
+        "elapsed_s": 0.572
+      },
+      {
+        "problem": "conditional_tree_s1007",
+        "passed": true,
+        "elapsed_s": 0.591
+      },
+      {
+        "problem": "conditional_tree_s1007_renamed",
+        "passed": true,
+        "elapsed_s": 0.594
+      },
+      {
+        "problem": "conditional_warp_s1006",
+        "passed": true,
+        "elapsed_s": 0.614
+      },
+      {
+        "problem": "conditional_warp_s1006_renamed",
+        "passed": true,
+        "elapsed_s": 0.614
+      },
+      {
+        "problem": "conditional_warp_s1013",
+        "passed": true,
+        "elapsed_s": 0.586
+      },
+      {
+        "problem": "conditional_warp_s1013_renamed",
+        "passed": true,
+        "elapsed_s": 0.61
+      },
+      {
+        "problem": "loop_axis_s1004",
+        "passed": true,
+        "elapsed_s": 0.61
+      },
+      {
+        "problem": "loop_axis_s1004_renamed",
+        "passed": true,
+        "elapsed_s": 0.608
+      },
+      {
+        "problem": "loop_axis_s1011",
+        "passed": true,
+        "elapsed_s": 0.623
+      },
+      {
+        "problem": "loop_axis_s1011_renamed",
+        "passed": true,
+        "elapsed_s": 0.607
+      },
+      {
+        "problem": "loop_value_s1002",
+        "passed": true,
+        "elapsed_s": 0.606
+      },
+      {
+        "problem": "loop_value_s1002_renamed",
+        "passed": true,
+        "elapsed_s": 0.583
+      },
+      {
+        "problem": "loop_value_s1009",
+        "passed": true,
+        "elapsed_s": 0.629
+      },
+      {
+        "problem": "loop_value_s1009_renamed",
+        "passed": true,
+        "elapsed_s": 0.538
+      },
+      {
+        "problem": "mutable_snapshot_s1005",
+        "passed": true,
+        "elapsed_s": 0.598
+      },
+      {
+        "problem": "mutable_snapshot_s1005_renamed",
+        "passed": true,
+        "elapsed_s": 0.611
+      },
+      {
+        "problem": "mutable_snapshot_s1012",
+        "passed": true,
+        "elapsed_s": 0.67
+      },
+      {
+        "problem": "mutable_snapshot_s1012_renamed",
+        "passed": true,
+        "elapsed_s": 0.598
+      },
+      {
+        "problem": "branch_index_s2_minimal",
+        "passed": true,
+        "elapsed_s": 0.628
+      },
+      {
+        "problem": "branch_index_s2_renamed_minimal",
+        "passed": true,
+        "elapsed_s": 0.572
+      },
+      {
+        "problem": "branch_value_s0_minimal",
+        "passed": true,
+        "elapsed_s": 0.621
+      },
+      {
+        "problem": "branch_value_s0_renamed_minimal",
+        "passed": true,
+        "elapsed_s": 0.604
+      },
+      {
+        "problem": "conditional_tree_s6_minimal",
+        "passed": true,
+        "elapsed_s": 0.61
+      },
+      {
+        "problem": "conditional_tree_s6_renamed_minimal",
+        "passed": true,
+        "elapsed_s": 0.6
+      },
+      {
+        "problem": "conditional_warp_s5_minimal",
+        "passed": true,
+        "elapsed_s": 0.596
+      },
+      {
+        "problem": "conditional_warp_s5_renamed_minimal",
+        "passed": true,
+        "elapsed_s": 0.598
+      },
+      {
+        "problem": "loop_axis_s3_minimal",
+        "passed": true,
+        "elapsed_s": 0.603
+      },
+      {
+        "problem": "loop_axis_s3_renamed_minimal",
+        "passed": true,
+        "elapsed_s": 0.562
+      },
+      {
+        "problem": "loop_value_s1_minimal",
+        "passed": true,
+        "elapsed_s": 0.575
+      },
+      {
+        "problem": "loop_value_s1_renamed_minimal",
+        "passed": true,
+        "elapsed_s": 0.51
+      },
+      {
+        "problem": "mutable_snapshot_s4_minimal",
+        "passed": true,
+        "elapsed_s": 0.521
+      },
+      {
+        "problem": "mutable_snapshot_s4_renamed_minimal",
+        "passed": true,
+        "elapsed_s": 0.635
+      },
+      {
+        "problem": "branch_index_s16",
+        "passed": true,
+        "elapsed_s": 0.598
+      },
+      {
+        "problem": "branch_index_s16_renamed",
+        "passed": true,
+        "elapsed_s": 0.625
+      },
+      {
+        "problem": "branch_index_s2",
+        "passed": true,
+        "elapsed_s": 0.592
+      },
+      {
+        "problem": "branch_index_s23",
+        "passed": true,
+        "elapsed_s": 0.603
+      },
+      {
+        "problem": "branch_index_s23_renamed",
+        "passed": true,
+        "elapsed_s": 0.585
+      },
+      {
+        "problem": "branch_index_s2_renamed",
+        "passed": true,
+        "elapsed_s": 0.553
+      },
+      {
+        "problem": "branch_index_s9",
+        "passed": true,
+        "elapsed_s": 0.615
+      },
+      {
+        "problem": "branch_index_s9_renamed",
+        "passed": true,
+        "elapsed_s": 0.686
+      },
+      {
+        "problem": "branch_value_s0",
+        "passed": true,
+        "elapsed_s": 0.88
+      },
+      {
+        "problem": "branch_value_s0_renamed",
+        "passed": true,
+        "elapsed_s": 0.675
+      },
+      {
+        "problem": "branch_value_s14",
+        "passed": true,
+        "elapsed_s": 0.807
+      },
+      {
+        "problem": "branch_value_s14_renamed",
+        "passed": true,
+        "elapsed_s": 0.751
+      },
+      {
+        "problem": "branch_value_s21",
+        "passed": true,
+        "elapsed_s": 0.833
+      },
+      {
+        "problem": "branch_value_s21_renamed",
+        "passed": true,
+        "elapsed_s": 0.739
+      },
+      {
+        "problem": "branch_value_s7",
+        "passed": true,
+        "elapsed_s": 0.885
+      },
+      {
+        "problem": "branch_value_s7_renamed",
+        "passed": true,
+        "elapsed_s": 0.879
+      },
+      {
+        "problem": "conditional_tree_s13",
+        "passed": true,
+        "elapsed_s": 0.772
+      },
+      {
+        "problem": "conditional_tree_s13_renamed",
+        "passed": true,
+        "elapsed_s": 0.788
+      },
+      {
+        "problem": "conditional_tree_s20",
+        "passed": true,
+        "elapsed_s": 0.871
+      },
+      {
+        "problem": "conditional_tree_s20_renamed",
+        "passed": true,
+        "elapsed_s": 0.804
+      },
+      {
+        "problem": "conditional_tree_s27",
+        "passed": true,
+        "elapsed_s": 0.917
+      },
+      {
+        "problem": "conditional_tree_s27_renamed",
+        "passed": true,
+        "elapsed_s": 0.749
+      },
+      {
+        "problem": "conditional_tree_s6",
+        "passed": true,
+        "elapsed_s": 0.744
+      },
+      {
+        "problem": "conditional_tree_s6_renamed",
+        "passed": true,
+        "elapsed_s": 0.682
+      },
+      {
+        "problem": "conditional_warp_s12",
+        "passed": true,
+        "elapsed_s": 0.7
+      },
+      {
+        "problem": "conditional_warp_s12_renamed",
+        "passed": true,
+        "elapsed_s": 0.694
+      },
+      {
+        "problem": "conditional_warp_s19",
+        "passed": true,
+        "elapsed_s": 0.662
+      },
+      {
+        "problem": "conditional_warp_s19_renamed",
+        "passed": true,
+        "elapsed_s": 0.714
+      },
+      {
+        "problem": "conditional_warp_s26",
+        "passed": true,
+        "elapsed_s": 0.724
+      },
+      {
+        "problem": "conditional_warp_s26_renamed",
+        "passed": true,
+        "elapsed_s": 0.763
+      },
+      {
+        "problem": "conditional_warp_s5",
+        "passed": true,
+        "elapsed_s": 0.704
+      },
+      {
+        "problem": "conditional_warp_s5_renamed",
+        "passed": true,
+        "elapsed_s": 0.825
+      },
+      {
+        "problem": "loop_axis_s10",
+        "passed": true,
+        "elapsed_s": 0.654
+      },
+      {
+        "problem": "loop_axis_s10_renamed",
+        "passed": true,
+        "elapsed_s": 0.75
+      },
+      {
+        "problem": "loop_axis_s17",
+        "passed": true,
+        "elapsed_s": 0.793
+      },
+      {
+        "problem": "loop_axis_s17_renamed",
+        "passed": true,
+        "elapsed_s": 0.916
+      },
+      {
+        "problem": "loop_axis_s24",
+        "passed": true,
+        "elapsed_s": 0.852
+      },
+      {
+        "problem": "loop_axis_s24_renamed",
+        "passed": true,
+        "elapsed_s": 0.881
+      },
+      {
+        "problem": "loop_axis_s3",
+        "passed": true,
+        "elapsed_s": 0.875
+      },
+      {
+        "problem": "loop_axis_s3_renamed",
+        "passed": true,
+        "elapsed_s": 0.682
+      },
+      {
+        "problem": "loop_value_s1",
+        "passed": true,
+        "elapsed_s": 0.834
+      },
+      {
+        "problem": "loop_value_s15",
+        "passed": true,
+        "elapsed_s": 0.817
+      },
+      {
+        "problem": "loop_value_s15_renamed",
+        "passed": true,
+        "elapsed_s": 0.74
+      },
+      {
+        "problem": "loop_value_s1_renamed",
+        "passed": true,
+        "elapsed_s": 0.582
+      },
+      {
+        "problem": "loop_value_s22",
+        "passed": true,
+        "elapsed_s": 0.765
+      },
+      {
+        "problem": "loop_value_s22_renamed",
+        "passed": true,
+        "elapsed_s": 0.68
+      },
+      {
+        "problem": "loop_value_s8",
+        "passed": true,
+        "elapsed_s": 0.676
+      },
+      {
+        "problem": "loop_value_s8_renamed",
+        "passed": true,
+        "elapsed_s": 0.742
+      },
+      {
+        "problem": "mutable_snapshot_s11",
+        "passed": true,
+        "elapsed_s": 0.719
+      },
+      {
+        "problem": "mutable_snapshot_s11_renamed",
+        "passed": true,
+        "elapsed_s": 0.753
+      },
+      {
+        "problem": "mutable_snapshot_s18",
+        "passed": true,
+        "elapsed_s": 0.703
+      },
+      {
+        "problem": "mutable_snapshot_s18_renamed",
+        "passed": true,
+        "elapsed_s": 0.623
+      },
+      {
+        "problem": "mutable_snapshot_s25",
+        "passed": true,
+        "elapsed_s": 0.656
+      },
+      {
+        "problem": "mutable_snapshot_s25_renamed",
+        "passed": true,
+        "elapsed_s": 0.588
+      },
+      {
+        "problem": "mutable_snapshot_s4",
+        "passed": true,
+        "elapsed_s": 0.623
+      },
+      {
+        "problem": "mutable_snapshot_s4_renamed",
+        "passed": true,
+        "elapsed_s": 0.745
+      },
+      {
+        "problem": "carried_seed_s2_minimal",
+        "passed": true,
+        "elapsed_s": 0.772
+      },
+      {
+        "problem": "carried_seed_s2_renamed_minimal",
+        "passed": true,
+        "elapsed_s": 0.613
+      },
+      {
+        "problem": "outer_through_inner_s3_minimal",
+        "passed": true,
+        "elapsed_s": 0.646
+      },
+      {
+        "problem": "outer_through_inner_s3_renamed_minimal",
+        "passed": true,
+        "elapsed_s": 0.625
+      },
+      {
+        "problem": "shared_branch_s0_minimal",
+        "passed": true,
+        "elapsed_s": 0.652
+      },
+      {
+        "problem": "shared_branch_s0_renamed_minimal",
+        "passed": true,
+        "elapsed_s": 0.632
+      },
+      {
+        "problem": "shared_loop_s1_minimal",
+        "passed": true,
+        "elapsed_s": 0.634
+      },
+      {
+        "problem": "shared_loop_s1_renamed_minimal",
+        "passed": true,
+        "elapsed_s": 0.589
+      },
+      {
+        "problem": "shared_branch_s0_minimal_dynamic",
+        "passed": true,
+        "elapsed_s": 0.582
+      },
+      {
+        "problem": "shared_branch_s0_renamed_minimal_dynamic",
+        "passed": true,
+        "elapsed_s": 0.683
+      },
+      {
+        "problem": "shared_loop_s1_minimal_dynamic",
+        "passed": true,
+        "elapsed_s": 0.771
+      },
+      {
+        "problem": "shared_loop_s1_renamed_minimal_dynamic",
+        "passed": true,
+        "elapsed_s": 0.691
+      },
+      {
+        "problem": "carried_seed_s10",
+        "passed": true,
+        "elapsed_s": 0.631
+      },
+      {
+        "problem": "carried_seed_s10_renamed",
+        "passed": true,
+        "elapsed_s": 0.592
+      },
+      {
+        "problem": "carried_seed_s14",
+        "passed": true,
+        "elapsed_s": 0.728
+      },
+      {
+        "problem": "carried_seed_s14_renamed",
+        "passed": true,
+        "elapsed_s": 0.672
+      },
+      {
+        "problem": "carried_seed_s2",
+        "passed": true,
+        "elapsed_s": 0.556
+      },
+      {
+        "problem": "carried_seed_s2_renamed",
+        "passed": true,
+        "elapsed_s": 0.531
+      },
+      {
+        "problem": "carried_seed_s6",
+        "passed": true,
+        "elapsed_s": 0.499
+      },
+      {
+        "problem": "carried_seed_s6_renamed",
+        "passed": true,
+        "elapsed_s": 0.54
+      },
+      {
+        "problem": "outer_through_inner_s11",
+        "passed": true,
+        "elapsed_s": 0.508
+      },
+      {
+        "problem": "outer_through_inner_s11_renamed",
+        "passed": true,
+        "elapsed_s": 0.528
+      },
+      {
+        "problem": "outer_through_inner_s15",
+        "passed": true,
+        "elapsed_s": 0.665
+      },
+      {
+        "problem": "outer_through_inner_s15_renamed",
+        "passed": true,
+        "elapsed_s": 0.667
+      },
+      {
+        "problem": "outer_through_inner_s3",
+        "passed": true,
+        "elapsed_s": 0.604
+      },
+      {
+        "problem": "outer_through_inner_s3_renamed",
+        "passed": true,
+        "elapsed_s": 0.59
+      },
+      {
+        "problem": "outer_through_inner_s7",
+        "passed": true,
+        "elapsed_s": 0.544
+      },
+      {
+        "problem": "outer_through_inner_s7_renamed",
+        "passed": true,
+        "elapsed_s": 0.562
+      },
+      {
+        "problem": "shared_branch_s0",
+        "passed": true,
+        "elapsed_s": 0.652
+      },
+      {
+        "problem": "shared_branch_s0_renamed",
+        "passed": true,
+        "elapsed_s": 0.602
+      },
+      {
+        "problem": "shared_branch_s12",
+        "passed": true,
+        "elapsed_s": 0.658
+      },
+      {
+        "problem": "shared_branch_s12_renamed",
+        "passed": true,
+        "elapsed_s": 0.536
+      },
+      {
+        "problem": "shared_branch_s4",
+        "passed": true,
+        "elapsed_s": 0.633
+      },
+      {
+        "problem": "shared_branch_s4_renamed",
+        "passed": true,
+        "elapsed_s": 0.576
+      },
+      {
+        "problem": "shared_branch_s8",
+        "passed": true,
+        "elapsed_s": 0.605
+      },
+      {
+        "problem": "shared_branch_s8_renamed",
+        "passed": true,
+        "elapsed_s": 0.689
+      },
+      {
+        "problem": "shared_loop_s1",
+        "passed": true,
+        "elapsed_s": 0.889
+      },
+      {
+        "problem": "shared_loop_s13",
+        "passed": true,
+        "elapsed_s": 0.721
+      },
+      {
+        "problem": "shared_loop_s13_renamed",
+        "passed": true,
+        "elapsed_s": 0.784
+      },
+      {
+        "problem": "shared_loop_s1_renamed",
+        "passed": true,
+        "elapsed_s": 0.771
+      },
+      {
+        "problem": "shared_loop_s5",
+        "passed": true,
+        "elapsed_s": 0.631
+      },
+      {
+        "problem": "shared_loop_s5_renamed",
+        "passed": true,
+        "elapsed_s": 0.637
+      },
+      {
+        "problem": "shared_loop_s9",
+        "passed": true,
+        "elapsed_s": 0.691
+      },
+      {
+        "problem": "shared_loop_s9_renamed",
+        "passed": true,
+        "elapsed_s": 0.61
+      },
+      {
+        "problem": "carried_seed_s1002",
+        "passed": true,
+        "elapsed_s": 0.566
+      },
+      {
+        "problem": "carried_seed_s1002_renamed",
+        "passed": true,
+        "elapsed_s": 0.618
+      },
+      {
+        "problem": "carried_seed_s1006",
+        "passed": true,
+        "elapsed_s": 0.604
+      },
+      {
+        "problem": "carried_seed_s1006_renamed",
+        "passed": true,
+        "elapsed_s": 0.586
+      },
+      {
+        "problem": "outer_through_inner_s1003",
+        "passed": true,
+        "elapsed_s": 0.684
+      },
+      {
+        "problem": "outer_through_inner_s1003_renamed",
+        "passed": true,
+        "elapsed_s": 0.542
+      },
+      {
+        "problem": "outer_through_inner_s1007",
+        "passed": true,
+        "elapsed_s": 0.642
+      },
+      {
+        "problem": "outer_through_inner_s1007_renamed",
+        "passed": true,
+        "elapsed_s": 0.644
+      },
+      {
+        "problem": "shared_branch_s1000",
+        "passed": true,
+        "elapsed_s": 0.714
+      },
+      {
+        "problem": "shared_branch_s1000_renamed",
+        "passed": true,
+        "elapsed_s": 0.67
+      },
+      {
+        "problem": "shared_branch_s1004",
+        "passed": true,
+        "elapsed_s": 0.665
+      },
+      {
+        "problem": "shared_branch_s1004_renamed",
+        "passed": true,
+        "elapsed_s": 0.565
+      },
+      {
+        "problem": "shared_loop_s1001",
+        "passed": true,
+        "elapsed_s": 0.546
+      },
+      {
+        "problem": "shared_loop_s1001_renamed",
+        "passed": true,
+        "elapsed_s": 0.516
+      },
+      {
+        "problem": "shared_loop_s1005",
+        "passed": true,
+        "elapsed_s": 0.525
+      },
+      {
+        "problem": "shared_loop_s1005_renamed",
+        "passed": true,
+        "elapsed_s": 0.477
+      },
+      {
+        "problem": "adjacent_s0_t1",
+        "passed": true,
+        "elapsed_s": 0.517
+      },
+      {
+        "problem": "adjacent_s0_t1_renamed",
+        "passed": true,
+        "elapsed_s": 0.512
+      },
+      {
+        "problem": "axis_shadow_s0_t1",
+        "passed": true,
+        "elapsed_s": 0.743
+      },
+      {
+        "problem": "axis_shadow_s0_t1_renamed",
+        "passed": true,
+        "elapsed_s": 0.627
+      },
+      {
+        "problem": "barrier_s0_t1",
+        "passed": true,
+        "elapsed_s": 0.679
+      },
+      {
+        "problem": "barrier_s0_t1_renamed",
+        "passed": true,
+        "elapsed_s": 0.671
+      },
+      {
+        "problem": "cancellation_s0_t1",
+        "passed": true,
+        "elapsed_s": 0.714
+      },
+      {
+        "problem": "cancellation_s0_t1_renamed",
+        "passed": true,
+        "elapsed_s": 0.702
+      },
+      {
+        "problem": "destination_update_s0_t1",
+        "passed": true,
+        "elapsed_s": 0.598
+      },
+      {
+        "problem": "destination_update_s0_t1_renamed",
+        "passed": true,
+        "elapsed_s": 0.577
+      },
+      {
+        "problem": "destination_use_s0_t1",
+        "passed": true,
+        "elapsed_s": 0.6
+      },
+      {
+        "problem": "destination_use_s0_t1_renamed",
+        "passed": true,
+        "elapsed_s": 0.531
+      },
+      {
+        "problem": "global_read_s0_t1",
+        "passed": true,
+        "elapsed_s": 0.724
+      },
+      {
+        "problem": "global_read_s0_t1_renamed",
+        "passed": true,
+        "elapsed_s": 0.674
+      },
+      {
+        "problem": "index_shadow_s0_t1",
+        "passed": true,
+        "elapsed_s": 0.647
+      },
+      {
+        "problem": "index_shadow_s0_t1_renamed",
+        "passed": true,
+        "elapsed_s": 0.635
+      },
+      {
+        "problem": "nested_weak_s0_t1",
+        "passed": true,
+        "elapsed_s": 0.631
+      },
+      {
+        "problem": "nested_weak_s0_t1_renamed",
+        "passed": true,
+        "elapsed_s": 0.558
+      },
+      {
+        "problem": "nonadjacent_s0_t1",
+        "passed": true,
+        "elapsed_s": 0.604
+      },
+      {
+        "problem": "nonadjacent_s0_t1_renamed",
+        "passed": true,
+        "elapsed_s": 0.684
+      },
+      {
+        "problem": "odd_offset_s0_t1",
+        "passed": true,
+        "elapsed_s": 0.7
+      },
+      {
+        "problem": "odd_offset_s0_t1_renamed",
+        "passed": true,
+        "elapsed_s": 0.576
+      },
+      {
+        "problem": "shared_write_s0_t1",
+        "passed": true,
+        "elapsed_s": 0.653
+      },
+      {
+        "problem": "shared_write_s0_t1_renamed",
+        "passed": true,
+        "elapsed_s": 0.596
+      },
+      {
+        "problem": "weak_base_s0_t1",
+        "passed": true,
+        "elapsed_s": 0.634
+      },
+      {
+        "problem": "weak_base_s0_t1_renamed",
+        "passed": true,
+        "elapsed_s": 0.666
+      },
+      {
+        "problem": "adjacent_s71_t7",
+        "passed": true,
+        "elapsed_s": 0.832
+      },
+      {
+        "problem": "adjacent_s71_t7_renamed",
+        "passed": true,
+        "elapsed_s": 0.794
+      },
+      {
+        "problem": "axis_shadow_s71_t7",
+        "passed": true,
+        "elapsed_s": 0.896
+      },
+      {
+        "problem": "axis_shadow_s71_t7_renamed",
+        "passed": true,
+        "elapsed_s": 0.868
+      },
+      {
+        "problem": "barrier_s71_t7",
+        "passed": true,
+        "elapsed_s": 0.959
+      },
+      {
+        "problem": "barrier_s71_t7_renamed",
+        "passed": true,
+        "elapsed_s": 0.813
+      },
+      {
+        "problem": "cancellation_s71_t7",
+        "passed": true,
+        "elapsed_s": 0.903
+      },
+      {
+        "problem": "cancellation_s71_t7_renamed",
+        "passed": true,
+        "elapsed_s": 0.812
+      },
+      {
+        "problem": "destination_update_s71_t7",
+        "passed": true,
+        "elapsed_s": 0.754
+      },
+      {
+        "problem": "destination_update_s71_t7_renamed",
+        "passed": true,
+        "elapsed_s": 0.818
+      },
+      {
+        "problem": "destination_use_s71_t7",
+        "passed": true,
+        "elapsed_s": 0.95
+      },
+      {
+        "problem": "destination_use_s71_t7_renamed",
+        "passed": true,
+        "elapsed_s": 0.803
+      },
+      {
+        "problem": "global_read_s71_t7",
+        "passed": true,
+        "elapsed_s": 0.826
+      },
+      {
+        "problem": "global_read_s71_t7_renamed",
+        "passed": true,
+        "elapsed_s": 0.704
+      },
+      {
+        "problem": "index_shadow_s71_t7",
+        "passed": true,
+        "elapsed_s": 0.678
+      },
+      {
+        "problem": "index_shadow_s71_t7_renamed",
+        "passed": true,
+        "elapsed_s": 0.655
+      },
+      {
+        "problem": "nested_weak_s71_t7",
+        "passed": true,
+        "elapsed_s": 0.818
+      },
+      {
+        "problem": "nested_weak_s71_t7_renamed",
+        "passed": true,
+        "elapsed_s": 0.72
+      },
+      {
+        "problem": "nonadjacent_s71_t7",
+        "passed": true,
+        "elapsed_s": 0.915
+      },
+      {
+        "problem": "nonadjacent_s71_t7_renamed",
+        "passed": true,
+        "elapsed_s": 0.797
+      },
+      {
+        "problem": "odd_offset_s71_t7",
+        "passed": true,
+        "elapsed_s": 0.841
+      },
+      {
+        "problem": "odd_offset_s71_t7_renamed",
+        "passed": true,
+        "elapsed_s": 0.661
+      },
+      {
+        "problem": "shared_write_s71_t7",
+        "passed": true,
+        "elapsed_s": 0.801
+      },
+      {
+        "problem": "shared_write_s71_t7_renamed",
+        "passed": true,
+        "elapsed_s": 0.706
+      },
+      {
+        "problem": "weak_base_s71_t7",
+        "passed": true,
+        "elapsed_s": 0.664
+      },
+      {
+        "problem": "weak_base_s71_t7_renamed",
+        "passed": true,
+        "elapsed_s": 0.787
+      },
+      {
+        "problem": "adjacent_s1907_t3",
+        "passed": true,
+        "elapsed_s": 0.725
+      },
+      {
+        "problem": "adjacent_s1907_t3_renamed",
+        "passed": true,
+        "elapsed_s": 0.632
+      },
+      {
+        "problem": "axis_shadow_s1907_t3",
+        "passed": true,
+        "elapsed_s": 0.768
+      },
+      {
+        "problem": "axis_shadow_s1907_t3_renamed",
+        "passed": true,
+        "elapsed_s": 0.823
+      },
+      {
+        "problem": "barrier_s1907_t3",
+        "passed": true,
+        "elapsed_s": 0.723
+      },
+      {
+        "problem": "barrier_s1907_t3_renamed",
+        "passed": true,
+        "elapsed_s": 0.688
+      },
+      {
+        "problem": "cancellation_s1907_t3",
+        "passed": true,
+        "elapsed_s": 0.904
+      },
+      {
+        "problem": "cancellation_s1907_t3_renamed",
+        "passed": true,
+        "elapsed_s": 0.774
+      },
+      {
+        "problem": "destination_update_s1907_t3",
+        "passed": true,
+        "elapsed_s": 0.727
+      },
+      {
+        "problem": "destination_update_s1907_t3_renamed",
+        "passed": true,
+        "elapsed_s": 0.776
+      },
+      {
+        "problem": "destination_use_s1907_t3",
+        "passed": true,
+        "elapsed_s": 0.788
+      },
+      {
+        "problem": "destination_use_s1907_t3_renamed",
+        "passed": true,
+        "elapsed_s": 0.67
+      },
+      {
+        "problem": "global_read_s1907_t3",
+        "passed": true,
+        "elapsed_s": 0.766
+      },
+      {
+        "problem": "global_read_s1907_t3_renamed",
+        "passed": true,
+        "elapsed_s": 0.69
+      },
+      {
+        "problem": "index_shadow_s1907_t3",
+        "passed": true,
+        "elapsed_s": 0.654
+      },
+      {
+        "problem": "index_shadow_s1907_t3_renamed",
+        "passed": true,
+        "elapsed_s": 0.668
+      },
+      {
+        "problem": "nested_weak_s1907_t3",
+        "passed": true,
+        "elapsed_s": 0.752
+      },
+      {
+        "problem": "nested_weak_s1907_t3_renamed",
+        "passed": true,
+        "elapsed_s": 0.671
+      },
+      {
+        "problem": "nonadjacent_s1907_t3",
+        "passed": true,
+        "elapsed_s": 0.681
+      },
+      {
+        "problem": "nonadjacent_s1907_t3_renamed",
+        "passed": true,
+        "elapsed_s": 0.664
+      },
+      {
+        "problem": "odd_offset_s1907_t3",
+        "passed": true,
+        "elapsed_s": 0.627
+      },
+      {
+        "problem": "odd_offset_s1907_t3_renamed",
+        "passed": true,
+        "elapsed_s": 0.642
+      },
+      {
+        "problem": "shared_write_s1907_t3",
+        "passed": true,
+        "elapsed_s": 0.696
+      },
+      {
+        "problem": "shared_write_s1907_t3_renamed",
+        "passed": true,
+        "elapsed_s": 0.601
+      },
+      {
+        "problem": "weak_base_s1907_t3",
+        "passed": true,
+        "elapsed_s": 0.588
+      },
+      {
+        "problem": "weak_base_s1907_t3_renamed",
+        "passed": true,
+        "elapsed_s": 0.553
+      },
+      {
+        "problem": "m_shared_256_512_384",
+        "passed": true,
+        "elapsed_s": 2.827
+      },
+      {
+        "problem": "m_shared_257_129_131",
+        "passed": true,
+        "elapsed_s": 0.581
+      },
+      {
+        "problem": "m_shared_384_256_320",
+        "passed": true,
+        "elapsed_s": 2.558
+      },
+      {
+        "problem": "m_shared_512_256_256",
+        "passed": true,
+        "elapsed_s": 0.803
+      }
+    ]
+  }
+}

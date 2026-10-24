@@ -174,3 +174,30 @@ names emit byte-identical PTX to da4f12dd (overlapping, duplicate copies include
 Tools: check_feature_rejections.py and check_codegen_equivalence.py; TESTING.md
 has reproduction. No fresh timing claim. Next: adversarial control-flow/index
 typing probes and fuller validation, then systematic shrinking and target profiling.
+
+## Step 19 — active signed-index correctness investigation
+
+Accepted compiler is still 5af51dc2 (aa668e2). Working compile.py currently holds
+UNACCEPTED generic signed-floor correction, hash 51fc430f..., because generic
+regression session 31758 still reads it. Do not confuse this with acceptance.
+All 12 signed-index baseline probes fail numerically; generic fix passes all 12
+locally/hosted and four sanitizers but slows m01 64.160 → 80.544 µs, rejected as
+final performance solution. Evidence: validation/2026-10-24-signed-index-discovery.json.
+Installed 0.3.11 expr.apply_binop specifies floor division and Python remainder.
+
+Frozen range candidate artifacts/compiler-signed-ranged-v2.py uses conservative
+signed-int32 bounds to omit correction when signs prove truncation equivalent.
+14/15 public PTX outputs match baseline (m01 included; m02 differs). Live handles:
+88887 original/fresh seed-2049 local checks; 30214 hosted original; 76614 paired
+m01/m02 timings. Generic regression session 31758 remains separate. Check exact
+hashes; the earlier nonfrozen ranged timing is excluded. Next: finish these gates,
+adversarial lexical/mutable range probes, full exact-candidate regressions,
+sanitizers and transformer before accepting. No submission or release rebuild.
+
+Latest Step 19 state supersedes the temporary worktree note above: generic
+regression finished 255/255 and compile.py is RESTORED to accepted 5af51dc2.
+Frozen v2 finished 24 local, 12 hosted, target m01/m02 timing unchanged exactly.
+Preserved experiments/signed-index-floor.patch reconstructs v2 from current main.
+Discovery record includes completed v2 and generic regression results.
+Remaining live sessions: 29029 exact-v2 regression; 78413 selected sanitizers;
+51894 transformer. Next also add adversarial range-proof scope/mutation probes.

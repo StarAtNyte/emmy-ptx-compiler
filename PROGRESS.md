@@ -530,3 +530,43 @@ Completed 2026-10-24:
 Next: strengthen control-flow/index type validation and genuinely new adversarial
 IR probes, then systematic failure shrinking and target profiling. Compiler dtype
 coverage remains f32; production readiness unproven, submission deferred, ZIP stale.
+
+## Step 19 — signed index division/remainder bug and performance control
+
+Completed discovery/initial experiments, 2026-10-24:
+
+- Installed Emmy 0.3.11 expr.apply_binop defines / and // as floor division and
+  % as divisor-signed Python remainder. Existing PTX div/rem truncate toward zero.
+- Added tools/generate_signed_index_cases.py: 12 typed-reader-valid signed-index
+  probes (three operators, positive/negative varying divisor, renamed pairs),
+  independent NumPy int64 floor/remainder references and in-bounds addresses.
+  Accepted 5af51dc2 fails all 12 numerically in isolated GPU contexts.
+- Generic correction candidate 51fc430f... passes all 12 locally and hosted;
+  all four sanitizers clean on these cases. Seven-pair target timing rejects
+  unconditional correction for performance: m01 64.160 → 80.544 µs. Attention
+  and sum remain within 0.032 µs. This is NOT accepted as the final compiler.
+- Separate range candidate conservatively bounds signed-int32 expressions and
+  omits correction only for proven nonnegative dividend / positive divisor.
+  Frozen v2 is artifacts/compiler-signed-ranged-v2.py; 14/15 public kernels
+  already emit identical PTX to accepted baseline, including m01. M02 differs.
+- Discovery evidence: validation/2026-10-24-signed-index-discovery.json. An earlier
+  ranged timing run overlapped source edits and is excluded from final acceptance.
+
+Live work: generic regression session 31758 writes signed-index-regression.json;
+its compile.py input remains the generic candidate (worktree UNACCEPTED).
+Frozen ranged-v2 local original/fresh cases session 88887; hosted original suite
+30214; target m01/m02 timing 76614. Preserve these handles and inspect reports.
+Fresh seed 2049 cases were generated after freezing ranged v2.
+Next: finish frozen v2 runtime/performance gates; test range proof under lexical
+shadowing and mutable bindings; rerun regression/sanitizer/transformer gates for
+that exact hash before adoption. Accepted source remains 5af51dc2 in commit
+ aa668e2 and artifacts/compiler-before-signed-index.py. Submission still deferred.
+
+Step 19 continuation: generic regression completed 255/255. Restored compile.py
+to accepted 5af51dc2 after its process exited. Frozen v2 completed 24/24 original
+and fresh local cases, 12/12 hosted originals; seven target pairs preserve m01
+64.160 → 64.160 µs and m02 5.056 → 5.056. These reports now join discovery evidence.
+Preserved reconstructible v2 patch in experiments/signed-index-floor.patch.
+Exact v2 full regression session 29029, selected sanitizer session 78413, and
+transformer session 51894 are now live. Main stays accepted until these gates and
+adversarial range-proof scope checks finish.
