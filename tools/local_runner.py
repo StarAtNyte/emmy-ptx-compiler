@@ -83,6 +83,7 @@ class Driver:
         stream, graph, executable = ct.c_void_p(), ct.c_void_p(), ct.c_void_p()
         self.last_timings_us = []
         arrays, parameters = {}, []
+        zero_outputs = kernel.get('zero_outputs', ())
         types = {'f32': np.float32, 'f16': np.float16, 'f64': np.float64,
                  'i32': np.int32, 'i64': np.int64}
         try:
@@ -110,6 +111,11 @@ class Driver:
                 arrays[arg['name']] = (array, pointer)
                 parameters.append(pointer)
             addresses = (ct.c_void_p * len(parameters))(*(ct.addressof(p) for p in parameters))
+            # The hosted API zeros named buffers before every launch, including
+            # input buffers and the first correctness invocation.
+            for name in zero_outputs:
+                array, pointer = arrays[name]
+                self.call('cuMemsetD8_v2', pointer, 0, array.nbytes)
             self.call('cuLaunchKernel', function, *kernel['grid'], *kernel['block'],
                       kernel['smem_bytes'], None, addresses, None)
             self.call('cuCtxSynchronize')
@@ -134,14 +140,14 @@ class Driver:
                 self.call('cuStreamEndCapture', stream, ct.byref(graph))
                 self.call('cuGraphInstantiateWithFlags', ct.byref(executable), graph, 0)
                 for iteration in range(timed_iters + 5):
-                    for name in kernel['zero_outputs']:
+                    for name in zero_outputs:
                         array, pointer = arrays[name]
                         self.call('cuMemsetD8_v2', pointer, 0, array.nbytes)
                     if eviction is not None:
                         # Eviction conditioning, not a guaranteed cold-cache
                         # state. Keep it outside captured timing events.
                         self.call('cuMemsetD8_v2', eviction, 0, eviction_bytes)
-                    if kernel['zero_outputs'] or eviction is not None:
+                    if zero_outputs or eviction is not None:
                         # The graph stream is nonblocking and does not inherit
                         # legacy default-stream ordering from these memsets.
                         self.call('cuCtxSynchronize')

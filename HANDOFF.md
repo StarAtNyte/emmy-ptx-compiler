@@ -59,6 +59,25 @@ are fixed. Predicates in integer contexts become numeric 0/1, while conditions
 retain predicate registers. Strided end capture happens after axis initialization; dependent step
 executes after body; axis_end is body-visible. See DESIGN.md for details.
 
+## Latest local runner correction
+
+validation/2026-10-24-runner-initialization.json fixes tools/local_runner.py, not
+compile.py. Hosted zero_outputs may name an input buffer; the old local runner
+honored this only during timed repetitions, missing the first correctness launch.
+Now it zeros requested buffers before that launch too, defaulting an omitted list
+to empty. Output=true initialization precedence stays unchanged: both runners
+zero returned buffers even when explicit data is supplied in the tested cases.
+Do not equate that flag with write permissions or ban zeroing input buffers.
+
+Eight hosted/local copy combinations (four flags×two input values) pass exact
+references for initial and timed local execution. Retained GPU fixture old-runner
+regression: control passes, zero-input case returns 7 instead of 0. New runner passes
+both. Fifteen public and nine transformer checks pass; memcheck/synccheck clean
+on both fixtures. Audit 705 retained/model descriptors: zero affected non-output
+zero targets. Compiler remains 7ebf4ff2; existing 125-check local matrix still applies.
+All gate jobs terminal. New tool/harness checkpoint needs committed-source archive
+refresh; do not claim hosted CPU CI success. Repo private; submission deferred.
+
 ## Latest shape correction
 
 production-iteration14.json supports zero-domain tiles as no-ops before coordinate

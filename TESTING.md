@@ -609,3 +609,24 @@ runtime. Archive/compiler hashes in current-package.json. GitHub run 40111398281
 on that source again produced no steps/results because account payments/spending
 state prevented startup. All125 checks pass locally on each of three Python
 versions; these are not hosted CPU CI results. No billing or visibility changes.
+
+Local/hosted initialization parity (requires both a local NVIDIA GPU and the
+hosted API):
+
+```sh
+python tools/probe_runner_initialization.py --require-match
+python tools/probe_runner_initialization.py --out artifacts/runner-initialization-fresh \
+  --first-value=-5.5 --require-match
+python tools/validate_isolated.py validation/runner-fixtures/*/ \
+  --report artifacts/runner-fixtures.json
+```
+
+The copy probe checks explicit data, returned-input flags and zero_outputs naming
+an input. The initial local correctness launch now zeros requested buffers too;
+the timed path already did so. Four flag combinations × two exact input values
+match hosted outputs and an independent reference in both initial and timed local
+execution. Public fifteen and transformer nine checks pass; memcheck/synccheck
+cover the two retained numerical fixtures. An audit of 705 retained/model kernel
+descriptors finds no non-output zero targets, preserving their prior initialization
+scope. Evidence: runner-initialization.json. Compiler/PTX and CPU suite unchanged;
+these GPU fixtures are not added as misleading CPU snapshot coverage.

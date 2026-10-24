@@ -193,3 +193,8 @@ now fail before PTX output. Scalar and zero logical views remain supported;
 zero-sized shared allocations remain explicitly unsupported. The expanded
 125-check suite passes locally on Python 3.12–3.14 without Torch. Hosted CPU CI
 still needs verification once account billing permits jobs to start.
+
+A [local-runner initialization audit](validation/2026-10-24-runner-initialization.json)
+found and fixed missing first-launch zeroing when zero_outputs names an input.
+Hosted parity, retained GPU regressions and public/model checks pass. The compiler
+is unchanged; this corrects the validation harness, not generated PTX.

@@ -1263,3 +1263,25 @@ Completed 2026-10-24:
 - General schema/type/cardinality/grid/buffer-role/data-payload/bounds coverage and
   hardware counters/sustained hosted CI remain open. Goal active, repo private,
   entry submission deferred. No new performance claim: 658 prior PTX outputs equal.
+
+## Step 50 — local runner honors first-launch input zeroing
+
+Completed 2026-10-24:
+
+- Audited real hosted initialization instead of inferring role restrictions.
+  Observed that zero_outputs may name input buffers. Old local runner returned 7
+  where hosted returned 0 because it zeroed named inputs only in timed repetitions.
+  Returned buffers already initialize as zero in both runners despite explicit
+  data in these cases; preserved that precedence and kept role assumptions limited.
+- Fixed the initial local correctness launch to honor named zeroing. Optional
+  omitted list defaults empty; timed behavior unchanged. Compiler remains 7ebf4ff2.
+- All four flag combinations with two exact input values agree with hosted outputs
+  and independent expected values in initial and timed local execution. Retained
+  numerical zero-input fixture fails the old runner; nonzero control passes both.
+- Fifteen public and nine transformer checks pass. memcheck/synccheck clean on
+  two GPU fixtures. Audit 705 retained/model descriptors finds no non-output zero
+  targets, so their earlier initialization is unaffected. No performance claim.
+- Evidence: runner-initialization.json. Retained GPU regressions deliberately not
+  represented as CPU snapshot checks, which cannot test host zeroing. Next publish
+  and refresh the archive with the corrected harness. Wider role/payload/schema
+  and compiler coverage remain open. Repo private; entry submission deferred.
