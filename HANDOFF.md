@@ -28,9 +28,9 @@ http://runner.riftstack.ai:48701. Compiler emits PTX 8.0 sm89; local runner chan
 that target to sm86. Local performance cannot select contest optimizations.
 
 **Current accepted compile.py SHA-256:**
-04b50e69438a15973a590a881562b78dc41f3fd23c0f870352e63ab334019979.
-Exact source was frozen/tested as artifacts/compiler-power2-signed-only.py.
-Prior accepted source bb3a72b2 is reproducible from 1ad0dbf:compile.py.
+b13ccba603f9e74bef1f65254284d7172a929eddeeba2ec48b22ba0f24028b26.
+Exact source frozen/tested as artifacts/compiler-predicate-index.py. Prior accepted
+04b50e69 is reproducible from 074d4f9:compile.py; bb3a72b2 from 1ad0dbf.
 
 ## Contract/current implementation
 
@@ -50,11 +50,25 @@ Accepted optimizations: adjacent fold FMA; bounded shared-only loop expansion
 pairing; exact signed floor/remainder power-of-two shifts/masks. No kernel-name
 selection. Generic signed / and // floor; % follows divisor sign. Lexical scopes,
 Let snapshots, declaration-identity shared allocation and nested fold discovery
-are fixed. Strided end capture happens after axis initialization; dependent step
+are fixed. Predicates in integer contexts become numeric 0/1, while conditions
+retain predicate registers. Strided end capture happens after axis initialization; dependent step
 executes after body; axis_end is body-visible. See DESIGN.md for details.
 
 ## Latest acceptance evidence
 
+validation/2026-10-24-production-iteration8.json fixes predicate-valued indices.
+Scalar booleans materialize integer 0/1 for arithmetic, comparisons, ternary
+branches, integer Lets and memory offsets. Conditions retain .pred registers.
+All 20 corrected original probes fail driver assembly on 04b50e69; final candidate
+passes 20 original + 20 frozen fresh cases on both GPUs. Four sanitizers clean on
+20 new cases, nine transformer runs and three no-Torch compilations pass. Shared
+pairing positively emits a vector load in the predicate-address fixture.
+All 458 prior kernels emit byte-identical PTX, preserving earlier codegen; no
+fresh speedup claim. Eight rejection diagnostics still pass. New committed shared
+predicate fixture adds a fourth CPU golden: all seven checks pass locally without
+Torch, existing three goldens unchanged. Actual new Actions matrix pending push.
+
+Prior GPU/timing evidence for identical prior PTX:
 validation/2026-10-24-production-iteration7.json:
 
 - 366 prior isolated local cases plus 90 signed/divisor/extreme and two committed
@@ -87,7 +101,8 @@ nounroll controls are rejected/archived; avoid repeating without new evidence.
 
 TESTING.md has commands. Semantic generators fuzz_semantics.py, fuzz_nested.py,
 generate_pair_cases.py, generate_signed_index_cases.py, generate_index_scope_cases.py
-and generate_strided_bound_cases.py use independent mathematical references.
+generate_strided_bound_cases.py and generate_predicate_index_cases.py use
+independent mathematical references.
 validate_isolated.py uses a fresh process/context per case to avoid poisoned-context
 cascades. Shared sanitizer binary is under artifacts/vendor (see TESTING).
 
@@ -114,14 +129,14 @@ One push run is not sustained CI history.
 
 ## Packaging and next work
 
-Verified checkpoint archive built from 00da61e, compiler 04b50e69, in a fresh
+Prior verified checkpoint archive built from 00da61e, compiler 04b50e69, in a fresh
 Python 3.12.13 environment with pinned constraints and no Torch. Extracted outside
 the worktree; hosted scalar-add, matmul and attention smoke checks pass. Evidence:
 validation/2026-10-24-current-package.json. Paths:
 artifacts/emmy-ptx-current-checkpoint.zip and artifacts/emmy-ptx-submission.zip
 are identical verified bytes. Prior stale archive/report retained as
-artifacts/emmy-ptx-before-power2.zip/json. No need to rebuild for documentation-only
-follow-ups; the report identifies the exact archived commit/compiler.
+artifacts/emmy-ptx-before-power2.zip/json. Compiler has now changed to b13ccba6; refresh archive after committing this fix.
+The report identifies the exact archived commit/compiler; no submission yet.
 
 Next: broaden index/control-flow type validation, operation/dtype coverage and
 bounded failure shrinking. Continue target hardware lower-bound/bottleneck work;

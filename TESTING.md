@@ -420,3 +420,26 @@ clocks are unlocked. The accepted variant improves three matmuls; other 16 gaps
 are at most 0.032 µs and treated as noise. The original unsigned rewrite's 7.6%
 attention128 regression and its rejected identity-control follow-up are retained
 in discovery/refinement evidence, not hidden by the accepted results.
+
+## Predicates used as integer indices
+
+```sh
+.venv/bin/python tools/generate_predicate_index_cases.py
+.venv/bin/python tools/generate_predicate_index_cases.py --seed 8231 --out artifacts/predicate-index-fresh
+.venv/bin/python tools/validate_isolated.py artifacts/predicate-index/*/ artifacts/predicate-index-fresh/*/ --report artifacts/predicate-index-local.json
+```
+
+Ten families with renamed counterparts cover direct comparisons as indices,
+boolean arithmetic, nested numeric comparisons, logical arithmetic/truthiness,
+boolean ternary branches, integer Let snapshots, nested conditions, scalar shared
+loads and positively vectorized paired shared loads. Independent NumPy formulas
+explicitly convert booleans to 0/1. All memory indices remain in bounds.
+
+The prior compiler emitted invalid PTX by placing .pred operands in integer
+instructions. The final corpus uses only operators supported by installed
+0.3.11 apply_binop; preliminary use of != was replaced with equivalent >0 for a
+nonnegative remainder before final checks. Iteration8 preserves those final IR
+hashes, all 20 baseline assembly failures, 40 local/hosted passes, 458 prior
+byte-identical kernels, selected sanitizer/model/runtime checks and vector
+eligibility proof. CPU CI adds the committed shared-vector predicate fixture;
+four positive fixtures plus three negative probes now make seven checks.

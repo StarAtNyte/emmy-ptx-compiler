@@ -180,3 +180,12 @@ numerators as well. Boundary fixtures observe both sign and low bits near INT_MI
 and INT_MAX, excluding division overflow. The corresponding unsigned Tile rewrite
 was not adopted: it regressed one target attention workload despite fewer native
 instructions. Current tile-coordinate lowering retains its prior behavior.
+
+## Predicate and integer register classes
+
+Expression lowering distinguishes predicate-valued intermediates from numeric
+index values. Integer contexts materialize a predicate as 0/1 with selp.b32 before
+arithmetic, numeric comparisons, ternary branches, integer Let bindings or memory
+addressing. Condition contexts retain native predicates, preserving existing
+branch lowering. This also applies to aligned paired shared-read addresses; no
+predicate register can be used directly as an integer byte/element offset.

@@ -1,6 +1,6 @@
 {
-  "baseline_compiler_sha256": "04b50e69438a15973a590a881562b78dc41f3fd23c0f870352e63ab334019979",
-  "snapshot_provenance": "GPU-verified fixtures in production-iteration7, independent oracle preserved; signed INT32 extrema added",
+  "baseline_compiler_sha256": "b13ccba603f9e74bef1f65254284d7172a929eddeeba2ec48b22ba0f24028b26",
+  "snapshot_provenance": "GPU-verified retained fixtures; predicate shared-vector index fixture added after production-iteration8 gates",
   "fixtures": [
     {
       "folder": "validation/counterexamples/2026-10-24-scope-shrunk",
@@ -31,6 +31,16 @@
         "expected.npz": "de111f24317a98f68e43a80dfed4772e948e1fc7f71443158b602190ddd38444"
       },
       "ptx_sha256": "1bfd5c4f54e3ceff6a220c2b70ebbb8994b77a070908ac2dffa44501218fe5eb"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-24-predicate-shared-pair",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "k_sum_1_reduce.ir.json": "216761de2d34bffb6d990021b0dfc29786e53f63d8f1cfe7339a1ea8f7d1b453",
+        "meta.json": "38c97cb6cf1f4f220e5469901ee62b31adde2be3f33934d9b5ee064d42c43fa3",
+        "expected.npz": "2fe1de840ad9fe7e7ab9bb0b50b711e077828c8a5f6475fcc8873e0a029875a5"
+      },
+      "ptx_sha256": "66aa5809246c005c37a822359527f949697a523f6abcce0ea63c7af8013c9b2e"
     }
   ]
 }

@@ -881,3 +881,30 @@ Completed 2026-10-24:
 Next: broader index/control-flow typing probes and target hardware lower-bound /
 bottleneck work. General operation/dtype/dynamic-shape support remains limited;
 nightly CI has only an initial history. Submission stays deferred.
+
+## Step 33 — predicate-valued indices found invalid PTX; context-aware fix accepted
+
+Completed 2026-10-24:
+
+- Added generate_predicate_index_cases.py: ten renamed families / 20 fixtures,
+  independent NumPy boolean/0-or-1 oracles, including nested comparisons/ternaries,
+  Let snapshots, truthiness, shared scalar and positively paired shared reads.
+- Previous 04b50e69 fails all 20 final fixtures with driver invalid-PTX assembly
+  errors. Initial logic fixture's != was changed to equivalent >0 for nonnegative
+  remainder to stay within installed apply_binop vocabulary; preliminary reports
+  are excluded from final evidence.
+- Accepted exact b13ccba603f9e74bef1f65254284d7172a929eddeeba2ec48b22ba0f24028b26:
+  separate generic expression result from integer/predicate use. Integer contexts
+  materialize booleans as 0/1; conditions keep native predicate registers.
+- Final 20 original + 20 frozen fresh cases pass locally and hosted. Four sanitizer
+  tools clean on 20 original cases; nine transformer runs and three no-Torch /tmp
+  compilation checks pass. Shared-pair fixtures actually emit one vector read.
+- All 458 prior kernels emit byte-identical PTX, preserving their prior tested
+  codegen and timing evidence. No fresh speedup claim. Eight rejection probes pass.
+- Preserved reports/fixture hashes in production-iteration8.json. Added shared
+  predicate fixture to CPU manifest; existing three goldens unchanged, seven
+  no-Torch contract checks pass locally. Updated design/testing/current handoff.
+
+Next: publish, verify seven-check CPU matrix and refresh code archive for changed
+compiler. Broader type/rank/ABI validation and hardware lower-bound work remain.
+Production readiness unproven; submission stays deferred.

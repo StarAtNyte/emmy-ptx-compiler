@@ -188,6 +188,12 @@ class Compiler:
         return None
 
     def integer(self, expr):
+        value = self.expression(expr)
+        # PTX predicates are a separate register class. Index arithmetic and
+        # memory offsets require the IR boolean's numeric 0-or-1 value.
+        return self.instruction('selp.b32', 1, 0, value) if value.startswith('%p') else value
+
+    def expression(self, expr):
         if isinstance(expr, TernaryExpr):
             predicate = self.predicate(expr.cond)
             return self.instruction('selp.b32', self.integer(expr.if_true), self.integer(expr.if_false), predicate)
@@ -233,7 +239,7 @@ class Compiler:
         raise NotImplementedError(f'Index expression: {expr!r}')
 
     def predicate(self, expr):
-        value = self.integer(expr)
+        value = self.expression(expr)
         return value if value.startswith('%p') else self.instruction('setp.ne.s32', value, 0, kind='p')
 
     def address(self, buffer, index, offset=0):

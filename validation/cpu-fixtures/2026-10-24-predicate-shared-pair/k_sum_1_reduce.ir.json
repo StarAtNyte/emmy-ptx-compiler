@@ -1,0 +1,47 @@
+{
+  "inputs": [
+    "x"
+  ],
+  "outputs": [
+    "sum_1"
+  ],
+  "nodes": {
+    "x": {
+      "op": "InputOp",
+      "op_fields": {},
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "x",
+          "shape": [
+            128
+          ],
+          "dtype": "f32"
+        }
+      ]
+    },
+    "sum_1": {
+      "op": "KernelOp",
+      "op_fields": {
+        "body": [
+          "Tile(axes=(Axis(name='i', extent=Dim(64), window=None),), body=(Smem(name='scratch', extents=(128,), dtype='float', align=16), StridedLoop(axis=Axis(name='copy', extent=Dim(128), window=None), start=Var(name='i'), step=Literal(value=64, dtype='int'), body=(Load(names=('copy_value',), input='x', index=(Var(name='copy'),), dtype=None), Write(output='scratch', index=(Var(name='copy'),), values=('copy_value',), value_dtype=None, atomic=False, swizzle='NONE')), unroll=False, end=None, seed=True), Sync(barrier_id=0, count=None, warp=False), Loop(axis=Axis(name='step', extent=Dim(1), window=None), body=(Load(names=('a',), input='scratch', index=(BinaryExpr(op='*', left=BinaryExpr(op='<', left=Var(name='i'), right=Literal(value=32, dtype='int')), right=Literal(value=2, dtype='int')),), dtype=None), Load(names=('b',), input='scratch', index=(BinaryExpr(op='+', left=BinaryExpr(op='*', left=BinaryExpr(op='<', left=Var(name='i'), right=Literal(value=32, dtype='int')), right=Literal(value=2, dtype='int')), right=Literal(value=1, dtype='int')),), dtype=None), Assign(name='sum', op=ElementwiseImpl('add'), args=('a', 'b'), dtype=None), Accum(name='result', value='sum', op=ElementwiseImpl('add'), dtype=None, axes=('step',), base=None)), unroll=False, seed=True), Write(output='sum_1', index=(Var(name='i'),), values=('result',), value_dtype=None, atomic=False, swizzle='NONE')), block_threads=None, aux_threads=0, raster_axes=None, raster_group=None, raster_orient='m')"
+        ],
+        "name": "k_sum_1_reduce",
+        "zero_delegated": [],
+        "serial": []
+      },
+      "inputs": [
+        "x"
+      ],
+      "outputs": [
+        {
+          "name": "sum_1",
+          "shape": [
+            64
+          ],
+          "dtype": "f32"
+        }
+      ]
+    }
+  }
+}
