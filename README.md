@@ -135,4 +135,7 @@ CPU contract checks run on pushes, pull requests and nightly across Python
 3.12–3.14. They use committed counterexamples, isolated CLI execution without
 Torch, fixed PTX snapshots and unsupported-feature probes. See
 [the workflow](.github/workflows/cpu-contract.yml) and [testing notes](TESTING.md).
-These checks complement the numerical GPU and sanitizer gates above.
+The [first three-version matrix](https://github.com/StarAtNyte/emmy-ptx-compiler/actions/runs/40089837329)
+passed; [downloaded evidence](validation/2026-10-24-cpu-ci.json) records exact
+versions, hashes and scope. These checks complement the numerical GPU and
+sanitizer gates above.

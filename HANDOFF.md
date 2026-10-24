@@ -178,13 +178,21 @@ pass. Evidence validation/2026-10-24-statement-shrinking.json and self-contained
 fixtures validation/counterexamples; TESTING.md has commands/limits. All reducer
 jobs completed. Next: CPU CI on committed fixtures, broader typing, target profiling.
 
-## Step 24 — CPU CI awaits first hosted run
+## CPU CI — current verified state
 
-Compiler unchanged bb3a72b2. New check_cpu_contract.py passes five checks in the
-no-Torch runtime and clean copied checkout; corrupted PTX golden correctly fails.
-Only committed assets needed. requirements-ci.lock constrains runtime versions;
-.github/workflows/cpu-contract.yml configures push/PR/manual/nightly on Python
-3.12/3.13/3.14, pinned action commits and report artifacts. Current evidence:
-validation/2026-10-24-cpu-ci.json. First actual GitHub Actions matrix run pending;
-next push workflow, inspect jobs, fix failures and record evidence. Do not claim
-sustained CI or GPU coverage from these CPU checks. Submission remains deferred.
+Compiler unchanged bb3a72b2. check_cpu_contract.py uses only committed fixtures,
+checks isolated no-Torch CLI execution, two GPU-validated PTX snapshots and three
+unsupported-feature diagnostics. Local clean-checkout checks pass; deliberately
+corrupted golden fails. requirements-ci.lock pins runtime constraints.
+.github/workflows/cpu-contract.yml configures push/PR/manual/nightly across
+Python 3.12/3.13/3.14 with pinned official action commits and report artifacts.
+
+First GitHub Actions run 40089837329 succeeded on all three versions (3.12.15,
+3.13.16, 3.14.8):
+https://github.com/StarAtNyte/emmy-ptx-compiler/actions/runs/40089837329.
+Downloaded reports confirm accepted compiler hash, no Torch, Emmy 0.3.11,
+NumPy 2.5.4 and 5/5 checks on each. Full evidence:
+validation/2026-10-24-cpu-ci.json. Nightly schedule is configured, but sustained
+history and GPU coverage are not established by this first matrix. No live jobs
+remain from this implementation step. Next: target bottleneck profiling/measured
+optimization and broader typing probes. Submission remains deferred.

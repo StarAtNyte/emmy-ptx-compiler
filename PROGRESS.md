@@ -692,3 +692,24 @@ Completed locally 2026-10-24, compiler unchanged bb3a72b2...:
 Next: push, inspect authoritative Actions job results, fix matrix/setup failures,
 then record verified outcomes. CPU snapshots do not replace GPU numerical gates.
 Production readiness remains unproven; submission deferred and release ZIP stale.
+
+## Step 25 — first real CPU CI matrix verified
+
+Completed 2026-10-24:
+
+- Published CPU workflow/checker as 435355b. GitHub Actions run 40089837329
+  completed successfully on Python 3.12.15, 3.13.16 and 3.14.8:
+  https://github.com/StarAtNyte/emmy-ptx-compiler/actions/runs/40089837329.
+- Downloaded all three report artifacts and verified five checks pass in each,
+  Torch is absent, Emmy 0.3.11/NumPy 2.5.4 match constraints, and compiler hash
+  exactly matches accepted bb3a72b2. Both fixture PTX snapshots match on each
+  Python version; negative CLI probes reject cleanly.
+- Saved job/step conclusions, artifact metadata and full hosted reports in
+  validation/2026-10-24-cpu-ci.json. Compiler/workflow/checker remain unchanged
+  after that successful run. The nightly trigger is configured; one successful
+  push matrix is not evidence of sustained history or GPU correctness.
+
+Next: target instruction/occupancy/bottleneck profiling and measured optimization,
+plus broader index/control-flow typing probes. CPU CI covers only two committed
+fixtures/three diagnostics; expand it with future retained counterexamples.
+Submission remains deferred, release archive stale, production readiness unproven.
