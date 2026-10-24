@@ -238,3 +238,15 @@ Consistent permutations are legal. Allocation descriptors use f32 and a list of
 nonnegative integer dimensions (including scalar []); physical shapes need not
 match logical tensor shapes. This validates ABI syntax and buffer membership,
 not access bounds, initialization/output roles, data payloads or chain provenance.
+
+The bounded shared-only unroll also pairs reads across two iterations. A scalar
+load must have affine flattened index coefficient +1 for the loop axis, an even
+constant and even coefficients for every other term. Any other term containing
+the loop axis is rejected. The physical allocation must be aligned to at least
+8 bytes, and no index dependency may be declared or updated in the loop body.
+Existing within-body pairs take precedence. The unrolled loop starts at zero
+and advances by an even power-of-two factor, proving an even address at each
+paired position. The first iteration emits ld.shared.v2.f32; its second register
+supplies the next iteration's scalar binding. Pair state is cleared before scalar
+tails. Only the existing straight-line shared-read-only expansion is eligible;
+there is no motion across writes, global reads, barriers or control flow.

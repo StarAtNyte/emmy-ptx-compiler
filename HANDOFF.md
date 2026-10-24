@@ -29,8 +29,9 @@ http://runner.riftstack.ai:48701. Compiler emits PTX 8.0 sm89; local runner chan
 that target to sm86. Local performance cannot select contest optimizations.
 
 **Current accepted compile.py SHA-256:**
-7fbe5ee4ed6c8688929b3892c06903a317bc9a4ca60e9496b0a231174ec35761.
-Exact source frozen/tested as artifacts/compiler-abi-validation.py. Prior
+40a1de84e3813cb1377d1dcdd0c0e369666c5638332d6cb18155cb31fcfc678c.
+Exact source frozen/tested as artifacts/compiler-cross-pair.py. Prior
+7fbe5ee4 is reproducible from b2a1b19:compile.py. Prior
 1dfcf75f is reproducible from 0fea2c0:compile.py. Prior
 bf07d517 is reproducible from 998f3b0:compile.py. Prior 393d7600
 is reproducible from 48793dc:compile.py; b13ccba6 from 35208cf.
@@ -57,12 +58,12 @@ are fixed. Predicates in integer contexts become numeric 0/1, while conditions
 retain predicate registers. Strided end capture happens after axis initialization; dependent step
 executes after body; axis_end is body-visible. See DESIGN.md for details.
 
-## Pending optimization checkpoint — cross-iteration shared pairing
+## Latest accepted optimization — cross-iteration shared pairing
 
-Accepted compiler remains 7fbe5ee4; DO NOT lose the candidate. Frozen candidate
+Accepted compiler is 40a1de84. Exact frozen source
 artifacts/compiler-cross-pair.py SHA256
 40a1de84e3813cb1377d1dcdd0c0e369666c5638332d6cb18155cb31fcfc678c.
-Reconstruct via experiments/cross-iteration-pair.patch against current compile.py.
+Reconstruct via experiments/cross-iteration-pair.patch against prior 7fbe5ee4.
 Candidate adds aligned v2 shared reads across even/odd positions in the existing
 bounded unroll. Requires affine unit axis coefficient, even remaining terms,
 >=8-byte allocation alignment and immutable index dependencies. Skips within-body
@@ -84,14 +85,15 @@ broad timing overlapped correctness; retain but use final timing for acceptance.
 Local-driver sm120 native diagnostics differ from actual hosted code; public
 static entry grows 1546→4976 despite speedup, so static counts are not dynamic work.
 
-NEXT: review/adopt this candidate, add retained GPU-verified positive/tail/guard
-CPU fixtures (existing goldens unchanged), verify actual CI, refresh archive.
-Current package still accepted 7fbe5ee4. Compiler change is not yet in main.
+Main adopts the exact validated candidate. Four GPU-verified positive/tail/guard
+fixtures are committed; existing twelve goldens unchanged. Twenty local no-Torch
+snapshot/feature checks pass; CI now totals 90 checks with launch/ABI suites.
+NEXT: publish/verify actual CI and refresh archive. Current package still 7fbe5ee4.
 Broader goal/readiness gaps remain. Keep repository private; submission deferred.
 
 ## Latest acceptance evidence
 
-Latest performance evidence (compiler unchanged):
+Prior baseline performance calibration (before cross-iteration pairing):
 validation/2026-10-24-target-calibration.json and TARGET_PERFORMANCE.md. Five hosted
 trials, 8 warmups/75 iterations, alternating forward/reverse: no-work median
 2.784 us, copy 1 MiB 3.008 us, 64 MiB strided read 5366.47 effective GB/s,
@@ -243,7 +245,7 @@ an initial history, not sustained-nightly proof.
 
 ## Packaging and next work
 
-Current verified archive built from b2a1b19, compiler 7fbe5ee4. Uses the existing
+Prior verified archive built from b2a1b19, compiler 7fbe5ee4. Uses the existing
 isolated no-Torch Python 3.12.13 runtime from the earlier pinned fresh install;
 dependencies unchanged. Extracted scalar-add, matmul and attention hosted checks
 pass. Latest evidence: validation/2026-10-24-current-package.json. Archive aliases
@@ -278,4 +280,4 @@ Next performance priority: investigate matmul instruction/address work, shared
 traffic/dependencies and available warp parallelism using the calibrated gap.
 Prescribed grids have 80–128 CTAs vs 170 SMs. Further optimization still needs
 independent safety gates and target paired timing; no counter-proven bottleneck.
-Compiler/runtime files unchanged by calibration; existing package remains valid.
+Latest cross-iteration compiler needs a refreshed package; prior ABI archive is historical.

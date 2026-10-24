@@ -1,0 +1,235 @@
+{
+  "status": "accepted bounded cross-iteration shared-read pairing; CI/package verification pending",
+  "compiler_sha256": "40a1de84e3813cb1377d1dcdd0c0e369666c5638332d6cb18155cb31fcfc678c",
+  "development_gates": {
+    "record": "2026-10-24-cross-iteration-discovery.json",
+    "sha256": "d0002d6faa07499b28644f7a0a1f8f4b22930c07c58b0384c6b9f8132a987b98",
+    "scope": "60 new probes both GPUs; 561 prior identical PTX; 33 changed prior kernels both GPUs; sanitizers/transformer/runtime/diagnostics and final 7-pair timings recorded there"
+  },
+  "cpu_contract": {
+    "compiler_sha256": "40a1de84e3813cb1377d1dcdd0c0e369666c5638332d6cb18155cb31fcfc678c",
+    "manifest_sha256": "0714ba0cda5933c7fd1c924975d2fe3d73ea1dd509d2942ec9acb99be5323138",
+    "python": "3.12.13 (main, Jul 23 2026, 14:43:28) [Clang 22.1.3 ]",
+    "torch_present": false,
+    "packages": {
+      "emmy-ml": "0.3.11",
+      "numpy": "2.5.4"
+    },
+    "scope": "CPU CLI/code-generation contract, not GPU execution",
+    "results": [
+      {
+        "case": "2026-10-24-scope-shrunk",
+        "passed": true,
+        "ptx_sha256": "808b7dd2be9067300a0d7d6a873675ea26a09ecdc4288202dc07b74a22b759c3",
+        "stderr": [
+          "",
+          ""
+        ]
+      },
+      {
+        "case": "2026-10-24-strided-shrunk",
+        "passed": true,
+        "ptx_sha256": "d978ffa0ed5c3a837c6d36ce061dedd966ad8ba03ef64fb20c1000d4eb504a68",
+        "stderr": [
+          "",
+          ""
+        ]
+      },
+      {
+        "case": "2026-10-24-power2-int32-extremes",
+        "passed": true,
+        "ptx_sha256": "1bfd5c4f54e3ceff6a220c2b70ebbb8994b77a070908ac2dffa44501218fe5eb",
+        "stderr": [
+          "",
+          ""
+        ]
+      },
+      {
+        "case": "2026-10-24-predicate-shared-pair",
+        "passed": true,
+        "ptx_sha256": "66aa5809246c005c37a822359527f949697a523f6abcce0ea63c7af8013c9b2e",
+        "stderr": [
+          "",
+          ""
+        ]
+      },
+      {
+        "case": "2026-10-24-f32-float-arithmetic",
+        "passed": true,
+        "ptx_sha256": "298d2f0b086051ddbb84aadc062bf720835e63c0d3c3570872930a2659172e8c",
+        "stderr": [
+          "",
+          ""
+        ]
+      },
+      {
+        "case": "2026-10-24-f32-float-to-int",
+        "passed": true,
+        "ptx_sha256": "d29a0ed56fbc94d56d79dbc72f68c924fbab8bf0b7af175927d40cc2438fa3f7",
+        "stderr": [
+          "",
+          ""
+        ]
+      },
+      {
+        "case": "2026-10-24-f32-mixed-compare",
+        "passed": true,
+        "ptx_sha256": "2ea2baa1bf50960f933b72527b1242da8f3362ecb11de133670448e6de8f2d82",
+        "stderr": [
+          "",
+          ""
+        ]
+      },
+      {
+        "case": "2026-10-24-f32-nan-truth",
+        "passed": true,
+        "ptx_sha256": "34a9e8da648ec8f7d9b7d0e6447c500378c0191b6cf86b6f7ecd846205ab6ddd",
+        "stderr": [
+          "",
+          ""
+        ]
+      },
+      {
+        "case": "2026-10-24-address-extra-load",
+        "passed": true,
+        "ptx_sha256": "f97d5b20d00422899305f365bb2d562eb4c57f41bfeb2271afc2be97129bf30a",
+        "stderr": [
+          "",
+          ""
+        ]
+      },
+      {
+        "case": "2026-10-24-address-scalar-flat",
+        "passed": true,
+        "ptx_sha256": "892b296b619d44b30fcc3d8e18dc1304474e64f6f1713287c3a80f8dd3e3a50c",
+        "stderr": [
+          "",
+          ""
+        ]
+      },
+      {
+        "case": "2026-10-24-address-shared-pair",
+        "passed": true,
+        "ptx_sha256": "64dfdc2da4071207ec81322c244ae60dbe9ba0fef72589e62cdb96e26de1323d",
+        "stderr": [
+          "",
+          ""
+        ]
+      },
+      {
+        "case": "2026-10-24-abi-reordered",
+        "passed": true,
+        "ptx_sha256": "c86f56f7882c9d797f637bcbd41e200efbf7ff4f5d28035427534bcc8d593b3c",
+        "stderr": [
+          "",
+          ""
+        ]
+      },
+      {
+        "case": "2026-10-24-cross-tail",
+        "passed": true,
+        "ptx_sha256": "8abbb3df395cf072530222383e3956f1b06a5e1f3a7e2469538b36c3b80a88b4",
+        "stderr": [
+          "",
+          ""
+        ]
+      },
+      {
+        "case": "2026-10-24-cross-large-tail",
+        "passed": true,
+        "ptx_sha256": "02216f60589995548d311e7cbaa3f8a495421dcd7b8f6f4bf6ad98b084c10a43",
+        "stderr": [
+          "",
+          ""
+        ]
+      },
+      {
+        "case": "2026-10-24-cross-write-guard",
+        "passed": true,
+        "ptx_sha256": "854cf74f73bb111cbd3cddff62f6d49bc0b6433a7d643ab3b8fa0f9eae7ebb9f",
+        "stderr": [
+          "",
+          ""
+        ]
+      },
+      {
+        "case": "2026-10-24-cross-local-index-guard",
+        "passed": true,
+        "ptx_sha256": "fc4e9622917dd5809468526f3f934f933daf5c5f91d3c0fe36facb106531e39b",
+        "stderr": [
+          "",
+          ""
+        ]
+      },
+      {
+        "case": "tensor_f16",
+        "passed": true,
+        "stderr": "compile.py: Kernel k_sum_1_reduce, tensor x: unsupported tensor dtype f16\n"
+      },
+      {
+        "case": "write_f16",
+        "passed": true,
+        "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write dtype f16\n"
+      },
+      {
+        "case": "write_swizzle",
+        "passed": true,
+        "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write swizzle B32\n"
+      },
+      {
+        "case": "floating_index",
+        "passed": true,
+        "stderr": "compile.py: Kernel k_sum_1_reduce: unsupported floating index expression Literal(value=0.5, dtype='float')\n"
+      }
+    ]
+  },
+  "retained_cpu_fixtures": [
+    {
+      "folder": "validation/cpu-fixtures/2026-10-24-cross-tail",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "expected.npz": "039d993bc6242742087c45d4468512fe631afbd0ed6fb7cc8446ade2bfdd7cfc",
+        "k_sum_1_reduce.ir.json": "dab030fb1a9eaea6718bceb09cbb6871c841891a31ce366f44f9b8d88fd50ed5",
+        "meta.json": "b06a4392cf00646f71c44a3f1a64a2c1cd0cab28436a7ed35fa1ef13507e86cc"
+      },
+      "ptx_sha256": "8abbb3df395cf072530222383e3956f1b06a5e1f3a7e2469538b36c3b80a88b4"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-24-cross-large-tail",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "expected.npz": "f669736add2a7515db48b552e5d867f2d39beebfa4025603262d9f87378decc9",
+        "k_sum_1_reduce.ir.json": "6c1d66f98e13bed895363b893dd742359428596088bf1cf7dce6d3b4608ffd5f",
+        "meta.json": "e4df068a4920347766cff14311134cae7909826f6a5181865b613de9fd6fbdca"
+      },
+      "ptx_sha256": "02216f60589995548d311e7cbaa3f8a495421dcd7b8f6f4bf6ad98b084c10a43"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-24-cross-write-guard",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "expected.npz": "7b2a308933322cbf3aeba9f21df4618fb7bb114adcfc181847bfad1ff7a1970b",
+        "k_sum_1_reduce.ir.json": "d48d8107b9350504c3aa0430a929b2cb87ac515b68af7fc01c30908162b6836c",
+        "meta.json": "40f64f50947901afedf591c4d78b116c08ce3468babc82e5f38fcd41b80104b2"
+      },
+      "ptx_sha256": "854cf74f73bb111cbd3cddff62f6d49bc0b6433a7d643ab3b8fa0f9eae7ebb9f"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-24-cross-local-index-guard",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "expected.npz": "057f3fd4b3f8702be08dba7e009845a065975c137b107c4897e170efd053d96e",
+        "k_sum_1_reduce.ir.json": "1bfc384b3fb5f75c1a222cbfb479af07d73591fb15c23191d650f6fa56c65420",
+        "meta.json": "1e2abfd5d8d8cf07d71822f7ac7da38d3899b6d5c2267650223aa50aacc47065"
+      },
+      "ptx_sha256": "fc4e9622917dd5809468526f3f934f933daf5c5f91d3c0fe36facb106531e39b"
+    }
+  ],
+  "limitations": [
+    "Static f32 coverage only, no general production-readiness claim",
+    "No clocks locked or cache eviction; timings are named-workload observations",
+    "Not a full ABI/schema/type/bounds checker; no entry submitted"
+  ],
+  "prior_cpu_snapshot_baseline_sha256": "bf07d517f3a31619ce7f46514def0e8cedfdf1ea4f0f5b1206bb76fd4c85fac3",
+  "prior_compiler_sha256": "7fbe5ee4ed6c8688929b3892c06903a317bc9a4ca60e9496b0a231174ec35761"
+}

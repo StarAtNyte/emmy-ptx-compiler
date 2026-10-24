@@ -63,6 +63,9 @@ inspection then motivates exact signed power-of-two index lowering: public matmu
 64.160 → 24.928 microseconds, with 2.18x/2.09x on two independent shapes. A broader
 unsigned rewrite regressed attention; the accepted signed refinement avoids that
 regression. Native inspection is local-driver output, not hosted SASS or counters.
+Cross-iteration pairing then combines adjacent K reads in the bounded unroll:
+public matmul 25.088 → 16.928 microseconds, with 1.47x/1.39x on independent
+shapes. Show the alignment/index-dependency guards and the scalar tail.
 Clocks were not locked; these are measured cases rather than universal speedups.
 
 ## 3:00–4:00 — Validation and limits

@@ -137,6 +137,9 @@ not locked; these are observations on named kernels, not universal speedups.
 | Signed power-of-two index lowering | Public m01 matmul | 64.160 → 24.928 µs | 2.574× |
 | Signed power-of-two index lowering | Independent 256×512×384 matmul | 37.760 → 17.344 µs | 2.177× |
 | Signed power-of-two index lowering | Independent 384×256×320 matmul | 31.392 → 15.008 µs | 2.092× |
+| Cross-iteration shared-read pairing | Public m01 matmul | 25.088 → 16.928 µs | 1.482× |
+| Cross-iteration shared-read pairing | Independent 256×512×384 matmul | 19.040 → 12.992 µs | 1.466× |
+| Cross-iteration shared-read pairing | Independent 384×256×320 matmul | 14.912 → 10.752 µs | 1.387× |
 
 The semantic audit retained those performance levels. Raw samples are preserved
 in the validation records. Explicit vector accesses were timing-neutral, and
@@ -173,3 +176,10 @@ sanitizer gates above.
 Target launch/memory calibration and conditional f32 workload models are in
 [TARGET_PERFORMANCE.md](TARGET_PERFORMANCE.md). The compiler remains unchanged;
 these measurements guide future optimization and do not claim a new speedup.
+
+The [cross-iteration pairing acceptance](validation/2026-10-24-production-iteration13.json)
+retains scalar tails and index/alignment guards. Sixty new cases pass on both GPUs;
+561 prior kernels keep identical PTX and all 33 changed kernels pass on both GPUs.
+Final seven-pair timing covers nineteen workloads; the other sixteen differ by
+at most 0.032 µs. Twenty snapshot/feature checks plus 28 launch and 42 ABI probes
+are now committed for CPU CI; updated hosted CI verification is pending.

@@ -1178,3 +1178,19 @@ Completed 2026-10-24:
 - Preserved patch and complete evidence in cross-iteration-discovery.json. All
   gate jobs terminal. Next review/adopt, add CPU fixtures, verify updated CI and
   refresh archive. Repository private; no entry submission/readiness claim.
+
+## Step 46 — accepted cross-iteration pairing; retained CPU fixtures
+
+Completed 2026-10-24:
+
+- Reviewed guards and revalidated source/patch and all sixty fixture hashes against
+  recorded evidence. Adopted exact frozen 40a1de84; no lowering edits after GPU,
+  sanitizer, integration and final seven-pair gates. Main now includes the change.
+- Retained four GPU-checked CPU fixtures: tail, large tail, write guard and local
+  index guard. All twelve existing PTX goldens remain unchanged. Twenty no-Torch
+  snapshot/feature checks pass locally; unchanged launch/ABI suites bring CI to 90.
+- Added production-iteration13 acceptance record referencing immutable discovery
+  evidence. Updated design/testing/README, own-voice outline and entry draft with
+  measured 1.482x/1.466x/1.387x gains and limits. No universal speedup claim.
+- Next publish, inspect actual 90-check CI reports and refresh compiler archive.
+  Prior archive is still 7fbe5ee4. Repository stays private; submission deferred.

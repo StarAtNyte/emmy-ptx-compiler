@@ -544,3 +544,28 @@ unlocked clocks and no eviction control are explicit. See TARGET_PERFORMANCE.md
 for effective bandwidth definitions, runner allocation/return limits, raw evidence
 and the separate current matmul self-comparison. This is a diagnostic calibration,
 not a candidate performance acceptance test or measured DRAM traffic.
+
+Cross-iteration shared pairing uses committed generator templates:
+
+```sh
+python tools/generate_cross_iteration_cases.py --out artifacts/cross-original --seed 0
+python tools/generate_cross_iteration_cases.py --out artifacts/cross-fresh --seed 9161
+python tools/check_cross_iteration_codegen.py \
+  artifacts/cross-original/manifest.json artifacts/cross-fresh/manifest.json \
+  --baseline artifacts/compiler-before-cross-pair.py --candidate compile.py \
+  --report artifacts/cross-codegen.json
+```
+
+The baseline source is reproducible from b2a1b19:compile.py. Fifteen families with
+two naming variants cover eligibility and unsafe-motion guards, scalar tails,
+flat/additive layouts and 4/5/64/65 trips. All sixty original/fresh cases pass on
+both GPUs; all sixty code-generation expectations pass. Of 594 retained kernels,
+561 PTX outputs stay identical; all 33 changed kernels pass on both GPUs. Four
+sanitizers cover thirty originals and separate exact-allocation 5/65 boundaries;
+nine transformer and three isolated no-Torch compilation comparisons pass.
+Final seven alternating pairs cover nineteen workloads after correctness requests
+finished; use cross-final-timing, not the exploratory overlapping broad run.
+Full evidence: cross-iteration-discovery.json. Acceptance: production-iteration13.json.
+Four GPU-checked cross-iteration fixtures add positive/tail and write/local-index
+guards to CPU CI; all twelve existing snapshots stay unchanged. Twenty snapshot/
+feature, 28 launch and 42 ABI checks make ninety checks per Python version.

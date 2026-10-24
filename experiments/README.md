@@ -118,11 +118,11 @@ was intentionally stopped after timing rejection. No full safety claim.
 sm86/sm120 cubins. Three workloads have identical disassembly; matmul native code
 changes without a target win. These are not hosted SASS or counter measurements.
 
-## Cross-iteration shared reads — validated, adoption pending
+## Cross-iteration shared reads — accepted
 
-cross-iteration-pair.patch applies to compiler 7fbe5ee4 (current main source) and
+cross-iteration-pair.patch applies to compiler 7fbe5ee4 (prior source at b2a1b19) and
 reconstructs candidate 40a1de84. It pairs aligned affine unit-stride shared reads
 across two unrolled iterations with immutable index dependencies. Final target
 matmul gains are 1.387–1.482x; full safety and timing scope is recorded in
-validation/2026-10-24-cross-iteration-discovery.json. Main has not yet adopted it;
-CPU fixture retention, actual updated CI and refreshed packaging remain.
+validation/2026-10-24-cross-iteration-discovery.json. Main now adopts that exact compiler; four GPU-verified CPU fixtures are retained.
+Actual updated CI and refreshed packaging remain to be verified.

@@ -42,6 +42,9 @@ Approach:
 > Aligned shared-read pairing adds a measured 1.03x public matmul gain. Exact
 > signed power-of-two index shifts/masks then measure 2.57x on that matmul and
 > 2.18x/2.09x on two independent shapes. These remain separate paired observations.
+> Cross-iteration aligned shared reads add 1.48x on public matmul and 1.47x/1.39x
+> on two independent shapes in seven paired trials; scalar tails and dependency
+> guards are retained. The other sixteen workloads differ by at most 0.032 us.
 > A broader unsigned tile rewrite regressed attention and was rejected; the
 > accepted signed refinement preserves its latency. Broader unrolling and an
 > explicit global-vector pass were also rejected after measurement.

@@ -1,6 +1,6 @@
 {
-  "baseline_compiler_sha256": "bf07d517f3a31619ce7f46514def0e8cedfdf1ea4f0f5b1206bb76fd4c85fac3",
-  "snapshot_provenance": "GPU-verified fixtures; additive, shared-pair, scalar-flat and reordered ABI cases added after production-iteration10. Existing eight goldens unchanged.",
+  "baseline_compiler_sha256": "40a1de84e3813cb1377d1dcdd0c0e369666c5638332d6cb18155cb31fcfc678c",
+  "snapshot_provenance": "GPU-verified fixtures; cross-iteration positive/tail/write/local-index guards added after cross-iteration-discovery. Existing twelve snapshots unchanged.",
   "fixtures": [
     {
       "folder": "validation/counterexamples/2026-10-24-scope-shrunk",
@@ -121,6 +121,46 @@
         "expected.npz": "2bec740462c36cb6c76f6a29054da9bd1c55565857636376f3b90753ff1b071c"
       },
       "ptx_sha256": "c86f56f7882c9d797f637bcbd41e200efbf7ff4f5d28035427534bcc8d593b3c"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-24-cross-tail",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "expected.npz": "039d993bc6242742087c45d4468512fe631afbd0ed6fb7cc8446ade2bfdd7cfc",
+        "k_sum_1_reduce.ir.json": "dab030fb1a9eaea6718bceb09cbb6871c841891a31ce366f44f9b8d88fd50ed5",
+        "meta.json": "b06a4392cf00646f71c44a3f1a64a2c1cd0cab28436a7ed35fa1ef13507e86cc"
+      },
+      "ptx_sha256": "8abbb3df395cf072530222383e3956f1b06a5e1f3a7e2469538b36c3b80a88b4"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-24-cross-large-tail",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "expected.npz": "f669736add2a7515db48b552e5d867f2d39beebfa4025603262d9f87378decc9",
+        "k_sum_1_reduce.ir.json": "6c1d66f98e13bed895363b893dd742359428596088bf1cf7dce6d3b4608ffd5f",
+        "meta.json": "e4df068a4920347766cff14311134cae7909826f6a5181865b613de9fd6fbdca"
+      },
+      "ptx_sha256": "02216f60589995548d311e7cbaa3f8a495421dcd7b8f6f4bf6ad98b084c10a43"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-24-cross-write-guard",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "expected.npz": "7b2a308933322cbf3aeba9f21df4618fb7bb114adcfc181847bfad1ff7a1970b",
+        "k_sum_1_reduce.ir.json": "d48d8107b9350504c3aa0430a929b2cb87ac515b68af7fc01c30908162b6836c",
+        "meta.json": "40f64f50947901afedf591c4d78b116c08ce3468babc82e5f38fcd41b80104b2"
+      },
+      "ptx_sha256": "854cf74f73bb111cbd3cddff62f6d49bc0b6433a7d643ab3b8fa0f9eae7ebb9f"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-24-cross-local-index-guard",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "expected.npz": "057f3fd4b3f8702be08dba7e009845a065975c137b107c4897e170efd053d96e",
+        "k_sum_1_reduce.ir.json": "1bfc384b3fb5f75c1a222cbfb479af07d73591fb15c23191d650f6fa56c65420",
+        "meta.json": "1e2abfd5d8d8cf07d71822f7ac7da38d3899b6d5c2267650223aa50aacc47065"
+      },
+      "ptx_sha256": "fc4e9622917dd5809468526f3f934f933daf5c5f91d3c0fe36facb106531e39b"
     }
   ]
 }
