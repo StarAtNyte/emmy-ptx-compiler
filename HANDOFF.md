@@ -69,7 +69,7 @@ alignment zero/natural or power of two. Zero-sized shared arrays unsupported.
 Preserves logical/physical allocation views and valid ABI permutations.
 
 Baseline 40a1de84 passes four controls, fails fourteen zero-domain probes. Final 36
-original/frozen-fresh cases pass on both GPUs;27 negative/four valid CLI shape
+original/frozen-fresh cases pass on both GPUs; 27 negative/four valid CLI shape
 controls pass. Initial generator used float index 0 in the sentinel control;
 corrected to integer and retained invalid initial runs separately, excluded from
 acceptance. Candidate source unchanged. All 658 prior kernels emit identical PTX;
@@ -77,8 +77,9 @@ nine transformer runs pass. No fresh speedup or changed shared-memory motion.
 
 Four GPU-checked fixtures retained; existing sixteen goldens unchanged. Local
 matrix 24+28+42+31=125 passes on Python 3.12.13/3.13.14/3.14.4 without Torch.
-Next publish, inspect actual hosted job state and refresh archive for 7ebf4ff2.
-Current archive still 40a1de84; hosted CPU CI last rejected for account billing.
+Published source 7a7f518; refreshed archive with compiler 7ebf4ff2 passes three
+hosted GPU smoke checks. GitHub run 40111398281 again rejected all jobs before
+startup for account payments/spending state; no hosted CPU results.
 All semantic/local test jobs terminal. Repo private; submission deferred.
 
 ## Previous accepted optimization — cross-iteration shared pairing
@@ -264,25 +265,25 @@ roofline study. Address CSE reduced PTX but five target timings were neutral;
 partial safety sweep stopped after rejection, patch/evidence preserved.
 
 CPU workflow is configured for push/PR/manual/nightly on Python 3.12–3.14.
-Current suite: sixteen GPU-verified snapshots/four feature probes, plus 28 launch
-and 42 ABI checks (90 total). Local isolated matrix passes all 90 on 3.12.13,
-3.13.14 and 3.14.4 without Torch; 3.13/3.14 environments were freshly installed
-from pinned requirements. Dependencies check clean. Full reports in iteration13.
-GitHub run 40109402820 on source 07f4851 failed before any job step: annotation
-says recent account payments failed or spending limit needs increasing. Hosted
-90-check CI remains UNVERIFIED until account state changes. Keep repo private;
-do not alter billing/spending or republish it. Prior public-repo 86-check matrix
-run 40107112159 passed 7fbe5ee4, not the current compiler. Nightly history unproven.
+Current suite: twenty GPU-verified snapshots/four feature probes, plus 28 launch,
+42 ABI and 31 shape checks (125 total). Local isolated matrix passes all 125 on
+3.12.13/3.13.14/3.14.4 without Torch; environments reused from prior pinned
+installs. Full local reports in iteration14. GitHub run 40111398281 on 7a7f518
+produced no test results: every job rejected before startup for account failed
+payments/spending limit. Hosted 125-check CI remains unverified until account
+state changes. Keep repo private; no billing/spending changes authorized.
+Prior public-repo 86-check run 40107112159 passed 7fbe5ee4, not current source.
+Nightly history remains unproven.
 
 ## Packaging and next work
 
-Prior verified archive built from 07f4851, compiler 40a1de84. Uses the existing
+Current verified archive built from 7a7f518, compiler 7ebf4ff2. Uses the existing
 isolated no-Torch Python 3.12.13 runtime from the earlier pinned fresh install;
 dependencies unchanged. Extracted scalar-add, matmul and attention hosted checks
 pass. Latest evidence: validation/2026-10-24-current-package.json. Archive aliases
-artifacts/emmy-ptx-cross-iteration-checkpoint.zip, artifacts/emmy-ptx-current-checkpoint.zip,
-and artifacts/emmy-ptx-submission.zip hold identical verified bytes. Prior ABI
-archive/report retained; evidence validation/2026-10-24-abi-package.json.
+artifacts/emmy-ptx-static-shapes-checkpoint.zip, artifacts/emmy-ptx-current-checkpoint.zip,
+and artifacts/emmy-ptx-submission.zip hold identical verified bytes. Prior cross-iteration
+archive/report retained; evidence validation/2026-10-24-cross-iteration-package.json.
 No rebuild needed for documentation-only changes. No entry submitted.
 
 Next: broaden index/control-flow type validation, operation/dtype coverage and
@@ -311,4 +312,4 @@ Next performance priority: investigate matmul instruction/address work, shared
 traffic/dependencies and available warp parallelism using the calibrated gap.
 Prescribed grids have 80–128 CTAs vs 170 SMs. Further optimization still needs
 independent safety gates and target paired timing; no counter-proven bottleneck.
-Latest static-shape source needs refreshed packaging; prior cross-iteration archive is historical.
+Current static-shape package is verified; prior cross-iteration archive is historical.

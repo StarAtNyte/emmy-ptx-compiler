@@ -1,5 +1,5 @@
 {
-  "status": "accepted zero-tile no-op and typed static-shape diagnostics; local 125-check matrix passes all three versions; package refresh pending",
+  "status": "accepted zero-tile no-op and typed static-shape diagnostics; local 125-check matrix and packaged hosted GPU smoke verified; hosted CPU CI not started due account billing",
   "compiler_sha256": "7ebf4ff2395ddd9bd4f7c2eb2aa213c8cd24c505149c2c757edf159c0cbf5a61",
   "baseline_sha256": "40a1de84e3813cb1377d1dcdd0c0e369666c5638332d6cb18155cb31fcfc678c",
   "reports": {
@@ -13061,5 +13061,90 @@
         }
       }
     }
+  },
+  "hosted_cpu_ci": {
+    "run": {
+      "conclusion": "failure",
+      "headSha": "7a7f5183e2f589e885464a273d17079b6ae55db4",
+      "jobs": [
+        {
+          "completedAt": "2026-10-24T16:24:18Z",
+          "conclusion": "failure",
+          "databaseId": 120923701274,
+          "name": "compiler-contract (3.12)",
+          "startedAt": "2026-10-24T16:24:16Z",
+          "status": "completed",
+          "steps": [],
+          "url": "https://github.com/StarAtNyte/emmy-ptx-compiler/actions/runs/40111398281/job/120923701274"
+        },
+        {
+          "completedAt": "2026-10-24T16:24:18Z",
+          "conclusion": "failure",
+          "databaseId": 120923701422,
+          "name": "compiler-contract (3.13)",
+          "startedAt": "2026-10-24T16:24:16Z",
+          "status": "completed",
+          "steps": [],
+          "url": "https://github.com/StarAtNyte/emmy-ptx-compiler/actions/runs/40111398281/job/120923701422"
+        },
+        {
+          "completedAt": "2026-10-24T16:24:18Z",
+          "conclusion": "failure",
+          "databaseId": 120923701525,
+          "name": "compiler-contract (3.14)",
+          "startedAt": "2026-10-24T16:24:16Z",
+          "status": "completed",
+          "steps": [],
+          "url": "https://github.com/StarAtNyte/emmy-ptx-compiler/actions/runs/40111398281/job/120923701525"
+        }
+      ],
+      "status": "completed",
+      "url": "https://github.com/StarAtNyte/emmy-ptx-compiler/actions/runs/40111398281"
+    },
+    "annotations": {
+      "compiler-contract (3.12)": [
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/StarAtNyte/emmy-ptx-compiler/blob/7a7f5183e2f589e885464a273d17079b6ae55db4/.github",
+          "start_line": 1,
+          "start_column": null,
+          "end_line": 1,
+          "end_column": null,
+          "annotation_level": "failure",
+          "title": "",
+          "message": "The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the 'Billing & plans' section in your settings",
+          "raw_details": ""
+        }
+      ],
+      "compiler-contract (3.13)": [
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/StarAtNyte/emmy-ptx-compiler/blob/7a7f5183e2f589e885464a273d17079b6ae55db4/.github",
+          "start_line": 1,
+          "start_column": null,
+          "end_line": 1,
+          "end_column": null,
+          "annotation_level": "failure",
+          "title": "",
+          "message": "The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the 'Billing & plans' section in your settings",
+          "raw_details": ""
+        }
+      ],
+      "compiler-contract (3.14)": [
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/StarAtNyte/emmy-ptx-compiler/blob/7a7f5183e2f589e885464a273d17079b6ae55db4/.github",
+          "start_line": 1,
+          "start_column": null,
+          "end_line": 1,
+          "end_column": null,
+          "annotation_level": "failure",
+          "title": "",
+          "message": "The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the 'Billing & plans' section in your settings",
+          "raw_details": ""
+        }
+      ]
+    },
+    "status": "jobs not started; no hosted CPU test results; account billing/spending restriction"
   }
 }

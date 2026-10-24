@@ -1,26 +1,26 @@
 {
-  "status": "verified cross-iteration code checkpoint; no entry submission or production-readiness claim; hosted CPU CI billing-blocked",
+  "status": "verified static-shape/zero-tile code checkpoint; no entry submission or production-readiness claim; hosted CPU CI billing-restricted",
   "package_report": {
-    "commit": "07f48519687a51c0748fb4d6dd7b96f621e069f8",
-    "compiler_sha256": "40a1de84e3813cb1377d1dcdd0c0e369666c5638332d6cb18155cb31fcfc678c",
-    "archive_sha256": "6281fe79f8d272115f81c4f654c8be67da96f03931972b3f3b0886c9d87c8679",
+    "commit": "7a7f5183e2f589e885464a273d17079b6ae55db4",
+    "compiler_sha256": "7ebf4ff2395ddd9bd4f7c2eb2aa213c8cd24c505149c2c757edf159c0cbf5a61",
+    "archive_sha256": "daca3a619395a2dbf0cd0767d55fa2a61523f5a02955fd0a665b401c51b3afed",
     "checks": [
       {
         "problem": "p00_scalar_add",
         "passed": true,
-        "stdout": "[k_add_pointwise] 22 registers\n[k_add_pointwise] PASS  add: max abs err 0.000e+00  (24.064 us)\n",
+        "stdout": "[k_add_pointwise] 22 registers\n[k_add_pointwise] PASS  add: max abs err 0.000e+00  (23.616 us)\n",
         "stderr": ""
       },
       {
         "problem": "m01_matmul_512",
         "passed": true,
-        "stdout": "[k_matmul_2967be] 40 registers\n[k_matmul_2967be] PASS  matmul: max abs err 8.392e-05  (32.928 us)\n",
+        "stdout": "[k_matmul_2967be] 40 registers\n[k_matmul_2967be] PASS  matmul: max abs err 8.392e-05  (30.912 us)\n",
         "stderr": ""
       },
       {
         "problem": "a01_attention",
         "passed": true,
-        "stdout": "[k_matmul_softmax_reduce_b55365] 128 registers\n[k_matmul_softmax_reduce_b55365] PASS  matmul_1: max abs err 6.557e-07  (102.88 us)\n",
+        "stdout": "[k_matmul_softmax_reduce_b55365] 128 registers\n[k_matmul_softmax_reduce_b55365] PASS  matmul_1: max abs err 6.557e-07  (101.344 us)\n",
         "stderr": ""
       }
     ],
@@ -30,11 +30,11 @@
     }
   },
   "archive_paths": [
-    "artifacts/emmy-ptx-cross-iteration-checkpoint.zip",
+    "artifacts/emmy-ptx-static-shapes-checkpoint.zip",
     "artifacts/emmy-ptx-current-checkpoint.zip",
     "artifacts/emmy-ptx-submission.zip"
   ],
-  "archive_bytes": 1236835,
+  "archive_bytes": 1386340,
   "environment_note": "existing isolated no-Torch Python 3.12.13 runtime from pinned fresh installation; dependencies unchanged",
-  "previous_checkpoint_record": "2026-10-24-abi-package.json"
+  "previous_checkpoint_record": "2026-10-24-cross-iteration-package.json"
 }

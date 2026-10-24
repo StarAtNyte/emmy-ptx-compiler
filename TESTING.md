@@ -602,3 +602,10 @@ Twenty-four snapshot/feature + 28 launch + 42 ABI + 31 shape checks total 125 pe
 version, all passing locally without Torch on 3.12/3.13/3.14. Hosted CPU CI remains
 subject to the previously recorded account billing restriction; local results are
 not hosted CI success. Packaging state is recorded in current-package.json.
+
+Current source 7a7f518 archive (compiler 7ebf4ff2) passes extracted hosted scalar-add,
+matmul and attention smoke checks using the existing isolated no-Torch 3.12.13
+runtime. Archive/compiler hashes in current-package.json. GitHub run 40111398281
+on that source again produced no steps/results because account payments/spending
+state prevented startup. All125 checks pass locally on each of three Python
+versions; these are not hosted CPU CI results. No billing or visibility changes.

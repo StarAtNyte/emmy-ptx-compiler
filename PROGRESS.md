@@ -1234,12 +1234,32 @@ Completed 2026-10-24:
   and 17011: all 36 cases pass on both GPUs. Initial sentinel used float index 0;
   nonempty controls caught it. Fixed generator, preserved invalid initial runs
   separately and excluded them from acceptance. Compiler source unchanged.
-- All 658prior kernels emit byte-identical PTX, preserving previous performance
+- All 658 prior kernels emit byte-identical PTX, preserving previous performance
   codegen. Nine transformer runs pass. No new shared/async motion or speedup claim.
 - Four GPU-verified empty-domain/nested/empty-axis/zero-view CPU fixtures retained;
-  existing 16goldens unchanged. Local 24 snapshot/feature+ 28 launch+ 42 ABI+ 31 shape
+  existing 16 goldens unchanged. Local 24 snapshot/feature + 28 launch + 42 ABI + 31 shape
   checks pass on all three Python versions without Torch (375 results). Added shape
   suite to workflow. Actual hosted CPU CI still account-restricted, not claimed.
 - Evidence: production-iteration14.json. Next publish/refresh package and inspect
   hosted job state. Full type/schema/role/bounds/grid/overflow coverage and general
   production readiness remain open. Repo private; entry submission deferred.
+
+## Step 49 — static-shape archive verified; hosted CPU restriction confirmed
+
+Completed 2026-10-24:
+
+- Published source 7a7f518, compiler 7ebf4ff2. Local 24 snapshot/feature + 28 launch +
+  42 ABI + 31 shape checks pass on 3.12.13/3.13.14/3.14.4 (375 results), without Torch.
+  Existing pinned environments reused; no fresh-install claim for this step.
+- GitHub run 40111398281 rejected all three jobs before startup for failed account
+  payments/spending limit. Recorded all annotations; no hosted test results.
+  Did not alter billing, retry blocked jobs or change private visibility.
+- Packaged committed 7a7f518. Compiler hash verified; archive SHA256
+  daca3a619395a2dbf0cd0767d55fa2a61523f5a02955fd0a665b401c51b3afed.
+  Extracted hosted scalar-add/matmul/attention checks pass in the reused isolated
+  no-Torch 3.12.13 runtime. Static/current/submission ZIP aliases are identical.
+- Preserved previous cross-iteration record separately; current-package.json now
+  records static-shape checkpoint. Updated current handoff/README/testing.
+- General schema/type/cardinality/grid/buffer-role/data-payload/bounds coverage and
+  hardware counters/sustained hosted CI remain open. Goal active, repo private,
+  entry submission deferred. No new performance claim: 658 prior PTX outputs equal.
