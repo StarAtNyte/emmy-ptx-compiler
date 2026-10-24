@@ -1059,8 +1059,8 @@ Completed 2026-10-24:
   c15871976ee0cebb5f6e7458a4e37084fa15b6b35b2acc2ed37f63f2819c0662.
   Extracted hosted scalar-add, matmul and attention checks pass in the reused
   isolated no-Torch 3.12.13 runtime. Launch/current/submission aliases identical.
-- Preserved prior address package record separately; current-package.json points
-  to the launch checkpoint. Updated README and current handoff.
+- Preserved prior address package record separately; launch-package.json preserves
+  the historical launch checkpoint after the later ABI update. Updated README and current handoff.
 - Official submit.py and local runner both pass args descriptors positionally;
   next ABI checks must require agreement with arg_order and permit consistent
   reordering. Logical/allocation rank equality remains an invalid constraint.
@@ -1088,3 +1088,23 @@ Completed 2026-10-24:
   Evidence: production-iteration12.json. Next publish/verify CI and archive, then
   broader static-shape/control validation and target hardware bottleneck work.
   Submission remains deferred.
+
+## Step 42 — 86-check CI and ABI checkpoint archive verified
+
+Completed 2026-10-24:
+
+- Published source b2a1b19. Actions run 40107112159 passes sixteen snapshot/feature,
+  28 launch and 42 ABI checks on Python 3.12/3.13/3.14 (258 check results).
+  Downloaded reports verify exact 7fbe5ee4 compiler and Torch absent; iteration12
+  retains full reports. Baseline had 23 silent PTX emissions/14 tracebacks across
+  37 negative ABI/entry probes; all now fail clearly before output.
+- Archived b2a1b19 with compiler hash verified. Archive SHA256
+  da5716307f46d4d7452e87d668617cbc63980a760fd6ab495ce01cf6070e0000.
+  Extracted scalar-add, matmul and attention pass hosted using the reused isolated
+  no-Torch 3.12.13 runtime. ABI/current/submission ZIP aliases match byte-for-byte.
+- Preserved previous launch evidence separately; current-package.json records ABI
+  checkpoint. Updated README and handoff. No entry submission/readiness claim.
+- Remaining validation includes static tile shapes, grid coverage, argument roles,
+  payloads and graph/schema consistency. Next performance priority is measured
+  target launch/bandwidth calibration and workload lower bounds, with explicit
+  cache/API limitations. General production coverage remains unproven.

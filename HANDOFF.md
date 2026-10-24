@@ -66,7 +66,9 @@ logical views and differing logical/physical shapes. 37 negatives/five positive
 CLI controls pass. All 594 prior kernels emit identical PTX; twelve retained GPU
 fixtures pass locally and two new positive layout/order controls pass on both GPUs.
 Existing 16 snapshot/feature and 28 launch checks remain; CI adds 42 ABI probes.
-Changed-code CI and archive refresh pending. No full data/role/bounds/type checker.
+Actions run 40107112159 passes all 86 checks on Python 3.12/3.13/3.14; downloaded
+reports verify 7fbe5ee4 and no Torch. Archive from b2a1b19 passes three hosted checks.
+No full data/role/bounds/type checker.
 
 Previous launch acceptance:
 
@@ -183,29 +185,28 @@ roofline study. Address CSE reduced PTX but five target timings were neutral;
 partial safety sweep stopped after rejection, patch/evidence preserved.
 
 CPU Actions run on push/PR/manual/nightly across Python 3.12–3.14. Current
-manifest has twelve GPU-verified fixtures and four negative feature probes; the
-separate launch suite adds 25 negative and three valid controls. Published source
-0fea2c0 passes both suites (16+28) on all three versions in run 40106607610.
-Downloaded reports verify compiler 1dfcf75f and no Torch; retained in iteration11.
-All existing PTX goldens unchanged. Push matrices are an initial history, not
-sustained-nightly proof.
+manifest has twelve GPU-verified fixtures/four negative feature probes, plus
+28 launch and 42 ABI checks. Published b2a1b19 passes all 86 checks on all three
+versions in run 40107112159. Downloaded reports verify compiler 7fbe5ee4 and no
+Torch; retained in iteration12. Existing PTX goldens unchanged. Push matrices are
+an initial history, not sustained-nightly proof.
 
 ## Packaging and next work
 
-Prior verified archive built from 0fea2c0, compiler 1dfcf75f. Uses the existing
+Current verified archive built from b2a1b19, compiler 7fbe5ee4. Uses the existing
 isolated no-Torch Python 3.12.13 runtime from the earlier pinned fresh install;
 dependencies unchanged. Extracted scalar-add, matmul and attention hosted checks
 pass. Latest evidence: validation/2026-10-24-current-package.json. Archive aliases
-artifacts/emmy-ptx-launch-checkpoint.zip, artifacts/emmy-ptx-current-checkpoint.zip,
-and artifacts/emmy-ptx-submission.zip hold identical verified bytes. Prior address
-archive/report retained; evidence validation/2026-10-24-address-package.json.
+artifacts/emmy-ptx-abi-checkpoint.zip, artifacts/emmy-ptx-current-checkpoint.zip,
+and artifacts/emmy-ptx-submission.zip hold identical verified bytes. Prior launch
+archive/report retained; evidence validation/2026-10-24-launch-package.json.
 No rebuild needed for documentation-only changes. No entry submitted.
 
 Next: broaden index/control-flow type validation, operation/dtype coverage and
 bounded failure shrinking. Continue target hardware lower-bound/bottleneck work;
 no hosted counter/roofline evidence yet. Add future retained cases to CPU CI.
 No candidate jobs remain live from this acceptance step. New CI runs may trigger
-on documentation pushes; existing accepted-code 16+28-check matrix is verified.
+on documentation pushes; existing accepted-code 86-check matrix is verified.
 
 Entry drafts SUBMISSION.md/WALKTHROUGH.md reflect current measured optimizations.
 **No contest entry submitted.** Personal fields/video still missing; don't invent
@@ -220,6 +221,8 @@ Future validation should require agreement with arg_order, while permitting
 consistent permutations of both lists. Do not require logical/allocation rank
 identity. Full ABI/schema validation and required-grid coverage remain open.
 
-Current ABI source needs published 16+28+42-check CI and archive refresh. Future
-validation still needs initialization/output roles, payload sizes, graph/schema
+Remaining validation needs initialization/output roles, payload sizes, graph/schema
 consistency, static tile shapes and required grid coverage. Preserve valid views.
+Next performance priority: establish target workload arithmetic/data-movement
+bounds and a measured bandwidth/launch calibration, respecting API/cache limits;
+no hardware lower-bound claim yet.
