@@ -531,3 +531,16 @@ fixtures pass locally; two derived positive permutation/16x8 allocation controls
 pass locally and hosted (same independent oracle values, reshaped allocation
 control oracle to 16x8). All existing sixteen snapshot/feature and 28 launch
 checks remain unchanged. CI adds the 42 ABI checks. See production-iteration12.json.
+
+Target launch/copy/strided-read calibration:
+
+```sh
+python tools/calibrate_hosted.py --out artifacts/target-calibration --trials 5
+```
+
+Uses only committed fixtures and the compiler runtime; no local GPU or Torch.
+First trial verifies every output; later trials verify prefixes. Repeated buffers,
+unlocked clocks and no eviction control are explicit. See TARGET_PERFORMANCE.md
+for effective bandwidth definitions, runner allocation/return limits, raw evidence
+and the separate current matmul self-comparison. This is a diagnostic calibration,
+not a candidate performance acceptance test or measured DRAM traffic.

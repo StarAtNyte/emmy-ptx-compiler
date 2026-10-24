@@ -46,5 +46,9 @@ ignored `artifacts/research/`. No external compiler code was incorporated.
 
 Hardware lower bounds require the actual workload's arithmetic and minimum data
 movement, the correct f32 execution path, and target clocks/bandwidth. Do not
-use BF16/FP4 tensor-core peak figures to score scalar-f32 kernels. Those bounds
-and a measured target bandwidth calibration remain to be established.
+use BF16/FP4 tensor-core peak figures to score scalar-f32 kernels. A first target calibration and conditional nominal-peak models now appear in
+[TARGET_PERFORMANCE.md](TARGET_PERFORMANCE.md). The 224 MiB strided read measures
+1654.52 effective GB/s; a cache-sized read measures 5366.47 GB/s, so a DRAM-only
+roofline is inappropriate for repeated cache-resident workloads. Actual clocks
+and counters remain unavailable; rigorous hardware lower bounds and measured
+utilization remain unproven.

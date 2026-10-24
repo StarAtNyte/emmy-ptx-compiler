@@ -1,0 +1,1913 @@
+{
+  "status": "measured target calibration and conditional ideal arithmetic/data models; no compiler change or speedup claim",
+  "compiler_sha256": "7fbe5ee4ed6c8688929b3892c06903a317bc9a4ca60e9496b0a231174ec35761",
+  "tool_sha256": "a4eb92018b663a40c6eb36a0b8c6bdeee253cf65e26b73d2a4de103e8ef2dcce",
+  "hardware_source": {
+    "url": "https://images.nvidia.com/aem-dam/Solutions/geforce/blackwell/nvidia-rtx-blackwell-gpu-architecture.pdf",
+    "sha256": "906ff2a409d7a7e4cbc56f5d3a179d574120d19aaba99520670e1a0c064595fa",
+    "inspected_pages_zero_based": [
+      45,
+      46,
+      47
+    ],
+    "f32_non_tensor_TFLOP_s": 104.8,
+    "advertised_DRAM_GB_s": 1792,
+    "L2_bytes": 100663296,
+    "footnote": "Peak rates based on GPU Boost Clock; actual clocks not queried or locked"
+  },
+  "runner_health": {
+    "ok": true,
+    "arch_ok": true,
+    "ptxas": "/usr/local/cuda/bin/ptxas",
+    "default_arch": "sm_120",
+    "cache_dir": "/home/riftuser/.cache/ptxserver",
+    "can_compile": true,
+    "can_run": true,
+    "gpu": "NVIDIA GeForce RTX 5090 (compute capability 12.0, sm_120)"
+  },
+  "runner_openapi": {
+    "openapi": "3.1.0",
+    "info": {
+      "title": "PTX compile + run server",
+      "version": "0.1.0"
+    },
+    "paths": {
+      "/health": {
+        "get": {
+          "summary": "Health",
+          "operationId": "health_health_get",
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "additionalProperties": true,
+                    "type": "object",
+                    "title": "Response Health Health Get"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/compile": {
+        "post": {
+          "summary": "Compile Endpoint",
+          "description": "Compile PTX to a cubin.\n\nNote this returns HTTP 200 even when the compile *fails*. A failed compile is\na normal, expected answer to a valid question \u2014 the caller submitted PTX and\nwe are telling them what ptxas said about it. A 4xx/5xx would mean the\n*request* was wrong, which is a different thing. Distinguish on `ok`.",
+          "operationId": "compile_endpoint_compile_post",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompileRequest"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "additionalProperties": true,
+                    "type": "object",
+                    "title": "Response Compile Endpoint Compile Post"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/run": {
+        "post": {
+          "summary": "Run Endpoint",
+          "description": "Compile if needed, then launch on the GPU and return the outputs.\n\nImported lazily so the compile half keeps working on a machine with no GPU\nand no cupy.",
+          "operationId": "run_endpoint_run_post",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunRequest"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "additionalProperties": true,
+                    "type": "object",
+                    "title": "Response Run Endpoint Run Post"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "ArgSpec": {
+          "properties": {
+            "name": {
+              "type": "string",
+              "title": "Name"
+            },
+            "dtype": {
+              "type": "string",
+              "title": "Dtype",
+              "default": "f32"
+            },
+            "shape": {
+              "items": {
+                "type": "integer"
+              },
+              "type": "array",
+              "maxItems": 8,
+              "title": "Shape"
+            },
+            "output": {
+              "type": "boolean",
+              "title": "Output",
+              "default": false
+            },
+            "scalar": {
+              "type": "boolean",
+              "title": "Scalar",
+              "default": false
+            },
+            "seed": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Seed"
+            },
+            "value": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Value"
+            },
+            "data": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "number"
+                  },
+                  "type": "array",
+                  "maxItems": 67108864
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Data"
+            }
+          },
+          "type": "object",
+          "required": [
+            "name"
+          ],
+          "title": "ArgSpec",
+          "description": "One kernel parameter. Either a buffer (becomes a device pointer) or a\nscalar (passed by value)."
+        },
+        "CompileRequest": {
+          "properties": {
+            "ptx": {
+              "type": "string",
+              "maxLength": 2000000,
+              "title": "Ptx",
+              "description": "PTX source text"
+            },
+            "arch": {
+              "type": "string",
+              "title": "Arch",
+              "description": "Target arch; defaults to the runner's GPU"
+            },
+            "flags": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "maxItems": 8,
+              "title": "Flags",
+              "description": "Extra ptxas flags, e.g. ['-O3']"
+            }
+          },
+          "type": "object",
+          "required": [
+            "ptx"
+          ],
+          "title": "CompileRequest"
+        },
+        "HTTPValidationError": {
+          "properties": {
+            "detail": {
+              "items": {
+                "$ref": "#/components/schemas/ValidationError"
+              },
+              "type": "array",
+              "title": "Detail"
+            }
+          },
+          "type": "object",
+          "title": "HTTPValidationError"
+        },
+        "RunRequest": {
+          "properties": {
+            "cubin_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cubin Id"
+            },
+            "ptx": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 2000000
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Ptx"
+            },
+            "arch": {
+              "type": "string",
+              "title": "Arch"
+            },
+            "entry": {
+              "type": "string",
+              "title": "Entry",
+              "description": "Which kernel in the module to launch"
+            },
+            "args": {
+              "items": {
+                "$ref": "#/components/schemas/ArgSpec"
+              },
+              "type": "array",
+              "maxItems": 32,
+              "title": "Args"
+            },
+            "grid": {
+              "prefixItems": [
+                {
+                  "type": "integer",
+                  "exclusiveMinimum": 0.0
+                },
+                {
+                  "type": "integer",
+                  "exclusiveMinimum": 0.0
+                },
+                {
+                  "type": "integer",
+                  "exclusiveMinimum": 0.0
+                }
+              ],
+              "type": "array",
+              "maxItems": 3,
+              "minItems": 3,
+              "title": "Grid",
+              "default": [
+                1,
+                1,
+                1
+              ]
+            },
+            "block": {
+              "prefixItems": [
+                {
+                  "type": "integer",
+                  "exclusiveMinimum": 0.0
+                },
+                {
+                  "type": "integer",
+                  "exclusiveMinimum": 0.0
+                },
+                {
+                  "type": "integer",
+                  "exclusiveMinimum": 0.0
+                }
+              ],
+              "type": "array",
+              "maxItems": 3,
+              "minItems": 3,
+              "title": "Block",
+              "default": [
+                128,
+                1,
+                1
+              ]
+            },
+            "smem_bytes": {
+              "type": "integer",
+              "maximum": 101376.0,
+              "minimum": 0.0,
+              "title": "Smem Bytes",
+              "default": 0
+            },
+            "zero_outputs": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Zero Outputs"
+            },
+            "warmup": {
+              "type": "integer",
+              "maximum": 20.0,
+              "minimum": 0.0,
+              "title": "Warmup",
+              "default": 5
+            },
+            "iters": {
+              "type": "integer",
+              "maximum": 200.0,
+              "minimum": 1.0,
+              "title": "Iters",
+              "default": 20
+            },
+            "max_return": {
+              "type": "integer",
+              "maximum": 4194304.0,
+              "minimum": 0.0,
+              "title": "Max Return",
+              "default": 4096
+            }
+          },
+          "type": "object",
+          "required": [
+            "entry"
+          ],
+          "title": "RunRequest",
+          "description": "The launch descriptor.\n\nThis is the part that surprises people: a compiled cubin is inert. The PTX\nsays what one thread does; it does NOT say how many threads to start, how\nthey're grouped, how much scratch memory they share, or which argument is an\noutput. All of that has to be supplied at launch, which is why this request\nis so much bigger than /compile's."
+        },
+        "ValidationError": {
+          "properties": {
+            "loc": {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ]
+              },
+              "type": "array",
+              "title": "Location"
+            },
+            "msg": {
+              "type": "string",
+              "title": "Message"
+            },
+            "type": {
+              "type": "string",
+              "title": "Error Type"
+            },
+            "input": {
+              "title": "Input"
+            },
+            "ctx": {
+              "type": "object",
+              "title": "Context"
+            }
+          },
+          "type": "object",
+          "required": [
+            "loc",
+            "msg",
+            "type"
+          ],
+          "title": "ValidationError"
+        }
+      }
+    }
+  },
+  "discovered_aggregate_limit_rejection": {
+    "request": {
+      "cubin_id": "41acefcb02038775bf2aa15d20cea4ce36096edfd216756ebe3f810e31223289",
+      "node": "sum_1",
+      "entry": "k_sum_1_reduce",
+      "arg_order": [
+        "sum_1",
+        "x"
+      ],
+      "grid": [
+        8192,
+        1,
+        1
+      ],
+      "block": [
+        256,
+        1,
+        1
+      ],
+      "smem_bytes": 0,
+      "zero_outputs": [],
+      "args": [
+        {
+          "name": "sum_1",
+          "dtype": "f32",
+          "shape": [
+            2097152
+          ],
+          "output": true
+        },
+        {
+          "name": "x",
+          "dtype": "f32",
+          "shape": [
+            67108864
+          ],
+          "seed": 47
+        }
+      ],
+      "final": true,
+      "warmup": 8,
+      "iters": 75,
+      "max_return": 2097152
+    },
+    "status": 422,
+    "response": "{\"detail\":[{\"type\":\"value_error\",\"loc\":[\"body\"],\"msg\":\"Value error, buffers total 69206016 elements; the limit is 67108864\",\"input\":{\"cubin_id\":\"41acefcb02038775bf2aa15d20cea4ce36096edfd216756ebe3f810e31223289\",\"node\":\"sum_1\",\"entry\":\"k_sum_1_reduce\",\"arg_order\":[\"sum_1\",\"x\"],\"grid\":[8192,1,1],\"block\":[256,1,1],\"smem_bytes\":0,\"zero_outputs\":[],\"args\":[{\"name\":\"sum_1\",\"dtype\":\"f32\",\"shape\":[2097152],\"output\":true},{\"name\":\"x\",\"dtype\":\"f32\",\"shape\":[67108864],\"seed\":47}],\"final\":true,\"warmup\":8,\"iters\":75,\"max_return\":2097152},\"ctx\":{\"error\":{}}}]}"
+  },
+  "calibration": {
+    "compiler_sha256": "7fbe5ee4ed6c8688929b3892c06903a317bc9a4ca60e9496b0a231174ec35761",
+    "tool_sha256": "a4eb92018b663a40c6eb36a0b8c6bdeee253cf65e26b73d2a4de103e8ef2dcce",
+    "health": {
+      "ok": true,
+      "arch_ok": true,
+      "ptxas": "/usr/local/cuda/bin/ptxas",
+      "default_arch": "sm_120",
+      "cache_dir": "/home/riftuser/.cache/ptxserver",
+      "can_compile": true,
+      "can_run": true,
+      "gpu": "NVIDIA GeForce RTX 5090 (compute capability 12.0, sm_120)"
+    },
+    "server": "http://runner.riftstack.ai:48701",
+    "clock_locked": false,
+    "cache_evicted": false,
+    "warmup": 8,
+    "iters": 75,
+    "order": "forward/reverse on alternating trials",
+    "scope": "effective workload bytes/time, not DRAM counters or bandwidth maximum",
+    "full_outputs_checked_trial": 0,
+    "later_trials": "4096 output prefix checked",
+    "results": [
+      {
+        "name": "launch_floor",
+        "kernel": {
+          "entry": "launch_floor",
+          "args": [],
+          "grid": [
+            1,
+            1,
+            1
+          ],
+          "block": [
+            1,
+            1,
+            1
+          ],
+          "smem_bytes": 0,
+          "zero_outputs": []
+        },
+        "input_bytes": 0,
+        "output_bytes": 0,
+        "float_adds": 0,
+        "ptx_sha256": "d9f82499c18b126063011cb4c982831afc723c03f0ef0219b25a83ecbc68c4d2",
+        "source": "hand-written no-work calibration control",
+        "compiled": {
+          "ok": true,
+          "cubin_id": "3c08560e03d31ea8665a44172f8a54da9153bf07c010beeea03eb5bf12034f0a",
+          "bytes": 4968,
+          "arch": "sm_120",
+          "flags": [],
+          "entry_points": [
+            "launch_floor"
+          ],
+          "registers": {
+            "launch_floor": 4
+          }
+        },
+        "samples": [
+          {
+            "trial": 0,
+            "median_us": 2.816,
+            "runner": {
+              "ok": true,
+              "entry": "launch_floor",
+              "grid": [
+                1,
+                1,
+                1
+              ],
+              "block": [
+                1,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 2.816,
+              "iters": 75
+            }
+          },
+          {
+            "trial": 1,
+            "median_us": 2.784,
+            "runner": {
+              "ok": true,
+              "entry": "launch_floor",
+              "grid": [
+                1,
+                1,
+                1
+              ],
+              "block": [
+                1,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 2.784,
+              "iters": 75
+            }
+          },
+          {
+            "trial": 2,
+            "median_us": 2.784,
+            "runner": {
+              "ok": true,
+              "entry": "launch_floor",
+              "grid": [
+                1,
+                1,
+                1
+              ],
+              "block": [
+                1,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 2.784,
+              "iters": 75
+            }
+          },
+          {
+            "trial": 3,
+            "median_us": 2.752,
+            "runner": {
+              "ok": true,
+              "entry": "launch_floor",
+              "grid": [
+                1,
+                1,
+                1
+              ],
+              "block": [
+                1,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 2.752,
+              "iters": 75
+            }
+          },
+          {
+            "trial": 4,
+            "median_us": 2.784,
+            "runner": {
+              "ok": true,
+              "entry": "launch_floor",
+              "grid": [
+                1,
+                1,
+                1
+              ],
+              "block": [
+                1,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 2.784,
+              "iters": 75
+            }
+          }
+        ],
+        "validation": [
+          {
+            "trial": 0,
+            "elements": 0,
+            "full": true,
+            "passed": true
+          },
+          {
+            "trial": 1,
+            "elements": 0,
+            "full": false,
+            "passed": true
+          },
+          {
+            "trial": 2,
+            "elements": 0,
+            "full": false,
+            "passed": true
+          },
+          {
+            "trial": 3,
+            "elements": 0,
+            "full": false,
+            "passed": true
+          },
+          {
+            "trial": 4,
+            "elements": 0,
+            "full": false,
+            "passed": true
+          }
+        ],
+        "median_us": 2.784,
+        "effective_GB_s": 0.0
+      },
+      {
+        "name": "copy_4KiB",
+        "kernel": {
+          "node": "sum_1",
+          "entry": "k_sum_1_reduce",
+          "arg_order": [
+            "sum_1",
+            "x"
+          ],
+          "grid": [
+            4,
+            1,
+            1
+          ],
+          "block": [
+            256,
+            1,
+            1
+          ],
+          "smem_bytes": 0,
+          "zero_outputs": [],
+          "args": [
+            {
+              "name": "sum_1",
+              "dtype": "f32",
+              "shape": [
+                1024
+              ],
+              "output": true
+            },
+            {
+              "name": "x",
+              "dtype": "f32",
+              "shape": [
+                1024
+              ],
+              "seed": 47
+            }
+          ],
+          "final": true
+        },
+        "input_bytes": 4096,
+        "output_bytes": 4096,
+        "float_adds": 0,
+        "steps": 1,
+        "ir_sha256": "9a604ad85533c00b26d42fe79de924ba82b49bde3b40849dfa10be3f573b4222",
+        "meta_sha256": "7cc638b8a8cbed14795ac701f0f2b89da9ac3f8220afeac34c6c677d90160cfb",
+        "oracle_sha256": "4df5872099bc87979e980e2785dc38498ccd3b8f061c1bc1739c528e04e8bd47",
+        "ptx_sha256": "edd9f20941ffd3e32ebc2420f3f8c826fb04d05e6826336bff3d238d2c7fa60b",
+        "compiled": {
+          "ok": true,
+          "cubin_id": "f28a605d20650afa20cf8ae8e66df63729b487d16f0b17b94c337c2eb307186f",
+          "bytes": 5832,
+          "arch": "sm_120",
+          "flags": [],
+          "entry_points": [
+            "k_sum_1_reduce"
+          ],
+          "registers": {
+            "k_sum_1_reduce": 10
+          }
+        },
+        "samples": [
+          {
+            "trial": 0,
+            "median_us": 2.976,
+            "runner": {
+              "ok": true,
+              "entry": "k_sum_1_reduce",
+              "grid": [
+                4,
+                1,
+                1
+              ],
+              "block": [
+                256,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 2.976,
+              "iters": 75
+            }
+          },
+          {
+            "trial": 1,
+            "median_us": 3.008,
+            "runner": {
+              "ok": true,
+              "entry": "k_sum_1_reduce",
+              "grid": [
+                4,
+                1,
+                1
+              ],
+              "block": [
+                256,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 3.008,
+              "iters": 75
+            }
+          },
+          {
+            "trial": 2,
+            "median_us": 2.944,
+            "runner": {
+              "ok": true,
+              "entry": "k_sum_1_reduce",
+              "grid": [
+                4,
+                1,
+                1
+              ],
+              "block": [
+                256,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 2.944,
+              "iters": 75
+            }
+          },
+          {
+            "trial": 3,
+            "median_us": 2.976,
+            "runner": {
+              "ok": true,
+              "entry": "k_sum_1_reduce",
+              "grid": [
+                4,
+                1,
+                1
+              ],
+              "block": [
+                256,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 2.976,
+              "iters": 75
+            }
+          },
+          {
+            "trial": 4,
+            "median_us": 3.552,
+            "runner": {
+              "ok": true,
+              "entry": "k_sum_1_reduce",
+              "grid": [
+                4,
+                1,
+                1
+              ],
+              "block": [
+                256,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 3.552,
+              "iters": 75
+            }
+          }
+        ],
+        "validation": [
+          {
+            "trial": 0,
+            "elements": 1024,
+            "full": true,
+            "passed": true
+          },
+          {
+            "trial": 1,
+            "elements": 1024,
+            "full": false,
+            "passed": true
+          },
+          {
+            "trial": 2,
+            "elements": 1024,
+            "full": false,
+            "passed": true
+          },
+          {
+            "trial": 3,
+            "elements": 1024,
+            "full": false,
+            "passed": true
+          },
+          {
+            "trial": 4,
+            "elements": 1024,
+            "full": false,
+            "passed": true
+          }
+        ],
+        "median_us": 2.976,
+        "effective_GB_s": 2.7526881720430105
+      },
+      {
+        "name": "copy_1MiB",
+        "kernel": {
+          "node": "sum_1",
+          "entry": "k_sum_1_reduce",
+          "arg_order": [
+            "sum_1",
+            "x"
+          ],
+          "grid": [
+            1024,
+            1,
+            1
+          ],
+          "block": [
+            256,
+            1,
+            1
+          ],
+          "smem_bytes": 0,
+          "zero_outputs": [],
+          "args": [
+            {
+              "name": "sum_1",
+              "dtype": "f32",
+              "shape": [
+                262144
+              ],
+              "output": true
+            },
+            {
+              "name": "x",
+              "dtype": "f32",
+              "shape": [
+                262144
+              ],
+              "seed": 47
+            }
+          ],
+          "final": true
+        },
+        "input_bytes": 1048576,
+        "output_bytes": 1048576,
+        "float_adds": 0,
+        "steps": 1,
+        "ir_sha256": "f34ca3b9ae1dc13384039ad46031148e43e644b2e796b67dc2e6347f1e8e95de",
+        "meta_sha256": "4902efcee7a9eaa853655fa8447a60f2898708f5fbe0f4ec792b6a9c958802b9",
+        "oracle_sha256": "421d358235f1fcdf5c853864f6c3f0fe0fc25f421a930f2d644b446abae54e3e",
+        "ptx_sha256": "62ccbc7c6111ae4192160a3614b74183c202bfe28880689e819abf7e12977042",
+        "compiled": {
+          "ok": true,
+          "cubin_id": "192bf1eedeb2c21848a3b81e47d80c01b782c0847419a4af77048f1e2c5583b1",
+          "bytes": 5832,
+          "arch": "sm_120",
+          "flags": [],
+          "entry_points": [
+            "k_sum_1_reduce"
+          ],
+          "registers": {
+            "k_sum_1_reduce": 10
+          }
+        },
+        "samples": [
+          {
+            "trial": 0,
+            "median_us": 3.008,
+            "runner": {
+              "ok": true,
+              "entry": "k_sum_1_reduce",
+              "grid": [
+                1024,
+                1,
+                1
+              ],
+              "block": [
+                256,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 3.008,
+              "iters": 75
+            }
+          },
+          {
+            "trial": 1,
+            "median_us": 3.168,
+            "runner": {
+              "ok": true,
+              "entry": "k_sum_1_reduce",
+              "grid": [
+                1024,
+                1,
+                1
+              ],
+              "block": [
+                256,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 3.168,
+              "iters": 75
+            }
+          },
+          {
+            "trial": 2,
+            "median_us": 3.008,
+            "runner": {
+              "ok": true,
+              "entry": "k_sum_1_reduce",
+              "grid": [
+                1024,
+                1,
+                1
+              ],
+              "block": [
+                256,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 3.008,
+              "iters": 75
+            }
+          },
+          {
+            "trial": 3,
+            "median_us": 3.168,
+            "runner": {
+              "ok": true,
+              "entry": "k_sum_1_reduce",
+              "grid": [
+                1024,
+                1,
+                1
+              ],
+              "block": [
+                256,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 3.168,
+              "iters": 75
+            }
+          },
+          {
+            "trial": 4,
+            "median_us": 3.008,
+            "runner": {
+              "ok": true,
+              "entry": "k_sum_1_reduce",
+              "grid": [
+                1024,
+                1,
+                1
+              ],
+              "block": [
+                256,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 3.008,
+              "iters": 75
+            }
+          }
+        ],
+        "validation": [
+          {
+            "trial": 0,
+            "elements": 262144,
+            "full": true,
+            "passed": true
+          },
+          {
+            "trial": 1,
+            "elements": 4096,
+            "full": false,
+            "passed": true
+          },
+          {
+            "trial": 2,
+            "elements": 4096,
+            "full": false,
+            "passed": true
+          },
+          {
+            "trial": 3,
+            "elements": 4096,
+            "full": false,
+            "passed": true
+          },
+          {
+            "trial": 4,
+            "elements": 4096,
+            "full": false,
+            "passed": true
+          }
+        ],
+        "median_us": 3.008,
+        "effective_GB_s": 697.1914893617021
+      },
+      {
+        "name": "read_4MiB",
+        "kernel": {
+          "node": "sum_1",
+          "entry": "k_sum_1_reduce",
+          "arg_order": [
+            "sum_1",
+            "x"
+          ],
+          "grid": [
+            128,
+            1,
+            1
+          ],
+          "block": [
+            256,
+            1,
+            1
+          ],
+          "smem_bytes": 0,
+          "zero_outputs": [],
+          "args": [
+            {
+              "name": "sum_1",
+              "dtype": "f32",
+              "shape": [
+                32768
+              ],
+              "output": true
+            },
+            {
+              "name": "x",
+              "dtype": "f32",
+              "shape": [
+                1048576
+              ],
+              "seed": 47
+            }
+          ],
+          "final": true
+        },
+        "input_bytes": 4194304,
+        "output_bytes": 131072,
+        "float_adds": 1048576,
+        "steps": 32,
+        "ir_sha256": "d1b3bf184645c3d574bb0cedfd70468e5d18ac1fd6d5c013d9c72b9be2ec879a",
+        "meta_sha256": "a049f1ffeabcba37d95ea58dc0e3707471c1c665623b6853def68e32ff3e9d01",
+        "oracle_sha256": "6a7a2324de65e4e2206f12f8af10d8ecff49e8e18491ce5724e5d85da0d3f5ce",
+        "ptx_sha256": "1555812444fc86560e8a510025c311dec82063958384ef389edfc5e902a1ac82",
+        "compiled": {
+          "ok": true,
+          "cubin_id": "f897d21c6c76006a7b50e8bb015e39410ef6b8cb516860b9c87760596ce9953d",
+          "bytes": 7768,
+          "arch": "sm_120",
+          "flags": [],
+          "entry_points": [
+            "k_sum_1_reduce"
+          ],
+          "registers": {
+            "k_sum_1_reduce": 40
+          }
+        },
+        "samples": [
+          {
+            "trial": 0,
+            "median_us": 4.224,
+            "runner": {
+              "ok": true,
+              "entry": "k_sum_1_reduce",
+              "grid": [
+                128,
+                1,
+                1
+              ],
+              "block": [
+                256,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 4.224,
+              "iters": 75
+            }
+          },
+          {
+            "trial": 1,
+            "median_us": 4.384,
+            "runner": {
+              "ok": true,
+              "entry": "k_sum_1_reduce",
+              "grid": [
+                128,
+                1,
+                1
+              ],
+              "block": [
+                256,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 4.384,
+              "iters": 75
+            }
+          },
+          {
+            "trial": 2,
+            "median_us": 3.264,
+            "runner": {
+              "ok": true,
+              "entry": "k_sum_1_reduce",
+              "grid": [
+                128,
+                1,
+                1
+              ],
+              "block": [
+                256,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 3.264,
+              "iters": 75
+            }
+          },
+          {
+            "trial": 3,
+            "median_us": 4.224,
+            "runner": {
+              "ok": true,
+              "entry": "k_sum_1_reduce",
+              "grid": [
+                128,
+                1,
+                1
+              ],
+              "block": [
+                256,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 4.224,
+              "iters": 75
+            }
+          },
+          {
+            "trial": 4,
+            "median_us": 3.264,
+            "runner": {
+              "ok": true,
+              "entry": "k_sum_1_reduce",
+              "grid": [
+                128,
+                1,
+                1
+              ],
+              "block": [
+                256,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 3.264,
+              "iters": 75
+            }
+          }
+        ],
+        "validation": [
+          {
+            "trial": 0,
+            "elements": 32768,
+            "full": true,
+            "passed": true
+          },
+          {
+            "trial": 1,
+            "elements": 4096,
+            "full": false,
+            "passed": true
+          },
+          {
+            "trial": 2,
+            "elements": 4096,
+            "full": false,
+            "passed": true
+          },
+          {
+            "trial": 3,
+            "elements": 4096,
+            "full": false,
+            "passed": true
+          },
+          {
+            "trial": 4,
+            "elements": 4096,
+            "full": false,
+            "passed": true
+          }
+        ],
+        "median_us": 4.224,
+        "effective_GB_s": 1024.0
+      },
+      {
+        "name": "read_64MiB",
+        "kernel": {
+          "node": "sum_1",
+          "entry": "k_sum_1_reduce",
+          "arg_order": [
+            "sum_1",
+            "x"
+          ],
+          "grid": [
+            2048,
+            1,
+            1
+          ],
+          "block": [
+            256,
+            1,
+            1
+          ],
+          "smem_bytes": 0,
+          "zero_outputs": [],
+          "args": [
+            {
+              "name": "sum_1",
+              "dtype": "f32",
+              "shape": [
+                524288
+              ],
+              "output": true
+            },
+            {
+              "name": "x",
+              "dtype": "f32",
+              "shape": [
+                16777216
+              ],
+              "seed": 47
+            }
+          ],
+          "final": true
+        },
+        "input_bytes": 67108864,
+        "output_bytes": 2097152,
+        "float_adds": 16777216,
+        "steps": 32,
+        "ir_sha256": "0b62018a8060f456229cb4c0a9df1afe4a4d10ee16a560a66440dc0319b4610c",
+        "meta_sha256": "42bba9275bd665def9c92722e0cfd5ff198ade825cfc91001e75586941aff1fb",
+        "oracle_sha256": "fbf43471d562d06323224a23eca719af5e3c629dfb79583d8fa0b661622e9079",
+        "ptx_sha256": "26461c81711f46a86bfd83362bbf1d4fdde8137202a76e248a73b0701da2506e",
+        "compiled": {
+          "ok": true,
+          "cubin_id": "e64e9f7b3798adf9702c281a31c684215d979bfe988b1e122f78c678e9b70cbe",
+          "bytes": 7768,
+          "arch": "sm_120",
+          "flags": [],
+          "entry_points": [
+            "k_sum_1_reduce"
+          ],
+          "registers": {
+            "k_sum_1_reduce": 40
+          }
+        },
+        "samples": [
+          {
+            "trial": 0,
+            "median_us": 12.896,
+            "runner": {
+              "ok": true,
+              "entry": "k_sum_1_reduce",
+              "grid": [
+                2048,
+                1,
+                1
+              ],
+              "block": [
+                256,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 12.896,
+              "iters": 75
+            }
+          },
+          {
+            "trial": 1,
+            "median_us": 12.896,
+            "runner": {
+              "ok": true,
+              "entry": "k_sum_1_reduce",
+              "grid": [
+                2048,
+                1,
+                1
+              ],
+              "block": [
+                256,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 12.896,
+              "iters": 75
+            }
+          },
+          {
+            "trial": 2,
+            "median_us": 12.928,
+            "runner": {
+              "ok": true,
+              "entry": "k_sum_1_reduce",
+              "grid": [
+                2048,
+                1,
+                1
+              ],
+              "block": [
+                256,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 12.928,
+              "iters": 75
+            }
+          },
+          {
+            "trial": 3,
+            "median_us": 13.056,
+            "runner": {
+              "ok": true,
+              "entry": "k_sum_1_reduce",
+              "grid": [
+                2048,
+                1,
+                1
+              ],
+              "block": [
+                256,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 13.056,
+              "iters": 75
+            }
+          },
+          {
+            "trial": 4,
+            "median_us": 12.896,
+            "runner": {
+              "ok": true,
+              "entry": "k_sum_1_reduce",
+              "grid": [
+                2048,
+                1,
+                1
+              ],
+              "block": [
+                256,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 12.896,
+              "iters": 75
+            }
+          }
+        ],
+        "validation": [
+          {
+            "trial": 0,
+            "elements": 524288,
+            "full": true,
+            "passed": true
+          },
+          {
+            "trial": 1,
+            "elements": 4096,
+            "full": false,
+            "passed": true
+          },
+          {
+            "trial": 2,
+            "elements": 4096,
+            "full": false,
+            "passed": true
+          },
+          {
+            "trial": 3,
+            "elements": 4096,
+            "full": false,
+            "passed": true
+          },
+          {
+            "trial": 4,
+            "elements": 4096,
+            "full": false,
+            "passed": true
+          }
+        ],
+        "median_us": 12.896,
+        "effective_GB_s": 5366.471464019851
+      },
+      {
+        "name": "read_224MiB",
+        "kernel": {
+          "node": "sum_1",
+          "entry": "k_sum_1_reduce",
+          "arg_order": [
+            "sum_1",
+            "x"
+          ],
+          "grid": [
+            7168,
+            1,
+            1
+          ],
+          "block": [
+            256,
+            1,
+            1
+          ],
+          "smem_bytes": 0,
+          "zero_outputs": [],
+          "args": [
+            {
+              "name": "sum_1",
+              "dtype": "f32",
+              "shape": [
+                1835008
+              ],
+              "output": true
+            },
+            {
+              "name": "x",
+              "dtype": "f32",
+              "shape": [
+                58720256
+              ],
+              "seed": 47
+            }
+          ],
+          "final": true
+        },
+        "input_bytes": 234881024,
+        "output_bytes": 7340032,
+        "float_adds": 58720256,
+        "steps": 32,
+        "ir_sha256": "395aba4c569686cc65edcc6c78d39d97337bf427e602f7c115e765ad2624b9f5",
+        "meta_sha256": "5c6628d9d6a1b588a987c93cdc5a7e9e04ebe5b4370b268cfa3bdcb377728b1c",
+        "oracle_sha256": "eda8eaf7e3c2e081a2df02c70cd670df8f5f7996124f318e047dbc00592571d3",
+        "ptx_sha256": "a58c1a6d6c467bcbdf3799076c401166007752d43a2d50414f10972d8c2eaedc",
+        "compiled": {
+          "ok": true,
+          "cubin_id": "a01885aa0b210eaaa72b703412b42ae78121f0135cf11e3e938b0306b338abcb",
+          "bytes": 7768,
+          "arch": "sm_120",
+          "flags": [],
+          "entry_points": [
+            "k_sum_1_reduce"
+          ],
+          "registers": {
+            "k_sum_1_reduce": 40
+          }
+        },
+        "samples": [
+          {
+            "trial": 0,
+            "median_us": 146.4,
+            "runner": {
+              "ok": true,
+              "entry": "k_sum_1_reduce",
+              "grid": [
+                7168,
+                1,
+                1
+              ],
+              "block": [
+                256,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 146.4,
+              "iters": 75
+            }
+          },
+          {
+            "trial": 1,
+            "median_us": 146.464,
+            "runner": {
+              "ok": true,
+              "entry": "k_sum_1_reduce",
+              "grid": [
+                7168,
+                1,
+                1
+              ],
+              "block": [
+                256,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 146.464,
+              "iters": 75
+            }
+          },
+          {
+            "trial": 2,
+            "median_us": 145.696,
+            "runner": {
+              "ok": true,
+              "entry": "k_sum_1_reduce",
+              "grid": [
+                7168,
+                1,
+                1
+              ],
+              "block": [
+                256,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 145.696,
+              "iters": 75
+            }
+          },
+          {
+            "trial": 3,
+            "median_us": 146.368,
+            "runner": {
+              "ok": true,
+              "entry": "k_sum_1_reduce",
+              "grid": [
+                7168,
+                1,
+                1
+              ],
+              "block": [
+                256,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 146.368,
+              "iters": 75
+            }
+          },
+          {
+            "trial": 4,
+            "median_us": 146.4,
+            "runner": {
+              "ok": true,
+              "entry": "k_sum_1_reduce",
+              "grid": [
+                7168,
+                1,
+                1
+              ],
+              "block": [
+                256,
+                1,
+                1
+              ],
+              "smem_bytes": 0,
+              "median_us": 146.4,
+              "iters": 75
+            }
+          }
+        ],
+        "validation": [
+          {
+            "trial": 0,
+            "elements": 1835008,
+            "full": true,
+            "passed": true
+          },
+          {
+            "trial": 1,
+            "elements": 4096,
+            "full": false,
+            "passed": true
+          },
+          {
+            "trial": 2,
+            "elements": 4096,
+            "full": false,
+            "passed": true
+          },
+          {
+            "trial": 3,
+            "elements": 4096,
+            "full": false,
+            "passed": true
+          },
+          {
+            "trial": 4,
+            "elements": 4096,
+            "full": false,
+            "passed": true
+          }
+        ],
+        "median_us": 146.4,
+        "effective_GB_s": 1654.5154098360656
+      }
+    ]
+  },
+  "fresh_same_compiler_matmul": {
+    "clock_locked": false,
+    "warmup": 8,
+    "iters": 75,
+    "compilers": {
+      "baseline": "7fbe5ee4ed6c8688929b3892c06903a317bc9a4ca60e9496b0a231174ec35761",
+      "candidate": "7fbe5ee4ed6c8688929b3892c06903a317bc9a4ca60e9496b0a231174ec35761"
+    },
+    "timing_return_limit": 4096,
+    "results": [
+      {
+        "problem": "m01_matmul_512",
+        "samples_us": {
+          "baseline": [
+            25.088,
+            25.024,
+            24.96
+          ],
+          "candidate": [
+            25.088,
+            25.056,
+            25.088
+          ]
+        },
+        "baseline_median_us": 25.024,
+        "candidate_median_us": 25.088,
+        "speedup": 0.9974489795918368,
+        "outputs_passed": true,
+        "output_check": "full first trial; returned prefix thereafter",
+        "registers": {
+          "baseline": {
+            "k_matmul_2967be": {
+              "k_matmul_2967be": 40
+            }
+          },
+          "candidate": {
+            "k_matmul_2967be": {
+              "k_matmul_2967be": 40
+            }
+          }
+        }
+      },
+      {
+        "problem": "m_shared_256_512_384",
+        "samples_us": {
+          "baseline": [
+            18.656,
+            19.008,
+            18.624
+          ],
+          "candidate": [
+            19.072,
+            19.04,
+            19.04
+          ]
+        },
+        "baseline_median_us": 18.656,
+        "candidate_median_us": 19.04,
+        "speedup": 0.9798319327731092,
+        "outputs_passed": true,
+        "output_check": "full first trial; returned prefix thereafter",
+        "registers": {
+          "baseline": {
+            "k_matmul": {
+              "k_matmul": 40
+            }
+          },
+          "candidate": {
+            "k_matmul": {
+              "k_matmul": 40
+            }
+          }
+        }
+      },
+      {
+        "problem": "m_shared_384_256_320",
+        "samples_us": {
+          "baseline": [
+            14.912,
+            14.912,
+            14.912
+          ],
+          "candidate": [
+            14.912,
+            14.912,
+            14.912
+          ]
+        },
+        "baseline_median_us": 14.912,
+        "candidate_median_us": 14.912,
+        "speedup": 1.0,
+        "outputs_passed": true,
+        "output_check": "full first trial; returned prefix thereafter",
+        "registers": {
+          "baseline": {
+            "k_matmul_1b049d": {
+              "k_matmul_1b049d": 40
+            }
+          },
+          "candidate": {
+            "k_matmul_1b049d": {
+              "k_matmul_1b049d": 40
+            }
+          }
+        }
+      }
+    ]
+  },
+  "workload_models": [
+    {
+      "problem": "m01_matmul_512",
+      "folder": "challenge/problems/m01_matmul_512",
+      "M": 512,
+      "N": 512,
+      "K": 512,
+      "conventional_f32_flops": 268435456,
+      "minimum_input_output_bytes": 3145728,
+      "fits_published_L2": true,
+      "grid_ctas": 128,
+      "block_threads": 512,
+      "samples_us_same_compiler": [
+        25.088,
+        25.024,
+        24.96,
+        25.088,
+        25.056,
+        25.088
+      ],
+      "median_us": 25.072000000000003,
+      "ideal_compute_us_at_published_peak": 2.5614070229007635,
+      "ideal_compute_us_with_grid_SM_ceiling": 3.4018687022900767,
+      "measured_over_grid_ideal": 7.370066923253677,
+      "cold_DRAM_minimum_time_us_conditional_only": 1.7554285714285713,
+      "meta_sha256": "3324370a2d29614c6c7ff7cf549563f9afb22bab0ed31ed62d8ffd27c59dcd57",
+      "ir_sha256": "ed9ab32776ce0de8b0d1f0367da54c586bf993c964efc01482666247a976dc02",
+      "expected_npz_sha256": "6396bececa75b2adee8c83bb0c090f9a68e7297d7de492f5a2f0cd3e67f24c36"
+    },
+    {
+      "problem": "m_shared_256_512_384",
+      "folder": "artifacts/shared-matmul/m_shared_256_512_384",
+      "M": 256,
+      "N": 384,
+      "K": 512,
+      "conventional_f32_flops": 100663296,
+      "minimum_input_output_bytes": 1703936,
+      "fits_published_L2": true,
+      "grid_ctas": 96,
+      "block_threads": 512,
+      "samples_us_same_compiler": [
+        18.656,
+        19.008,
+        18.624,
+        19.072,
+        19.04,
+        19.04
+      ],
+      "median_us": 19.024,
+      "ideal_compute_us_at_published_peak": 0.9605276335877863,
+      "ideal_compute_us_with_grid_SM_ceiling": 1.7009343511450383,
+      "measured_over_grid_ideal": 11.184441061580882,
+      "cold_DRAM_minimum_time_us_conditional_only": 0.9508571428571428,
+      "meta_sha256": "554e73ce1ff12bb46fc14fc0086109c97755ded1416f2fdab6272530c4346e23",
+      "ir_sha256": "529ddc2689a34aa40b44be57202a098c7d3087cf1201dd13fc9df70b107ee336",
+      "expected_npz_sha256": "af94483c5a1b9bca5bf74dd43ff56535c969a4236c9160a813e385c849698f29"
+    },
+    {
+      "problem": "m_shared_384_256_320",
+      "folder": "artifacts/shared-matmul/m_shared_384_256_320",
+      "M": 384,
+      "N": 320,
+      "K": 256,
+      "conventional_f32_flops": 62914560,
+      "minimum_input_output_bytes": 1212416,
+      "fits_published_L2": true,
+      "grid_ctas": 80,
+      "block_threads": 128,
+      "samples_us_same_compiler": [
+        14.912,
+        14.912,
+        14.912,
+        14.912,
+        14.912,
+        14.912
+      ],
+      "median_us": 14.912,
+      "ideal_compute_us_at_published_peak": 0.6003297709923664,
+      "ideal_compute_us_with_grid_SM_ceiling": 1.2757007633587787,
+      "measured_over_grid_ideal": 11.689261642156863,
+      "cold_DRAM_minimum_time_us_conditional_only": 0.6765714285714286,
+      "meta_sha256": "c7d23cc4c4847ac19a6ac81fa3d23df8a465b83c81bc0f3f6e594569c56432ca",
+      "ir_sha256": "284994498bdfbfe6015438038326c1b3c825ae604327cd5b5cdcdd58df8a2742",
+      "expected_npz_sha256": "4602d50254651b7d8e87df1908d379c05244223225264a4e32b8defd3f28b0ff"
+    }
+  ],
+  "interpretation": [
+    "Repeated buffers, 8 warmups and 75 timed iterations, unlocked clocks, no eviction control",
+    "64 MiB effective bandwidth exceeds advertised DRAM throughput; cache effects invalidate cold DRAM models for cache-resident repeated workloads",
+    "224 MiB input exceeds twice published 96 MiB L2, but no memory counters prove actual DRAM bytes or cold cache state",
+    "Published 104.8 TFLOP/s peak assumes GPU Boost clock; conditional arithmetic model is not a rigorous bound for unknown clocks",
+    "Grid ceiling scales peak by min(CTA count,170)/170 since each CTA resides on one SM; ignores additional warp/issue/shared-memory constraints",
+    "No-work launch median is a timing reference, not an additive cost or universal minimum",
+    "Matmul self-comparison uses identical compiler hashes; group ratios reflect noise, not a candidate speedup",
+    "Full output checks on first calibration trial, prefixes later; random-input exact float32 strided sum reference",
+    "No hosted counters, roofline utilization proof, clock locking or fresh-input-every-iteration claim"
+  ],
+  "benchmark_tool_sha256": "16e1d42935e25af96bc896329a10ea4f1d2337a799e3e8b5247e062858e5a6e1"
+}

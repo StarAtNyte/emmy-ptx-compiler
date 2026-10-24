@@ -58,6 +58,23 @@ executes after body; axis_end is body-visible. See DESIGN.md for details.
 
 ## Latest acceptance evidence
 
+Latest performance evidence (compiler unchanged):
+validation/2026-10-24-target-calibration.json and TARGET_PERFORMANCE.md. Five hosted
+trials, 8 warmups/75 iterations, alternating forward/reverse: no-work median
+2.784 us, copy 1 MiB 3.008 us, 64 MiB strided read 5366.47 effective GB/s,
+224 MiB read 1654.52 GB/s. Full outputs checked exactly first trial, prefixes
+later. Clocks unlocked/reused buffers/no eviction or counters. Initial 256+8 MiB
+request rejected by aggregate 67108864-element limit; corrected to 224+7 MiB.
+Fresh same-compiler matmul medians: 25.072/19.024/14.912 us for public512,
+256x512x384 and 384x256x320. Nominal f32/grid models leave 7.37–11.69x gaps but
+are conditional on published boost rates, not measured utilization or rigorous
+hardware bounds. Cache-sized tests must not use a cold DRAM-only roofline.
+NVIDIA whitepaper pinned: 170 SMs, 104.8 non-Tensor FP32 TFLOP/s, 1792 GB/s,
+96 MiB L2. Do not substitute reduced-precision Tensor Core peaks.
+
+Latest compiler acceptance:
+
+
 production-iteration12.json adds positional buffer ABI diagnostics: exactly one
 KernelOp per IR file, a unique matching launch entry, complete unique arg_order,
 args descriptors in the same order, f32 allocation dtype and static nonnegative
@@ -204,7 +221,8 @@ No rebuild needed for documentation-only changes. No entry submitted.
 
 Next: broaden index/control-flow type validation, operation/dtype coverage and
 bounded failure shrinking. Continue target hardware lower-bound/bottleneck work;
-no hosted counter/roofline evidence yet. Add future retained cases to CPU CI.
+no hosted counters or rigorous clock-aware roofline yet. First calibration is
+recorded above. Add future retained cases to CPU CI.
 No candidate jobs remain live from this acceptance step. New CI runs may trigger
 on documentation pushes; existing accepted-code 86-check matrix is verified.
 
@@ -223,6 +241,8 @@ identity. Full ABI/schema validation and required-grid coverage remain open.
 
 Remaining validation needs initialization/output roles, payload sizes, graph/schema
 consistency, static tile shapes and required grid coverage. Preserve valid views.
-Next performance priority: establish target workload arithmetic/data-movement
-bounds and a measured bandwidth/launch calibration, respecting API/cache limits;
-no hardware lower-bound claim yet.
+Next performance priority: investigate matmul instruction/address work, shared
+traffic/dependencies and available warp parallelism using the calibrated gap.
+Prescribed grids have 80–128 CTAs vs 170 SMs. Further optimization still needs
+independent safety gates and target paired timing; no counter-proven bottleneck.
+Compiler/runtime files unchanged by calibration; existing package remains valid.

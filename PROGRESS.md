@@ -1108,3 +1108,33 @@ Completed 2026-10-24:
   payloads and graph/schema consistency. Next performance priority is measured
   target launch/bandwidth calibration and workload lower bounds, with explicit
   cache/API limitations. General production coverage remains unproven.
+
+## Step 43 — target hardware calibration and conditional workload models
+
+Completed 2026-10-24:
+
+- Added calibrate_hosted.py: committed typed-IR fixture transformed into copy and
+  32-plane strided reads, PTX emitted by our compiler, exact seeded NumPy float32
+  references. Only no-work timing control uses hand-written diagnostic PTX.
+- Queried actual runner health/OpenAPI. Initial largest request (256+8 MiB)
+  rejected with aggregate buffer limit 67108864 elements; preserved evidence and
+  terminal partial run, corrected largest case to 224+7 MiB. Return cap 4194304.
+- Five forward/reverse hosted trials, eight warmups/75 iterations: no-work median
+  2.784 us; copy 1 MiB 3.008 us; read 64 MiB 12.896 us/5366.47 effective GB/s;
+  read 224 MiB 146.400 us/1654.52 GB/s. All full first-trial outputs pass exact
+  references; later prefixes pass. Raw per-request medians preserved, not raw
+  iteration samples. Clocks unlocked, buffers reused and no eviction control.
+- Inspected/pinned NVIDIA RTX Blackwell whitepaper Appendix A: 170 SMs,
+  104.8 non-Tensor f32 TFLOP/s at boost, 1792 GB/s DRAM, 96 MiB L2. Effective
+  64 MiB rate exceeds DRAM spec, so cache-sized workloads cannot use cold-DRAM
+  models. Large streaming throughput is not a hardware traffic counter.
+- Fresh identical-compiler self-comparison: three matmuls, six request medians
+  each, full first-trial outputs/prefixes pass. Medians 25.072/19.024/14.912 us;
+  nominal arithmetic model with prescribed 128/96/80 CTA ceilings gives
+  3.402/1.701/1.276 us. The 7.37–11.69x gaps guide investigation, not measured
+  utilization or rigorously clock-aware bounds. No compiler speedup claimed.
+- Evidence: target-calibration.json; interpretation/reproduction TARGET_PERFORMANCE.md.
+  Compiler remains 7fbe5ee4; package/86-check accepted-code CI remain valid. Updated
+  research, testing, README and handoff. Next examine address/instruction/shared
+  traffic and available warp parallelism, then measure any candidate on target.
+  Submission deferred; broader validation/production coverage remains open.

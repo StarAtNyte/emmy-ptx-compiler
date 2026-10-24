@@ -169,3 +169,7 @@ The [86-check CPU matrix](https://github.com/StarAtNyte/emmy-ptx-compiler/action
 passed on all three versions; [downloaded evidence](validation/2026-10-24-production-iteration12.json)
 records exact versions, hashes and scope. These checks complement the numerical GPU and
 sanitizer gates above.
+
+Target launch/memory calibration and conditional f32 workload models are in
+[TARGET_PERFORMANCE.md](TARGET_PERFORMANCE.md). The compiler remains unchanged;
+these measurements guide future optimization and do not claim a new speedup.
