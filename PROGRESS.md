@@ -861,3 +861,23 @@ Completed 2026-10-24:
 
 Next: refresh stale archive from this committed checkpoint and run extracted
 no-Torch hosted smoke checks. Packaging does not authorize contest submission.
+
+## Step 32 — current code checkpoint archive rebuilt and verified
+
+Completed 2026-10-24:
+
+- Created fresh Python 3.12.13 environment artifacts/power2-release-runtime and
+  installed requirements with the verified exact CI constraints. Torch absent.
+- Archived committed 00da61e; extracted outside the working tree. Packaged compiler
+  SHA 04b50e69 matches accepted source. Hosted scalar add, m01 matmul and attention
+  smoke checks pass from the extracted path without Torch.
+- Current checkpoint ZIP is artifacts/emmy-ptx-current-checkpoint.zip. Replaced
+  stale artifacts/emmy-ptx-submission.zip with the same verified bytes; old archive
+  and report preserved as artifacts/emmy-ptx-before-power2.zip/json.
+- Archive/environment/requirements hashes and all smoke outputs preserved in
+  validation/2026-10-24-current-package.json. This is a verified code checkpoint,
+  not contest entry submission or a claim of complete production readiness.
+
+Next: broader index/control-flow typing probes and target hardware lower-bound /
+bottleneck work. General operation/dtype/dynamic-shape support remains limited;
+nightly CI has only an initial history. Submission stays deferred.

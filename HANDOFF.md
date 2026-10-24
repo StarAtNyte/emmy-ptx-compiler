@@ -112,16 +112,23 @@ as 074d4f9; Actions run 40092577026 passed six checks on all three Python versio
 Downloaded reports confirm compiler 04b50e69 and no Torch; saved in iteration7.
 One push run is not sustained CI history.
 
-## Next concrete action / open scope
+## Packaging and next work
 
-1. Refresh/test the stale release archive from the accepted compiler in a fresh
-   no-Torch environment. Packaging is not competition submission; keep submission
-   deferred. Existing artifacts/emmy-ptx-submission.zip is several iterations stale.
-2. Broaden index/control-flow type validation and dtype/operation support; continue
-   target-appropriate profiling and measured optimization. General shrinking,
-   hardware roofline/counters, dynamic shapes and sustained CI remain open.
+Verified checkpoint archive built from 00da61e, compiler 04b50e69, in a fresh
+Python 3.12.13 environment with pinned constraints and no Torch. Extracted outside
+the worktree; hosted scalar-add, matmul and attention smoke checks pass. Evidence:
+validation/2026-10-24-current-package.json. Paths:
+artifacts/emmy-ptx-current-checkpoint.zip and artifacts/emmy-ptx-submission.zip
+are identical verified bytes. Prior stale archive/report retained as
+artifacts/emmy-ptx-before-power2.zip/json. No need to rebuild for documentation-only
+follow-ups; the report identifies the exact archived commit/compiler.
 
-All candidate correctness, timing, sanitizer, model and runtime jobs for this
-acceptance step have completed. No need to restart old handles. Entry drafts:
-SUBMISSION.md/WALKTHROUGH.md. No final release or contest entry submitted, and
-current evidence still does not establish general production readiness.
+Next: broaden index/control-flow type validation, operation/dtype coverage and
+bounded failure shrinking. Continue target hardware lower-bound/bottleneck work;
+no hosted counter/roofline evidence yet. Add future retained cases to CPU CI.
+No candidate jobs remain live from this acceptance step. New CI runs may trigger
+on documentation pushes; existing accepted-code six-check matrix is verified.
+
+Entry drafts SUBMISSION.md/WALKTHROUGH.md reflect current measured optimizations.
+**No contest entry submitted.** Personal fields/video still missing; don't invent
+them or contact organizers. General production readiness remains unproven.
