@@ -229,3 +229,12 @@ nonnegative integer. Cooperative Tile.block_threads must be positive and match
 block.x when no auxiliary band is present. Auxiliary bands remain unsupported.
 These checks do not infer required grid coverage, validate argument descriptors,
 or establish dynamic memory safety. Logical tensor/allocation ranks may differ.
+
+The input IR file must contain exactly one KernelOp, selected by a unique matching
+metadata entry. Other launch entries may coexist in meta.json for a kernel chain.
+arg_order contains each KernelOp input/output buffer once; args descriptors must
+name those buffers in the same order because the runner passes them positionally.
+Consistent permutations are legal. Allocation descriptors use f32 and a list of
+nonnegative integer dimensions (including scalar []); physical shapes need not
+match logical tensor shapes. This validates ABI syntax and buffer membership,
+not access bounds, initialization/output roles, data payloads or chain provenance.

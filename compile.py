@@ -17,11 +17,30 @@ from emmy.compiler.ir.kernel.ir import CpAsyncCommit, CpAsyncCopy, CpAsyncWait, 
 from emmy.compiler.ir.stmt import Accum, Assign, Cond, Init, Let, Load, Loop, Select, StridedLoop, Write
 
 
+def kernel_node(graph):
+    nodes = [n for n in graph.nodes.values() if type(n.op).__name__ == 'KernelOp']
+    if len(nodes) != 1:
+        raise ValueError('ABI: input IR must contain exactly one KernelOp')
+    return nodes[0]
+
+
+def kernel_launch(metadata, entry):
+    if not isinstance(metadata, dict) or not isinstance(metadata.get('kernels'), list):
+        raise ValueError('ABI: metadata must contain a kernels list')
+    if any(not isinstance(k, dict) for k in metadata['kernels']):
+        raise ValueError('ABI: kernels must contain launch objects')
+    matches = [k for k in metadata['kernels'] if k.get('entry') == entry]
+    if len(matches) != 1:
+        raise ValueError(f'ABI: expected exactly one metadata launch for entry {entry}')
+    return matches[0]
+
+
 class Compiler:
     def __init__(self, graph, launch):
         self.graph = graph
         self.launch = launch
-        self.node = next(n for n in graph.nodes.values() if type(n.op).__name__ == 'KernelOp')
+        self.node = kernel_node(graph)
+        self.validate_abi()
         self.validate_launch()
         self.validate_features()
         self.lines = []
@@ -85,6 +104,36 @@ class Compiler:
         for node in graph.nodes.values():
             for tensor in node.outputs:
                 self.shapes[tensor.name] = tuple(d.value for d in tensor.shape)
+
+    def validate_abi(self):
+        """Check positional buffer descriptors without equating logical views."""
+        def invalid(detail):
+            raise ValueError(f'Kernel {self.node.op.name}, ABI: {detail}')
+
+        if not isinstance(self.launch, dict) or self.launch.get('entry') != self.node.op.name:
+            invalid('launch entry must match KernelOp name')
+        order = self.launch.get('arg_order')
+        if (not isinstance(order, list)
+                or any(not isinstance(name, str) or not name for name in order)):
+            invalid('arg_order must be a list of nonempty buffer names')
+        if len(set(order)) != len(order):
+            invalid('arg_order contains duplicate buffer names')
+        expected = set(self.node.inputs) | {tensor.name for tensor in self.node.outputs}
+        if set(order) != expected:
+            invalid('arg_order must contain exactly the KernelOp input/output buffers')
+        descriptors = self.launch.get('args')
+        if (not isinstance(descriptors, list)
+                or any(not isinstance(arg, dict) for arg in descriptors)):
+            invalid('args must be a list of buffer descriptor objects')
+        if [arg.get('name') for arg in descriptors] != order:
+            invalid('args descriptor order must match arg_order')
+        for arg in descriptors:
+            if arg.get('dtype') != 'f32':
+                invalid(f"buffer {arg['name']} requires f32 allocation dtype")
+            shape = arg.get('shape')
+            if (not isinstance(shape, list)
+                    or any(type(d) is not int or d < 0 for d in shape)):
+                invalid(f"buffer {arg['name']} shape must contain nonnegative integer dimensions")
 
     def validate_launch(self):
         """Validate geometry used by our one-dimensional tile mapping."""
@@ -843,9 +892,9 @@ class Compiler:
 def main():
     path = Path(sys.argv[1])
     graph = Graph.from_dict(json.loads(path.read_text()))
-    node = next(n for n in graph.nodes.values() if type(n.op).__name__ == 'KernelOp')
+    node = kernel_node(graph)
     metadata = json.loads(path.with_name('meta.json').read_text())
-    launch = next(k for k in metadata['kernels'] if k['entry'] == node.op.name)
+    launch = kernel_launch(metadata, node.op.name)
     print(Compiler(graph, launch).compile(), end='')
 
 

@@ -516,3 +516,18 @@ The accepted launch-only change emits identical PTX for 594 retained kernels;
 twelve committed numerical fixtures pass locally. CPU CI runs this 28-case suite
 in addition to the existing sixteen snapshot/feature checks. Evidence is recorded
 in production-iteration11.json; this does not establish full ABI/bounds validation.
+
+The positional ABI suite also runs entirely on the CPU:
+
+```sh
+python tools/check_abi_contract.py --report artifacts/abi-contract-result.json
+```
+
+It checks 37 negative cases and five valid controls, including consistent
+permutations, equal-capacity allocation reshaping, scalar logical views and
+selection among metadata entries. Invalid descriptors are never launched.
+The accepted ABI change preserves 594 retained PTX outputs. Twelve retained GPU
+fixtures pass locally; two derived positive permutation/16x8 allocation controls
+pass locally and hosted (same independent oracle values, reshaped allocation
+control oracle to 16x8). All existing sixteen snapshot/feature and 28 launch
+checks remain unchanged. CI adds the 42 ABI checks. See production-iteration12.json.

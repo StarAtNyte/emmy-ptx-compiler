@@ -1066,3 +1066,25 @@ Completed 2026-10-24:
   reordering. Logical/allocation rank equality remains an invalid constraint.
 - Submission deferred. Full ABI/static-shape/coverage checks, broader operations
   and hardware lower-bound analysis remain; general readiness unproven.
+
+## Step 41 — positional buffer ABI diagnostics
+
+Completed 2026-10-24:
+
+- Audited all 594 retained KernelOp argument sets: metadata matches input/output
+  buffers. Official/local runners pass args list positionally, so its order must
+  match arg_order; consistent permutations remain legal.
+- Added pre-emission checks for a single KernelOp per file, unique metadata entry,
+  complete unique buffer names, descriptor order/type, f32 physical allocation
+  dtype and nonnegative integer allocation dimensions. Logical/physical shape
+  identity deliberately not required; scalar logical views stay supported.
+- Accepted 7fbe5ee4ed6c8688929b3892c06903a317bc9a4ca60e9496b0a231174ec35761.
+  37 negative/five valid controls pass without Torch; failures emit no PTX and
+  provide an ABI diagnostic. Multi-entry metadata with one matching entry is valid.
+- All 594 prior kernels retain identical PTX; twelve retained GPU fixtures pass
+  locally. Two derived reorder/allocation-reshape controls pass locally and hosted.
+  Added 42-case ABI suite to CI alongside existing sixteen and 28 launch checks.
+- No full schema/type/bounds/payload/output-role validation or new speedup claim.
+  Evidence: production-iteration12.json. Next publish/verify CI and archive, then
+  broader static-shape/control validation and target hardware bottleneck work.
+  Submission remains deferred.

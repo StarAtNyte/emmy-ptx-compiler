@@ -28,8 +28,9 @@ http://runner.riftstack.ai:48701. Compiler emits PTX 8.0 sm89; local runner chan
 that target to sm86. Local performance cannot select contest optimizations.
 
 **Current accepted compile.py SHA-256:**
-1dfcf75fe9d2ecb8d1f9aec50517b1583bc183c753bd594e61150997663df882.
-Exact source frozen/tested as artifacts/compiler-launch-validation.py. Prior
+7fbe5ee4ed6c8688929b3892c06903a317bc9a4ca60e9496b0a231174ec35761.
+Exact source frozen/tested as artifacts/compiler-abi-validation.py. Prior
+1dfcf75f is reproducible from 0fea2c0:compile.py. Prior
 bf07d517 is reproducible from 998f3b0:compile.py. Prior 393d7600
 is reproducible from 48793dc:compile.py; b13ccba6 from 35208cf.
 
@@ -56,6 +57,19 @@ retain predicate registers. Strided end capture happens after axis initializatio
 executes after body; axis_end is body-visible. See DESIGN.md for details.
 
 ## Latest acceptance evidence
+
+production-iteration12.json adds positional buffer ABI diagnostics: exactly one
+KernelOp per IR file, a unique matching launch entry, complete unique arg_order,
+args descriptors in the same order, f32 allocation dtype and static nonnegative
+integer allocation shapes. Preserves consistently reordered parameters, scalar
+logical views and differing logical/physical shapes. 37 negatives/five positive
+CLI controls pass. All 594 prior kernels emit identical PTX; twelve retained GPU
+fixtures pass locally and two new positive layout/order controls pass on both GPUs.
+Existing 16 snapshot/feature and 28 launch checks remain; CI adds 42 ABI probes.
+Changed-code CI and archive refresh pending. No full data/role/bounds/type checker.
+
+Previous launch acceptance:
+
 
 production-iteration11.json adds pre-emission launch geometry diagnostics. Rejects
 invalid/missing dimension triples, nonpositive/noninteger dimensions, y/z != 1,
@@ -178,7 +192,7 @@ sustained-nightly proof.
 
 ## Packaging and next work
 
-Current verified archive built from 0fea2c0, compiler 1dfcf75f. Uses the existing
+Prior verified archive built from 0fea2c0, compiler 1dfcf75f. Uses the existing
 isolated no-Torch Python 3.12.13 runtime from the earlier pinned fresh install;
 dependencies unchanged. Extracted scalar-add, matmul and attention hosted checks
 pass. Latest evidence: validation/2026-10-24-current-package.json. Archive aliases
@@ -205,3 +219,7 @@ order, and tools/local_runner.py builds positional parameters the same way.
 Future validation should require agreement with arg_order, while permitting
 consistent permutations of both lists. Do not require logical/allocation rank
 identity. Full ABI/schema validation and required-grid coverage remain open.
+
+Current ABI source needs published 16+28+42-check CI and archive refresh. Future
+validation still needs initialization/output roles, payload sizes, graph/schema
+consistency, static tile shapes and required grid coverage. Preserve valid views.
