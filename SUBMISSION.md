@@ -9,6 +9,8 @@ The deadline is October 27 at 23:59 AoE, October 28 at 17:44 in Nepal.
 
 ## Technical fields ready to use
 
+Public repository: https://github.com/StarAtNyte/emmy-ptx-compiler
+
 Tech stack:
 
 > Python 3.12, Emmy 0.3.11 typed IR loader, direct PTX 8.0 generation, NVIDIA
@@ -44,7 +46,6 @@ Approach:
 ## Human fields still required
 
 - Entrant's preferred name and email, and any teammate details.
-- Public repository URL: https://github.com/StarAtNyte/emmy-ptx-compiler (published).
 - A public-link 3–5 minute own-voice video. See `WALKTHROUGH.md`.
 - The entrant's own age, rule and video-understanding confirmations.
 
