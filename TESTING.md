@@ -57,6 +57,20 @@ stage, with three independent input seeds and depths of one, two and four
 repeated blocks. It is an untrained numerical test. Host transfers are part of
 this integration harness, so it is not a model performance benchmark.
 
+## Frozen-compiler follow-up
+
+```sh
+.venv/bin/python challenge/tools/generate.py tools/expressions_holdout.py --emmy .venv/bin/emmy --out artifacts/holdout-reproduced
+.venv/bin/python tools/local_runner.py artifacts/holdout-reproduced/*
+.venv/bin/python tools/validate.py --problems artifacts/holdout-reproduced --report artifacts/holdout-results.json
+```
+
+The compiler hash was frozen before creating the original cases. Two expressions
+could not be traced upstream, and a LayerNorm fixture needed its full computation
+inside the traced callable. The active specification contains the ten runnable
+cases. Original attempts, the fixture correction, both GPU results and unchanged
+compiler hash are recorded in `validation/2026-10-24-holdout.json`.
+
 ## Performance
 
 ```sh

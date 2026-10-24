@@ -1,0 +1,234 @@
+{
+  "date": "2026-10-24",
+  "freeze": {
+    "created_utc": "2026-10-24T01:57:17.207897+00:00",
+    "seed": 20261024,
+    "commit": "49265afbae10532addbf56ff435dbbadb3f5cbc1",
+    "compiler_sha256": "6fb720f76e33e9a77f25767cc43de4f923e498028a9f2581b720ac018399558f",
+    "specification_sha256": "6b43c7107cf12ee4e8477e59fe398dba4b91d7cf5de9727a78d539d1e36fa470",
+    "status": "frozen before tracing or evaluation"
+  },
+  "initial_trace_attempts": 12,
+  "initial_generated_cases": 10,
+  "upstream_trace_failures": {
+    "r_holdout_min": "aten.amin fallback could not produce reduction output",
+    "r_holdout_product": "aten.prod fallback could not produce reduction output"
+  },
+  "initial_hosted_results": {
+    "compiler_sha256": "6fb720f76e33e9a77f25767cc43de4f923e498028a9f2581b720ac018399558f",
+    "results": [
+      {
+        "problem": "a_holdout_0",
+        "passed": true,
+        "elapsed_s": 2.586,
+        "stdout": "[k_matmul_softmax_reduce_e035c6] 96 registers\n[k_matmul_softmax_reduce_e035c6] PASS  matmul_1: max abs err 1.788e-07  (78.048 us)\n",
+        "stderr": ""
+      },
+      {
+        "problem": "a_holdout_1",
+        "passed": true,
+        "elapsed_s": 2.723,
+        "stdout": "[k_matmul_softmax_reduce_2e48c2] 40 registers\n[k_matmul_softmax_reduce_2e48c2] PASS  matmul_1: max abs err 3.576e-07  (17.248 us)\n",
+        "stderr": ""
+      },
+      {
+        "problem": "f_holdout_layernorm",
+        "passed": false,
+        "elapsed_s": 2.54,
+        "stdout": "[k_mean_02cd87] 22 registers\n[k_mean_02cd87] FAIL  div: max abs err 2.162e-01 (tolerance rtol=0.001 atol=0.0001)\n    the parameters must be in meta.json's arg_order: mean_count, add_c1, y, div\n",
+        "stderr": ""
+      },
+      {
+        "problem": "f_holdout_softmax",
+        "passed": true,
+        "elapsed_s": 2.118,
+        "stdout": "[k_softmax_4eec5c] 21 registers\n[k_softmax_4eec5c] PASS  softmax: max abs err 7.451e-09  (21.088 us)\n",
+        "stderr": ""
+      },
+      {
+        "problem": "m_holdout_0",
+        "passed": true,
+        "elapsed_s": 2.289,
+        "stdout": "[k_matmul_5ebc40] 40 registers\n[k_matmul_5ebc40] PASS  matmul: max abs err 1.907e-06  (19.296 us)\n",
+        "stderr": ""
+      },
+      {
+        "problem": "m_holdout_1",
+        "passed": true,
+        "elapsed_s": 2.32,
+        "stdout": "[k_matmul_7b8861] 25 registers\n[k_matmul_7b8861] PASS  matmul: max abs err 1.907e-06  (15.36 us)\n",
+        "stderr": ""
+      },
+      {
+        "problem": "p_holdout_minmax",
+        "passed": true,
+        "elapsed_s": 2.296,
+        "stdout": "[k_sub_pointwise] 14 registers\n[k_sub_pointwise] PASS  sub: max abs err 0.000e+00  (21.472 us)\n",
+        "stderr": ""
+      },
+      {
+        "problem": "p_holdout_mixed",
+        "passed": true,
+        "elapsed_s": 2.109,
+        "stdout": "[k_add_pointwise] 17 registers\n[k_add_pointwise] PASS  add: max abs err 4.768e-06  (20.576 us)\n",
+        "stderr": ""
+      },
+      {
+        "problem": "p_holdout_sqrt",
+        "passed": true,
+        "elapsed_s": 2.119,
+        "stdout": "[k_sqrt_pointwise] 12 registers\n[k_sqrt_pointwise] PASS  sqrt: max abs err 0.000e+00  (21.28 us)\n",
+        "stderr": ""
+      },
+      {
+        "problem": "r_holdout_3d",
+        "passed": true,
+        "elapsed_s": 2.312,
+        "stdout": "[k_sum_1_reduce] 16 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 1.907e-06  (20.576 us)\n",
+        "stderr": ""
+      }
+    ]
+  },
+  "fixture_correction": {
+    "compiler_sha256": "6fb720f76e33e9a77f25767cc43de4f923e498028a9f2581b720ac018399558f",
+    "corrected_specification_sha256": "7e1dbd4a60f8768935bf8aa0adb8ac16906a072f28ac550007e060b79c8df0f7",
+    "reason": "Original fixture centers y outside tracing. Kernel IR inputs contain y, so it represents RMS normalization rather than centering plus normalization. Keep centering inside nn.Module.forward.",
+    "status": "recorded before tracing corrected fixture"
+  },
+  "final_local_results": {
+    "compiler_sha256": "6fb720f76e33e9a77f25767cc43de4f923e498028a9f2581b720ac018399558f",
+    "arch": "sm_86",
+    "results": [
+      {
+        "problem": "a_holdout_0",
+        "passed": true,
+        "elapsed_s": 0.582
+      },
+      {
+        "problem": "a_holdout_1",
+        "passed": true,
+        "elapsed_s": 0.634
+      },
+      {
+        "problem": "f_holdout_layernorm_module",
+        "passed": true,
+        "elapsed_s": 0.649
+      },
+      {
+        "problem": "f_holdout_softmax",
+        "passed": true,
+        "elapsed_s": 0.499
+      },
+      {
+        "problem": "m_holdout_0",
+        "passed": true,
+        "elapsed_s": 0.491
+      },
+      {
+        "problem": "m_holdout_1",
+        "passed": true,
+        "elapsed_s": 0.569
+      },
+      {
+        "problem": "p_holdout_minmax",
+        "passed": true,
+        "elapsed_s": 0.574
+      },
+      {
+        "problem": "p_holdout_mixed",
+        "passed": true,
+        "elapsed_s": 0.508
+      },
+      {
+        "problem": "p_holdout_sqrt",
+        "passed": true,
+        "elapsed_s": 0.51
+      },
+      {
+        "problem": "r_holdout_3d",
+        "passed": true,
+        "elapsed_s": 0.513
+      }
+    ]
+  },
+  "final_hosted_results": {
+    "compiler_sha256": "6fb720f76e33e9a77f25767cc43de4f923e498028a9f2581b720ac018399558f",
+    "results": [
+      {
+        "problem": "a_holdout_0",
+        "passed": true,
+        "elapsed_s": 2.41,
+        "stdout": "[k_matmul_softmax_reduce_e035c6] 96 registers\n[k_matmul_softmax_reduce_e035c6] PASS  matmul_1: max abs err 1.788e-07  (83.104 us)\n",
+        "stderr": ""
+      },
+      {
+        "problem": "a_holdout_1",
+        "passed": true,
+        "elapsed_s": 2.348,
+        "stdout": "[k_matmul_softmax_reduce_2e48c2] 40 registers\n[k_matmul_softmax_reduce_2e48c2] PASS  matmul_1: max abs err 3.576e-07  (25.184 us)\n",
+        "stderr": ""
+      },
+      {
+        "problem": "f_holdout_layernorm_module",
+        "passed": true,
+        "elapsed_s": 2.095,
+        "stdout": "[k_mean_reduce_5c3e65] 40 registers\n[k_mean_reduce_5c3e65] PASS  div: max abs err 4.768e-07  (20.288 us)\n",
+        "stderr": ""
+      },
+      {
+        "problem": "f_holdout_softmax",
+        "passed": true,
+        "elapsed_s": 1.997,
+        "stdout": "[k_softmax_4eec5c] 21 registers\n[k_softmax_4eec5c] PASS  softmax: max abs err 7.451e-09  (24.608 us)\n",
+        "stderr": ""
+      },
+      {
+        "problem": "m_holdout_0",
+        "passed": true,
+        "elapsed_s": 2.301,
+        "stdout": "[k_matmul_5ebc40] 40 registers\n[k_matmul_5ebc40] PASS  matmul: max abs err 1.907e-06  (20.128 us)\n",
+        "stderr": ""
+      },
+      {
+        "problem": "m_holdout_1",
+        "passed": true,
+        "elapsed_s": 2.248,
+        "stdout": "[k_matmul_7b8861] 25 registers\n[k_matmul_7b8861] PASS  matmul: max abs err 1.907e-06  (17.312 us)\n",
+        "stderr": ""
+      },
+      {
+        "problem": "p_holdout_minmax",
+        "passed": true,
+        "elapsed_s": 2.008,
+        "stdout": "[k_sub_pointwise] 14 registers\n[k_sub_pointwise] PASS  sub: max abs err 0.000e+00  (24.544 us)\n",
+        "stderr": ""
+      },
+      {
+        "problem": "p_holdout_mixed",
+        "passed": true,
+        "elapsed_s": 2.007,
+        "stdout": "[k_add_pointwise] 17 registers\n[k_add_pointwise] PASS  add: max abs err 4.768e-06  (24.288 us)\n",
+        "stderr": ""
+      },
+      {
+        "problem": "p_holdout_sqrt",
+        "passed": true,
+        "elapsed_s": 2.09,
+        "stdout": "[k_sqrt_pointwise] 12 registers\n[k_sqrt_pointwise] PASS  sqrt: max abs err 0.000e+00  (23.808 us)\n",
+        "stderr": ""
+      },
+      {
+        "problem": "r_holdout_3d",
+        "passed": true,
+        "elapsed_s": 1.931,
+        "stdout": "[k_sum_1_reduce] 16 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 1.907e-06  (23.264 us)\n",
+        "stderr": ""
+      }
+    ]
+  },
+  "curated_specification": "tools/expressions_holdout.py",
+  "curated_specification_sha256": "5564a0cbe41ea843cc85d766eea8602f057e4690846ae47eb792dfd604f5bf1c",
+  "curated_regeneration": "10/10 generated; IR, launch metadata and expected arrays match evaluated cases",
+  "compiler_changed": false,
+  "interpretation": "Nine valid initial cases passed. One initial LayerNorm fixture compared a traced RMS-normalization IR with a centering reference; corrected by keeping centering inside nn.Module.forward. The ten valid cases passed on both GPUs without compiler changes. No hidden-test success rate is inferred."
+}

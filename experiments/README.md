@@ -32,3 +32,17 @@ preserve all remainder lengths; dedicated shared-loop cases exercise them.
 All measurements use alternating baseline/candidate trials with checked outputs.
 Runner clocks are not locked. Raw results and compiler hashes are archived in
 the iteration's validation record.
+
+## Frozen-compiler holdout provenance
+
+`holdout-initial.py` preserves the original specification hash recorded before
+tracing. Two of twelve attempts failed in Emmy's frontend (`amin`, `prod`). Nine
+of the ten generated cases passed initially. The LayerNorm fixture incorrectly
+precomputed centering outside the traced callable, so its IR took y as input and
+performed RMS normalization while the reference centered again.
+
+`holdout-layernorm-correction.py` keeps the whole computation inside forward.
+The compiler was unchanged. All ten valid cases then passed locally and hosted.
+The runnable `tools/expressions_holdout.py` reproduces those exact IRs, launch
+metadata and expected arrays. Original and corrected results are retained in
+`validation/2026-10-24-holdout.json`; no initial failure was silently discarded.

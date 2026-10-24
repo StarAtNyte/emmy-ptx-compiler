@@ -68,6 +68,11 @@ git clone https://github.com/cloudrift-ai/emmy-hackathon-2026 challenge
 paired timing and sanitizer details. A committed-source archive was also tested
 from another directory in a fresh environment without Torch installed.
 
+A later [frozen-compiler check](validation/2026-10-24-holdout.json) passed ten
+additional valid cases on both GPUs without compiler changes. It records two
+upstream tracing failures and a corrected callable-boundary fixture, including
+the initial results.
+
 ## Measured performance
 
 Alternating paired RTX 5090 trials checked both compilers' outputs. Clocks were
