@@ -787,3 +787,9 @@ selected sanitizers. Reports use power2-index-* under artifacts. Also preliminar
 43011 may finish independently; do not confuse it with final proof corpus.
 Next: inspect those exact-hash gates, runtime equivalence, paired timing repeat,
 then accept or reject. CPU snapshots will need reviewed updates only if adopted.
+
+Step 28 checkpoint: final proof-local corpus completed 48/48; hosted public 15/15
+and independent matmul 4/4; nine transformer checks; three no-Torch /tmp compilation
+checks all pass for frozen 8da911f2. These completed reports now join discovery
+record. Full prior regression, hosted proof suites and sanitizer gates remain live;
+no acceptance. Profiling/experiment checkpoint published as 0d2d442.

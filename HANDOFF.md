@@ -233,3 +233,10 @@ sanitizers. Final frozen proof dirs are power2-index-proof-d{1,2,8,32}; earlier
 fresh-* preliminary dirs have duplicate case IDs and are excluded from acceptance.
 Next collect gates, standalone runtime, repeat target timing, then decide adoption
 and update CPU snapshots only with numerical evidence. Submission deferred.
+
+Step 28 latest checkpoint: final proof-local 48/48, hosted public 15/15, independent
+matmul 4/4, nine transformer runs and three no-Torch runtime compilation checks
+all completed/pass, preserved in discovery record. Remaining live: 92307 prior
+regressions, 85282 hosted proof suites, 61493 selected sanitizers. Repeat target
+pairs after these complete before deciding adoption. Main unchanged; experiment
+publication 0d2d442. Preliminary/finished local handles need no restart.

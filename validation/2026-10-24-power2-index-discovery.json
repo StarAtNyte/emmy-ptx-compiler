@@ -329,5 +329,1409 @@
     "Unlocked target clocks, full outputs first trial and prefixes thereafter",
     "Native inspection is local-driver cuLink, not hosted SASS or dynamic executed instruction counts",
     "No candidate acceptance until all exact-hash gates complete"
-  ]
+  ],
+  "completed_candidate_gates": {
+    "power2-index-proof-local": {
+      "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+      "isolation": "one subprocess and CUDA context per case",
+      "results": [
+        {
+          "problem": "divide_negative_s5731_d1",
+          "path": "artifacts/power2-index-proof-d1/divide_negative_s5731_d1",
+          "meta_sha256": "0aa93d6376eadbd0a7056a3390c2966235e98620868f7933cb0ec92c7e62ce59",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "caa6b5a776eef252625b73b8bace55989a3100b468f307b6afe4f3254fcfa61a"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_negative_s5731_d1\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_negative_s5731_d1",
+                "passed": true,
+                "elapsed_s": 0.481
+              }
+            ]
+          },
+          "elapsed_s": 1.006
+        },
+        {
+          "problem": "divide_negative_s5731_renamed_d1",
+          "path": "artifacts/power2-index-proof-d1/divide_negative_s5731_renamed_d1",
+          "meta_sha256": "db7157915fc975d9a3e6c8452c78173a10466b455a10596c24829ae34d34de55",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "231d59173a7164c287f253d96b97552a7a3e427070c590b30c5ff6480e5dee28"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_negative_s5731_renamed_d1\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_negative_s5731_renamed_d1",
+                "passed": true,
+                "elapsed_s": 0.505
+              }
+            ]
+          },
+          "elapsed_s": 1.024
+        },
+        {
+          "problem": "divide_positive_s5731_d1",
+          "path": "artifacts/power2-index-proof-d1/divide_positive_s5731_d1",
+          "meta_sha256": "ec705c7b29988d2d224e3fef9050c600393645940420d92c79c99b7757ccfa80",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "6cfba56d546418c093c5445983b55b92af5e3909b7b0d0faa4b66e74fcfc492b"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_positive_s5731_d1\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_positive_s5731_d1",
+                "passed": true,
+                "elapsed_s": 0.511
+              }
+            ]
+          },
+          "elapsed_s": 1.157
+        },
+        {
+          "problem": "divide_positive_s5731_renamed_d1",
+          "path": "artifacts/power2-index-proof-d1/divide_positive_s5731_renamed_d1",
+          "meta_sha256": "0988d3d64ed78446b6fc259b088cb7de8b947fd1a98243e8989534f68e34e277",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "1d81e5cb38e1aee893319bc1dd31f94c8239c3431d4026b6c1a8f99b3af6b2ea"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_positive_s5731_renamed_d1\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_positive_s5731_renamed_d1",
+                "passed": true,
+                "elapsed_s": 0.476
+              }
+            ]
+          },
+          "elapsed_s": 0.988
+        },
+        {
+          "problem": "floor_negative_s5731_d1",
+          "path": "artifacts/power2-index-proof-d1/floor_negative_s5731_d1",
+          "meta_sha256": "2fe3c2fe93d08361f133e8d4b254212550ad2580e792bb1a608f48162ee86c7b",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "29544829d26749356ddfb733fa3268c0319f2a34f31d6e217da2b74ad661d5ec"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_negative_s5731_d1\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_negative_s5731_d1",
+                "passed": true,
+                "elapsed_s": 0.54
+              }
+            ]
+          },
+          "elapsed_s": 1.051
+        },
+        {
+          "problem": "floor_negative_s5731_renamed_d1",
+          "path": "artifacts/power2-index-proof-d1/floor_negative_s5731_renamed_d1",
+          "meta_sha256": "4e6e1dbbe964d2be73c79f72be3c39061cf066672cb1b83572f86b5025af284f",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "280310fd35f4036af6f11bce7c83365bc982335fb9a1fa3dbadb97b8b64f4542"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_negative_s5731_renamed_d1\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_negative_s5731_renamed_d1",
+                "passed": true,
+                "elapsed_s": 0.516
+              }
+            ]
+          },
+          "elapsed_s": 1.048
+        },
+        {
+          "problem": "floor_positive_s5731_d1",
+          "path": "artifacts/power2-index-proof-d1/floor_positive_s5731_d1",
+          "meta_sha256": "d5b74221d223874eed6d5c271453acde664b5771b5f0d11936a32320498f8aef",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "046043007f2a69135e3ef034e6ec4d2882ef9bd383b8378459e66142e8727af5"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_positive_s5731_d1\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_positive_s5731_d1",
+                "passed": true,
+                "elapsed_s": 0.524
+              }
+            ]
+          },
+          "elapsed_s": 1.06
+        },
+        {
+          "problem": "floor_positive_s5731_renamed_d1",
+          "path": "artifacts/power2-index-proof-d1/floor_positive_s5731_renamed_d1",
+          "meta_sha256": "01a6718c9c956ff15345156cff569badca2a6d05cceaedcfd7d6c6f6fc64eed8",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "dc8eb97fac7d2e6f954b34e0a9d409fb6991ab1bbc7a93931151d8248af57190"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_positive_s5731_renamed_d1\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_positive_s5731_renamed_d1",
+                "passed": true,
+                "elapsed_s": 0.483
+              }
+            ]
+          },
+          "elapsed_s": 0.998
+        },
+        {
+          "problem": "mod_negative_s5731_d1",
+          "path": "artifacts/power2-index-proof-d1/mod_negative_s5731_d1",
+          "meta_sha256": "7ec43fe4d2ddae6796fb6c1b24879d798e54b0db823ed8153a63d6f8cc896794",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "8ce9f61447ae096c0cb35de73cb518474b01676574cfd69a4fa4134fc02f1763"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_negative_s5731_d1\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_negative_s5731_d1",
+                "passed": true,
+                "elapsed_s": 0.494
+              }
+            ]
+          },
+          "elapsed_s": 1.067
+        },
+        {
+          "problem": "mod_negative_s5731_renamed_d1",
+          "path": "artifacts/power2-index-proof-d1/mod_negative_s5731_renamed_d1",
+          "meta_sha256": "711a83067921d331b3555ff73dcd288e4d60736bdc11db0c3fe00fb6da2a6648",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "597b3ed928a3795994f0fb14b527400ca1de2bed4ff6330bd61e0ee4a1fb3a98"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_negative_s5731_renamed_d1\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_negative_s5731_renamed_d1",
+                "passed": true,
+                "elapsed_s": 0.557
+              }
+            ]
+          },
+          "elapsed_s": 1.121
+        },
+        {
+          "problem": "mod_positive_s5731_d1",
+          "path": "artifacts/power2-index-proof-d1/mod_positive_s5731_d1",
+          "meta_sha256": "bfdbed2cae9096836dbe8912484d663069ddc2899ff3ca25a6b36c08e8f238ec",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "c57fbaf61ac3e26431c2c3b47b9383f4d7cfe052dafc56e59109fd197bc8bb47"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_positive_s5731_d1\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_positive_s5731_d1",
+                "passed": true,
+                "elapsed_s": 0.532
+              }
+            ]
+          },
+          "elapsed_s": 1.0
+        },
+        {
+          "problem": "mod_positive_s5731_renamed_d1",
+          "path": "artifacts/power2-index-proof-d1/mod_positive_s5731_renamed_d1",
+          "meta_sha256": "5a48c517d37ca0d05ef50bdf0bbf8e50a78a6373232bfc51aec01759a88d3220",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "d39914b1b2b7f9b714fb31ed3c7fe481694b92b69e35db6d52cb70b7ad559b0b"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_positive_s5731_renamed_d1\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_positive_s5731_renamed_d1",
+                "passed": true,
+                "elapsed_s": 0.531
+              }
+            ]
+          },
+          "elapsed_s": 1.037
+        },
+        {
+          "problem": "divide_negative_s5731_d2",
+          "path": "artifacts/power2-index-proof-d2/divide_negative_s5731_d2",
+          "meta_sha256": "f148da5e141a53664d0f5075798f3bfd31e366ece6da8382a5e19a9a17478118",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "48c3633a1688766eb3be95bcc7db6f75c07dd8c0e63b17ddb396dc10e7b47ca8"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_negative_s5731_d2\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_negative_s5731_d2",
+                "passed": true,
+                "elapsed_s": 0.532
+              }
+            ]
+          },
+          "elapsed_s": 1.094
+        },
+        {
+          "problem": "divide_negative_s5731_renamed_d2",
+          "path": "artifacts/power2-index-proof-d2/divide_negative_s5731_renamed_d2",
+          "meta_sha256": "08d50d2d1a02c3361bbf0087af75f52885534e3dd5e5dfce269f0610cb271d5d",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "94343ea414292b818c51c2a96ff74deebb521a2a26f93bff6a5396beda1ad0db"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_negative_s5731_renamed_d2\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_negative_s5731_renamed_d2",
+                "passed": true,
+                "elapsed_s": 0.498
+              }
+            ]
+          },
+          "elapsed_s": 0.952
+        },
+        {
+          "problem": "divide_positive_s5731_d2",
+          "path": "artifacts/power2-index-proof-d2/divide_positive_s5731_d2",
+          "meta_sha256": "fea7ad84992df05a6704e73ccef18df32d0081db7c60019b739e7cd5b2577ff5",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "e5dec426f2bd45a451d75c762f431fe1a4bc9623178fcb1adc83366af50e669e"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_positive_s5731_d2\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_positive_s5731_d2",
+                "passed": true,
+                "elapsed_s": 0.487
+              }
+            ]
+          },
+          "elapsed_s": 0.912
+        },
+        {
+          "problem": "divide_positive_s5731_renamed_d2",
+          "path": "artifacts/power2-index-proof-d2/divide_positive_s5731_renamed_d2",
+          "meta_sha256": "86dd2102dbadf0d93120ead599ace4ac4bb06916635bb3b8136c4686a5dedbe9",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "26e31bb32724256219946600d4dc033ac3e212a913c0afaf4376968f9fbf261e"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_positive_s5731_renamed_d2\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_positive_s5731_renamed_d2",
+                "passed": true,
+                "elapsed_s": 0.499
+              }
+            ]
+          },
+          "elapsed_s": 1.094
+        },
+        {
+          "problem": "floor_negative_s5731_d2",
+          "path": "artifacts/power2-index-proof-d2/floor_negative_s5731_d2",
+          "meta_sha256": "acea1eba1c1b65c6e92a9cff82687c1ceb9ce8f92ed38617b91cfaba8c13bea6",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "dd016662d50e7e20f3e648a9a883b94fb4274c8d382ee233fd69fb0ff7e4baaf"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_negative_s5731_d2\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_negative_s5731_d2",
+                "passed": true,
+                "elapsed_s": 0.463
+              }
+            ]
+          },
+          "elapsed_s": 1.061
+        },
+        {
+          "problem": "floor_negative_s5731_renamed_d2",
+          "path": "artifacts/power2-index-proof-d2/floor_negative_s5731_renamed_d2",
+          "meta_sha256": "59b9aca181ea50caaa6145b8714ce6d3b07d2fd5b44782bf9e390804c8d29082",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "0d9542d8127e9dda9c58ac3af7e48f44841e672cc050c9da73e408e11dda6302"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_negative_s5731_renamed_d2\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_negative_s5731_renamed_d2",
+                "passed": true,
+                "elapsed_s": 0.473
+              }
+            ]
+          },
+          "elapsed_s": 1.073
+        },
+        {
+          "problem": "floor_positive_s5731_d2",
+          "path": "artifacts/power2-index-proof-d2/floor_positive_s5731_d2",
+          "meta_sha256": "9d984706021307bb224e8e7390dedbfc52f14122fc01e2f473da4d2f4ecd2c16",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "690617dc1cffd8c06236dbbe274ec4afe7a32bc72285dcec660c67bbe1d0b3a5"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_positive_s5731_d2\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_positive_s5731_d2",
+                "passed": true,
+                "elapsed_s": 0.485
+              }
+            ]
+          },
+          "elapsed_s": 1.041
+        },
+        {
+          "problem": "floor_positive_s5731_renamed_d2",
+          "path": "artifacts/power2-index-proof-d2/floor_positive_s5731_renamed_d2",
+          "meta_sha256": "157149ce0440409e7a2ed530533909f204d7babb9c47bd62dcf8102249fb6312",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "f257d43d1abe4ccf0634d4fbc0d25131765192d0d966da2368add2c9737908dd"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_positive_s5731_renamed_d2\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_positive_s5731_renamed_d2",
+                "passed": true,
+                "elapsed_s": 0.497
+              }
+            ]
+          },
+          "elapsed_s": 1.037
+        },
+        {
+          "problem": "mod_negative_s5731_d2",
+          "path": "artifacts/power2-index-proof-d2/mod_negative_s5731_d2",
+          "meta_sha256": "e8a189abb7849e83f5ecf3e7c0339cc4742c2d506057480a1bc941ec069626f2",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "957cd5195b2ab7f79196a21b01614db448bea8e016b3288aa83a26c67a6cb616"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_negative_s5731_d2\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_negative_s5731_d2",
+                "passed": true,
+                "elapsed_s": 0.478
+              }
+            ]
+          },
+          "elapsed_s": 1.045
+        },
+        {
+          "problem": "mod_negative_s5731_renamed_d2",
+          "path": "artifacts/power2-index-proof-d2/mod_negative_s5731_renamed_d2",
+          "meta_sha256": "d60bca9a8243a4bac8b11df2f0184d7aba0fdd17f6fa29d4ffefe3f73fd4be35",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "49816d418d3064e074744759fc39ab56fd56e00a3f259a7cc5ed0c6a8c73f823"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_negative_s5731_renamed_d2\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_negative_s5731_renamed_d2",
+                "passed": true,
+                "elapsed_s": 0.413
+              }
+            ]
+          },
+          "elapsed_s": 0.899
+        },
+        {
+          "problem": "mod_positive_s5731_d2",
+          "path": "artifacts/power2-index-proof-d2/mod_positive_s5731_d2",
+          "meta_sha256": "a2f4a1415fb75778260858d9dbd14092a3d7bd877e36e498063fa802064e0dbb",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "cbaf0de3c062cb691497e279472bcdb1d82c71fc2ad9f39e03761b4274d1db67"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_positive_s5731_d2\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_positive_s5731_d2",
+                "passed": true,
+                "elapsed_s": 0.434
+              }
+            ]
+          },
+          "elapsed_s": 0.998
+        },
+        {
+          "problem": "mod_positive_s5731_renamed_d2",
+          "path": "artifacts/power2-index-proof-d2/mod_positive_s5731_renamed_d2",
+          "meta_sha256": "26f15315b7bd9df7189a2728336063f54cfcff4ca27edb517ac1be447417e182",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "cfa0e1ced113ec5d935eb0e706072c79b97daa6f9b129e6a2f24c4fac0e3275e"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_positive_s5731_renamed_d2\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_positive_s5731_renamed_d2",
+                "passed": true,
+                "elapsed_s": 0.465
+              }
+            ]
+          },
+          "elapsed_s": 1.039
+        },
+        {
+          "problem": "divide_negative_s5731_d32",
+          "path": "artifacts/power2-index-proof-d32/divide_negative_s5731_d32",
+          "meta_sha256": "8450aab20f4e751cecd9f045665e0a9935e98e489eb299c1184d653842b21ae7",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "4cbf2bbb7ef95a97f2669de12c36ace150989ea4392d3b55ec7ffe009538a8e7"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_negative_s5731_d32\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_negative_s5731_d32",
+                "passed": true,
+                "elapsed_s": 0.43
+              }
+            ]
+          },
+          "elapsed_s": 0.971
+        },
+        {
+          "problem": "divide_negative_s5731_renamed_d32",
+          "path": "artifacts/power2-index-proof-d32/divide_negative_s5731_renamed_d32",
+          "meta_sha256": "5e3b298ff441670bbd378f20c714a2e79f5e5b985816e6f6a682558cba741b2f",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "1b560139115770d959709b14b4e85ab269f657d34bb12b035b2fea8c8911abe1"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_negative_s5731_renamed_d32\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_negative_s5731_renamed_d32",
+                "passed": true,
+                "elapsed_s": 0.462
+              }
+            ]
+          },
+          "elapsed_s": 1.013
+        },
+        {
+          "problem": "divide_positive_s5731_d32",
+          "path": "artifacts/power2-index-proof-d32/divide_positive_s5731_d32",
+          "meta_sha256": "8457630c977e8fa76dfcb0c3ba0d02034436ee5aac3432d9abad39536267d318",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "1005ce854da08bb8622d7cc28bf3b81883b4363a30e4b73b78c3111c294a0b1b"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_positive_s5731_d32\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_positive_s5731_d32",
+                "passed": true,
+                "elapsed_s": 0.428
+              }
+            ]
+          },
+          "elapsed_s": 0.987
+        },
+        {
+          "problem": "divide_positive_s5731_renamed_d32",
+          "path": "artifacts/power2-index-proof-d32/divide_positive_s5731_renamed_d32",
+          "meta_sha256": "ff8f55681fcee0fe6b4514a23903b8ccb786188c3c782f2ead09788611c5faeb",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "cb280720b5798cced0359f7c6fd907a7d1237fe791c51f76633fa854e9fc52fe"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_positive_s5731_renamed_d32\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_positive_s5731_renamed_d32",
+                "passed": true,
+                "elapsed_s": 0.439
+              }
+            ]
+          },
+          "elapsed_s": 1.004
+        },
+        {
+          "problem": "floor_negative_s5731_d32",
+          "path": "artifacts/power2-index-proof-d32/floor_negative_s5731_d32",
+          "meta_sha256": "eb73e1f2b8be9038323f68d8bef4780ef0bb5942967d76316a46568d392feaf2",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "85111aa83cb71b18b3e6f43f2073612a421a8d6d4eea640b758b7da3d388e0e4"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_negative_s5731_d32\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_negative_s5731_d32",
+                "passed": true,
+                "elapsed_s": 0.413
+              }
+            ]
+          },
+          "elapsed_s": 0.96
+        },
+        {
+          "problem": "floor_negative_s5731_renamed_d32",
+          "path": "artifacts/power2-index-proof-d32/floor_negative_s5731_renamed_d32",
+          "meta_sha256": "e57547f207c7d93752456e7fde08373148224af57da3a1e95f789a3874c1f34a",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "7d10749c1594b8a7688e1059fc6aaaa0bac1c188e662e117b9ef16abd3dbc173"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_negative_s5731_renamed_d32\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_negative_s5731_renamed_d32",
+                "passed": true,
+                "elapsed_s": 0.433
+              }
+            ]
+          },
+          "elapsed_s": 0.994
+        },
+        {
+          "problem": "floor_positive_s5731_d32",
+          "path": "artifacts/power2-index-proof-d32/floor_positive_s5731_d32",
+          "meta_sha256": "e63e124dba4e44502b12f299f768cc17a3d346192553fe5dca992d3c432fb5ef",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "5b8cd173fed5ea5bec9ab74d81566fca6b47cb6623a387477c712bcbe026895f"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_positive_s5731_d32\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_positive_s5731_d32",
+                "passed": true,
+                "elapsed_s": 0.411
+              }
+            ]
+          },
+          "elapsed_s": 1.041
+        },
+        {
+          "problem": "floor_positive_s5731_renamed_d32",
+          "path": "artifacts/power2-index-proof-d32/floor_positive_s5731_renamed_d32",
+          "meta_sha256": "145756045891708961bb6b52fb4362268b780235376d34867cee5334d02d328f",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "54138decae4b9e6a558e582b5087185b44cbb70f1a97cd4f248b990c5e6ba251"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_positive_s5731_renamed_d32\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_positive_s5731_renamed_d32",
+                "passed": true,
+                "elapsed_s": 0.442
+              }
+            ]
+          },
+          "elapsed_s": 1.03
+        },
+        {
+          "problem": "mod_negative_s5731_d32",
+          "path": "artifacts/power2-index-proof-d32/mod_negative_s5731_d32",
+          "meta_sha256": "d404a443b41486acb28c0fce539dd1dfe7282b28288dde5ec6a9a7823935b8fd",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "f19e5c5bff35d7205acd36f3e306733891a5b15dbfe62a3722e9af1439a912bc"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_negative_s5731_d32\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_negative_s5731_d32",
+                "passed": true,
+                "elapsed_s": 0.51
+              }
+            ]
+          },
+          "elapsed_s": 1.063
+        },
+        {
+          "problem": "mod_negative_s5731_renamed_d32",
+          "path": "artifacts/power2-index-proof-d32/mod_negative_s5731_renamed_d32",
+          "meta_sha256": "2af4f701a0541b47524a9b14cef0439cfcc6e820771178ead36abdab31264cc8",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "2ce627569a4a5c628fe73e863268e329c950f42e2581d9b5389c75f56a628f44"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_negative_s5731_renamed_d32\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_negative_s5731_renamed_d32",
+                "passed": true,
+                "elapsed_s": 0.459
+              }
+            ]
+          },
+          "elapsed_s": 1.03
+        },
+        {
+          "problem": "mod_positive_s5731_d32",
+          "path": "artifacts/power2-index-proof-d32/mod_positive_s5731_d32",
+          "meta_sha256": "77b4828f1055a6c05e9244f4d9ff342e09bf496f3c25a91aebc79b8349d93401",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "8cd5f8a5256d636b0f7f301c4cf1bfaeb0d7094a8621a4263c0e40da754dbe3c"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_positive_s5731_d32\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_positive_s5731_d32",
+                "passed": true,
+                "elapsed_s": 0.433
+              }
+            ]
+          },
+          "elapsed_s": 0.981
+        },
+        {
+          "problem": "mod_positive_s5731_renamed_d32",
+          "path": "artifacts/power2-index-proof-d32/mod_positive_s5731_renamed_d32",
+          "meta_sha256": "a4ee40c06b0f0676b365099630e3706056844a0104ad981e70f88db40fb5c822",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "16d89bd2d8e264b36f9fdb79f86273d0f2450b54221fdb89368f6a8ff72939d7"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_positive_s5731_renamed_d32\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_positive_s5731_renamed_d32",
+                "passed": true,
+                "elapsed_s": 0.445
+              }
+            ]
+          },
+          "elapsed_s": 0.98
+        },
+        {
+          "problem": "divide_negative_s5731_d8",
+          "path": "artifacts/power2-index-proof-d8/divide_negative_s5731_d8",
+          "meta_sha256": "f6562b3718a440b2ce38d533b1b5441d1b58aad790507c21fd659c63ecbdbf23",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "b21ff7764ca760e6b9fe0766a69a46510d7c87bb816076affa274f5aa80b13cb"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_negative_s5731_d8\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_negative_s5731_d8",
+                "passed": true,
+                "elapsed_s": 0.412
+              }
+            ]
+          },
+          "elapsed_s": 1.042
+        },
+        {
+          "problem": "divide_negative_s5731_renamed_d8",
+          "path": "artifacts/power2-index-proof-d8/divide_negative_s5731_renamed_d8",
+          "meta_sha256": "664c01597a08a27d1a27c61ce31dce37b04493436e5440d2478428875dbd3f97",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "e7614ffc70b8925b82df9d07657e3e77ec1293ceb47fec61e2c60f23cb7b2564"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_negative_s5731_renamed_d8\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_negative_s5731_renamed_d8",
+                "passed": true,
+                "elapsed_s": 0.439
+              }
+            ]
+          },
+          "elapsed_s": 0.962
+        },
+        {
+          "problem": "divide_positive_s5731_d8",
+          "path": "artifacts/power2-index-proof-d8/divide_positive_s5731_d8",
+          "meta_sha256": "aea8eb9120593ad0b585df8e5dd6debd1b431b051844da73601a0b8107448e90",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "69c0268cf2fe7121a47ed001a6d4f8dd0d8380e4dc86944d8e2fbb48ccf606f8"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_positive_s5731_d8\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_positive_s5731_d8",
+                "passed": true,
+                "elapsed_s": 0.441
+              }
+            ]
+          },
+          "elapsed_s": 1.019
+        },
+        {
+          "problem": "divide_positive_s5731_renamed_d8",
+          "path": "artifacts/power2-index-proof-d8/divide_positive_s5731_renamed_d8",
+          "meta_sha256": "7e4f6aed9c4ee7d045e76bd8effdcb3f9c2c62dd7645cea199d29685d29ab88d",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "5b52a992fa56ab6452b4305557ec897c683298ec1e584540a592284e958b4cb9"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS divide_positive_s5731_renamed_d8\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "divide_positive_s5731_renamed_d8",
+                "passed": true,
+                "elapsed_s": 0.475
+              }
+            ]
+          },
+          "elapsed_s": 1.055
+        },
+        {
+          "problem": "floor_negative_s5731_d8",
+          "path": "artifacts/power2-index-proof-d8/floor_negative_s5731_d8",
+          "meta_sha256": "f488e91f0e8d7dfd688db45bad76771e2bd9c65c3e01ea3870a24f67924d65b3",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "a1b10824c7592e5129665158fee5af1b22a09627133585a54db07b86b9d4c466"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_negative_s5731_d8\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_negative_s5731_d8",
+                "passed": true,
+                "elapsed_s": 0.419
+              }
+            ]
+          },
+          "elapsed_s": 0.957
+        },
+        {
+          "problem": "floor_negative_s5731_renamed_d8",
+          "path": "artifacts/power2-index-proof-d8/floor_negative_s5731_renamed_d8",
+          "meta_sha256": "9cc2677dd156a7c2b75b296ca215b221248cfbb6da50433ba57275dca597423a",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "c57461c1495428d36b198c771abcf65867029df85e3f0d5e17bfa4b72f1d74ac"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_negative_s5731_renamed_d8\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_negative_s5731_renamed_d8",
+                "passed": true,
+                "elapsed_s": 0.418
+              }
+            ]
+          },
+          "elapsed_s": 0.969
+        },
+        {
+          "problem": "floor_positive_s5731_d8",
+          "path": "artifacts/power2-index-proof-d8/floor_positive_s5731_d8",
+          "meta_sha256": "939e7060c93c0ff8ead4a30d20e8255152a96fb245bd0ee60eb3a6b04f375aa8",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "c1a38b1df12d2d4a91f0c702245e679a81e46285cb5aeac3c506149c4b235c92"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_positive_s5731_d8\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_positive_s5731_d8",
+                "passed": true,
+                "elapsed_s": 0.466
+              }
+            ]
+          },
+          "elapsed_s": 1.006
+        },
+        {
+          "problem": "floor_positive_s5731_renamed_d8",
+          "path": "artifacts/power2-index-proof-d8/floor_positive_s5731_renamed_d8",
+          "meta_sha256": "c0de955c604aae2fb276ffffa8a63f32077c1f80d56054dcaee219531f095657",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "140eef42f9a4ffaad93acb2db3e6d0f1ee4c7c85c32546b20ae7f36ee05ba86f"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS floor_positive_s5731_renamed_d8\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "floor_positive_s5731_renamed_d8",
+                "passed": true,
+                "elapsed_s": 0.436
+              }
+            ]
+          },
+          "elapsed_s": 0.986
+        },
+        {
+          "problem": "mod_negative_s5731_d8",
+          "path": "artifacts/power2-index-proof-d8/mod_negative_s5731_d8",
+          "meta_sha256": "de639b20d21bde63c8b0ef72a6fa164820a0e2f805555c06ede012d116488f2f",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "5574a4a7269ecb2d8b29b60871ccb62464c431d4a01310dd3b079fdb28fdbd03"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_negative_s5731_d8\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_negative_s5731_d8",
+                "passed": true,
+                "elapsed_s": 0.472
+              }
+            ]
+          },
+          "elapsed_s": 0.996
+        },
+        {
+          "problem": "mod_negative_s5731_renamed_d8",
+          "path": "artifacts/power2-index-proof-d8/mod_negative_s5731_renamed_d8",
+          "meta_sha256": "aab4fdce409cfee118e96b0ef98e388fb751593fa496de303b3b9bb9b1e7a83b",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "7c676e687180dd339697a168ac498fb7f23f57a218b89f0d4aabd4023dbabb62"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_negative_s5731_renamed_d8\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_negative_s5731_renamed_d8",
+                "passed": true,
+                "elapsed_s": 0.473
+              }
+            ]
+          },
+          "elapsed_s": 1.038
+        },
+        {
+          "problem": "mod_positive_s5731_d8",
+          "path": "artifacts/power2-index-proof-d8/mod_positive_s5731_d8",
+          "meta_sha256": "71cc756a48af766b32d89e3001d5b2d41852bc2d9845cea308f546559d4833df",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "ab6b934f11c472db2db7aff3c93346930b91b358378b59ef1baaab75fb2c8256"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_positive_s5731_d8\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_positive_s5731_d8",
+                "passed": true,
+                "elapsed_s": 0.446
+              }
+            ]
+          },
+          "elapsed_s": 0.986
+        },
+        {
+          "problem": "mod_positive_s5731_renamed_d8",
+          "path": "artifacts/power2-index-proof-d8/mod_positive_s5731_renamed_d8",
+          "meta_sha256": "a0d12a416ef63ed6869e5ad8261e071c584f7445819b55be84c965ef87d03f38",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "dd6f1083a8775cae15a1470433b4d112a941d739583214dff3bcdae87f6fa526"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS mod_positive_s5731_renamed_d8\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "mod_positive_s5731_renamed_d8",
+                "passed": true,
+                "elapsed_s": 0.427
+              }
+            ]
+          },
+          "elapsed_s": 0.963
+        }
+      ]
+    },
+    "power2-index-transformer": {
+      "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+      "arch": "sm_86",
+      "model": "seeded RMSNorm + QKV SDPA + output projection + residual SiLU MLP",
+      "shape": [
+        1,
+        4,
+        16
+      ],
+      "execution": "seven separately traced stages, host transfers",
+      "results": [
+        {
+          "seed": 9,
+          "depth": 1,
+          "passed": true,
+          "stage_checks": 7,
+          "max_abs_error": 1.1920928955078125e-06
+        },
+        {
+          "seed": 9,
+          "depth": 2,
+          "passed": true,
+          "stage_checks": 14,
+          "max_abs_error": 1.1920928955078125e-06
+        },
+        {
+          "seed": 9,
+          "depth": 4,
+          "passed": true,
+          "stage_checks": 28,
+          "max_abs_error": 1.1920928955078125e-06
+        },
+        {
+          "seed": 71,
+          "depth": 1,
+          "passed": true,
+          "stage_checks": 7,
+          "max_abs_error": 2.86102294921875e-06
+        },
+        {
+          "seed": 71,
+          "depth": 2,
+          "passed": true,
+          "stage_checks": 14,
+          "max_abs_error": 2.86102294921875e-06
+        },
+        {
+          "seed": 71,
+          "depth": 4,
+          "passed": true,
+          "stage_checks": 28,
+          "max_abs_error": 2.86102294921875e-06
+        },
+        {
+          "seed": 613,
+          "depth": 1,
+          "passed": true,
+          "stage_checks": 7,
+          "max_abs_error": 3.4570693969726562e-06
+        },
+        {
+          "seed": 613,
+          "depth": 2,
+          "passed": true,
+          "stage_checks": 14,
+          "max_abs_error": 3.6954879760742188e-06
+        },
+        {
+          "seed": 613,
+          "depth": 4,
+          "passed": true,
+          "stage_checks": 28,
+          "max_abs_error": 4.291534423828125e-06
+        }
+      ]
+    },
+    "power2-index-hosted-public": {
+      "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+      "results": [
+        {
+          "problem": "a01_attention",
+          "passed": true,
+          "elapsed_s": 2.979,
+          "stdout": "[k_matmul_softmax_reduce_b55365] 128 registers\n[k_matmul_softmax_reduce_b55365] PASS  matmul_1: max abs err 6.557e-07  (103.2 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "a02_attention_128",
+          "passed": true,
+          "elapsed_s": 2.985,
+          "stdout": "[k_matmul_softmax_reduce_6f0029] 56 registers\n[k_matmul_softmax_reduce_6f0029] PASS  matmul_1: max abs err 4.470e-07  (68.352 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "f01_rmsnorm",
+          "passed": true,
+          "elapsed_s": 4.836,
+          "stdout": "[k_mean_cbd1de] 20 registers\n[k_mean_cbd1de] PASS  mul_1: max abs err 1.907e-06  (15.392 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "f02_row_softmax",
+          "passed": true,
+          "elapsed_s": 3.645,
+          "stdout": "[k_softmax_05263d] 22 registers\n[k_softmax_05263d] PASS  softmax: max abs err 7.451e-09  (15.04 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "f03_l2norm",
+          "passed": true,
+          "elapsed_s": 3.9,
+          "stdout": "[k_div_reduce] 20 registers\n[k_div_reduce] PASS  div: max abs err 1.490e-08  (15.264 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "m01_matmul_512",
+          "passed": true,
+          "elapsed_s": 9.305,
+          "stdout": "[k_matmul_2967be] 40 registers\n[k_matmul_2967be] PASS  matmul: max abs err 8.392e-05  (36.768 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "m02_matmul_rect",
+          "passed": true,
+          "elapsed_s": 3.581,
+          "stdout": "[k_matmul] 32 registers\n[k_matmul] PASS  matmul: max abs err 1.144e-05  (14.56 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "p00_scalar_add",
+          "passed": true,
+          "elapsed_s": 2.043,
+          "stdout": "[k_add_pointwise] 22 registers\n[k_add_pointwise] PASS  add: max abs err 0.000e+00  (20.48 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "p01_vector_add",
+          "passed": true,
+          "elapsed_s": 2.29,
+          "stdout": "[k_add_pointwise] 22 registers\n[k_add_pointwise] PASS  add: max abs err 0.000e+00  (37.44 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "p02_scale_shift",
+          "passed": true,
+          "elapsed_s": 3.063,
+          "stdout": "[k_add_pointwise] 30 registers\n[k_add_pointwise] PASS  add: max abs err 0.000e+00  (15.584 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "p03_relu_mul",
+          "passed": true,
+          "elapsed_s": 2.338,
+          "stdout": "[k_mul_pointwise] 26 registers\n[k_mul_pointwise] PASS  mul: max abs err 0.000e+00  (15.52 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r01_array_sum",
+          "passed": true,
+          "elapsed_s": 2.083,
+          "stdout": "[k_sum_1_reduce] 17 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 3.815e-06  (19.936 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r02_big_sum",
+          "passed": true,
+          "elapsed_s": 1.908,
+          "stdout": "[k_sum_1_reduce] 17 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 1.526e-05  (42.752 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r03_mean",
+          "passed": true,
+          "elapsed_s": 2.079,
+          "stdout": "[k_mean_ffcca3] 17 registers\n[k_mean_ffcca3] PASS  mean: max abs err 9.313e-10  (27.968 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r04_row_sum",
+          "passed": true,
+          "elapsed_s": 1.975,
+          "stdout": "[k_sum_1_reduce] 20 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 5.722e-06  (36.16 us)\n",
+          "stderr": ""
+        }
+      ]
+    },
+    "power2-index-hosted-matmul": {
+      "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+      "results": [
+        {
+          "problem": "m_shared_256_512_384",
+          "passed": true,
+          "elapsed_s": 9.829,
+          "stdout": "[k_matmul] 40 registers\n[k_matmul] PASS  matmul: max abs err 3.052e-05  (30.784 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "m_shared_257_129_131",
+          "passed": true,
+          "elapsed_s": 4.146,
+          "stdout": "[k_matmul_cec55c] 26 registers\n[k_matmul_cec55c] PASS  matmul: max abs err 1.907e-05  (39.232 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "m_shared_384_256_320",
+          "passed": true,
+          "elapsed_s": 6.751,
+          "stdout": "[k_matmul_1b049d] 40 registers\n[k_matmul_1b049d] PASS  matmul: max abs err 3.815e-05  (29.376 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "m_shared_512_256_256",
+          "passed": true,
+          "elapsed_s": 5.556,
+          "stdout": "[k_matmul] 53 registers\n[k_matmul] PASS  matmul: max abs err 1.526e-05  (28.352 us)\n",
+          "stderr": ""
+        }
+      ]
+    },
+    "power2-index-runtime": {
+      "compiler_sha256": "8da911f26419d9fbbf2f7836c79d9081ae320a83beab330e6f73067a65eb0c32",
+      "cwd": "/tmp",
+      "torch_present": false,
+      "results": [
+        {
+          "problem": "m01_matmul_512",
+          "ir_sha256": "ed9ab32776ce0de8b0d1f0367da54c586bf993c964efc01482666247a976dc02",
+          "ptx_sha256": "33f7cf7a0b25eccea4d0ffb6abf6e8566d2d8f0d10e2bc5bf63365c57fae1235",
+          "identical_ptx": true
+        },
+        {
+          "problem": "p01_vector_add",
+          "ir_sha256": "90088bc4c7346b9a5916205fdb96926f52cc0f5e3c5c08527d7b0796b0c47fc5",
+          "ptx_sha256": "43fb8ee814aafc31e193216e08449a809d28ad92cf77dd93948768e347214cfe",
+          "identical_ptx": true
+        },
+        {
+          "problem": "mod_positive_s5731_d32",
+          "ir_sha256": "8cd5f8a5256d636b0f7f301c4cf1bfaeb0d7094a8621a4263c0e40da754dbe3c",
+          "ptx_sha256": "28a582bfbb297475a66b4d0e055ed16b97f98c3b05fb59957afcae719b0c5252",
+          "identical_ptx": true
+        }
+      ]
+    }
+  }
 }
