@@ -68,7 +68,8 @@ pass on both GPUs; four sanitizers clean on 26 selected cases, nine transformer
 runs, three no-Torch compilations and eleven diagnostic probes pass. All 498 prior
 kernels emit identical PTX, preserving prior codegen/timing evidence. Current CPU
 manifest has eight positive fixtures/four negatives: twelve local no-Torch checks
-pass; actual updated Actions matrix pending. Existing four goldens unchanged.
+pass. Actions run 40096495312 passes all twelve checks on Python 3.12/3.13/3.14;
+downloaded exact-hash reports join iteration9. Existing four goldens unchanged.
 
 Previous predicate-index acceptance:
 validation/2026-10-24-production-iteration8.json fixes predicate-valued indices.
@@ -135,38 +136,30 @@ This differs from remote/direct-module JIT. No hosted counters/SASS capture or
 roofline study. Address CSE reduced PTX but five target timings were neutral;
 partial safety sweep stopped after rejection, patch/evidence preserved.
 
-CPU Actions run on push/PR/manual/nightly across Python 3.12–3.14. First matrix
-40089837329 passed all five checks without Torch; evidence in cpu-ci.json.
-Current manifest has four GPU-verified fixtures plus three negative probes.
-Accepted predicate fix published as 35208cf; Actions run 40093823051 passed seven
-checks on all three versions. Downloaded reports confirm b13ccba6 and no Torch;
-saved in iteration8. Existing three goldens unchanged, shared predicate fixture
-added. These push matrices are an initial history, not sustained-nightly proof.
+CPU Actions run on push/PR/manual/nightly across Python 3.12–3.14. Current
+manifest has eight GPU-verified fixtures and four negative probes. Scalar fix
+published as 48793dc; Actions run 40096495312 passes all twelve checks on all three
+versions. Downloaded reports confirm accepted 393d7600 and no Torch, preserved in
+iteration9. Existing four goldens unchanged; four f32 fixtures added. Push matrices
+are an initial history, not sustained-nightly proof.
 
 ## Packaging and next work
 
-Current verified archive built from 35208cf, compiler b13ccba6. Reused the
-isolated no-Torch Python 3.12.13 runtime created fresh with pinned constraints in
-the preceding phase; dependencies unchanged. Extracted outside the worktree;
-hosted scalar-add, matmul and attention smoke checks pass. Latest evidence:
-validation/2026-10-24-current-package.json. Paths:
-artifacts/emmy-ptx-predicate-checkpoint.zip, artifacts/emmy-ptx-current-checkpoint.zip
-and artifacts/emmy-ptx-submission.zip contain identical verified bytes. Previous
-power2 archive/report retained as artifacts/emmy-ptx-power2-checkpoint.zip/json;
-prior evidence preserved in validation/2026-10-24-power2-package.json.
+Current verified archive built from 48793dc, compiler 393d7600. Uses the existing
+isolated no-Torch Python 3.12.13 runtime from the earlier pinned fresh install;
+dependencies unchanged. Extracted scalar-add, matmul and attention hosted checks
+pass. Latest evidence: validation/2026-10-24-current-package.json. Archive aliases
+artifacts/emmy-ptx-scalar-checkpoint.zip, artifacts/emmy-ptx-current-checkpoint.zip,
+and artifacts/emmy-ptx-submission.zip hold identical verified bytes. Prior predicate
+archive/report retained; evidence validation/2026-10-24-predicate-package.json.
 No rebuild needed for documentation-only changes. No entry submitted.
 
 Next: broaden index/control-flow type validation, operation/dtype coverage and
 bounded failure shrinking. Continue target hardware lower-bound/bottleneck work;
 no hosted counter/roofline evidence yet. Add future retained cases to CPU CI.
 No candidate jobs remain live from this acceptance step. New CI runs may trigger
-on documentation pushes; existing accepted-code seven-check matrix is verified.
+on documentation pushes; existing accepted-code twelve-check matrix is verified.
 
 Entry drafts SUBMISSION.md/WALKTHROUGH.md reflect current measured optimizations.
 **No contest entry submitted.** Personal fields/video still missing; don't invent
 them or contact organizers. General production readiness remains unproven.
-
-Current packaging note supersedes earlier archive section: current verified ZIP
-still contains prior b13ccba6. After committing scalar fix, verify twelve-check CI
-and rebuild/check the archive for accepted 393d7600. Keep submission deferred.
-All scalar-fix GPU/sanitizer/model/runtime gates completed; no need to restart them.

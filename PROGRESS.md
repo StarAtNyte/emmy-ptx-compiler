@@ -922,7 +922,7 @@ Completed 2026-10-24:
   No dependency changes; this is not a new environment-creation claim.
 - Current predicate-checkpoint/current-checkpoint/submission ZIP aliases all hold
   identical verified bytes; previous power2 archive/report retained. Latest package
-  report current-package.json; older report preserved as power2-package.json.
+  report predicate-package.json; older report preserved as power2-package.json.
 - Updated current handoff/README. No submission or general production-readiness
   claim. Next: broader type/rank/ABI validation and target bottleneck/lower bounds.
 
@@ -958,3 +958,21 @@ Completed 2026-10-24:
 Next: publish, verify actual twelve-check CI matrix and refresh changed-code
 archive. Broader rank/ABI/static-shape validation and target roofline work remain;
 production readiness unproven and submission still deferred.
+
+## Step 36 — scalar-fix twelve-check CI and current archive verified
+
+Completed 2026-10-24:
+
+- Published scalar-fix source/fixtures/evidence as 48793dc. Actions run 40096495312
+  passes twelve checks on Python 3.12/3.13/3.14. Downloaded reports verify compiler
+  393d7600, Torch absent, eight positive snapshots and four negative diagnostics;
+  full hosted evidence included in iteration9.
+- Archived committed 48793dc and verified packaged compiler matches active source.
+  Extracted hosted scalar-add, matmul and attention smoke checks pass using the
+  existing isolated no-Torch 3.12.13 runtime; dependencies unchanged.
+- Scalar/current/submission ZIP aliases now hold the same verified archive. Old
+  predicate archive remains available and its record is preserved separately as
+  predicate-package.json. Latest package evidence is current-package.json.
+- Updated README/current handoff. No contest entry submitted or broad production
+  readiness claimed. Next: rank/ABI/static-shape validation, additional operations
+  and target hardware lower-bound/bottleneck work.

@@ -1,0 +1,40 @@
+{
+  "status": "verified predicate-fix code checkpoint; no entry submission or production-readiness claim",
+  "package_report": {
+    "commit": "35208cf48587b6585a020a21ab816cb31ec2a139",
+    "compiler_sha256": "b13ccba603f9e74bef1f65254284d7172a929eddeeba2ec48b22ba0f24028b26",
+    "archive_sha256": "1595196d76aa02c560ff8b5d27dc941916ec87cc329ef31a492adaec21a02b6d",
+    "checks": [
+      {
+        "problem": "p00_scalar_add",
+        "passed": true,
+        "stdout": "[k_add_pointwise] 22 registers\n[k_add_pointwise] PASS  add: max abs err 0.000e+00  (23.104 us)\n",
+        "stderr": ""
+      },
+      {
+        "problem": "m01_matmul_512",
+        "passed": true,
+        "stdout": "[k_matmul_2967be] 40 registers\n[k_matmul_2967be] PASS  matmul: max abs err 8.392e-05  (37.248 us)\n",
+        "stderr": ""
+      },
+      {
+        "problem": "a01_attention",
+        "passed": true,
+        "stdout": "[k_matmul_softmax_reduce_b55365] 128 registers\n[k_matmul_softmax_reduce_b55365] PASS  matmul_1: max abs err 6.557e-07  (102.496 us)\n",
+        "stderr": ""
+      }
+    ],
+    "environment": {
+      "python": "3.12.13 (main, Jul 23 2026, 14:43:28) [Clang 22.1.3 ]",
+      "torch_installed": false
+    }
+  },
+  "archive_paths": [
+    "artifacts/emmy-ptx-predicate-checkpoint.zip",
+    "artifacts/emmy-ptx-current-checkpoint.zip",
+    "artifacts/emmy-ptx-submission.zip"
+  ],
+  "archive_bytes": 705470,
+  "environment_note": "existing isolated no-Torch Python 3.12.13 environment from the preceding fresh pinned-runtime check; no dependency changes",
+  "previous_checkpoint_record": "2026-10-24-power2-package.json"
+}
