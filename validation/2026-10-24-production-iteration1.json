@@ -1,0 +1,1438 @@
+{
+  "date": "2026-10-24",
+  "compiler_sha256": "a180f7ec3408d0a74d86293159eac8b80eff3253e5bbfbb28c892a50f8c305a3",
+  "accepted": true,
+  "submission_deferred": true,
+  "clock_locked": false,
+  "hosted": {
+    "public": {
+      "compiler_sha256": "a180f7ec3408d0a74d86293159eac8b80eff3253e5bbfbb28c892a50f8c305a3",
+      "results": [
+        {
+          "problem": "a01_attention",
+          "passed": true,
+          "elapsed_s": 3.174,
+          "stdout": "[k_matmul_softmax_reduce_b55365] 128 registers\n[k_matmul_softmax_reduce_b55365] PASS  matmul_1: max abs err 6.557e-07  (103.328 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "a02_attention_128",
+          "passed": true,
+          "elapsed_s": 2.666,
+          "stdout": "[k_matmul_softmax_reduce_6f0029] 56 registers\n[k_matmul_softmax_reduce_6f0029] PASS  matmul_1: max abs err 4.470e-07  (64.96 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "f01_rmsnorm",
+          "passed": true,
+          "elapsed_s": 4.165,
+          "stdout": "[k_mean_cbd1de] 22 registers\n[k_mean_cbd1de] PASS  mul_1: max abs err 1.907e-06  (16.0 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "f02_row_softmax",
+          "passed": true,
+          "elapsed_s": 3.644,
+          "stdout": "[k_softmax_05263d] 22 registers\n[k_softmax_05263d] PASS  softmax: max abs err 7.451e-09  (15.232 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "f03_l2norm",
+          "passed": true,
+          "elapsed_s": 3.56,
+          "stdout": "[k_div_reduce] 22 registers\n[k_div_reduce] PASS  div: max abs err 1.490e-08  (15.232 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "m01_matmul_512",
+          "passed": true,
+          "elapsed_s": 6.388,
+          "stdout": "[k_matmul_2967be] 40 registers\n[k_matmul_2967be] PASS  matmul: max abs err 8.392e-05  (81.376 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "m02_matmul_rect",
+          "passed": true,
+          "elapsed_s": 3.703,
+          "stdout": "[k_matmul] 32 registers\n[k_matmul] PASS  matmul: max abs err 1.526e-05  (16.832 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "p00_scalar_add",
+          "passed": true,
+          "elapsed_s": 2.336,
+          "stdout": "[k_add_pointwise] 22 registers\n[k_add_pointwise] PASS  add: max abs err 0.000e+00  (23.968 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "p01_vector_add",
+          "passed": true,
+          "elapsed_s": 2.544,
+          "stdout": "[k_add_pointwise] 22 registers\n[k_add_pointwise] PASS  add: max abs err 0.000e+00  (20.448 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "p02_scale_shift",
+          "passed": true,
+          "elapsed_s": 3.018,
+          "stdout": "[k_add_pointwise] 30 registers\n[k_add_pointwise] PASS  add: max abs err 0.000e+00  (14.688 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "p03_relu_mul",
+          "passed": true,
+          "elapsed_s": 2.603,
+          "stdout": "[k_mul_pointwise] 24 registers\n[k_mul_pointwise] PASS  mul: max abs err 0.000e+00  (22.816 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r01_array_sum",
+          "passed": true,
+          "elapsed_s": 2.27,
+          "stdout": "[k_sum_1_reduce] 18 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 3.815e-06  (20.064 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r02_big_sum",
+          "passed": true,
+          "elapsed_s": 2.215,
+          "stdout": "[k_sum_1_reduce] 18 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 1.526e-05  (40.992 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r03_mean",
+          "passed": true,
+          "elapsed_s": 2.312,
+          "stdout": "[k_mean_ffcca3] 18 registers\n[k_mean_ffcca3] PASS  mean: max abs err 9.313e-10  (27.808 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r04_row_sum",
+          "passed": true,
+          "elapsed_s": 2.288,
+          "stdout": "[k_sum_1_reduce] 20 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 5.722e-06  (33.248 us)\n",
+          "stderr": ""
+        }
+      ]
+    },
+    "shared": {
+      "compiler_sha256": "a180f7ec3408d0a74d86293159eac8b80eff3253e5bbfbb28c892a50f8c305a3",
+      "results": [
+        {
+          "problem": "r_shared_1",
+          "passed": true,
+          "elapsed_s": 2.536,
+          "stdout": "[k_sum_1_reduce] 18 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (20.384 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_1023",
+          "passed": true,
+          "elapsed_s": 2.927,
+          "stdout": "[k_sum_1_reduce] 22 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (20.672 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_1024",
+          "passed": true,
+          "elapsed_s": 2.66,
+          "stdout": "[k_sum_1_reduce] 22 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 3.815e-06  (20.448 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_1025",
+          "passed": true,
+          "elapsed_s": 2.544,
+          "stdout": "[k_sum_1_reduce] 26 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 3.815e-06  (20.224 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_127",
+          "passed": true,
+          "elapsed_s": 3.109,
+          "stdout": "[k_sum_1_reduce] 22 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 9.537e-07  (19.648 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_128",
+          "passed": true,
+          "elapsed_s": 3.046,
+          "stdout": "[k_sum_1_reduce] 30 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 9.537e-07  (20.768 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_129",
+          "passed": true,
+          "elapsed_s": 2.838,
+          "stdout": "[k_sum_1_reduce] 30 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 1.431e-06  (19.872 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_19",
+          "passed": true,
+          "elapsed_s": 2.524,
+          "stdout": "[k_sum_1_reduce] 22 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 4.768e-07  (20.288 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_2",
+          "passed": true,
+          "elapsed_s": 2.45,
+          "stdout": "[k_sum_1_reduce] 18 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (26.72 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_3",
+          "passed": true,
+          "elapsed_s": 2.455,
+          "stdout": "[k_sum_1_reduce] 18 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (10.56 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_31",
+          "passed": true,
+          "elapsed_s": 2.447,
+          "stdout": "[k_sum_1_reduce] 22 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 4.768e-07  (20.672 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_32",
+          "passed": true,
+          "elapsed_s": 2.409,
+          "stdout": "[k_sum_1_reduce] 22 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 4.768e-07  (20.736 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_33",
+          "passed": true,
+          "elapsed_s": 2.318,
+          "stdout": "[k_sum_1_reduce] 22 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 4.768e-07  (20.224 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_4",
+          "passed": true,
+          "elapsed_s": 2.332,
+          "stdout": "[k_sum_1_reduce] 18 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (20.192 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_5",
+          "passed": true,
+          "elapsed_s": 2.294,
+          "stdout": "[k_sum_1_reduce] 18 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (20.128 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_6",
+          "passed": true,
+          "elapsed_s": 2.224,
+          "stdout": "[k_sum_1_reduce] 18 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (20.0 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_63",
+          "passed": true,
+          "elapsed_s": 2.528,
+          "stdout": "[k_sum_1_reduce] 22 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 1.431e-06  (20.224 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_64",
+          "passed": true,
+          "elapsed_s": 2.422,
+          "stdout": "[k_sum_1_reduce] 22 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 1.431e-06  (20.672 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_65",
+          "passed": true,
+          "elapsed_s": 2.566,
+          "stdout": "[k_sum_1_reduce] 22 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 1.431e-06  (19.712 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_7",
+          "passed": true,
+          "elapsed_s": 2.337,
+          "stdout": "[k_sum_1_reduce] 18 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (20.288 us)\n",
+          "stderr": ""
+        }
+      ]
+    },
+    "fresh": {
+      "compiler_sha256": "a180f7ec3408d0a74d86293159eac8b80eff3253e5bbfbb28c892a50f8c305a3",
+      "results": [
+        {
+          "problem": "r_shared_130",
+          "passed": true,
+          "elapsed_s": 2.717,
+          "stdout": "[k_sum_1_reduce] 26 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 9.537e-07  (20.064 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_257",
+          "passed": true,
+          "elapsed_s": 2.861,
+          "stdout": "[k_sum_1_reduce] 30 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 3.293e-06  (20.8 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_47",
+          "passed": true,
+          "elapsed_s": 2.664,
+          "stdout": "[k_sum_1_reduce] 22 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 1.192e-06  (20.416 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_511",
+          "passed": true,
+          "elapsed_s": 2.672,
+          "stdout": "[k_sum_1_reduce] 30 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 9.537e-07  (20.416 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_767",
+          "passed": true,
+          "elapsed_s": 2.622,
+          "stdout": "[k_sum_1_reduce] 30 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 4.768e-06  (20.8 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_79",
+          "passed": true,
+          "elapsed_s": 2.547,
+          "stdout": "[k_sum_1_reduce] 22 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 1.431e-06  (20.32 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_95",
+          "passed": true,
+          "elapsed_s": 2.708,
+          "stdout": "[k_sum_1_reduce] 22 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (20.448 us)\n",
+          "stderr": ""
+        }
+      ]
+    },
+    "budget": {
+      "compiler_sha256": "a180f7ec3408d0a74d86293159eac8b80eff3253e5bbfbb28c892a50f8c305a3",
+      "results": [
+        {
+          "problem": "r_shared_129_x17",
+          "passed": true,
+          "elapsed_s": 2.747,
+          "stdout": "[k_sum_1_reduce] 18 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 8.392e-05  (21.792 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_129_x32",
+          "passed": true,
+          "elapsed_s": 2.965,
+          "stdout": "[k_sum_1_reduce] 18 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (24.224 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_129_x33",
+          "passed": true,
+          "elapsed_s": 2.138,
+          "stdout": "[k_sum_1_reduce] 18 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 1.526e-04  (26.336 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_129_x8",
+          "passed": true,
+          "elapsed_s": 3.183,
+          "stdout": "[k_sum_1_reduce] 18 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 1.411e-04  (28.512 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_65_x17",
+          "passed": true,
+          "elapsed_s": 2.885,
+          "stdout": "[k_sum_1_reduce] 18 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 3.586e-04  (20.352 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_65_x32",
+          "passed": true,
+          "elapsed_s": 3.21,
+          "stdout": "[k_sum_1_reduce] 18 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 1.770e-03  (22.816 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_65_x33",
+          "passed": true,
+          "elapsed_s": 2.239,
+          "stdout": "[k_sum_1_reduce] 18 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 2.014e-03  (15.488 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r_shared_65_x8",
+          "passed": true,
+          "elapsed_s": 3.205,
+          "stdout": "[k_sum_1_reduce] 18 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 3.815e-05  (20.16 us)\n",
+          "stderr": ""
+        }
+      ]
+    }
+  },
+  "local": {
+    "regression": {
+      "compiler_sha256": "a180f7ec3408d0a74d86293159eac8b80eff3253e5bbfbb28c892a50f8c305a3",
+      "arch": "sm_86",
+      "results": [
+        {
+          "problem": "a01_attention",
+          "passed": true,
+          "elapsed_s": 0.981
+        },
+        {
+          "problem": "a02_attention_128",
+          "passed": true,
+          "elapsed_s": 0.77
+        },
+        {
+          "problem": "f01_rmsnorm",
+          "passed": true,
+          "elapsed_s": 0.912
+        },
+        {
+          "problem": "f02_row_softmax",
+          "passed": true,
+          "elapsed_s": 0.806
+        },
+        {
+          "problem": "f03_l2norm",
+          "passed": true,
+          "elapsed_s": 0.687
+        },
+        {
+          "problem": "m01_matmul_512",
+          "passed": true,
+          "elapsed_s": 2.364
+        },
+        {
+          "problem": "m02_matmul_rect",
+          "passed": true,
+          "elapsed_s": 0.847
+        },
+        {
+          "problem": "p00_scalar_add",
+          "passed": true,
+          "elapsed_s": 0.762
+        },
+        {
+          "problem": "p01_vector_add",
+          "passed": true,
+          "elapsed_s": 0.734
+        },
+        {
+          "problem": "p02_scale_shift",
+          "passed": true,
+          "elapsed_s": 0.865
+        },
+        {
+          "problem": "p03_relu_mul",
+          "passed": true,
+          "elapsed_s": 0.872
+        },
+        {
+          "problem": "r01_array_sum",
+          "passed": true,
+          "elapsed_s": 0.741
+        },
+        {
+          "problem": "r02_big_sum",
+          "passed": true,
+          "elapsed_s": 0.863
+        },
+        {
+          "problem": "r03_mean",
+          "passed": true,
+          "elapsed_s": 0.845
+        },
+        {
+          "problem": "r04_row_sum",
+          "passed": true,
+          "elapsed_s": 0.695
+        },
+        {
+          "problem": "r_shared_1",
+          "passed": true,
+          "elapsed_s": 0.71
+        },
+        {
+          "problem": "r_shared_1023",
+          "passed": true,
+          "elapsed_s": 0.929
+        },
+        {
+          "problem": "r_shared_1024",
+          "passed": true,
+          "elapsed_s": 0.85
+        },
+        {
+          "problem": "r_shared_1025",
+          "passed": true,
+          "elapsed_s": 0.98
+        },
+        {
+          "problem": "r_shared_127",
+          "passed": true,
+          "elapsed_s": 0.934
+        },
+        {
+          "problem": "r_shared_128",
+          "passed": true,
+          "elapsed_s": 0.751
+        },
+        {
+          "problem": "r_shared_129",
+          "passed": true,
+          "elapsed_s": 0.969
+        },
+        {
+          "problem": "r_shared_19",
+          "passed": true,
+          "elapsed_s": 1.022
+        },
+        {
+          "problem": "r_shared_2",
+          "passed": true,
+          "elapsed_s": 0.987
+        },
+        {
+          "problem": "r_shared_3",
+          "passed": true,
+          "elapsed_s": 0.952
+        },
+        {
+          "problem": "r_shared_31",
+          "passed": true,
+          "elapsed_s": 1.091
+        },
+        {
+          "problem": "r_shared_32",
+          "passed": true,
+          "elapsed_s": 0.909
+        },
+        {
+          "problem": "r_shared_33",
+          "passed": true,
+          "elapsed_s": 0.872
+        },
+        {
+          "problem": "r_shared_4",
+          "passed": true,
+          "elapsed_s": 0.857
+        },
+        {
+          "problem": "r_shared_5",
+          "passed": true,
+          "elapsed_s": 0.873
+        },
+        {
+          "problem": "r_shared_6",
+          "passed": true,
+          "elapsed_s": 0.735
+        },
+        {
+          "problem": "r_shared_63",
+          "passed": true,
+          "elapsed_s": 0.802
+        },
+        {
+          "problem": "r_shared_64",
+          "passed": true,
+          "elapsed_s": 0.943
+        },
+        {
+          "problem": "r_shared_65",
+          "passed": true,
+          "elapsed_s": 0.869
+        },
+        {
+          "problem": "r_shared_7",
+          "passed": true,
+          "elapsed_s": 0.808
+        },
+        {
+          "problem": "a_cross_11_13_19_7",
+          "passed": true,
+          "elapsed_s": 0.815
+        },
+        {
+          "problem": "a_cross_17_23_37_11",
+          "passed": true,
+          "elapsed_s": 0.731
+        },
+        {
+          "problem": "f_softmax_t256",
+          "passed": true,
+          "elapsed_s": 0.736
+        },
+        {
+          "problem": "f_softmax_t64",
+          "passed": true,
+          "elapsed_s": 0.782
+        },
+        {
+          "problem": "r_columns_transposed_t128",
+          "passed": true,
+          "elapsed_s": 0.68
+        },
+        {
+          "problem": "r_columns_transposed_t256",
+          "passed": true,
+          "elapsed_s": 0.615
+        },
+        {
+          "problem": "r_columns_transposed_t32",
+          "passed": true,
+          "elapsed_s": 0.75
+        },
+        {
+          "problem": "r_rows_serial",
+          "passed": true,
+          "elapsed_s": 0.739
+        },
+        {
+          "problem": "r_rows_t256",
+          "passed": true,
+          "elapsed_s": 0.731
+        },
+        {
+          "problem": "r_rows_t32",
+          "passed": true,
+          "elapsed_s": 0.685
+        },
+        {
+          "problem": "r_rows_t512",
+          "passed": true,
+          "elapsed_s": 0.72
+        },
+        {
+          "problem": "r_rows_t64",
+          "passed": true,
+          "elapsed_s": 0.674
+        },
+        {
+          "problem": "model_mlp_relu_silu",
+          "passed": true,
+          "elapsed_s": 0.671
+        },
+        {
+          "problem": "p_integer_let",
+          "passed": true,
+          "elapsed_s": 0.692
+        },
+        {
+          "problem": "p_repeated_tiles",
+          "passed": true,
+          "elapsed_s": 0.719
+        },
+        {
+          "problem": "r_conditional_accumulator",
+          "passed": true,
+          "elapsed_s": 0.678
+        },
+        {
+          "problem": "r_tree_named",
+          "passed": true,
+          "elapsed_s": 0.706
+        },
+        {
+          "problem": "r_tree_named_column_subset",
+          "passed": true,
+          "elapsed_s": 0.747
+        },
+        {
+          "problem": "r_tree_named_duplicate",
+          "passed": true,
+          "elapsed_s": 0.684
+        },
+        {
+          "problem": "r_tree_ordered_merge",
+          "passed": true,
+          "elapsed_s": 0.626
+        },
+        {
+          "problem": "r_tree_orders_other_memory",
+          "passed": true,
+          "elapsed_s": 0.702
+        },
+        {
+          "problem": "r_tree_repeat",
+          "passed": true,
+          "elapsed_s": 0.625
+        },
+        {
+          "problem": "r_tree_scratch",
+          "passed": true,
+          "elapsed_s": 0.62
+        },
+        {
+          "problem": "r_tree_segmented_scratch",
+          "passed": true,
+          "elapsed_s": 0.659
+        }
+      ]
+    },
+    "fresh": {
+      "compiler_sha256": "a180f7ec3408d0a74d86293159eac8b80eff3253e5bbfbb28c892a50f8c305a3",
+      "arch": "sm_86",
+      "results": [
+        {
+          "problem": "r_shared_130",
+          "passed": true,
+          "elapsed_s": 0.92
+        },
+        {
+          "problem": "r_shared_257",
+          "passed": true,
+          "elapsed_s": 0.942
+        },
+        {
+          "problem": "r_shared_47",
+          "passed": true,
+          "elapsed_s": 0.852
+        },
+        {
+          "problem": "r_shared_511",
+          "passed": true,
+          "elapsed_s": 0.966
+        },
+        {
+          "problem": "r_shared_767",
+          "passed": true,
+          "elapsed_s": 0.975
+        },
+        {
+          "problem": "r_shared_79",
+          "passed": true,
+          "elapsed_s": 0.821
+        },
+        {
+          "problem": "r_shared_95",
+          "passed": true,
+          "elapsed_s": 0.826
+        }
+      ]
+    },
+    "budget": {
+      "compiler_sha256": "a180f7ec3408d0a74d86293159eac8b80eff3253e5bbfbb28c892a50f8c305a3",
+      "arch": "sm_86",
+      "results": [
+        {
+          "problem": "r_shared_129_x17",
+          "passed": true,
+          "elapsed_s": 0.975
+        },
+        {
+          "problem": "r_shared_129_x32",
+          "passed": true,
+          "elapsed_s": 1.156
+        },
+        {
+          "problem": "r_shared_129_x33",
+          "passed": true,
+          "elapsed_s": 0.77
+        },
+        {
+          "problem": "r_shared_129_x8",
+          "passed": true,
+          "elapsed_s": 0.768
+        },
+        {
+          "problem": "r_shared_65_x17",
+          "passed": true,
+          "elapsed_s": 0.856
+        },
+        {
+          "problem": "r_shared_65_x32",
+          "passed": true,
+          "elapsed_s": 0.91
+        },
+        {
+          "problem": "r_shared_65_x33",
+          "passed": true,
+          "elapsed_s": 0.949
+        },
+        {
+          "problem": "r_shared_65_x8",
+          "passed": true,
+          "elapsed_s": 0.759
+        }
+      ]
+    }
+  },
+  "transformer": {
+    "compiler_sha256": "a180f7ec3408d0a74d86293159eac8b80eff3253e5bbfbb28c892a50f8c305a3",
+    "arch": "sm_86",
+    "model": "seeded RMSNorm + QKV SDPA + output projection + residual SiLU MLP",
+    "shape": [
+      1,
+      4,
+      16
+    ],
+    "execution": "seven separately traced stages, host transfers",
+    "results": [
+      {
+        "seed": 9,
+        "depth": 1,
+        "passed": true,
+        "stage_checks": 7,
+        "max_abs_error": 1.1920928955078125e-06
+      },
+      {
+        "seed": 9,
+        "depth": 2,
+        "passed": true,
+        "stage_checks": 14,
+        "max_abs_error": 1.1920928955078125e-06
+      },
+      {
+        "seed": 9,
+        "depth": 4,
+        "passed": true,
+        "stage_checks": 28,
+        "max_abs_error": 1.1920928955078125e-06
+      },
+      {
+        "seed": 71,
+        "depth": 1,
+        "passed": true,
+        "stage_checks": 7,
+        "max_abs_error": 2.86102294921875e-06
+      },
+      {
+        "seed": 71,
+        "depth": 2,
+        "passed": true,
+        "stage_checks": 14,
+        "max_abs_error": 2.86102294921875e-06
+      },
+      {
+        "seed": 71,
+        "depth": 4,
+        "passed": true,
+        "stage_checks": 28,
+        "max_abs_error": 2.86102294921875e-06
+      },
+      {
+        "seed": 613,
+        "depth": 1,
+        "passed": true,
+        "stage_checks": 7,
+        "max_abs_error": 3.4570693969726562e-06
+      },
+      {
+        "seed": 613,
+        "depth": 2,
+        "passed": true,
+        "stage_checks": 14,
+        "max_abs_error": 3.6954879760742188e-06
+      },
+      {
+        "seed": 613,
+        "depth": 4,
+        "passed": true,
+        "stage_checks": 28,
+        "max_abs_error": 4.291534423828125e-06
+      }
+    ]
+  },
+  "sanitizers": {
+    "compiler_sha256": "a180f7ec3408d0a74d86293159eac8b80eff3253e5bbfbb28c892a50f8c305a3",
+    "problems": [
+      "m01_matmul_512",
+      "r_shared_63",
+      "r_shared_64",
+      "r_shared_65",
+      "r_shared_1023",
+      "r_shared_1024",
+      "r_shared_1025"
+    ],
+    "results": [
+      {
+        "tool": "memcheck",
+        "exit_code": 0,
+        "passed": true,
+        "summaries": [
+          "========= LEAK SUMMARY: 0 bytes leaked in 0 allocations",
+          "========= ERROR SUMMARY: 0 errors"
+        ]
+      },
+      {
+        "tool": "racecheck",
+        "exit_code": 0,
+        "passed": true,
+        "summaries": [
+          "========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)"
+        ]
+      },
+      {
+        "tool": "synccheck",
+        "exit_code": 0,
+        "passed": true,
+        "summaries": [
+          "========= ERROR SUMMARY: 0 errors"
+        ]
+      },
+      {
+        "tool": "initcheck",
+        "exit_code": 0,
+        "passed": true,
+        "summaries": [
+          "========= ERROR SUMMARY: 0 errors"
+        ]
+      }
+    ]
+  },
+  "resources_local": {
+    "compiler_sha256": "a180f7ec3408d0a74d86293159eac8b80eff3253e5bbfbb28c892a50f8c305a3",
+    "mode": "local",
+    "executes_kernels": false,
+    "results": [
+      {
+        "problem": "m01_matmul_512",
+        "entry": "k_matmul_2967be",
+        "ir_sha256": "ed9ab32776ce0de8b0d1f0367da54c586bf993c964efc01482666247a976dc02",
+        "meta_sha256": "3324370a2d29614c6c7ff7cf549563f9afb22bab0ed31ed62d8ffd27c59dcd57",
+        "ptx_sha256": "2e3697e5b03c2ce429877fdfca0df62ebe05de286f56a0ba1d1dd57888f34cbb",
+        "ptx_bytes": 187430,
+        "grid": [
+          128,
+          1,
+          1
+        ],
+        "block": [
+          512,
+          1,
+          1
+        ],
+        "launch_smem_bytes": 73728,
+        "static_ptx_instructions": {
+          "add.s32": 1503,
+          "add.u32": 267,
+          "add.u64": 13,
+          "bar.sync": 2,
+          "bra": 5,
+          "cp.async.ca.shared.global": 9,
+          "cp.async.wait_group": 1,
+          "cvta.to.global.u64": 3,
+          "div.s32": 277,
+          "div.u32": 5,
+          "fma.rn.f32": 256,
+          "ld.param.u64": 3,
+          "ld.shared.f32": 256,
+          "mad.lo.s32": 1,
+          "mov.f32": 260,
+          "mov.u32": 6,
+          "mul.lo.s32": 1948,
+          "mul.rn.f32": 256,
+          "mul.wide.s32": 13,
+          "rem.s32": 277,
+          "rem.u32": 5,
+          "selp.b32": 3,
+          "setp.ge.s32": 2,
+          "setp.ge.u32": 1,
+          "setp.lt.s32": 3,
+          "st.global.f32": 4,
+          "sub.s32": 256
+        },
+        "local_resources": {
+          "max_threads_per_block": 1024,
+          "static_shared_bytes": 0,
+          "local_bytes_per_thread": 0,
+          "registers_per_thread": 40,
+          "ptx_version": 86,
+          "binary_version": 86,
+          "max_active_blocks_per_sm": 1,
+          "resource_occupancy_ceiling": 0.3333333333333333,
+          "grid_blocks": 128,
+          "sm_count": 20,
+          "grid_blocks_per_sm": 6.4
+        }
+      },
+      {
+        "problem": "r_shared_65",
+        "entry": "k_sum_1_reduce",
+        "ir_sha256": "eb333163de1b278a50f1837745f3b09acdb178ea5a3c679e5dc734f91518b94b",
+        "meta_sha256": "12acc4f2f344adfd6db249ad902f089b67a1c9d217a8dfbfa5f8ddfbd18448f7",
+        "ptx_sha256": "f65378dd448ba74da1eb2b714ea93a617598c4ae0a9bfad7488f45a395287701",
+        "ptx_bytes": 17091,
+        "grid": [
+          1,
+          1,
+          1
+        ],
+        "block": [
+          64,
+          1,
+          1
+        ],
+        "launch_smem_bytes": 0,
+        "static_ptx_instructions": {
+          "add.rn.f32": 65,
+          "add.s32": 133,
+          "add.u32": 66,
+          "add.u64": 2,
+          "bar.sync": 1,
+          "bra": 7,
+          "cvta.to.global.u64": 2,
+          "div.u32": 2,
+          "ld.global.f32": 1,
+          "ld.param.u64": 2,
+          "ld.shared.f32": 65,
+          "mad.lo.s32": 1,
+          "mov.f32": 66,
+          "mov.u32": 5,
+          "mul.lo.s32": 133,
+          "mul.wide.s32": 2,
+          "rem.u32": 2,
+          "setp.eq.s32": 1,
+          "setp.ge.s32": 2,
+          "setp.ge.u32": 1,
+          "st.global.f32": 1,
+          "st.shared.f32": 1
+        },
+        "local_resources": {
+          "max_threads_per_block": 1024,
+          "static_shared_bytes": 260,
+          "local_bytes_per_thread": 0,
+          "registers_per_thread": 22,
+          "ptx_version": 86,
+          "binary_version": 86,
+          "max_active_blocks_per_sm": 16,
+          "resource_occupancy_ceiling": 0.6666666666666666,
+          "grid_blocks": 1,
+          "sm_count": 20,
+          "grid_blocks_per_sm": 0.05
+        }
+      }
+    ],
+    "arch": "sm_86"
+  },
+  "runtime_smoke": {
+    "compiler_sha256": "a180f7ec3408d0a74d86293159eac8b80eff3253e5bbfbb28c892a50f8c305a3",
+    "runtime": "{\"torch_present\": false}",
+    "cwd": "/tmp",
+    "results": [
+      {
+        "problem": "p00_scalar_add",
+        "identical_ptx": true,
+        "ptx_sha256": "f8a694682593ae4252a0009787dd933acac27a61842a9e4b1c4b5959de3ecf20",
+        "ptx_bytes": 2099
+      },
+      {
+        "problem": "m01_matmul_512",
+        "identical_ptx": true,
+        "ptx_sha256": "2e3697e5b03c2ce429877fdfca0df62ebe05de286f56a0ba1d1dd57888f34cbb",
+        "ptx_bytes": 187430
+      },
+      {
+        "problem": "a01_attention",
+        "identical_ptx": true,
+        "ptx_sha256": "017a6631721f9aa6cc3876966a62e8356e1b668ab419edca111a0833b0802ba3",
+        "ptx_bytes": 15456
+      }
+    ]
+  },
+  "target_paired": {
+    "clock_locked": false,
+    "warmup": 8,
+    "iters": 75,
+    "compilers": {
+      "baseline": "6fb720f76e33e9a77f25767cc43de4f923e498028a9f2581b720ac018399558f",
+      "candidate": "a180f7ec3408d0a74d86293159eac8b80eff3253e5bbfbb28c892a50f8c305a3"
+    },
+    "timing_return_limit": 16,
+    "results": [
+      {
+        "problem": "m01_matmul_512",
+        "samples_us": {
+          "baseline": [
+            74.368,
+            74.208,
+            74.304,
+            74.304,
+            74.272,
+            74.304,
+            74.272
+          ],
+          "candidate": [
+            66.208,
+            66.208,
+            66.176,
+            66.176,
+            66.208,
+            66.176,
+            66.176
+          ]
+        },
+        "baseline_median_us": 74.304,
+        "candidate_median_us": 66.176,
+        "speedup": 1.122823984526112,
+        "outputs_passed": true,
+        "output_check": "full first trial; returned prefix thereafter",
+        "registers": {
+          "baseline": {
+            "k_matmul_2967be": {
+              "k_matmul_2967be": 38
+            }
+          },
+          "candidate": {
+            "k_matmul_2967be": {
+              "k_matmul_2967be": 40
+            }
+          }
+        }
+      },
+      {
+        "problem": "a01_attention",
+        "samples_us": {
+          "baseline": [
+            90.752,
+            90.752,
+            90.752,
+            90.784,
+            90.784,
+            90.784,
+            90.752
+          ],
+          "candidate": [
+            90.784,
+            90.752,
+            90.784,
+            90.784,
+            90.752,
+            90.784,
+            90.752
+          ]
+        },
+        "baseline_median_us": 90.752,
+        "candidate_median_us": 90.784,
+        "speedup": 0.9996475149806132,
+        "outputs_passed": true,
+        "output_check": "full first trial; returned prefix thereafter",
+        "registers": {
+          "baseline": {
+            "k_matmul_softmax_reduce_b55365": {
+              "k_matmul_softmax_reduce_b55365": 128
+            }
+          },
+          "candidate": {
+            "k_matmul_softmax_reduce_b55365": {
+              "k_matmul_softmax_reduce_b55365": 128
+            }
+          }
+        }
+      },
+      {
+        "problem": "a02_attention_128",
+        "samples_us": {
+          "baseline": [
+            53.92,
+            53.888,
+            53.92,
+            53.92,
+            53.92,
+            53.92,
+            53.92
+          ],
+          "candidate": [
+            53.888,
+            53.888,
+            53.888,
+            53.888,
+            53.92,
+            53.888,
+            53.92
+          ]
+        },
+        "baseline_median_us": 53.92,
+        "candidate_median_us": 53.888,
+        "speedup": 1.0005938242280286,
+        "outputs_passed": true,
+        "output_check": "full first trial; returned prefix thereafter",
+        "registers": {
+          "baseline": {
+            "k_matmul_softmax_reduce_6f0029": {
+              "k_matmul_softmax_reduce_6f0029": 56
+            }
+          },
+          "candidate": {
+            "k_matmul_softmax_reduce_6f0029": {
+              "k_matmul_softmax_reduce_6f0029": 56
+            }
+          }
+        }
+      },
+      {
+        "problem": "m02_matmul_rect",
+        "samples_us": {
+          "baseline": [
+            4.992,
+            5.12,
+            5.088,
+            5.088,
+            5.088,
+            5.024,
+            5.056
+          ],
+          "candidate": [
+            5.088,
+            5.088,
+            5.12,
+            4.992,
+            5.056,
+            5.024,
+            5.056
+          ]
+        },
+        "baseline_median_us": 5.088,
+        "candidate_median_us": 5.056,
+        "speedup": 1.0063291139240507,
+        "outputs_passed": true,
+        "output_check": "full first trial; returned prefix thereafter",
+        "registers": {
+          "baseline": {
+            "k_matmul": {
+              "k_matmul": 32
+            }
+          },
+          "candidate": {
+            "k_matmul": {
+              "k_matmul": 32
+            }
+          }
+        }
+      }
+    ]
+  },
+  "rejected_backend_nounroll": {
+    "clock_locked": false,
+    "warmup": 8,
+    "iters": 75,
+    "compilers": {
+      "baseline": "a180f7ec3408d0a74d86293159eac8b80eff3253e5bbfbb28c892a50f8c305a3",
+      "candidate": "11621c05f8af815b6257d6c8282a31ce99c11abad65d1e8772198a82276ac941"
+    },
+    "timing_return_limit": 16,
+    "results": [
+      {
+        "problem": "a01_attention",
+        "samples_us": {
+          "baseline": [
+            90.784,
+            90.752,
+            90.752,
+            90.752,
+            90.752,
+            90.784,
+            90.752
+          ],
+          "candidate": [
+            563.616,
+            563.616,
+            562.72,
+            563.616,
+            563.616,
+            563.648,
+            563.52
+          ]
+        },
+        "baseline_median_us": 90.752,
+        "candidate_median_us": 563.616,
+        "speedup": 0.16101743030715948,
+        "outputs_passed": true,
+        "output_check": "full first trial; returned prefix thereafter",
+        "registers": {
+          "baseline": {
+            "k_matmul_softmax_reduce_b55365": {
+              "k_matmul_softmax_reduce_b55365": 128
+            }
+          },
+          "candidate": {
+            "k_matmul_softmax_reduce_b55365": {
+              "k_matmul_softmax_reduce_b55365": 48
+            }
+          }
+        }
+      },
+      {
+        "problem": "a02_attention_128",
+        "samples_us": {
+          "baseline": [
+            53.92,
+            53.92,
+            53.952,
+            53.952,
+            53.952,
+            53.92,
+            53.92
+          ],
+          "candidate": [
+            193.024,
+            193.024,
+            193.056,
+            193.056,
+            193.056,
+            193.024,
+            193.056
+          ]
+        },
+        "baseline_median_us": 53.92,
+        "candidate_median_us": 193.056,
+        "speedup": 0.2792971987402619,
+        "outputs_passed": true,
+        "output_check": "full first trial; returned prefix thereafter",
+        "registers": {
+          "baseline": {
+            "k_matmul_softmax_reduce_6f0029": {
+              "k_matmul_softmax_reduce_6f0029": 56
+            }
+          },
+          "candidate": {
+            "k_matmul_softmax_reduce_6f0029": {
+              "k_matmul_softmax_reduce_6f0029": 22
+            }
+          }
+        }
+      },
+      {
+        "problem": "m01_matmul_512",
+        "samples_us": {
+          "baseline": [
+            66.208,
+            66.208,
+            66.24,
+            66.208,
+            66.208,
+            66.24,
+            66.208
+          ],
+          "candidate": [
+            68.256,
+            68.256,
+            68.256,
+            68.224,
+            68.224,
+            68.224,
+            68.224
+          ]
+        },
+        "baseline_median_us": 66.208,
+        "candidate_median_us": 68.224,
+        "speedup": 0.9704502814258911,
+        "outputs_passed": true,
+        "output_check": "full first trial; returned prefix thereafter",
+        "registers": {
+          "baseline": {
+            "k_matmul_2967be": {
+              "k_matmul_2967be": 40
+            }
+          },
+          "candidate": {
+            "k_matmul_2967be": {
+              "k_matmul_2967be": 40
+            }
+          }
+        }
+      },
+      {
+        "problem": "r02_big_sum",
+        "samples_us": {
+          "baseline": [
+            21.152,
+            21.152,
+            21.12,
+            21.12,
+            21.12,
+            21.152,
+            21.152
+          ],
+          "candidate": [
+            72.32,
+            72.32,
+            72.32,
+            72.352,
+            72.288,
+            72.32,
+            72.32
+          ]
+        },
+        "baseline_median_us": 21.152,
+        "candidate_median_us": 72.32,
+        "speedup": 0.29247787610619475,
+        "outputs_passed": true,
+        "output_check": "full first trial; returned prefix thereafter",
+        "registers": {
+          "baseline": {
+            "k_sum_1_reduce": {
+              "k_sum_1_reduce": 18
+            }
+          },
+          "candidate": {
+            "k_sum_1_reduce": {
+              "k_sum_1_reduce": 14
+            }
+          }
+        }
+      }
+    ]
+  },
+  "fresh_case_freeze": {
+    "compiler_sha256": "a180f7ec3408d0a74d86293159eac8b80eff3253e5bbfbb28c892a50f8c305a3",
+    "purpose": "Freeze before new shared-loop extent cases",
+    "sizes": [
+      47,
+      79,
+      95,
+      130,
+      257,
+      511,
+      767
+    ]
+  },
+  "research_pins": [
+    {
+      "repo": "NVIDIA/SOL-ExecBench",
+      "branch": "main",
+      "sha": "a9fa0804c793d438e70850c33fe34426e66d53dd",
+      "date": "2026-07-15T17:31:28Z"
+    },
+    {
+      "repo": "PufferAI/PufferLib",
+      "branch": "5.0",
+      "sha": "ea7f989371270d2948f96728bda8aec5e7634a4c",
+      "date": "2026-10-14T13:57:45Z"
+    },
+    {
+      "repo": "Snowflake-AI-Research/fastkernels",
+      "branch": "main",
+      "sha": "9acebaa1349c78af8bb0ecb7e0719b5372d26fd8",
+      "date": "2026-09-20T01:57:37Z"
+    },
+    {
+      "repo": "gpu-mode/kernelbot",
+      "branch": "main",
+      "sha": "ec4669669d368c395675565831f98b509db2b0b3",
+      "date": "2026-09-18T01:42:12Z"
+    },
+    {
+      "repo": "gpu-mode/reference-kernels",
+      "branch": "main",
+      "sha": "f3295bb6bd559bae4659d2d8fc45edb1394251b1",
+      "date": "2026-09-18T01:42:03Z"
+    }
+  ],
+  "limitations": [
+    "Counts overlap historical corpora; not independent hidden-test estimates.",
+    "Hosted timings are not clock-locked and cache state is uncontrolled.",
+    "Local resource ceilings and local-memory bytes do not establish target occupancy or target spills.",
+    "Fresh cases hold out extents within an existing semantic family, not an unseen operation family.",
+    "Existing submission ZIP is stale; this is not a final release or entry submission."
+  ]
+}

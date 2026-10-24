@@ -147,3 +147,15 @@ compares the packaged compiler hash with the working tree. The extracted program
 then runs official hosted pointwise, dynamic-shared matmul and attention checks
 from another directory. The companion JSON records the archive/commit/compiler
 hashes, environment and results. Torch is absent in this fresh runtime.
+
+The shared-loop generator additionally supports explicit fresh extents and body
+sizes, including the original 64-statement eligibility boundary:
+
+```sh
+.venv/bin/python tools/generate_shared_loop_cases.py --sizes 47 79 95 130 257 511 767 --out artifacts/fresh-shared
+.venv/bin/python tools/generate_shared_loop_cases.py --sizes 65 129 --body-repeats 8 17 32 33 --out artifacts/body-budget
+```
+
+Repeated load/fold pairs stress the expansion budget; expected sums come from
+float64 NumPy over the seeded input, multiplied by the repeat count. These are
+synthetic correctness tests, not representative model performance measurements.

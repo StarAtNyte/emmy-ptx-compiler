@@ -18,8 +18,8 @@
 - Public repo: https://github.com/StarAtNyte/emmy-ptx-compiler
 - Git remote `origin`, branch `master`; checkpoint before continuity work:
   `f58120be07bdd7475748119b91e34a4384f7f05a`.
-- Compiler hash:
-  `6fb720f76e33e9a77f25767cc43de4f923e498028a9f2581b720ac018399558f`.
+- Current compiler hash (accepted production optimization iteration 1):
+  `a180f7ec3408d0a74d86293159eac8b80eff3253e5bbfbb28c892a50f8c305a3`.
 - Start by checking `git status`, `git log`, current files and report hashes.
   This document is a snapshot, not authority over later changes.
 - Python defaults to 3.14 on the host. Use `.venv/bin/python` (3.12).
@@ -157,3 +157,46 @@ candidate against public and independent tail/schedule/model cases, sanitize
 changed shared-loop behavior and recheck target timings. Only then merge if green.
 A factor-16 exploratory local suite may still have a running process; it is not
 acceptance for the exact new candidate. Production compiler still `6fb720f...`.
+
+## Step 4 checkpoint — exact candidate under acceptance checks
+
+`compile.py` is now the **uncommitted candidate** `a180f7ec...`, bounded factor
+up to 64 / extent / 1024 expanded body statements. It passed 59 local cases,
+20 hosted shared cases and the nine complete transformer runs (147 stages).
+Exact target paired result: m01 74.304 → 66.176 µs; attention and m02 unchanged
+within noise. Compiler source has not changed since freeze recorded in
+`artifacts/production-bounded-freeze.json`.
+
+Separate ignored `compiler-nounroll.py` is **rejected**: disabling backend
+unrolling regressed every measured workload, especially attention. Never merge.
+See `artifacts/production-nounroll-paired.json` for raw timings.
+
+Pending before acceptance: finish sanitizer run at `artifacts/production-bounded-sanitizers`,
+fresh seven-extent local/hosted reports, body-budget regressions, active docs,
+combined evidence and commit. These supersede Step 3's baseline-current claim.
+
+## Step 5 — accepted current compiler and next action
+
+Current compiler is **accepted** `a180f7ec3408d0a74d86293159eac8b80eff3253e5bbfbb28c892a50f8c305a3`.
+This supersedes the baseline hash and the candidate/pending notes above.
+
+Verification: 50 hosted cases, 74 local cases, nine transformer seed/depth runs
+(147 stage outputs), four sanitizer tools clean on seven selected cases.
+All seven fresh extents and eight body-budget cases pass both GPUs. Combined
+record: `validation/2026-10-24-production-iteration1.json`; raw artifacts use
+`production-bounded-*`. m01 paired target timing is 74.304 → 66.176 µs, 1.123x;
+both attention cases unchanged within noise. No hidden-test or production-ready
+claim. Old `artifacts/emmy-ptx-submission.zip` is stale: do not submit it.
+
+**Next concrete work:** build seeded typed-IR differential/metamorphic fuzzing
+with independently computed expected values and shrinking of failures. Include
+control flow, mutable values/axes, cooperative schedules and observable scratch.
+Then test SSA-aware address-expression reuse / loop-invariant addressing using
+those semantic gates. Inspect actual generated behavior; blanket backend
+nounroll is rejected. Target SASS/counter access and roofline remain unresolved.
+No new permission is needed for research, local changes, tests or approved repo
+pushes. Submission remains deferred by user direction.
+
+Current runtime smoke: isolated no-Torch Python, cwd `/tmp`, p00/m01/a01 PTX
+matches development output byte-for-byte. Recorded in the combined validation.
+This is compilation verification, not a new archive smoke execution.

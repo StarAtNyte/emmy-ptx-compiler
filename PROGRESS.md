@@ -147,3 +147,66 @@ Completed 2026-10-24:
 Next: constrain factor 64 by extent/body-size budget, validate the exact candidate
 on independent cases and both GPUs, check sanitizers, then decide whether to
 merge. `compile.py` remains the baseline until these checks establish acceptance.
+
+## Step 4 — exact bounded candidate and rejected backend-unroll control
+
+Checks completed so far, 2026-10-24:
+
+- Candidate `a180f7ec3408d0a74d86293159eac8b80eff3253e5bbfbb28c892a50f8c305a3`
+  chooses a power-of-two factor capped by 64, extent and 1,024 expanded body
+  statements. Existing shared-memory/straight-line eligibility remains intact.
+- 59/59 local cases passed (15 public, 20 shared boundaries, two cross-attention,
+  ten schedules, one MLP, eleven semantic audit). All 20 shared cases passed the
+  hosted checker. Complete transformer: nine seed/depth runs, 147 stage outputs,
+  maximum absolute stage error 4.292e-6.
+- Exact-candidate seven paired target trials: m01 74.304 → 66.176 µs (1.123x),
+  a01 90.752 → 90.784, a02 53.920 → 53.888, m02 5.088 → 5.056. The last three
+  gaps are timing noise, not claimed wins.
+- Following NVIDIA's documented loop-header `.pragma "nounroll"`, tested a
+  separate backend-control candidate. Rejected: a01 90.752 → 563.616 µs,
+  a02 53.920 → 193.056, m01 66.208 → 68.224, r02 21.152 → 72.320.
+  Do not infer that lowering register pressure necessarily helps latency.
+- Expanded the shared-loop generator to 20 default extents covering 31/32/33,
+  63/64/65, 127/128/129, and the 1024 eligibility boundary. Added --sizes/--out.
+- Froze candidate before seven new extent cases; local/hosted checks and remaining
+  sanitizer tools are in progress. Do not call these untested outcomes passed.
+
+Next: finish fresh-case/sanitizer gates, exercise the body-size budget, archive
+rejected pragma evidence and synchronize the active design/release documentation.
+
+## Step 5 — bounded expansion accepted after verification
+
+Completed 2026-10-24:
+
+- All gates passed for compiler `a180f7ec3408d0a74d86293159eac8b80eff3253e5bbfbb28c892a50f8c305a3`:
+  50 hosted cases (15 public + 20 shared boundaries + 7 fresh extents + 8 body
+  budget cases); 74 local cases (59 regression + 7 fresh + 8 budget); nine
+  complete transformer checks / 147 stage outputs. Counts overlap prior suites.
+- memcheck, racecheck, synccheck and initcheck all clean on seven selected cases:
+  m01 and shared extents 63/64/65/1023/1024/1025. No blanket sanitizer claim.
+- Body repeats 8/17/32/33 test expanded-statement budget reductions and the
+  original-body eligibility boundary at 64 statements. Eight cases pass both
+  GPUs. Fresh seven-extent suite was generated after compiler freeze and also
+  passes both GPUs with no compiler changes.
+- Accepted bounded shared expansion; current measured m01 latency 66.176 µs
+  vs 74.304 µs previous compiler. The two attention workloads remain unchanged
+  within noise. Local JIT m01 retains 40 registers/thread and zero local bytes;
+  do not assume hosted spill behavior from this.
+- Preserved rejected backend pragma patch and measurements. Updated README,
+  design, testing and entry/walkthrough drafts to match actual active behavior.
+- Combined evidence: `validation/2026-10-24-production-iteration1.json`.
+  The old submission ZIP still contains the previous compiler and is **stale**;
+  no replacement entry has been submitted or final release claimed.
+
+Next highest-value step: deterministic typed-IR differential/metamorphic fuzzing
+with mathematical references and minimized retained failures. Focus on control
+flow, mutable axis/value bindings, cooperative indexing and reduction scratch
+observability before SSA-aware CSE/loop-invariant addressing. Continue target
+profiling where accessible; SASS/counters and hardware roofline remain open.
+Keep submission deferred and update both continuity files after each step.
+
+Step 5 runtime verification: the existing isolated Python 3.12 runtime has no
+Torch installed and emits byte-identical PTX to the development environment for
+p00, m01 and a01 when invoked from `/tmp`. This checks current standalone
+compilation only; it does not rebuild the stale archive or claim a new hosted
+execution from a packaged release.

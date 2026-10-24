@@ -1,5 +1,7 @@
-"""Shared scalar reductions with every remainder of a four-way unroll."""
+"""Shared scalar reductions around expansion and eligibility boundaries."""
+import argparse
 import json
+from itertools import product
 from dataclasses import replace
 from pathlib import Path
 
@@ -16,16 +18,25 @@ from emmy.compiler.ir.stmt import Accum, Cond, Load, Loop, StridedLoop, Write
 
 
 def main():
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--sizes',nargs='+',type=int,
+                        default=[1,2,3,4,5,6,7,19,31,32,33,63,64,65,127,128,129,1023,1024,1025])
+    parser.add_argument('--out',type=Path,default=Path('artifacts/shared-loops'))
+    parser.add_argument('--body-repeats',nargs='+',type=int,default=[1],
+                        help='Repeat load/fold pairs to exercise expansion body-size limits')
+    args=parser.parse_args()
+    if any(value < 1 for value in args.sizes + args.body_repeats):
+        parser.error('sizes and body repeats must be positive')
     root=Path(__file__).resolve().parents[1]
     template=root/'challenge/problems/r01_array_sum'
-    for size in (1,2,3,4,5,6,7,19,65):
+    for size,repeats in product(args.sizes,args.body_repeats):
         graph=Graph.from_dict(json.loads((template/'k_sum_1_reduce.ir.json').read_text()))
         copy=StridedLoop(Axis('copy',Dim(size)),Var('thread'),Literal(64,'int'),(
             Load(name='loaded',input='x',index=(Var('copy'),),dtype=F32),
             Write(output='scratch',index=(Var('copy'),),value='loaded',value_dtype=F32)))
         reduce=Loop(Axis('reduce',Dim(size)),(
             Load(name='value',input='scratch',index=(Var('reduce'),),dtype=F32),
-            Accum(name='acc',value='value',op=ElementwiseImpl('add'),dtype=F32,axes=('reduce',))))
+            Accum(name='acc',value='value',op=ElementwiseImpl('add'),dtype=F32,axes=('reduce',))) * repeats)
         tile=Tile((Axis('thread',Dim(64)),),(
             Smem('scratch',(size,),align=16),copy,Sync(),reduce,
             Cond(BinaryExpr('==',Var('thread'),Literal(0,'int')),
@@ -35,7 +46,8 @@ def main():
                 graph.nodes[name]=replace(node,outputs=tuple(replace(t,shape=(Dim(size),)) for t in node.outputs))
             elif type(node.op).__name__=='KernelOp':
                 graph.nodes[name]=replace(node,op=replace(node.op,body=(tile,)))
-        folder=root/'artifacts/shared-loops'/f'r_shared_{size}'
+        suffix=f'_x{repeats}' if repeats != 1 else ''
+        folder=args.out/f'r_shared_{size}{suffix}'
         folder.mkdir(parents=True,exist_ok=True)
         (folder/'k_sum_1_reduce.ir.json').write_text(json.dumps(graph.to_dict(),indent=2,default=str)+'\n')
         meta=json.loads((template/'meta.json').read_text())
@@ -46,8 +58,8 @@ def main():
         meta['kernels'][0]['args'][0]['shape']=[size]
         (folder/'meta.json').write_text(json.dumps(meta,indent=1)+'\n')
         x=np.random.default_rng(0).standard_normal(size).astype(np.float32)
-        np.savez(folder/'expected.npz',sum_1=np.array([x.astype(np.float64).sum()],dtype=np.float32))
-    print('Generated 9 shared-loop cases')
+        np.savez(folder/'expected.npz',sum_1=np.array([x.astype(np.float64).sum()*repeats],dtype=np.float32))
+    print(f'Generated {len(args.sizes)*len(args.body_repeats)} shared-loop cases')
 
 
 if __name__=='__main__':

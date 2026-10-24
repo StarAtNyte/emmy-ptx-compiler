@@ -46,3 +46,26 @@ The compiler was unchanged. All ten valid cases then passed locally and hosted.
 The runnable `tools/expressions_holdout.py` reproduces those exact IRs, launch
 metadata and expected arrays. Original and corrected results are retained in
 `validation/2026-10-24-holdout.json`; no initial failure was silently discarded.
+
+## Backend nounroll control — rejected 2026-10-24
+
+`backend-nounroll.patch` inserts NVIDIA's documented loop-header
+`.pragma "nounroll"` into the bounded shared-expansion compiler. It is an
+experiment only, never active lowering. The [PTX specification](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#descriptions-of-pragma-strings)
+requires statement-level placement before instructions in the loop header.
+
+Despite the target/local register discrepancy motivating this experiment,
+turning off backend unrolling made all four measured kernels slower. Seven
+alternating paired RTX 5090 trials, full-output first-trial checks and checked
+prefixes thereafter, unlocked clocks:
+
+| Kernel | Bounded baseline → nounroll, µs |
+| --- | --- |
+| a01 attention | 90.752 → 563.616 |
+| a02 attention | 53.920 → 193.056 |
+| m01 matmul | 66.208 → 68.224 |
+| r02 big sum | 21.152 → 72.320 |
+
+Raw samples and both compiler hashes are preserved in the production validation
+record. This rejects blanket backend-unroll suppression; it does not establish
+that every possible per-loop policy would be slower.

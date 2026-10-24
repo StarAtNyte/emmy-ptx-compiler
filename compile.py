@@ -294,8 +294,9 @@ class Compiler:
             start = self.integer(stmt.start) if isinstance(stmt, StridedLoop) else '0'
             step = self.integer(stmt.step) if isinstance(stmt, StridedLoop) else '1'
             end = self.integer(stmt.end) if isinstance(stmt, StridedLoop) and stmt.end is not None else str(stmt.axis.extent.value)
-            # Expand only straight-line scalar inner loops. The main loop has
-            # four ordered bodies; a scalar epilogue preserves arbitrary tails.
+            # Expand only straight-line shared-memory scalar inner loops.
+            # Bound expansion by extent and a statement budget to expose ILP
+            # without unbounded code growth; preserve ordered scalar tails.
             factor = 1
             remainder = 0
             if (isinstance(stmt, Loop) and 4 <= stmt.axis.extent.value <= 1024
@@ -303,7 +304,8 @@ class Compiler:
                     and any(isinstance(s, Load) for s in stmt.body)
                     and all(isinstance(s, (Load, Assign, Accum, Let, Init, Select)) for s in stmt.body)
                     and all(not isinstance(s, Load) or s.input in self.shared for s in stmt.body)):
-                factor = 4
+                limit = min(64, stmt.axis.extent.value, 1024 // len(stmt.body))
+                factor = 1 << (limit.bit_length() - 1)
                 remainder = stmt.axis.extent.value % factor
                 end = str(stmt.axis.extent.value - remainder)
                 step = str(factor)

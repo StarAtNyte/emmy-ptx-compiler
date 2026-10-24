@@ -33,8 +33,10 @@ Approach:
 >
 > Optimizations are tested with alternating paired runs on the hosted RTX 5090.
 > Adjacent multiply/add reduction steps contract to FMA; bounded shared-memory
-> scalar loops expand four ways with scalar tails. These measured about 1.32x
-> speedup for one attention kernel and 1.33x for one matmul step respectively.
+> scalar loops expand by up to 64 iterations under extent/body-size limits,
+> with scalar tails. FMA measured about 1.32x for one attention kernel. Shared
+> expansion improved one matmul step by 1.33x, then a further 1.12x in later
+> paired trials; these are separate measurements, not a combined benchmark.
 > Broader unrolling and an explicit vector pass were rejected after measurement.
 >
 > Validation includes all public categories, independent shape/operation and

@@ -44,9 +44,11 @@ tolerances permit the single-rounding contraction. Ordinary pointwise expression
 remain separate. The discarded multiply is left for ptxas dead-code elimination
 if no other statement consumes it.
 
-Straight-line scalar loops reading only shared memory can expand four iterations
-per loop, with a scalar epilogue for any remainder. Body and extent bounds limit
-code growth. The memory-space guard is deliberate: an unrestricted experiment
+Straight-line scalar loops reading only shared memory expand by a power-of-two
+factor up to 64, capped by the extent and a 1,024 expanded-statement budget.
+A scalar epilogue preserves ordered remainders. Eligibility also limits the
+original body to 64 statements and the extent to 4–1024. The memory-space guard
+is deliberate: an unrestricted experiment
 improved matmul but doubled one global-memory attention kernel's runtime. No
 kernel-name or public-problem checks select this optimization.
 

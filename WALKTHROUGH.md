@@ -49,13 +49,14 @@ integer Let bindings and repeated Tile labels needed separate fixes.
 Show `body`, `accumulate`, and the shared-memory loop guard.
 
 An adjacent multiply followed by an additive fold uses FMA. Ordinary pointwise
-arithmetic keeps separate rounding. Four-way expansion applies only to bounded,
+arithmetic keeps separate rounding. Expansion by up to 64 applies only to bounded,
 straight-line scalar loops whose loads read shared memory; a scalar epilogue
-handles remaining iterations.
+handles remaining iterations. The factor also respects an expanded-body budget.
 
 Show the paired timing records. FMA improved an attention kernel from about
 119 to 91 microseconds. Shared-memory loop expansion improved matmul from about
-99 to 74 microseconds. A broader unroll pass slowed attention, and explicit
+99 to 74 microseconds; later bounded expansion brought it to about 66.
+A broader unroll pass slowed attention, and explicit
 vector memory instructions were timing-neutral, so those versions were rejected.
 Clocks were not locked; these are measured cases rather than universal speedups.
 
