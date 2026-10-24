@@ -66,7 +66,8 @@ pairing positively emits a vector load in the predicate-address fixture.
 All 458 prior kernels emit byte-identical PTX, preserving earlier codegen; no
 fresh speedup claim. Eight rejection diagnostics still pass. New committed shared
 predicate fixture adds a fourth CPU golden: all seven checks pass locally without
-Torch, existing three goldens unchanged. Actual new Actions matrix pending push.
+Torch, existing three goldens unchanged. Actions run 40093823051 passes all seven
+checks on Python 3.12/3.13/3.14; downloaded exact-hash reports saved in iteration8.
 
 Prior GPU/timing evidence for identical prior PTX:
 validation/2026-10-24-production-iteration7.json:
@@ -121,28 +122,30 @@ partial safety sweep stopped after rejection, patch/evidence preserved.
 
 CPU Actions run on push/PR/manual/nightly across Python 3.12–3.14. First matrix
 40089837329 passed all five checks without Torch; evidence in cpu-ci.json.
-Current manifest adds a third GPU-verified INT32-boundary fixture under
-validation/cpu-fixtures. Existing two goldens unchanged. Accepted source published
-as 074d4f9; Actions run 40092577026 passed six checks on all three Python versions.
-Downloaded reports confirm compiler 04b50e69 and no Torch; saved in iteration7.
-One push run is not sustained CI history.
+Current manifest has four GPU-verified fixtures plus three negative probes.
+Accepted predicate fix published as 35208cf; Actions run 40093823051 passed seven
+checks on all three versions. Downloaded reports confirm b13ccba6 and no Torch;
+saved in iteration8. Existing three goldens unchanged, shared predicate fixture
+added. These push matrices are an initial history, not sustained-nightly proof.
 
 ## Packaging and next work
 
-Prior verified checkpoint archive built from 00da61e, compiler 04b50e69, in a fresh
-Python 3.12.13 environment with pinned constraints and no Torch. Extracted outside
-the worktree; hosted scalar-add, matmul and attention smoke checks pass. Evidence:
+Current verified archive built from 35208cf, compiler b13ccba6. Reused the
+isolated no-Torch Python 3.12.13 runtime created fresh with pinned constraints in
+the preceding phase; dependencies unchanged. Extracted outside the worktree;
+hosted scalar-add, matmul and attention smoke checks pass. Latest evidence:
 validation/2026-10-24-current-package.json. Paths:
-artifacts/emmy-ptx-current-checkpoint.zip and artifacts/emmy-ptx-submission.zip
-are identical verified bytes. Prior stale archive/report retained as
-artifacts/emmy-ptx-before-power2.zip/json. Compiler has now changed to b13ccba6; refresh archive after committing this fix.
-The report identifies the exact archived commit/compiler; no submission yet.
+artifacts/emmy-ptx-predicate-checkpoint.zip, artifacts/emmy-ptx-current-checkpoint.zip
+and artifacts/emmy-ptx-submission.zip contain identical verified bytes. Previous
+power2 archive/report retained as artifacts/emmy-ptx-power2-checkpoint.zip/json;
+prior evidence preserved in validation/2026-10-24-power2-package.json.
+No rebuild needed for documentation-only changes. No entry submitted.
 
 Next: broaden index/control-flow type validation, operation/dtype coverage and
 bounded failure shrinking. Continue target hardware lower-bound/bottleneck work;
 no hosted counter/roofline evidence yet. Add future retained cases to CPU CI.
 No candidate jobs remain live from this acceptance step. New CI runs may trigger
-on documentation pushes; existing accepted-code six-check matrix is verified.
+on documentation pushes; existing accepted-code seven-check matrix is verified.
 
 Entry drafts SUBMISSION.md/WALKTHROUGH.md reflect current measured optimizations.
 **No contest entry submitted.** Personal fields/video still missing; don't invent

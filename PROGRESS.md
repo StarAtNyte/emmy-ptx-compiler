@@ -875,7 +875,7 @@ Completed 2026-10-24:
   stale artifacts/emmy-ptx-submission.zip with the same verified bytes; old archive
   and report preserved as artifacts/emmy-ptx-before-power2.zip/json.
 - Archive/environment/requirements hashes and all smoke outputs preserved in
-  validation/2026-10-24-current-package.json. This is a verified code checkpoint,
+  validation/2026-10-24-power2-package.json. This is a verified code checkpoint,
   not contest entry submission or a claim of complete production readiness.
 
 Next: broader index/control-flow typing probes and target hardware lower-bound /
@@ -908,3 +908,20 @@ Completed 2026-10-24:
 Next: publish, verify seven-check CPU matrix and refresh code archive for changed
 compiler. Broader type/rank/ABI validation and hardware lower-bound work remain.
 Production readiness unproven; submission stays deferred.
+
+## Step 34 — seven-check CI and extracted predicate-fix archive verified
+
+Completed 2026-10-24:
+
+- Published accepted predicate fix as 35208cf. Actions run 40093823051 passed seven
+  checks on Python 3.12/3.13/3.14. Downloaded reports confirm b13ccba6, no Torch and
+  all four fixture goldens/three diagnostics pass; preserved in iteration8.
+- Archived committed 35208cf; packaged compiler b13ccba6 matches active source.
+  Extracted scalar-add, matmul and attention hosted checks pass in the existing
+  isolated no-Torch 3.12.13 environment from the preceding fresh pinned install.
+  No dependency changes; this is not a new environment-creation claim.
+- Current predicate-checkpoint/current-checkpoint/submission ZIP aliases all hold
+  identical verified bytes; previous power2 archive/report retained. Latest package
+  report current-package.json; older report preserved as power2-package.json.
+- Updated current handoff/README. No submission or general production-readiness
+  claim. Next: broader type/rank/ABI validation and target bottleneck/lower bounds.

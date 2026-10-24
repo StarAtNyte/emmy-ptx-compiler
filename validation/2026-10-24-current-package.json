@@ -1,20 +1,20 @@
 {
-  "status": "verified code checkpoint archive; no contest entry submitted or final production readiness claimed",
+  "status": "verified predicate-fix code checkpoint; no entry submission or production-readiness claim",
   "package_report": {
-    "commit": "00da61ed6c4d78953ed4643a469b71e2fa0b51e6",
-    "compiler_sha256": "04b50e69438a15973a590a881562b78dc41f3fd23c0f870352e63ab334019979",
-    "archive_sha256": "f8b7f3227b256c1face147a0456ea5a4e9a9fed40b080e705a42793bb65cdbf6",
+    "commit": "35208cf48587b6585a020a21ab816cb31ec2a139",
+    "compiler_sha256": "b13ccba603f9e74bef1f65254284d7172a929eddeeba2ec48b22ba0f24028b26",
+    "archive_sha256": "1595196d76aa02c560ff8b5d27dc941916ec87cc329ef31a492adaec21a02b6d",
     "checks": [
       {
         "problem": "p00_scalar_add",
         "passed": true,
-        "stdout": "[k_add_pointwise] 22 registers\n[k_add_pointwise] PASS  add: max abs err 0.000e+00  (23.712 us)\n",
+        "stdout": "[k_add_pointwise] 22 registers\n[k_add_pointwise] PASS  add: max abs err 0.000e+00  (23.104 us)\n",
         "stderr": ""
       },
       {
         "problem": "m01_matmul_512",
         "passed": true,
-        "stdout": "[k_matmul_2967be] 40 registers\n[k_matmul_2967be] PASS  matmul: max abs err 8.392e-05  (40.672 us)\n",
+        "stdout": "[k_matmul_2967be] 40 registers\n[k_matmul_2967be] PASS  matmul: max abs err 8.392e-05  (37.248 us)\n",
         "stderr": ""
       },
       {
@@ -30,12 +30,11 @@
     }
   },
   "archive_paths": [
+    "artifacts/emmy-ptx-predicate-checkpoint.zip",
     "artifacts/emmy-ptx-current-checkpoint.zip",
     "artifacts/emmy-ptx-submission.zip"
   ],
-  "archive_bytes": 632289,
-  "prior_archive_backup": "artifacts/emmy-ptx-before-power2.zip",
-  "requirements_sha256": "bf3788d135558775d6d0c0fddf732829fb817aa3f99edbdaf86d2569ae8d5fa2",
-  "constraints_sha256": "b7ead8525fd2eac60596ef02da4c27cbf8a45c31b4e4668618f889e5387060c3",
-  "fresh_environment_packages": "anyio==4.15.1\ncatboost==1.2.10\ncertifi==2026.10.23\ncharset-normalizer==3.5.2\nclick==8.5.0\ncontourpy==1.4.0\ncycler==0.12.1\nemmy-ml==0.3.11\nfilelock==4.2.4\nfonttools==4.67.0\nfrozendict==2.4.7\nfsspec==2026.9.0\ngraphviz==0.21\nh11==0.16.0\nhf-xet==1.7.0\nhttpcore==1.0.9\nhttpcore2==2.16.0\nhttpx==0.28.1\nhttpx2==2.16.0\nhuggingface-hub==2.3.0\nidna==3.20\nkiwisolver==1.5.1\nmatplotlib==3.11.2\nnarwhals==2.27.1\nnumpy==2.5.4\npackaging==26.3\npandas==3.1.0\npillow==13.0.0\nplotly==7.1.0\npyparsing==3.3.3\npython-dateutil==3.0.0\npyyaml==6.0.3\nrequests==2.34.2\nscipy==1.18.1\nsix==1.17.0\ntqdm==4.70.1\ntruststore==0.10.5\ntyping-extensions==4.16.0\ntzdata==2026.5\nurllib3==2.8.0\n"
+  "archive_bytes": 705470,
+  "environment_note": "existing isolated no-Torch Python 3.12.13 environment from the preceding fresh pinned-runtime check; no dependency changes",
+  "previous_checkpoint_record": "2026-10-24-power2-package.json"
 }

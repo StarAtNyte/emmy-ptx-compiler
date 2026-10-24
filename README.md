@@ -98,12 +98,17 @@ additional valid cases on both GPUs without compiler changes. It records two
 upstream tracing failures and a corrected callable-boundary fixture, including
 the initial results.
 
-The [latest signed-index iteration](validation/2026-10-24-production-iteration7.json)
+The [signed power-of-two iteration](validation/2026-10-24-production-iteration7.json)
 records 458 local fixture executions, 111 hosted cases (including full-output
 first timing trials), nine transformer runs, and four sanitizers on 45 selected
 cases. These are correlated development checks. An unsigned tile-coordinate
 rewrite was rejected after a repeatable attention regression; the accepted signed
 refinement preserves that workload while improving three measured matmuls.
+
+The [predicate-index iteration](validation/2026-10-24-production-iteration8.json)
+fixes invalid PTX when booleans are used numerically. Forty new cases pass on both
+GPUs, with selected sanitizer/model checks; all 458 prior kernels retain
+byte-identical PTX. This correctness fix does not claim a fresh speedup.
 
 ## Measured performance
 
@@ -147,7 +152,7 @@ CPU contract checks run on pushes, pull requests and nightly across Python
 3.12–3.14. They use committed counterexamples, isolated CLI execution without
 Torch, fixed PTX snapshots and unsupported-feature probes. See
 [the workflow](.github/workflows/cpu-contract.yml) and [testing notes](TESTING.md).
-The [first three-version matrix](https://github.com/StarAtNyte/emmy-ptx-compiler/actions/runs/40089837329)
-passed; [downloaded evidence](validation/2026-10-24-cpu-ci.json) records exact
-versions, hashes and scope. These checks complement the numerical GPU and
+The [seven-check matrix](https://github.com/StarAtNyte/emmy-ptx-compiler/actions/runs/40093823051)
+passed on all three versions; [downloaded evidence](validation/2026-10-24-production-iteration8.json)
+records exact versions, hashes and scope. These checks complement the numerical GPU and
 sanitizer gates above.
