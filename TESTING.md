@@ -289,3 +289,22 @@ signed-int32 addition overflow, and ternaries. Its second output half observes t
 outer binding after the scope. Overflow references explicitly wrap through int32
 before applying NumPy remainder. These bounded probes do not define division by
 zero or signed division overflow as supported behavior.
+
+## Strided-loop end and increment timing
+
+```sh
+.venv/bin/python tools/generate_strided_bound_cases.py
+.venv/bin/python tools/generate_strided_bound_cases.py --seed 3719 --out artifacts/strided-bounds-fresh
+.venv/bin/python tools/validate_isolated.py artifacts/strided-bounds/*/ artifacts/strided-bounds-fresh/*/ --report artifacts/strided-bounds-local.json
+.venv/bin/python tools/validate.py --problems artifacts/strided-bounds --report artifacts/strided-bounds-hosted.json
+```
+
+Four bounded families with renamed counterparts check an axis-dependent end,
+an axis-dependent increment, both together, and the implicit `<axis>_end` binding.
+Independent Python cursor recurrences and small-integer f32 sums provide exact
+references; a second output half observes the enclosing coordinate afterward.
+Installed Emmy 0.3.11 `ir/stmt/blocks.py:StridedLoop.render` establishes the timing
+and implicit-binding contract. Iteration-six evidence includes baseline numerical
+failures and missing-binding errors, final original/fresh cases on both GPUs,
+selected sanitizer, transformer, standalone-runtime and 350-kernel byte-identical
+PTX checks. This changes new-case correctness without a fresh speedup claim.

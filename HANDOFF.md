@@ -20,7 +20,7 @@ https://github.com/cloudrift-ai/emmy-hackathon-2026.
 - Workspace `/home/nitiz/Projects/Self/Challenges/emmy`; branch `master`, origin
   https://github.com/StarAtNyte/emmy-ptx-compiler. Check git status/log before work.
 - Current accepted compiler SHA-256:
-  `e034896678a6a6b8ada4ae40c4b40059811e2f81f0993d0853a9ec6abee11073`.
+  `bb3a72b276f87396b15e9e8e5d0d984b9f1eb86330c43cb6189d6856b85f22fb`.
 - Use `.venv/bin/python` (3.12); host default is 3.14. Pinned Emmy 0.3.11,
   NumPy 2.5.4, CPU Torch 2.14.1. Runtime compiler does not need Torch or a GPU.
 - Local RTX 3050 Laptop 6 GiB, sm_86; hosted RTX 5090, sm_120:
@@ -122,8 +122,17 @@ Use tools/sanitize.py; TESTING.md documents full suites and reconstruction.
 
 ## Current acceptance and next work
 
-Current compiler e0348966... is accepted after signed-index correction. Latest
-combined record: validation/2026-10-24-production-iteration5.json. The original
+Current compiler bb3a72b2... is accepted after strided-loop bound correction.
+Latest record: validation/2026-10-24-production-iteration6.json. All 350 prior
+regression kernels emit byte-identical PTX to e0348966. New end/step/axis_end
+fixtures: 16 original/fresh checks pass locally and hosted, nine transformer runs
+pass, four sanitizers clean on eight selected new cases, three no-Torch /tmp
+compilation checks match PTX. Installed StridedLoop.render initializes the axis
+before capturing end once; step runs after each body; axis_end is body-visible.
+The previous compiler failed six numerical fixtures and could not compile the
+two axis_end fixtures. No new performance claim. All live sessions completed.
+
+Prior signed-index record: validation/2026-10-24-production-iteration5.json. The original
 5af51dc2 compiler failed all 12 signed-division/remainder probes. PTX truncates
 signed division; Emmy 0.3.11 expr.apply_binop floors both / and // and uses Python
 remainder. Current code corrects signs unless conservative signed-int32 bounds
@@ -144,7 +153,7 @@ The unconditional sign-correction control passed correctness but slowed m01
 Historical candidate patch experiments/signed-index-floor.patch applies to
 compiler at aa668e2; do not apply to new main. All prior live handles completed.
 
-Next: broaden control-flow/index typing and strided-loop lexical binding probes;
+Next: broaden control-flow/index typing and add failure shrinking;
 add systematic failure shrinking, target instruction/roofline analysis and CI.
 Division by zero and signed division overflow are not supported behavior.
 Explicit unsupported dtypes/layouts fail before PTX output; this boundary check

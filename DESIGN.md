@@ -162,3 +162,14 @@ belong to register identities, with tile/loop bounds and integer Let snapshots;
 unknown expressions and possible arithmetic overflow discard the proof. This
 retains public matmul code generation while supporting negative index arithmetic.
 Division by zero and signed division overflow are outside supported behavior.
+
+## Strided-loop expression timing
+
+A strided loop evaluates its start in the enclosing environment, initializes its
+axis, then captures an explicit end bound once. The captured value is visible
+inside the body as `<axis>_end`, matching installed Emmy 0.3.11's renderer.
+Axis-dependent steps execute after each body at the loop increment; steps using
+the captured end binding are also resolved there. Independent immutable steps
+retain their existing lowering. Range proofs for axis-dependent bounds/steps
+remain conservative rather than treating their initial values as whole-loop
+bounds. Exiting the loop restores enclosing bindings and exports carried states.

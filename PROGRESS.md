@@ -619,3 +619,30 @@ readiness remains unproven. Submission deferred; packaged release still stale.
 
 Active-path follow-up: all eight unsupported-feature CLI probes still reject
 cleanly with current e0348966; report included in iteration-five evidence.
+
+## Step 22 — strided end/increment evaluation fixed and accepted
+
+Completed 2026-10-24:
+
+- Inspected installed StridedLoop.render: initialize the axis, capture explicit
+  end once, expose axis_end inside the body, and evaluate step after each body.
+  The previous compiler evaluated end and step before initializing the axis and
+  did not provide axis_end. Same-name start shadowing was not used as the oracle
+  because C initialization semantics make that probe less clear.
+- Added tools/generate_strided_bound_cases.py: four bounded families / eight
+  renamed cases, independent exact Python cursor/small-integer sum references,
+  and enclosing-coordinate observations after the loop. Six original probes fail
+  numerically on e0348966; two axis_end probes fail compilation with missing names.
+- Accepted bb3a72b276f87396b15e9e8e5d0d984b9f1eb86330c43cb6189d6856b85f22fb.
+  Captures end after axis initialization, evaluates dependent increments in the
+  loop, binds axis_end, and conservatively declines dependent-bound range proofs.
+- 16 original/fresh local checks and 16 hosted checks pass. Nine transformer runs
+  pass; all four sanitizer tools clean on eight selected new cases. Three no-Torch
+  /tmp compilation checks emit identical PTX to the development environment.
+- All 350 prior regression kernels emit byte-identical PTX to e0348966, including
+  all public kernels. This preserves tested code generation; no new timing claim.
+- Final baseline failures, candidate gates and fixture hashes preserved in
+  validation/2026-10-24-production-iteration6.json. Updated design/testing/handoff.
+
+Next: control-flow/index typing, systematic shrinking and target profiling/CI.
+Production readiness unproven. Submission deferred and release ZIP still stale.

@@ -440,10 +440,15 @@ class Compiler:
                 self.identities[name] = identity
                 self.emit(f'mov.f32 {register}, {self.floating(identity)};')
             axis = self.reg()
-            self.values[stmt.axis.name] = axis
             start = self.integer(stmt.start) if isinstance(stmt, StridedLoop) else '0'
-            step = self.integer(stmt.step) if isinstance(stmt, StridedLoop) else '1'
-            end = self.integer(stmt.end) if isinstance(stmt, StridedLoop) and stmt.end is not None else str(stmt.axis.extent.value)
+            start_bounds = self.index_interval(stmt.start) if isinstance(stmt, StridedLoop) else None
+            self.values[stmt.axis.name] = axis
+            dynamic_step = (isinstance(stmt, StridedLoop) and hasattr(stmt.step, 'free_vars')
+                            and bool({stmt.axis.name, stmt.axis.name + '_end'} & stmt.step.free_vars()))
+            axis_end = (isinstance(stmt, StridedLoop) and stmt.end is not None
+                        and stmt.axis.name in stmt.end.free_vars())
+            step = None if dynamic_step else self.integer(stmt.step) if isinstance(stmt, StridedLoop) else '1'
+            end = None if axis_end else self.integer(stmt.end) if isinstance(stmt, StridedLoop) and stmt.end is not None else str(stmt.axis.extent.value)
             # Expand only straight-line shared-memory scalar inner loops.
             # Bound expansion by extent and a statement budget to expose ILP
             # without unbounded code growth; preserve ordered scalar tails.
@@ -460,12 +465,19 @@ class Compiler:
                 end = str(stmt.axis.extent.value - remainder)
                 step = str(factor)
             self.emit(f'mov.u32 {axis}, {start};')
+            if axis_end:
+                if start_bounds is not None:
+                    self.index_ranges[axis] = start_bounds
+                end = self.integer(stmt.end)
+                self.index_ranges.pop(axis, None)
+            if isinstance(stmt, StridedLoop) and stmt.end is not None:
+                self.values[stmt.axis.name + '_end'] = end
             if isinstance(stmt, Loop) and 0 < stmt.axis.extent.value < (1 << 31):
                 self.index_ranges[axis] = (0, stmt.axis.extent.value-1)
             elif isinstance(stmt, StridedLoop):
-                lower = self.index_interval(stmt.start)
-                stride_bounds = self.index_interval(stmt.step)
-                upper = self.index_interval(stmt.end) if stmt.end is not None else (stmt.axis.extent.value,)*2
+                lower = start_bounds
+                stride_bounds = None if dynamic_step else self.index_interval(stmt.step)
+                upper = None if axis_end else self.index_interval(stmt.end) if stmt.end is not None else (stmt.axis.extent.value,)*2
                 if (lower is not None and stride_bounds is not None and upper is not None
                         and lower[0] >= 0 and stride_bounds[0] > 0
                         and lower[1] < upper[1] and upper[1] + stride_bounds[1] < (1 << 31)):
@@ -480,6 +492,8 @@ class Compiler:
                     self.index_ranges[self.values[stmt.axis.name]] = self.index_ranges[axis]
                 self.scoped_body(stmt.body)
             self.values[stmt.axis.name] = axis
+            if dynamic_step:
+                step = self.integer(stmt.step)
             self.emit(f'add.s32 {axis}, {axis}, {step};')
             self.emit(f'bra {head};')
             self.emit(tail + ':')
