@@ -28,10 +28,10 @@ def main():
     python=str(args.python.absolute())
     with zipfile.ZipFile(args.out) as archive, tempfile.TemporaryDirectory(prefix='emmy-release-') as directory:
         names=archive.namelist()
-        required={'compile.py','requirements.txt','README.md','DESIGN.md','SUBMISSION.md','WALKTHROUGH.md'}
+        required={'compile.py','requirements.txt','README.md','docs/design.md','docs/testing.md','tests/run.py'}
         if not required.issubset(names):
             raise RuntimeError('Committed archive is missing submission files')
-        if any(n.startswith(('.venv/','artifacts/','challenge/','upstream-emmy/','.git/')) for n in names):
+        if any(n.startswith(('.venv/','.local/','artifacts/','challenge/','upstream-emmy/','.git/')) for n in names):
             raise RuntimeError('Development state leaked into the archive')
         archive.extractall(directory)
         packaged=Path(directory)/'compile.py'

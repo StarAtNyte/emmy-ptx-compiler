@@ -1,4 +1,4 @@
-name: CPU compiler contract
+name: CPU tests
 
 on:
   push:
@@ -31,32 +31,13 @@ jobs:
         run: |
           python -m pip install -r requirements.txt -c requirements-ci.lock
           python -m pip check
-      - name: Check isolated CLI and committed PTX snapshots without Torch
-        run: python tools/check_cpu_contract.py --forbid-torch --report artifacts/cpu-contract-result.json
-      - name: Check launch diagnostics and valid ABI controls
-        run: python tools/check_launch_contract.py --report artifacts/launch-contract-result.json
-      - name: Check large-block register allocation ceilings
-        run: python tools/check_launch_resources.py --report artifacts/launch-resource-result.json
-      - name: Check positional buffer ABI diagnostics
-        run: python tools/check_abi_contract.py --report artifacts/abi-contract-result.json
-      - name: Check static shapes and valid view controls
-        run: python tools/check_static_shapes.py --report artifacts/shape-contract-result.json
-      - name: Check unsupported scalar operation diagnostics
-        run: python tools/check_scalar_op_rejections.py --report artifacts/op-contract-result.json
-      - name: Check bool SSA and storage boundaries
-        run: python tools/check_bool_contract.py --report artifacts/bool-contract-result.json
+      - name: Run CPU regression suite
+        run: python tests/run.py --forbid-torch
       - name: Retain contract evidence
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: cpu-contract-python-${{ matrix.python-version }}
-          path: |
-            artifacts/cpu-contract-result.json
-            artifacts/launch-contract-result.json
-            artifacts/launch-resource-result.json
-            artifacts/abi-contract-result.json
-            artifacts/shape-contract-result.json
-            artifacts/op-contract-result.json
-            artifacts/bool-contract-result.json
+          path: artifacts/test-results/
           if-no-files-found: warn
           retention-days: 14

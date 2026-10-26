@@ -3,3 +3,5 @@ __pycache__/
 upstream-emmy/
 challenge/
 artifacts/
+.local/
+*.ptx
