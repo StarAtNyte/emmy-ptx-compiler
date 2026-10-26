@@ -34,8 +34,8 @@ Final gates: hosted public15/15, frontend16/16, fresh pressure5/5; local22/22;
 transformer9 runs/147 stage checks; four sanitizers clean on final attention and
 shared matmul. Each isolated no-Torch3.12/3.13/3.14 passes176 contracts and3072
 register-ceiling checks. Seven-pair target public matmul/attention medians unchanged;
-independent shared matmul11.072→11.168us (<1%). Packaging needs rebuilding after
-this source commit. No hidden score or new speedup claimed.
+independent shared matmul11.072→11.168us (<1%). Package rebuilt and verified for
+e43ff39/c9184bfd; current record below. No hidden score or new speedup claimed.
 
 Workspace /home/nitiz/Projects/Self/Challenges/emmy. Use .venv/bin/python3.12,
 Emmy0.3.11 and NumPy2.5.4. Dev Torch is CPU2.14.1; compiler needs no Torch/GPU.
@@ -240,15 +240,15 @@ GitHub run40302035461 (sourced193ab1) inspected: all3 CPU jobs rejected before
 steps for account payments/spending limit. No current hosted CPU results.
 Do not alter billing, retry unchanged jobs or change visibility as a workaround.
 
-Current verified archive source d193ab1 / compiler3586814e:
-ZIP7dfc70d706ef2f1e9f4738ea73e36fa94bbb81f9c230584bc0022f950cf9a2a6.
-Record validation/2026-10-26-current-package.json. Prior mask checkpoint preserved
-as2026-10-26-masks-package.json. Erf/current/submission ZIP aliases match.
-Actual compiler/harness/generators/manifest/fixture member bytes checked.
-Extracted standard3 plus all5 archived math fixtures and a prepared full GELU
-MLP case pass on official GPU in existing isolated no-Torch3.12 runtime.
-The MLP descriptor is a prepared external artifact; compiler and5 fixtures were
-extracted. No fresh installation claimed. No rebuild for docs/evidence-only edits.
+Current verified archive source e43ff39 / compiler c9184bfd:
+ZIP f5b09da4b0234c07c88b10f278ae5bf8cedc105b08c1968c192b3397d5981f44.
+Record validation/2026-10-26-current-package.json; previous51239969 package
+record preserved as2026-10-26-pre-launch-package.json. The submission ZIP is
+artifacts/emmy-ptx-submission.zip. Extracted standard3 hosted smoke checks and
+the extracted512-thread pressure fixture pass on the official GPU. Extracted
+no-Torch3.12 CPU snapshot/diagnostic checks61/61 and3072 resource invariants
+pass. Existing runtime reused; no fresh installation claimed. Documentation and
+evidence-only follow-up commits do not require another archive rebuild.
 
 ## Next work
 
@@ -256,8 +256,7 @@ Judging order (official README; no numeric weights): hidden-set correctness
 by category, then code review, then kernel speed. The video is an eligibility
 gate. Deadline Oct 27 23:59 AoE; resubmission allowed until then.
 
-Package for f1e9d7a / 51239969 is built and verified: extracted compiler and all
-36 fixtures dated 2026-10-26 pass on the official GPU
+Package for e43ff39 / c9184bfd is built and verified
 (validation/2026-10-26-current-package.json). Rebuild after any code change.
 
 1. Readability: README "How it works", DESIGN math/launch sections and the

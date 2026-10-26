@@ -1821,3 +1821,14 @@ Retained512-thread pressure fixture extends CPU snapshots57 positives+4 negative
 probes; prior56 positives stay byte-identical. README sampled-error language and
 launch policy docs corrected. CLAUDE.md now agrees that visibility/video/submission
 are deferred. Packaging is the remaining release check for this source.
+
+## Step 79 — launch-fix archive verified
+
+Archive source e43ff39377ab1b7d2c2e7632dcad42d8162b7899, compiler c9184bfd,
+ZIP f5b09da4b0234c07c88b10f278ae5bf8cedc105b08c1968c192b3397d5981f44.
+tools/package_submission.py passes extracted p00/m01/a01 on the official GPU.
+An additional extraction passes all61 CPU snapshot/diagnostic checks and3072
+register-ceiling invariants in existing no-Torch3.12. The extracted512-thread
+pressure fixture also passes the official GPU checker. Current package record
+retained; previous51239969 package record preserved as pre-launch-package.json.
+No repository visibility, entrant/video fields or submission changed.

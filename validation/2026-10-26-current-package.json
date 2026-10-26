@@ -1,24 +1,24 @@
 {
-  "commit": "f1e9d7a7a798087d8c5c8046b24e9ebdbc53ee61",
-  "compiler_sha256": "512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32",
-  "archive_sha256": "ec18991882ce6dd10831159a2bfa051b3ea01f0ade820c6b1720aeb1f5ebc410",
+  "commit": "e43ff39377ab1b7d2c2e7632dcad42d8162b7899",
+  "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+  "archive_sha256": "f5b09da4b0234c07c88b10f278ae5bf8cedc105b08c1968c192b3397d5981f44",
   "checks": [
     {
       "problem": "p00_scalar_add",
       "passed": true,
-      "stdout": "[k_add_pointwise] 22 registers\n[k_add_pointwise] PASS  add: max abs err 0.000e+00  (37.024 us)\n",
+      "stdout": "[k_add_pointwise] 22 registers\n[k_add_pointwise] PASS  add: max abs err 0.000e+00  (24.256 us)\n",
       "stderr": ""
     },
     {
       "problem": "m01_matmul_512",
       "passed": true,
-      "stdout": "[k_matmul_2967be] 48 registers\n[k_matmul_2967be] PASS  matmul: max abs err 8.392e-05  (28.384 us)\n",
+      "stdout": "[k_matmul_2967be] 48 registers\n[k_matmul_2967be] PASS  matmul: max abs err 8.392e-05  (27.872 us)\n",
       "stderr": ""
     },
     {
       "problem": "a01_attention",
       "passed": true,
-      "stdout": "[k_matmul_softmax_reduce_b55365] 128 registers\n[k_matmul_softmax_reduce_b55365] PASS  matmul_1: max abs err 6.557e-07  (104.64 us)\n",
+      "stdout": "[k_matmul_softmax_reduce_b55365] 128 registers\n[k_matmul_softmax_reduce_b55365] PASS  matmul_1: max abs err 6.557e-07  (103.072 us)\n",
       "stderr": ""
     }
   ],
@@ -26,10 +26,573 @@
     "python": "3.12.13 (main, Jul 23 2026, 14:43:28) [Clang 22.1.3 ]",
     "torch_installed": false
   },
-  "extracted_fixture_check": {
-    "scope": "All 36 fixtures dated 2026-10-26 extracted from the archive, compiled by the extracted compile.py, run on the official RTX 5090",
-    "passed": 36,
-    "total": 36,
-    "compiler_sha256": "512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32"
-  }
+  "extracted_contract_checks": [
+    {
+      "check": "check_cpu_contract",
+      "passed": true,
+      "detail": {
+        "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+        "manifest_sha256": "3104b0334195857b3580ee1738f0b5c1a46804d34d2fc67730e5853a657d66a2",
+        "python": "3.12.13 (main, Jul 23 2026, 14:43:28) [Clang 22.1.3 ]",
+        "torch_present": false,
+        "packages": {
+          "emmy-ml": "0.3.11",
+          "numpy": "2.5.4"
+        },
+        "scope": "CPU CLI/code-generation contract, not GPU execution",
+        "results": [
+          {
+            "case": "2026-10-24-scope-shrunk",
+            "passed": true,
+            "ptx_sha256": "da92b6fb192b65dc7f3db59027f2b19490839cd28ec96780b863eafd03c63636",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-strided-shrunk",
+            "passed": true,
+            "ptx_sha256": "0daa66ab444bfa84882ab282c513855a93f0e81a5ca0138f0793ec90ae6ab29a",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-power2-int32-extremes",
+            "passed": true,
+            "ptx_sha256": "90b58c7313e9aa68cb370231e6be886d7a65a3d5589db8b6d2d0fb76acb0783b",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-predicate-shared-pair",
+            "passed": true,
+            "ptx_sha256": "fd06c944a7e8af93c66bf3e55f2b4967959c8700ca18ee932412f6f2555402d8",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-f32-float-arithmetic",
+            "passed": true,
+            "ptx_sha256": "2df7c46b854f2a015912bc7ddbfb5dcce1ec8a6bcde7c89686890f4b562704af",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-f32-float-to-int",
+            "passed": true,
+            "ptx_sha256": "6ab78d97f9052e98979c0f276713b8079345fdbfadc418de6253612d26cc8d8a",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-f32-mixed-compare",
+            "passed": true,
+            "ptx_sha256": "2a1c96afbee96e89e545dbce76f6da7fc9728c9333228577141e2526c1fc8bd1",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-f32-nan-truth",
+            "passed": true,
+            "ptx_sha256": "f4cd7d56c04384085c1a6bf28e8c58859ccab0b40e02067f4a6a5cb6e3c86644",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-address-extra-load",
+            "passed": true,
+            "ptx_sha256": "ef787e70144111fc08fa68599cccf900ce5b78b2d5713e2877dce1c75095dcae",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-address-scalar-flat",
+            "passed": true,
+            "ptx_sha256": "5b282358a6b403fb5581810ea2a59fae285a09bc65e3a0431cf850ab9dcc2552",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-address-shared-pair",
+            "passed": true,
+            "ptx_sha256": "62031c8c90c184e99f937a63d4320a71ea9693befd71a70770616762ea2f76f5",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-abi-reordered",
+            "passed": true,
+            "ptx_sha256": "70fae51164243b8fb221be8aab328de710e560406d1fef21db9a929056ce6519",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-cross-tail",
+            "passed": true,
+            "ptx_sha256": "d4cf107f7f6a90de6c2ebdc49ff4dca16a0c60a95c7180262d926ac187b2689f",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-cross-large-tail",
+            "passed": true,
+            "ptx_sha256": "0620641622129f6c3e635e1f4bbc234ac499d1de655434a7939f1708d73875cf",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-cross-write-guard",
+            "passed": true,
+            "ptx_sha256": "2ccc41605aa89eff30de2c7c7cd134f95bd2f5f84b6e7a4a02c322d84c3fe2e4",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-cross-local-index-guard",
+            "passed": true,
+            "ptx_sha256": "c287d21272f1d2f57a0b6407f21905953db0e573b545d5e70999ffdc62f7a481",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-zero-tile-inner",
+            "passed": true,
+            "ptx_sha256": "2e8eccd9e99f6bd05fc7c4dcb288dd44da3dbd84a1af33d93be47e977194ee0b",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-zero-tile-nested",
+            "passed": true,
+            "ptx_sha256": "d17e23937c2f8d33c92f6fd1ada75f6f563912e78334d53337dbe8cc7e36a03b",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-zero-tile-empty-axis-control",
+            "passed": true,
+            "ptx_sha256": "96187424d881bf53b7957bab0ea87f27f172864b627c9f6067064d88a9563db8",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-24-zero-tile-zero-view",
+            "passed": true,
+            "ptx_sha256": "d414bf4b45267007ddabfa933b3d2436af09ad904bc35210e00c1fc8742c4967",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-wide-align8",
+            "passed": true,
+            "ptx_sha256": "6eee801f2406e0d9dea4541e5756368261b3065c113577b025779200aa9d9e47",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-wide-even_stride",
+            "passed": true,
+            "ptx_sha256": "08566abc5be9daaf6d35ed26a4fa32463d1439afe2ef22afe7baf9e7a99b7401",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-wide-mixed_alignment",
+            "passed": true,
+            "ptx_sha256": "c166b6b36b7216b1926b1f503c27c18546bc5c76e79fe9c2c5502440bf0088bc",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-wide-offset4",
+            "passed": true,
+            "ptx_sha256": "0b14b1bf1eb03d5d3901411ff0632ed8ce9ec3675cef048a50fea89a30b656d8",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-wide-tail_six",
+            "passed": true,
+            "ptx_sha256": "069d8b9f309d43ae27cf24c1321aa1d2f7b38c5816e550bcb21c2d091b53e765",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-wrap-signed_add",
+            "passed": true,
+            "ptx_sha256": "99c9a538fd6745891cdd5b507f3b786c977e88c6e1f967c24f1c737b8140b819",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-wrap-multiply",
+            "passed": true,
+            "ptx_sha256": "66b7e52b60fce8b2cb7917137ce88115818eb79af1ce054864afbcc6d752d4bd",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-wrap-align8",
+            "passed": true,
+            "ptx_sha256": "79ef745e730e1d3a855bb12d118684c35dde94cf5659dddec0bf3be2c07d8283",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-wrap-nonlinear",
+            "passed": true,
+            "ptx_sha256": "41c43779e85b38565fbc24a5e9c4e714d2960406b3e3582ab29867caba16d31d",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-log-range",
+            "passed": true,
+            "ptx_sha256": "7be081cdd480d73f7da67fd29671059b0d1e11d6fc4fa569658b7ed5050a13c8",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-log2-near_one",
+            "passed": true,
+            "ptx_sha256": "011a8a6fe43b445e6ff17ebefd05157c250e4fbce4327aa18505c32a1687359c",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-log10-special",
+            "passed": true,
+            "ptx_sha256": "c937a860e4787546baf2aaf15802a3f7c2642dd245bbd07b67facbf9bc16cc26",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-exp2-powers",
+            "passed": true,
+            "ptx_sha256": "52ba30a4a0c7b4bae70bdf0af32408737ed717793f8ea8a4e0cd15549b2b1321",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-mask-to-float",
+            "passed": true,
+            "ptx_sha256": "79a6064d25d2962b72e41372f5f04ded2d50a4b0bc6add5362f4a1a5eab7aea9",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-mask-signed-zero",
+            "passed": true,
+            "ptx_sha256": "3ff410e6c59e2588b91ee53cb202f6778cf6ce9ba74c39a925f4a38dc822d2f9",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-mask-legacy-rounding",
+            "passed": true,
+            "ptx_sha256": "a040c5e14880c50a07a0b009db9e81b7ce94894096edbe1ef69f64f2d5da236f",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-mask-let-truth",
+            "passed": true,
+            "ptx_sha256": "94d28e5aa9e4c6006bde369a81e6311ad7bf3b634be4332574e4242fc96f1da6",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-masked-attention",
+            "passed": true,
+            "ptx_sha256": "59e40eaa108a997c5707bdafc479cac19eb39bf85a2eeb03ffff4e5a86c267f8",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-erf-signed-zero",
+            "passed": true,
+            "ptx_sha256": "582a9c0134cec2582426d2783b1f49d63c24d85147bc1e3ca93473a65b73db92",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-erf-transition",
+            "passed": true,
+            "ptx_sha256": "a01d9f41ced7acb6f56e064ea7f9bafa8e43f85c379f32cb02fdae457fb0f729",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-square",
+            "passed": true,
+            "ptx_sha256": "85ff64cb378bd01b8204089267558dfb0cf08d19df321055a65ddd5fcbfc00ef",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-gelu",
+            "passed": true,
+            "ptx_sha256": "965348ea9409d85c7e93925c17adefc24afb35cd639282afb48343af56ccef04",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-rms-square",
+            "passed": true,
+            "ptx_sha256": "ed6bf45feb9175296406e163416f79def9957379497a799ab6671f2492d6e40d",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-math-cos",
+            "passed": true,
+            "ptx_sha256": "5233b3c07989bd24f3be8ff1ae18e3fab49a55418a5da82f409fee9d79f384ce",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-math-exp",
+            "passed": true,
+            "ptx_sha256": "e9ecd7b5eccd730c39c49d976658f9ae8844667d5b5d36b697a240273e6282b2",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-math-gelu",
+            "passed": true,
+            "ptx_sha256": "04df7adfd104a50067562dfc64f57689c2e177a1cb85a9ad5e48f7a26ed8c9c3",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-math-gelu-tanh",
+            "passed": true,
+            "ptx_sha256": "d61e05c24d4bc3288513e7fdba670d1f9c4dcbb32c0301fe5ae4ad8fe1f5a3cf",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-math-pow3",
+            "passed": true,
+            "ptx_sha256": "e1a59102699a48beee123ad09c725076b3b032d7a54302bbf7e3ba7634a84375",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-math-sigmoid",
+            "passed": true,
+            "ptx_sha256": "a4f7e66475bd297be4fe9ef6eb42869969f69a50ad4523600393f671b53e7819",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-math-silu",
+            "passed": true,
+            "ptx_sha256": "12aac56dcc77203ad147de5f2bb13efaf049c9a20199088e70f7e5e855a0cf5a",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-math-sin",
+            "passed": true,
+            "ptx_sha256": "07e6f933f502fe857038899c896544fe8cedaa59b7ca95d2ea3c6111ee79fdb5",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-math-softplus",
+            "passed": true,
+            "ptx_sha256": "01ddfe3271df06578840561accbf2acf759f64f3bdb42e896f2ec79b84224f3d",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-math-tanh",
+            "passed": true,
+            "ptx_sha256": "0bcda0521b5ca4f09112b80eb334975d8f509eb9e47719723797f9d8c91310f5",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-math-sin-cos-mix",
+            "passed": true,
+            "ptx_sha256": "ae187264d3433f1016fb86b33e22264677218ade9987ff59ad342b0865a474df",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-register-cap-1024",
+            "passed": true,
+            "ptx_sha256": "9dd883219478873be0f42865cdb4f8e560e4ce8b367ebfa4cddaceb6cc5ab900",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-attention-empty-lanes",
+            "passed": true,
+            "ptx_sha256": "08c7911af3ff8920b56291d372b07bdedc892baac1267898990865c84d9a9be0",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "2026-10-26-launch-pressure-512",
+            "passed": true,
+            "ptx_sha256": "c1833a09cf5e7b9967941819fe35b86a254c3a54cffea42c6488753fd0768d2a",
+            "stderr": [
+              "",
+              ""
+            ]
+          },
+          {
+            "case": "tensor_f16",
+            "passed": true,
+            "stderr": "compile.py: Kernel k_sum_1_reduce, tensor x: unsupported tensor dtype f16\n"
+          },
+          {
+            "case": "write_f16",
+            "passed": true,
+            "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write dtype f16\n"
+          },
+          {
+            "case": "write_swizzle",
+            "passed": true,
+            "stderr": "compile.py: Kernel k_sum_1_reduce, body[0]/Tile.body[5]/Write: unsupported write swizzle B32\n"
+          },
+          {
+            "case": "floating_index",
+            "passed": true,
+            "stderr": "compile.py: Kernel k_sum_1_reduce: unsupported floating index expression Literal(value=0.5, dtype='float')\n"
+          }
+        ]
+      }
+    },
+    {
+      "check": "check_launch_resources",
+      "passed": true,
+      "detail": {
+        "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+        "scope": "register-allocation ceiling only; not GPU execution or shared-memory limits",
+        "checked": 3072,
+        "passed": true,
+        "failures": []
+      }
+    },
+    {
+      "check": "retained launch-pressure fixture on official GPU",
+      "passed": true,
+      "stdout": "[k_sum_1_reduce] 48 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (121.408 us)\n",
+      "stderr": ""
+    }
+  ]
 }
