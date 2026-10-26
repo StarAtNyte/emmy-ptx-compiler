@@ -1697,3 +1697,12 @@ validation/2026-10-26-production-iteration19.json.
 - Two hidden-proxy failures were my own spec mistakes (computation outside the
   traced expression became a seeded input); corrected specs pass.
 - Verification: listed in the iteration19 record. No hidden-set guarantee.
+
+## Step 71 — package refreshed for compiler 1a2ad94e
+
+Completed 2026-10-26. Archive of commit 7c15e10 built by package_submission.py
+in the isolated no-Torch 3.12 runtime; packaged public smoke checks pass. The
+extracted compile.py (1a2ad94e) passes all 13 new fixtures extracted from the
+same archive on the official RTX 5090. Record:
+validation/2026-10-26-current-package.json; the previous erf checkpoint record
+is preserved as 2026-10-26-erf-package.json.

@@ -239,15 +239,16 @@ Judging order (official README; no numeric weights): hidden-set correctness
 by category, then code review, then kernel speed. The video is an eligibility
 gate. Deadline Oct 27 23:59 AoE; resubmission allowed until then.
 
-1. Refresh the submission package for compiler 1a2ad94e (package_submission.py)
-   and verify the archive on the official GPU.
-2. Readability for code review: public-facing README describing the design in
+Package for 7c15e10 / 1a2ad94e is built and verified
+(validation/2026-10-26-current-package.json); rebuild after any code change.
+
+1. Readability for code review: public-facing README describing the design in
    plain terms; consider splitting lower_loop. Gate refactors on byte-identical
    PTX with the scratch equivalence approach (compile both, compare strings).
-3. Further hidden-set probing: more fresh shapes per category on the hosted
+2. Further hidden-set probing: more fresh shapes per category on the hosted
    runner, especially attention/softmax tiles with idle lanes and reductions
    with odd sizes. Fix any failure generally, never by workload name.
-4. Feature freeze, then the user's own video, public repository and an early
+3. Feature freeze, then the user's own video, public repository and an early
    submission (resubmit if improved). Do not invent entrant details.
 
 Win-track assessment (Step 69) stands: correctness and accuracy first, then
