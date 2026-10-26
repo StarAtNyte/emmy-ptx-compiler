@@ -202,13 +202,33 @@ MLP case pass on official GPU in existing isolated no-Torch3.12 runtime.
 The MLP descriptor is a prepared external artifact; compiler and5 fixtures were
 extracted. No fresh installation claimed. No rebuild for docs/evidence-only edits.
 
-## Next work
+## Next work — verified checkpoint
 
-All accepted math/model/CPU/sanitizer/accuracy processes are terminal. Source
-published privately, archive verified. No current candidate changes outside main.
-Next frontend discovery is running from ignored artifacts/expressions-next-math-discovery.py
-into artifacts/next-math-discovery, then isolated baseline validation. Cases:
-sin, cos, variable exponent power, odd integer power, trig composition. Inspect
-actual process/report before restarting; do not guess remaining op gaps.
-Preserve the complete win-ready objective; do not substitute one passing subset.
-Current repo private, user video/publication later today, submission deferred.
+The working tree and origin/master were clean/synced at e6fac2c before this
+handoff update. Accepted compiler is3586814e; archive source d193ab1. All prior
+math/model/CPU/sanitizer/accuracy and discovery processes are terminal. No live
+candidate or unfinished worker should be restarted from old process handles.
+
+The next discovery has completed:5/5 actual frontend programs materialize,
+and current compiler fails all5 for unsupported sin/cos/pow. All argument
+buffers are f32, including the exponent3 buffer; this is an operation-lowering
+gap, not a need to broaden storage dtypes. Reproducible spec, IR/meta/oracle
+hashes and baseline failures: validation/2026-10-26-trig-power-discovery.json.
+Local assets: artifacts/next-math-discovery and
+artifacts/expressions-next-math-discovery.py.
+
+Next concrete implementation priorities:
+1. Runtime-general power lowering, with negative bases/integer exponents,
+   signed zeros, NaNs/infinities and overflow/underflow cases. Do not assume
+   exponent-buffer values from names or hardcode public expressions.
+2. Sine/cosine with independent large-finite-argument and special-value gates.
+   Passing normal random inputs alone does not establish full f32 behavior.
+3. Recheck retained PTX, independent numerical/model cases, sanitizers and the
+   no-Torch Python matrix; only adopt the exact verified candidate. Update both
+   continuity files after each meaningful step and refresh package after code changes.
+
+The complete win-ready compiler objective remains active. Remaining relevant
+operator/field, layout, type/schema and access-bounds coverage still needs audit;
+these numerical milestones are not a hidden-set or broad-readiness proof.
+Keep repository private. Public repo, user's personal video and submission remain
+for later at the user's direction; do not invent fields or contact organizers.

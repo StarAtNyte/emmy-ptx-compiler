@@ -1627,3 +1627,18 @@ Completed 2026-10-26:
   no billing changes, reruns or public-repository workaround.
 - Next actual frontend sin/cos/power/composition discovery is running. Preserve
   live process until completion; no new candidate or core change. Goal active.
+
+## Step 68 — handoff refreshed and remaining trig/power gaps verified
+
+Completed 2026-10-26:
+
+- User requested continuing and updating handoff. Revalidated accepted3586814e,
+  verified d193ab1 archive, clean/synced e6fac2c checkpoint and terminal processes.
+- Five actual frontend sin/cos/pow/composition programs materialize; compiler
+  fails all5 on unsupported operations. All buffers aref32, including constant
+  exponent3: operator gap, no storage-dtype excuse.
+- Recorded trig-power-discovery.json with spec, op counts, buffer dtypes, hashes
+  and baseline failures. Handoff now states completed/live status accurately.
+- Next runtime-general pow, then robust sin/cos, with broad special/large-value
+  gates; no positive-only, name-based or shape-specific substitute. Full goal
+  active; source unchanged, repo private, video/publication/submission deferred.
