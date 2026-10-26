@@ -188,45 +188,27 @@ checks separate. Runner SHA90a494a357d0368265a06fffdcdfd3895eaa87d3a19f8d51b6dd4
 
 ## CI and packaging
 
-GitHub run40295512213 (sourcebea1389) inspected: all3 CPU jobs rejected before
-steps; annotation confirms account payments/spending limit. No compiler tests
-ran. No account change, retry loop or visibility workaround authorized. Current
-hosted CPU157-check suite remains unverified despite local157-check matrices.
+GitHub run40302035461 (sourced193ab1) inspected: all3 CPU jobs rejected before
+steps for account payments/spending limit. No current hosted CPU results.
+Do not alter billing, retry unchanged jobs or change visibility as a workaround.
 
-Current verified archive source bea1389 / compiler6237caab:
-ZIP041536e115f31a8b4561b9fbe1f33b36fe852cde2eb401ae575ab0122cb05c9e.
-Record validation/2026-10-26-current-package.json. Previous scalar-log checkpoint
-preserved as2026-10-26-scalar-logs-package.json. Masks/current/submission ZIP
-aliases match. Actual compiler/harness/generator/manifest/fixture bytes checked.
-Extracted hosted scalar-add/matmul/attention plus all5 retained mask/attention
-fixtures pass in existing isolated no-Torch3.12 runtime. No fresh install claimed.
-No rebuild needed for documentation/evidence-only updates.
+Current verified archive source d193ab1 / compiler3586814e:
+ZIP7dfc70d706ef2f1e9f4738ea73e36fa94bbb81f9c230584bc0022f950cf9a2a6.
+Record validation/2026-10-26-current-package.json. Prior mask checkpoint preserved
+as2026-10-26-masks-package.json. Erf/current/submission ZIP aliases match.
+Actual compiler/harness/generators/manifest/fixture member bytes checked.
+Extracted standard3 plus all5 archived math fixtures and a prepared full GELU
+MLP case pass on official GPU in existing isolated no-Torch3.12 runtime.
+The MLP descriptor is a prepared external artifact; compiler and5 fixtures were
+extracted. No fresh installation claimed. No rebuild for docs/evidence-only edits.
 
 ## Next work
 
-All semantic/CPU/transformer/sanitizer gates above have completed; do not restart.
-Mask source/evidence published and archive verified. Next remaining frontend scalar ops.
-Large dtype/Tensor Core expansions are not required by published evaluation scope.
-
-HACKATHON_READINESS.md is the requirements audit. Personal video/publication later,
-submission deferred, hidden-set and broad production-readiness claims unproven.
-
-Two numeric bool-cast audits with zero/subnormal/max-finite inputs also pass
-both GPUs and regenerate byte-identically; included in13 frontend count.
-Mask acceptance is complete, source bea1389 published privately and archive verified.
-All jobs terminal, including the next math discovery. Actual six frontend
-programs generate: five fail current6237 compiler on square/erf (including GELU), while
-zero-pad-plus-add passes. Evidence: validation/2026-10-26-math-discovery.json,
-including reproducible spec source and scalar op counts. No math candidate yet.
-Next implement own accurate PTX square and erf lowering to cover these GELU/RMS
-workloads; verify real frontend
-and adversarial numerical cases on both GPUs. Do not substitute a library
-backend, reduced precision or narrow the full win-ready objective to this subset.
-
-All refined math gates are terminal and passed. Current main3586814e is adopted;
-commit source/evidence and refresh archive before updating package aliases.
-Current-package still describes old6237/bea1389 mask checkpoint; preserve it
-as2026-10-26-masks-package.json. New source archive should exercise both standard
-and new math/model examples in existing isolated no-Torch runtime.
-Next audit remaining supported frontend scalar functions (sin/cos/pow etc.) and
-remaining schema/type/bounds limits. Do not confuse broad goal with one milestone.
+All accepted math/model/CPU/sanitizer/accuracy processes are terminal. Source
+published privately, archive verified. No current candidate changes outside main.
+Next frontend discovery is running from ignored artifacts/expressions-next-math-discovery.py
+into artifacts/next-math-discovery, then isolated baseline validation. Cases:
+sin, cos, variable exponent power, odd integer power, trig composition. Inspect
+actual process/report before restarting; do not guess remaining op gaps.
+Preserve the complete win-ready objective; do not substitute one passing subset.
+Current repo private, user video/publication later today, submission deferred.

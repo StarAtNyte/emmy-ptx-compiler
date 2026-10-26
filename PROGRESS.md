@@ -1610,3 +1610,20 @@ Completed 2026-10-26:
   final gates ran with ready fixtures and valid API requests; all passed.
 - Updated README/design/testing/readiness/entry drafts. No new kernel speedup
   or hidden-set claim. Commit/archive next; repo private, entry deferred.
+
+## Step 67 — refined math checkpoint archived and new features exercised
+
+Completed 2026-10-26:
+
+- Publishedd193ab1 privately. Independently checked actual ZIP compiler, harness,
+  math/model generators, manifest and all retained fixture bytes against source.
+- Extracted3 standard plus5 archived new math fixtures and1 prepared complete
+  GELU MLP case pass on official GPU in existing isolated no-Torch3.12. The MLP
+  descriptor is external prepared data; its compiler was extracted from ZIP.
+  No fresh installation or entry submission claimed. Erf/current/submission
+  aliases match; previous masks package record preserved separately.
+- Inspected source d193ab1 run40302035461: all3 CPU jobs rejected before steps
+  for account payments/spending limit. No hosted162-check success claimed;
+  no billing changes, reruns or public-repository workaround.
+- Next actual frontend sin/cos/power/composition discovery is running. Preserve
+  live process until completion; no new candidate or core change. Goal active.
