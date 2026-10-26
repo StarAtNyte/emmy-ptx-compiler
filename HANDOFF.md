@@ -147,20 +147,20 @@ retry loop or visibility workaround authorized. Later pushes can trigger jobs;
 do not claim current hosted CPU success from local matrices. Old public86-check
 run40107112159 passed7fbe5ee4, not current source.
 
-Previous verified archive source aacaa3c / compiler c2f7e2b3:
-ZIP9db6ffe1590498673894f58d7571aca43155bf78df7a300a6d3122d4636a3c43.
-Record validation/2026-10-26-current-package.json currently describes that old
-checkpoint. New eeb79a3a source must be committed and packaged next, using:
-`.venv/bin/python tools/package_submission.py --python artifacts/power2-release-runtime/bin/python --out artifacts/emmy-ptx-scalar-logs-checkpoint.zip`.
-Preserve old current record as2026-10-26-wrap-package.json. Inspect actual ZIP
-member bytes and extracted3 hosted smoke checks before updating current aliases.
-Never resolve the venv Python symlink (would bypass pyvenv.cfg).
+Current verified archive source 44bd6d3 / compiler eeb79a3a:
+ZIP7e1a3474678d4d1aaf2f907732377872386e3f703a2d501d6303619fd5dc19b3.
+Record validation/2026-10-26-current-package.json. Previous wrap record preserved
+as2026-10-26-wrap-package.json. Scalar-logs/current/submission ZIP aliases match.
+Actual ZIP compiler/harness/generator/manifest/fixture member bytes checked.
+Extracted hosted scalar-add/matmul/attention plus four new-operation fixture
+checks pass in existing isolated no-Torch3.12 runtime. No fresh install claimed.
+No archive rebuild needed for documentation/evidence-only updates.
 
 ## Next work
 
 All semantic/CPU/transformer/sanitizer gates above have completed; do not restart.
-Record current source/evidence, commit privately and verify refreshed package.
-Then prioritize remaining supported frontend scalar/mask operation mixes. Source
+Source/evidence published privately as44bd6d3, refreshed archive verified.
+Next prioritize remaining supported frontend scalar/mask operation mixes. Source
 inspection found f32 masks/comparisons/where, square/pad, sin/cos/erf/pow in the
 pinned frontend's op_to_expr; current backend still lacks several. Generate real
 frontend cases first to establish the actual gap. Internal bool SSA support must
@@ -169,3 +169,9 @@ are not required by current published evaluation scope.
 
 HACKATHON_READINESS.md is the requirements audit. Personal video/publication later,
 submission deferred, hidden-set and broad production-readiness claims unproven.
+
+A five-expression mask discovery run is now in progress (ignored spec
+artifacts/expressions-mask-discovery.py, output artifacts/mask-discovery).
+It tests where/comparison-float/interval-mask/positive-sum/masked-softmax with
+the official generator, then isolated local validation. Inspect live process
+handle and actual reports before acting; do not restart on an observation timeout.

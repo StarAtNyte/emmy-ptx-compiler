@@ -1447,3 +1447,19 @@ Completed 2026-10-26:
 - Evidence: production-iteration16.json. Commit and package next. Broader scalar
   masks/comparison/where and supported frontend op coverage remains open; no
   winning/hidden-set/whole-program equivalence claim.
+
+## Step 59 — scalar-operation checkpoint packaged and directly exercised
+
+Completed 2026-10-26:
+
+- Published44bd6d3 privately. Compiler eeb79a3a. Independently checked actual ZIP
+  compiler/harness/generator/manifest and retained fixture bytes against source.
+- Extracted standard scalar-add/matmul/attention and four new-op fixture checks
+  all pass on official GPU in existing isolated no-Torch3.12 runtime.
+  No fresh install or entry submission claimed. Scalar-logs/current/submission
+  archive aliases match; previous wrap package record retained separately.
+- New current-package record links142-check local matrix and actual archive bytes.
+  Hosted CPU CI remains unverified under known account restriction; no retries
+  or billing/privacy changes. Goal active, repo private, video/publication later.
+- Next: five real frontend mask/comparison/compound expressions are generating,
+  followed by isolated baseline checks. Do not restart this live discovery run.
