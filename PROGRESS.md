@@ -1706,3 +1706,18 @@ extracted compile.py (1a2ad94e) passes all 13 new fixtures extracted from the
 same archive on the official RTX 5090. Record:
 validation/2026-10-26-current-package.json; the previous erf checkpoint record
 is preserved as 2026-10-26-erf-package.json.
+
+## Step 72 — edge-shape and layout probes on the official GPU
+
+Completed 2026-10-26 with compiler 1a2ad94e (no code change).
+
+- tools/expressions_edge_shapes.py: 57 tiny/odd/degenerate cases (n=1..4097
+  sums and max, 1x1 to 33x5 rows for sum/softmax/RMS, 1x1x1 to 3x300x5 matmul,
+  attention seq 1..33 and depth 1..64). 57/57 pass on the RTX 5090.
+- tools/expressions_layouts.py: batched/broadcast/non-last-axis layouts
+  (outer add, 3-D bias, axis-0 and middle-axis sums, 3-D and axis-0 softmax,
+  bmm, broadcast batched matmul, batched, multi-head and causal-masked
+  attention). All valid cases pass. Causal first failed on my own reference
+  argument order (mask is a positional input). Matvec was removed: Emmy
+  emits IR that only reads the first vector element. Record:
+  validation/2026-10-26-shape-probes.json.
