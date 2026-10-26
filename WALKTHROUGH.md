@@ -75,9 +75,15 @@ the coverage: all public categories, independently generated shapes and schedule
 numerical stress inputs, semantic audit cases, actual PyTorch model comparisons,
 and selected Compute Sanitizer runs.
 
-Show one new logarithm boundary test. Approximate PTX math uses explicit
+Show one new erf boundary test: an initial low-order approximation passed
+tolerances but measured23ULP error. The widened degree23 odd series reduces
+the sampled maximum to3ULP; signed-zero/subnormal and exceptional-class tests
+are separate checks. A complete three-layer GELU MLP is tested against CPU
+PyTorch for three input seeds.
+
+Show one logarithm boundary test. Approximate PTX math uses explicit
 tolerances; the exp2 power probe checks a two-ULP bound, while special-value
-probes classify results exactly. The local no-Torch matrix has157 checks per
+probes classify results exactly. The local no-Torch matrix has162 checks per
 Python version; GitHub-hosted execution remains unverified.
 
 The complete transformer test uses separately traced stages because the pinned

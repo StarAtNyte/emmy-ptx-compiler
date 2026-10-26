@@ -1,6 +1,6 @@
 {
-  "baseline_compiler_sha256": "6237caabcebbaf5503223ab90d56d19d57aa4725095ab8846f8b3d2349ae41a3",
-  "snapshot_provenance": "Wide shared-load acceptance: two existing positive snapshots refreshed after both-GPU numerical checks; eighteen other existing snapshots unchanged. Five new alignment/fallback/offset/tail fixtures GPU verified. Four in-bounds signed-wrap fixtures added after both-GPU checks and all four sanitizers; existing25 snapshots unchanged. Four log/exp2 fixtures added after both-GPU and sanitizer checks; existing29 positive snapshots unchanged. Five bool-SSA/mask/attention fixtures added after both-GPU and sanitizer checks; previous33 positive snapshots unchanged.",
+  "baseline_compiler_sha256": "3586814ed85cd1ee59df83752a7a017df358a56d8ad762ef9f4aab96e78bfe16",
+  "snapshot_provenance": "Wide shared-load acceptance: two existing positive snapshots refreshed after both-GPU numerical checks; eighteen other existing snapshots unchanged. Five new alignment/fallback/offset/tail fixtures GPU verified. Four in-bounds signed-wrap fixtures added after both-GPU checks and all four sanitizers; existing25 snapshots unchanged. Four log/exp2 fixtures added after both-GPU and sanitizer checks; existing29 positive snapshots unchanged. Five bool-SSA/mask/attention fixtures added after both-GPU and sanitizer checks; previous33 positive snapshots unchanged. Five square/erf/GELU/RMS snapshots added after refined both-GPU/sanitizer gates; previous38 positives unchanged.",
   "fixtures": [
     {
       "folder": "validation/counterexamples/2026-10-24-scope-shrunk",
@@ -381,6 +381,56 @@
         "meta.json": "ca8a2aaf98a98ce73c86cdd383f88851583806f46f042a1c6b14bc9d71e40650"
       },
       "ptx_sha256": "9028139a53622f9ddcc29c52a7917cd6942bc1805937c7e45808d0bafc4ae8bb"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-26-erf-signed-zero",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "expected.npz": "6136c633a0f1d33f812e7a9e5a73dd76a1a82a8a22b53987cdaa0d12c6f340ac",
+        "k_sum_1_reduce.ir.json": "a70092357198ba75838463bc97e0c558426557f777151254ad921d4be2523e3c",
+        "meta.json": "0bbdec689e18771d0958bc9f3e9424baa2acdb17a64867353c43b40badc8520f"
+      },
+      "ptx_sha256": "f1f5870652a07e0666da934cf6f1e32315a5424d59d59fc7e2d8a035a1a876a5"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-26-erf-transition",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "expected.npz": "78cc03fd3eca0754c3a044a276b425efb09df125b74f2998e63125dec1232d9e",
+        "k_sum_1_reduce.ir.json": "f57c737f9cdaf53c57bcf820d4b6b39292bcf77f7f118c1e86105671ec4374e7",
+        "meta.json": "f0bde7cfecb7037b68e87856d0d06ec3e8cdf642a11d093ef427bb5394488e48"
+      },
+      "ptx_sha256": "c2c3161dd9ddb0363b2fdf2dd5e2248a7fb66e429a2a304bd6645f4c12f12221"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-26-square",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "expected.npz": "81aab23dd14172b2ccd687618f429ec62ff8a0e8fa664bebd36ea7868c4428ed",
+        "k_sum_1_reduce.ir.json": "71add7fcb064958abec9d18d79eef312e3c0af09c090afb6f47d4fa70072b180",
+        "meta.json": "133425439decc131ae0ff86b9ea13de8e07069e3ab179d20a79bc6278db87e8c"
+      },
+      "ptx_sha256": "340513b7ced14839866bb5e875acb241ad67e766a7f0001dbeb5d71056888374"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-26-gelu",
+      "ir": "k_gelu_pointwise.ir.json",
+      "files": {
+        "expected.npz": "dc9517323de459854c8531e7995795255744ca3748d5f50ba55ae5644f539dec",
+        "k_gelu_pointwise.ir.json": "9b827c36246e467b9be7c5942f6e3a88df9a5fd951063c61932e790fb78b77e9",
+        "meta.json": "2043c4d0b508940bbdba7372281157bb4a39896037b69eb52b00840942a42235"
+      },
+      "ptx_sha256": "89b3508513682b42242522513a58213bd9b0bba3c8a225ec9dd536b8ea4cc7cc"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-26-rms-square",
+      "ir": "k_mean_7480a2.ir.json",
+      "files": {
+        "expected.npz": "8fd4e0bf29119ce99bfa6ab18c8c615e0d6dfd20042552770511598689dd0c82",
+        "k_mean_7480a2.ir.json": "838adf673c5efd6ddb14ef7c3f8bc57b05847eacb5010998b4271f47f39354f5",
+        "meta.json": "85917f7789b64acc1d33fc449c22d8981e53c338dcfa669c4ff094f43e28da75"
+      },
+      "ptx_sha256": "43759661ce510cb7406a3b7fd5ef1ada6683a8650fc8baee09f99399f8d436e7"
     }
   ]
 }

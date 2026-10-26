@@ -41,9 +41,12 @@ Approach:
 > renamed and fresh-seed typed IR, model comparisons and selected sanitizer runs.
 > New logarithm/exp2 support passes 104 typed and four frontend compound cases on
 > both GPUs. Internal boolean SSA/masks pass 128 typed and 13 frontend workloads,
-> including full masked attention; 957 prior kernels retain identical PTX. Four
-> sanitizer tools are clean on 75 selected mask cases. The local no-Torch Python 3.12–3.14 matrix passes
-> 157 checks per version. Hosted CPU CI has not executed the current suite.
+> including full masked attention. Square/erf lowering closes GELU/RMS coverage
+> and passes a three-layer GELU MLP for three input seeds. The refined erf
+> implementation measures up to3ULP on selected datasets, not a global guarantee.
+> 1104 prior programs retain identical PTX. Four sanitizer tools are clean on31
+> selected math/model cases. The local no-Torch Python 3.12–3.14 matrix passes
+> 162 checks per version. Hosted CPU CI has not executed the current suite.
 >
 > This is a static f32 compiler with documented unsupported operations and layouts.
 > Numerical approximations have explicit tolerances and boundary tests. Hidden-test

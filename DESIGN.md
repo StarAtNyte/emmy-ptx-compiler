@@ -296,3 +296,18 @@ validated f32 buffer as1.0/0.0; its predicate bits are not stored as float bits.
 This does not enable bool pointers, bool global/shared arrays or bool Load,
 Init/Accum storage. Dedicated boundary probes retain those rejections and the
 existing restriction on general integer scalar Assign arithmetic.
+
+`square` emits one `mul.rn.f32` of its operand with itself. `erf` emits our
+piecewise f32 implementation: degree23 odd series for |x|<=1, then the
+[Abramowitz–Stegun7.1.26 approximation](https://digital.library.unt.edu/ark:/67531/metadc40302/m1/315/ocr/)
+with reciprocal, exponential and FMA Horner evaluation. The series follows
+[NIST DLMF7.6.1](https://dlmf.nist.gov/7.6.E1); using it around zero avoids
+subtractive cancellation and preserves signed zero/subnormals. Ordinary sign
+selection and the floating operations preserve tested NaN/infinity classes.
+This is not a call to a CUDA renderer or an external device math implementation.
+
+The initial .125-radius series passed problem tolerances but measured up to23ULP
+error on selected values. Widening the higher-order series reduced the observed
+maximum to3ULP on those fixed datasets on both GPUs (max absolute error1.7882e-7).
+These measurements and the real-arithmetic approximation's literature bounds
+are distinct; neither is a whole-f32-domain correctly-rounded guarantee.

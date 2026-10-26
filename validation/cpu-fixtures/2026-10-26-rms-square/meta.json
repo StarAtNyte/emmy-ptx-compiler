@@ -1,0 +1,77 @@
+{
+ "id": "f_rms_square_9_129",
+ "code": "x=torch.randn(9,129); x*torch.rsqrt(x.square().mean(-1,keepdim=True)+1e-5)",
+ "rtol": 0.0001,
+ "atol": 2e-05,
+ "graph_inputs": [
+  "x"
+ ],
+ "graph_outputs": [
+  "mul"
+ ],
+ "kernels": [
+  {
+   "node": "mul",
+   "entry": "k_mean_7480a2",
+   "arg_order": [
+    "mean_count",
+    "add_c1",
+    "x",
+    "mul"
+   ],
+   "grid": [
+    9,
+    1,
+    1
+   ],
+   "block": [
+    128,
+    1,
+    1
+   ],
+   "smem_bytes": 0,
+   "zero_outputs": [],
+   "args": [
+    {
+     "name": "mean_count",
+     "dtype": "f32",
+     "shape": [
+      1
+     ],
+     "data": [
+      129.0
+     ]
+    },
+    {
+     "name": "add_c1",
+     "dtype": "f32",
+     "shape": [
+      1
+     ],
+     "data": [
+      1e-05
+     ]
+    },
+    {
+     "name": "x",
+     "dtype": "f32",
+     "shape": [
+      9,
+      129
+     ],
+     "seed": 0
+    },
+    {
+     "name": "mul",
+     "dtype": "f32",
+     "shape": [
+      9,
+      129
+     ],
+     "output": true
+    }
+   ],
+   "final": true
+  }
+ ]
+}

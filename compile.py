@@ -457,6 +457,10 @@ class Compiler:
                        'greater': 'gt', 'greater_equal': 'ge'}
         if op in comparisons:
             return self.instruction(f'setp.{comparisons[op]}.f32', *args, kind='p')
+        if op == 'square':
+            return self.instruction('mul.rn.f32', args[0], args[0], kind='f')
+        if op == 'erf':
+            return self.error_function(args[0])
         if op == 'copy':
             return self.instruction('mov.f32', args[0], kind='f')
         opcode = {'add': 'add.rn.f32', 'subtract': 'sub.rn.f32',
@@ -487,6 +491,33 @@ class Compiler:
         if op not in opcode:
             raise NotImplementedError(f'Unsupported scalar operation {op}')
         return self.instruction(opcode[op], *args, kind='f')
+
+    def error_function(self, value):
+        """Own f32 erf: small-x series and A&S 7.1.26 away from zero."""
+        magnitude = self.instruction('abs.f32', value, kind='f')
+        square = self.instruction('mul.rn.f32', value, value, kind='f')
+        # The odd series avoids cancellation and preserves signed zero/subnormals.
+        series = self.floating(-1/(math.factorial(11)*23))
+        for order in range(10, -1, -1):
+            coefficient = (-1)**order / (math.factorial(order)*(2*order+1))
+            series = self.instruction('fma.rn.f32', series, square, self.floating(coefficient), kind='f')
+        scaled = self.instruction('mul.rn.f32', value, self.floating(2/math.sqrt(math.pi)), kind='f')
+        near_zero = self.instruction('mul.rn.f32', scaled, series, kind='f')
+        denominator = self.instruction('fma.rn.f32', magnitude, self.floating(.3275911), self.floating(1), kind='f')
+        t = self.instruction('rcp.rn.f32', denominator, kind='f')
+        polynomial = self.floating(1.061405429)
+        for coefficient in (-1.453152027, 1.421413741, -.284496736, .254829592):
+            polynomial = self.instruction('fma.rn.f32', polynomial, t, self.floating(coefficient), kind='f')
+        polynomial = self.instruction('mul.rn.f32', polynomial, t, kind='f')
+        negative_square = self.instruction('neg.f32', square, kind='f')
+        exponential = self.arithmetic('exp', [negative_square])
+        positive = self.instruction('fma.rn.f32', self.instruction('neg.f32', polynomial, kind='f'),
+                                    exponential, self.floating(1), kind='f')
+        negative = self.instruction('neg.f32', positive, kind='f')
+        sign = self.instruction('setp.lt.f32', value, self.floating(0), kind='p')
+        ordinary = self.instruction('selp.f32', negative, positive, sign, kind='f')
+        small = self.instruction('setp.le.f32', magnitude, self.floating(1), kind='p')
+        return self.instruction('selp.f32', near_zero, ordinary, small, kind='f')
 
     def combine(self, stmt):
         """Apply a reduction's merge program with its proven neutral state.

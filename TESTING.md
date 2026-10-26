@@ -731,3 +731,34 @@ inputs with exact NumPy references. Both pass on both GPUs and regenerate
 identical bytes. Keep operations under test inside the final traced expression:
 earlier tensor assignments become trace inputs. Check graph_inputs against the
 reference signature before counting a package as a compiler test.
+
+## Square/erf and GELU-model acceptance — 26 October
+
+Generate with `tools/generate_erf_cases.py --out DIRECTORY --seed SEED` using
+seeds0/71023. The default series-transition probe centers on1.0 and adjacent
+f32 values. All48 renamed/original/fresh probes pass on both GPUs: square and
+classes exact, erf/compositions rtol2e-6/atol4e-7. Probes include broad finite
+bit patterns, dense values, tiny/subnormal values, signed-zero and internally
+created exceptional values. Six actual frontend programs from
+`tools/expressions_erf_math.py` pass; GELU decomposes into existing arithmetic
+and the new erf lowering. RMS uses the new square primitive.
+
+`tools/generate_erf_models.py --out DIRECTORY` creates the three-layer GELU MLP
+with restored parameter arrays, then independent CPU PyTorch references for
+input seeds0/17/613. Generate fully before starting validation/sanitizers. All3
+MLP cases pass both GPUs and regenerate byte-identical IR/metadata/oracle files.
+Nine transformer comparisons pass;1104 old programs retain exact PTX.
+All4 sanitizer tools are clean on31 selected cases including the complete MLP.
+
+`tools/measure_erf_accuracy.py --compiler COMPILER --cases DIRECTORY --report REPORT`
+measures actual selected error distributions on both GPUs. Final compiler's
+maximum observed on fixed datasets is3ULP and1.7882e-7 absolute error; tiny
+values1ULP and zero signs checked. This is sampled evidence, not a global bound.
+The hosted API requires iters>=1; an initial diagnostic request with0 was
+rejected before remote execution and is excluded.
+
+Five new GPU-verified CPU snapshots leave previous38 positives unchanged.
+The complete local no-Torch3.12/3.13/3.14 matrix now totals162 per version:
+47 snapshot/feature +28 launch +42 ABI +31 shape +4 ops +10 bool-boundary.
+Evidence: validation/2026-10-26-production-iteration18.json. Hosted CPU CI
+remains unverified under the last inspected account-startup restriction.

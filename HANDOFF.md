@@ -33,14 +33,38 @@ http://runner.riftstack.ai:48701. Compiler emits PTX8.0 sm89, valid on target;
 local test harness retargets to sm86. Local timing cannot select target changes.
 
 **Accepted compile.py SHA256:**
-6237caabcebbaf5503223ab90d56d19d57aa4725095ab8846f8b3d2349ae41a3.
-Exact frozen source: artifacts/compiler-scalar-masks.py. Previous eeb79a3a is
+3586814ed85cd1ee59df83752a7a017df358a56d8ad762ef9f4aab96e78bfe16.
+Exact source: artifacts/compiler-erf-refined.py. Previous6237caab is reproducible
+from bea1389:compile.py and frozen as compiler-before-erf.py. Previous eeb79a3a is
 reproducible from44bd6d3:compile.py and frozen as compiler-before-masks.py.
 Previous c2f7e2b3 is reproducible from aacaa3c:compile.py. Earlier accepted sources/evidence are
 recorded in PROGRESS.md and dated validation records; old patches target those
 specific baselines, not automatically the current compiler.
 
-## Latest acceptance — internal bool SSA and masks
+## Latest acceptance — square/erf and GELU/RMS
+
+Evidence: validation/2026-10-26-production-iteration18.json. Square uses native
+rounded multiplication; own erf uses degree23 odd series over|x|<=1 and
+A&S7.1.26 outside, with FMA Horner evaluation. No stock backend/device library.
+All48 primitive/composition cases,6 frontend programs and3 seeded complete
+GELU MLP runs pass both GPUs. Six parameter arrays restored from fixed CPU
+PyTorch state, independent input seeds0/17/613. All3 regenerate exact bytes.
+Nine transformer checks pass. All1104 prior supported kernels emit exact PTX.
+Four sanitizers clean on31 selected primitive/frontend/full-model cases.
+
+Initial algorithm2cd85520 passed tolerance but measured up to23ULP near.125.
+Refined3586814e reduces selected fixed-input maximum to3ULP and1.7882e-7
+absolute on both GPUs. Tiny1ULP, bounds/zero signs checked. Not a whole-f32
+accuracy proof or bitwise libm claim. All162 local no-Torch checks pass each
+Python3.12/3.13/3.14 (47+28+42+31+4+10); previous38 snapshots unchanged,5 added.
+Cold CLI15public×3 medians0.854–0.971sec while CPU checks ran; no judge guarantee.
+
+Initial model memcheck was started before fixture creation and did not exercise
+kernel. Corrected check passes; final31-case4-tool run includes completed model.
+Initial accuracy request iters0 rejected422 before execution; corrected1 works.
+Initial candidate/reports preserved outside final acceptance; refined source frozen.
+
+## Previous acceptance — internal bool SSA and masks
 
 Evidence: validation/2026-10-26-production-iteration17.json. All six scalar
 comparisons, logical/legacy f32 masks, where and bool Assign/Let supported.
@@ -198,3 +222,11 @@ Next implement own accurate PTX square and erf lowering to cover these GELU/RMS
 workloads; verify real frontend
 and adversarial numerical cases on both GPUs. Do not substitute a library
 backend, reduced precision or narrow the full win-ready objective to this subset.
+
+All refined math gates are terminal and passed. Current main3586814e is adopted;
+commit source/evidence and refresh archive before updating package aliases.
+Current-package still describes old6237/bea1389 mask checkpoint; preserve it
+as2026-10-26-masks-package.json. New source archive should exercise both standard
+and new math/model examples in existing isolated no-Torch runtime.
+Next audit remaining supported frontend scalar functions (sin/cos/pow etc.) and
+remaining schema/type/bounds limits. Do not confuse broad goal with one milestone.

@@ -1547,3 +1547,66 @@ Completed discovery 2026-10-26:
   mask compiler/package remains verified. Next own PTX square/erf/GELU lowering
   and accuracy gates. User's complete win-ready objective remains active.
   Repo private, video/publication later, no entry submitted.
+
+## Step 64 — square/erf candidate passes real GELU/RMS and numerical probes
+
+In progress 2026-10-26:
+
+- Candidate2cd85520005bb4a833c39768521b490b3dceff2ae1789d47cf7f0afdb627cc31
+  adds native rounded square and own f32 erf lowering. Erf uses an odd series
+  forabs(x)<=.125 and A&S7.1.26 elsewhere, with FMA Horner evaluation and sign
+  selection. No other compiler backend/library function called by compilation.
+- All6 real frontend workloads and48 original/fresh/renamed numerical cases pass
+  both GPUs. Includes GELU/RMS, full-range finite bit patterns, dense values,
+  series transition, zeros/subnormals and internally generated NaNs/infinities.
+  Square/classes exact; erf/compositions use explicit2e-6/4e-7 tolerances.
+- All1104 previous supported kernels emit exact PTX;9 transformer checks pass.
+  Actual3-layer GELU MLP passes both GPUs forinput seeds0/17/613, with6 restored
+  weight/bias arrays and independent CPU PyTorch references.
+- Four sanitizers clean on30 primitive/frontend cases. Model race/sync/init pass;
+  initial memcheck raced fixture creation and never exercised kernel. Corrected
+  memory check running against complete fixture; initial result preserved.
+- Main stays6237 until final gates; model byte regeneration and CPU matrix pending.
+  Sources: A&S p299 formula7.1.26 and NIST DLMF7.6.1; analytic real-arithmetic
+  bounds are not claimed as a proof of this f32 implementation's error.
+
+## Step 65 — erf accuracy refinement before adoption
+
+In progress 2026-10-26:
+
+- Initial candidate passed functional tolerances but selected error measurements
+  showed up to23ULP near its .125 series boundary. Refined source3586814e expands
+  the odd series throughdegree23 over|x|<=1, retaining A&S7.1.26 outside. This
+  follows DLMF7.6.1; analytic truncation estimates are separate from FP32 errors.
+- Fixed-input accuracy comparison on both GPUs improves worst sampled ULP23→3
+  and max absolute error3.5763e-7→1.7882e-7. Original transition samples2ULP,
+  tiny samples1ULP, bounds/signed zeros checked. This is sampled evidence, not
+  a proof over every f32 value. No existing workload PTX change expected.
+- Final generator covers new boundary1.0 and neighbors, with frozen seeds0/71023.
+  Refined source: artifacts/compiler-erf-refined.py SHA
+  3586814ed85cd1ee59df83752a7a017df358a56d8ad762ef9f4aab96e78bfe16.
+  Main remains6237 pending final model/GPU/sanitizer/CPU gates.
+- Portable model generator regenerates all3 tested seeded MLPs byte-identically.
+  Corrected initial model memcheck passes; initial missing-fixture invocation
+  preserved/excluded. First accuracy HTTP request used iters0 and was rejected
+  before execution; schema requires>=1, corrected measurement passes.
+
+## Step 66 — refined square/erf adopted after complete numerical/model gates
+
+Completed 2026-10-26:
+
+- Adopted exact3586814e. All48 typed,6 actual frontend and3 seeded GELU MLP cases
+  pass both GPUs. Nine transformer comparisons pass. All1104 prior programs
+  emit identical PTX. Four sanitizers clean on31 selected cases including model.
+- Five positive CPU fixtures added, previous38 unchanged. Full162-check matrix
+  newly passes each isolated no-Torch3.12/3.13/3.14. Cold public15×3 CLI processes
+  deterministic, local medians0.854–0.971sec under concurrent CPU checks.
+- Piecewise f32 erf uses degree23 odd series over|x|<=1 and A&S formula outside.
+  Fixed-input sampled max23→3ULP, maxabs1.7882e-7; tiny1ULP, signed zeros checked.
+  Real-arithmetic literature bounds not transferred to whole-f32 proof.
+- Restored6 GELU MLP parameter arrays; input seeds0/17/613, independent CPU
+  PyTorch outputs. Portable generator reproduces all3 byte-identically.
+- Initial model missing-fixture and HTTP iters0 diagnostics excluded. Refined
+  final gates ran with ready fixtures and valid API requests; all passed.
+- Updated README/design/testing/readiness/entry drafts. No new kernel speedup
+  or hidden-set claim. Commit/archive next; repo private, entry deferred.
