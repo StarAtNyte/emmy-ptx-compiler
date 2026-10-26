@@ -1,26 +1,26 @@
 {
-  "status": "Verified four-wide compiler checkpoint; no entry submission",
+  "status": "Verified signed-wrap coverage checkpoint; compiler unchanged; no entry submitted",
   "package_report": {
-    "commit": "67c6b2f45311a5a92d293681f0642b17d86155be",
+    "commit": "aacaa3cb74d35e3069a2e86907737947e3074f0f",
     "compiler_sha256": "c2f7e2b38a1d77424201ec96eec39f2367587f032d0fdac73f87e38f74528c0e",
-    "archive_sha256": "d7bc84fa95ea4b9a884eb30567b4a45d269bafe8f4e325639c61a404b5b1e220",
+    "archive_sha256": "9db6ffe1590498673894f58d7571aca43155bf78df7a300a6d3122d4636a3c43",
     "checks": [
       {
         "problem": "p00_scalar_add",
         "passed": true,
-        "stdout": "[k_add_pointwise] 22 registers\n[k_add_pointwise] PASS  add: max abs err 0.000e+00  (24.576 us)\n",
+        "stdout": "[k_add_pointwise] 22 registers\n[k_add_pointwise] PASS  add: max abs err 0.000e+00  (20.544 us)\n",
         "stderr": ""
       },
       {
         "problem": "m01_matmul_512",
         "passed": true,
-        "stdout": "[k_matmul_2967be] 48 registers\n[k_matmul_2967be] PASS  matmul: max abs err 8.392e-05  (29.408 us)\n",
+        "stdout": "[k_matmul_2967be] 48 registers\n[k_matmul_2967be] PASS  matmul: max abs err 8.392e-05  (31.456 us)\n",
         "stderr": ""
       },
       {
         "problem": "a01_attention",
         "passed": true,
-        "stdout": "[k_matmul_softmax_reduce_b55365] 128 registers\n[k_matmul_softmax_reduce_b55365] PASS  matmul_1: max abs err 6.557e-07  (102.304 us)\n",
+        "stdout": "[k_matmul_softmax_reduce_b55365] 128 registers\n[k_matmul_softmax_reduce_b55365] PASS  matmul_1: max abs err 6.557e-07  (101.44 us)\n",
         "stderr": ""
       }
     ],
@@ -33,7 +33,8 @@
     "compile.py": "c2f7e2b38a1d77424201ec96eec39f2367587f032d0fdac73f87e38f74528c0e",
     "tools/local_runner.py": "90a494a357d0368265a06fffdcdfd3895eaa87d3a19f8d51b6dd492b10531872",
     "tools/probe_runner_initialization.py": "e9863612e8ea63777ec2977fc56f9844830adb6b9c89b76854ade7ca26bfa0a4",
-    "validation/cpu-contract.json": "49164a4c1c95fdf7c026adf1f5bb58d3b2868e491e10a5e0fcfb48e01bbcaa24",
+    "tools/generate_wrap_shared_cases.py": "00f38499e686ad9c6a1513e8ea7bcadadff7c05f6bd846d3851b900a05f5e55d",
+    "validation/cpu-contract.json": "612ed19288133e0c035246f6ba41861c815b4b845031aedf55eff41cd4424b8b",
     "validation/runner-fixtures/README.md": "cdfdbf5806fc6d2b7554fcf22d8d3f8a8a01879021cf6502d26da446f418e9bc",
     "validation/runner-fixtures/2026-10-24-zero-input/k_sum_1_reduce.ir.json": "36e53a795383a4f2f43efa4f8a17a093a14e810bfc71ffa188545dbb231e7cff",
     "validation/runner-fixtures/2026-10-24-zero-input/meta.json": "e80b4cae12fb3c62152a812759317f1588d5c95df80aedef5e7db7ead0c2133d",
@@ -57,15 +58,24 @@
     "validation/cpu-fixtures/2026-10-26-wide-mixed_alignment/k_sum_1_reduce.ir.json": "ff0a8eaa2fc4177893a94edb4ecc5909db75754adf0b2e7bf761bb1498be215b",
     "validation/cpu-fixtures/2026-10-26-wide-mixed_alignment/meta.json": "a53441e70b40ff7f295c5df7c945819a84511c4be55717850ba8bf85043cbbbb",
     "validation/cpu-fixtures/2026-10-26-wide-mixed_alignment/expected.npz": "87b183f35d5882eb8fafeb681aa5802162fe079020600eb9496019ae8aaabb14",
+    "validation/cpu-fixtures/2026-10-26-wrap-signed_add/k_sum_1_reduce.ir.json": "79646117a6a7f076a536c3f73c9f3bb6b73be99d36cbcac33f7bc042f6d84569",
+    "validation/cpu-fixtures/2026-10-26-wrap-signed_add/meta.json": "7f341a5ec370e8c82d5013041a66907369cb55dd385db299aeb5245d495e017f",
+    "validation/cpu-fixtures/2026-10-26-wrap-signed_add/expected.npz": "039d993bc6242742087c45d4468512fe631afbd0ed6fb7cc8446ade2bfdd7cfc",
     "validation/cpu-fixtures/2026-10-24-abi-reordered/k_sum_1_reduce.ir.json": "70be180ff631e8b8a6a54135a4615246baa92edb4300bc7912ca2483b5263f13",
     "validation/cpu-fixtures/2026-10-24-abi-reordered/meta.json": "3942f9994dcb523e56870199da208846c5e964f5fbb222ba8abf478789371f7c",
     "validation/cpu-fixtures/2026-10-24-abi-reordered/expected.npz": "2bec740462c36cb6c76f6a29054da9bd1c55565857636376f3b90753ff1b071c",
+    "validation/cpu-fixtures/2026-10-26-wrap-multiply/k_sum_1_reduce.ir.json": "e2d94f4abcffe41a9b9ebd36f3b0b0307fcdc78e862950d2846ab3bb04a8fcc1",
+    "validation/cpu-fixtures/2026-10-26-wrap-multiply/meta.json": "719ba7bd85f9f5eb07ec6efb89920840ce5bc87f8a3952fb8f5fa97732eeaefe",
+    "validation/cpu-fixtures/2026-10-26-wrap-multiply/expected.npz": "039d993bc6242742087c45d4468512fe631afbd0ed6fb7cc8446ade2bfdd7cfc",
     "validation/cpu-fixtures/2026-10-24-predicate-shared-pair/k_sum_1_reduce.ir.json": "216761de2d34bffb6d990021b0dfc29786e53f63d8f1cfe7339a1ea8f7d1b453",
     "validation/cpu-fixtures/2026-10-24-predicate-shared-pair/meta.json": "38c97cb6cf1f4f220e5469901ee62b31adde2be3f33934d9b5ee064d42c43fa3",
     "validation/cpu-fixtures/2026-10-24-predicate-shared-pair/expected.npz": "2fe1de840ad9fe7e7ab9bb0b50b711e077828c8a5f6475fcc8873e0a029875a5",
     "validation/cpu-fixtures/2026-10-24-zero-tile-zero-view/k_sum_1_reduce.ir.json": "40b88fdd3c98f33eadaaf7b1d30f819a2c237d7dc3b94b74ba93d52713763cfe",
     "validation/cpu-fixtures/2026-10-24-zero-tile-zero-view/meta.json": "b9178affda8dac6f6b2229bba9b1a633a7383a4c1ec4e380171484c8a66b4083",
     "validation/cpu-fixtures/2026-10-24-zero-tile-zero-view/expected.npz": "dc390e99b4029573c69211087ce108a9d76c75d63681aa3651fb1d00b47b8c2e",
+    "validation/cpu-fixtures/2026-10-26-wrap-align8/k_sum_1_reduce.ir.json": "0275f98dcc59a866d8b59cf26a3bfc0c8cf27986c8f12f76eb81c0c32ca19545",
+    "validation/cpu-fixtures/2026-10-26-wrap-align8/meta.json": "d72776c7f527559801a4a16a4948a60b8e2b3cdb1ea01436c6327530fd290caf",
+    "validation/cpu-fixtures/2026-10-26-wrap-align8/expected.npz": "039d993bc6242742087c45d4468512fe631afbd0ed6fb7cc8446ade2bfdd7cfc",
     "validation/cpu-fixtures/2026-10-24-cross-local-index-guard/k_sum_1_reduce.ir.json": "1bfc384b3fb5f75c1a222cbfb479af07d73591fb15c23191d650f6fa56c65420",
     "validation/cpu-fixtures/2026-10-24-cross-local-index-guard/meta.json": "1e2abfd5d8d8cf07d71822f7ac7da38d3899b6d5c2267650223aa50aacc47065",
     "validation/cpu-fixtures/2026-10-24-cross-local-index-guard/expected.npz": "057f3fd4b3f8702be08dba7e009845a065975c137b107c4897e170efd053d96e",
@@ -93,6 +103,9 @@
     "validation/cpu-fixtures/2026-10-24-f32-float-to-int/k_sum_1_reduce.ir.json": "b4a099ddf4fcbd9f6b1160b1613c3c330dc40e222b19d6dc140ef64c71482583",
     "validation/cpu-fixtures/2026-10-24-f32-float-to-int/meta.json": "a9699746db11e806353a3ea78d9801bdbaabf0bcd4f8a83406992c8214b5636f",
     "validation/cpu-fixtures/2026-10-24-f32-float-to-int/expected.npz": "77d43bbcf0a52ea5aefb10649746809ab791870d5fd83fb98b50dd83e411935e",
+    "validation/cpu-fixtures/2026-10-26-wrap-nonlinear/k_sum_1_reduce.ir.json": "786354f1b5c82705a2ccb1a4648c16cb43f68ffe17f547085646094c766528a3",
+    "validation/cpu-fixtures/2026-10-26-wrap-nonlinear/meta.json": "d4673361394aa35236a38b9bc9a27ddbc1e11b417a62c3d30f829d585e200d2a",
+    "validation/cpu-fixtures/2026-10-26-wrap-nonlinear/expected.npz": "3d288f3da4f457dad8f84c85979658a042f9447e9934f6100b7346cc07704425",
     "validation/cpu-fixtures/2026-10-24-zero-tile-nested/k_sum_1_reduce.ir.json": "8cff8648023477ab013f6a67cc4a4a4ba812dfbaf06ebc7b0039f726b8425e31",
     "validation/cpu-fixtures/2026-10-24-zero-tile-nested/meta.json": "40c5c83f05a4c7bffba62dc345439567ee5e7322088b08ba5af59e8c00b58e2d",
     "validation/cpu-fixtures/2026-10-24-zero-tile-nested/expected.npz": "dc390e99b4029573c69211087ce108a9d76c75d63681aa3651fb1d00b47b8c2e",
@@ -112,14 +125,12 @@
     "validation/cpu-fixtures/2026-10-24-address-scalar-flat/meta.json": "1103379df407ac7e2139ae5d14ecef7812d1da55760ee66f7d86090b5b5a9ebd",
     "validation/cpu-fixtures/2026-10-24-address-scalar-flat/expected.npz": "2bec740462c36cb6c76f6a29054da9bd1c55565857636376f3b90753ff1b071c"
   },
-  "local_cpu_matrix": "130 per Python 3.12.13/3.13.14/3.14.4 without Torch; see 2026-10-26-production-iteration15.json",
-  "environment_note": "Reused isolated environment; no fresh dependency installation claimed",
+  "local_cpu_matrix": "134 per Python:33 newly run snapshot/feature checks plus101 unchanged-source diagnostics; full provenance in2026-10-26-wrap-addresses.json",
+  "environment_note": "Reused isolated no-Torch3.12 runtime; no fresh installation claimed",
   "hosted_cpu_ci": {
-    "run": 40280154398,
-    "source": "67c6b2f45311a5a92d293681f0642b17d86155be",
-    "jobs_started": false,
-    "message": "The job was not started because recent account payments have failed or your spending limit needs to be increased."
+    "status": "Unverified; latest inspected source67c6b2f run40280154398 rejected before startup for account payments/spending limit",
+    "new_source_jobs": "Not polled or retried; no account state change observed"
   },
-  "previous_package": "2026-10-24-runner-package.json",
+  "previous_package": "2026-10-26-wide-package.json",
   "repository_private": true
 }

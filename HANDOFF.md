@@ -52,9 +52,9 @@ no claim. Other sixteen workloads have at most 0.032us median regression.
 README rewritten as professional compiler documentation. Requested primary-source
 review is in RESEARCH_2026-10-26.md with pinned research-refresh.json. No external
 code incorporated, Modal job/deployment or paid compute run. Repository private.
-Current archive is built from 67c6b2f, verified by extracted hosted scalar-add,
+Current archive is built from aacaa3c, verified by extracted hosted scalar-add,
 matmul and attention checks in the existing isolated no-Torch 3.12 runtime.
-Record: validation/2026-10-26-current-package.json. Wide/current/submission ZIP
+Record: validation/2026-10-26-current-package.json. Wrap/current/submission ZIP
 aliases match. All archived compiler/harness/fixture bytes match tested source.
 GitHub run 40280154398 rejected all three jobs before steps: failed account
 payments/spending limit annotation. No hosted CPU success claimed.
@@ -78,8 +78,11 @@ Evidence: validation/2026-10-26-wrap-addresses.json. Read HACKATHON_READINESS.md
 for verified task requirements and missing submission deliverables. Fifteen
 public kernels compile deterministically in three isolated no-Torch processes
 each, local median0.574–0.681sec. Prioritize broader scalar-op and compound
-correctness within the task vocabulary next. Package compiler remains valid;
-new fixtures/docs will be included in the next archived source checkpoint.
+correctness within the task vocabulary next. Refreshed archive source aacaa3c includes new generator, fixtures and readiness
+document. Compiler remains c2f7e2b3. Extracted hosted scalar-add/matmul/attention
+checks pass in existing isolated no-Torch3.12 runtime; ZIP source member hashes
+verified. Wrap/current/submission aliases identical. Current-package record
+updated; previous wide record preserved separately. No new hosted CPU CI claim.
 
 ## Contract/current implementation
 
