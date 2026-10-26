@@ -1,0 +1,117 @@
+{
+  "compiler_sha256": "fb54a46c3860a62acb0cff436646d6a7412dc3e0699c15672658d936a098cd2e",
+  "results": [
+    {
+      "problem": "t_clamp",
+      "passed": true,
+      "elapsed_s": 2.331,
+      "stdout": "[k_clamp_pointwise] 28 registers\n[k_clamp_pointwise] PASS  clamp: max abs err 0.000e+00  (15.52 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_cos",
+      "passed": true,
+      "elapsed_s": 2.701,
+      "stdout": "[k_cos_pointwise] 28 registers\n[k_cos_pointwise] PASS  cos: max abs err 5.960e-08  (15.2 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_exp",
+      "passed": true,
+      "elapsed_s": 2.149,
+      "stdout": "[k_exp_pointwise] 29 registers\n[k_exp_pointwise] PASS  exp: max abs err 1.907e-06  (14.688 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_gelu",
+      "passed": true,
+      "elapsed_s": 2.267,
+      "stdout": "[k_gelu_pointwise] 25 registers\n[k_gelu_pointwise] PASS  gelu: max abs err 2.431e-07  (15.296 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_gelu_tanh",
+      "passed": true,
+      "elapsed_s": 2.744,
+      "stdout": "[k_gelu_pointwise] 26 registers\n[k_gelu_pointwise] PASS  gelu: max abs err 2.384e-07  (15.104 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_log",
+      "passed": false,
+      "elapsed_s": 2.46,
+      "stdout": "[k_log_pointwise] 21 registers\n[k_log_pointwise] FAIL  log: max abs err nan (tolerance rtol=1e-06 atol=1e-06)\n    the parameters must be in meta.json's arg_order: x, log\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_pow3",
+      "passed": true,
+      "elapsed_s": 2.662,
+      "stdout": "[k_pow_1_pointwise] 33 registers\n[k_pow_1_pointwise] PASS  pow_1: max abs err 0.000e+00  (25.152 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_pow_half",
+      "passed": false,
+      "elapsed_s": 2.788,
+      "stdout": "[k_pow_1_pointwise] 18 registers\n[k_pow_1_pointwise] FAIL  pow_1: max abs err nan (tolerance rtol=1e-06 atol=1e-06)\n    the parameters must be in meta.json's arg_order: x, pow_1\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_reciprocal",
+      "passed": true,
+      "elapsed_s": 2.689,
+      "stdout": "[k_reciprocal_pointwise] 18 registers\n[k_reciprocal_pointwise] PASS  reciprocal: max abs err 0.000e+00  (14.848 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_rsqrt",
+      "passed": false,
+      "elapsed_s": 2.495,
+      "stdout": "[k_rsqrt_pointwise] 30 registers\n[k_rsqrt_pointwise] FAIL  rsqrt: max abs err nan (tolerance rtol=1e-06 atol=1e-06)\n    the parameters must be in meta.json's arg_order: x, rsqrt\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_sigmoid",
+      "passed": true,
+      "elapsed_s": 2.549,
+      "stdout": "[k_sigmoid_pointwise] 20 registers\n[k_sigmoid_pointwise] PASS  sigmoid: max abs err 5.960e-08  (15.104 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_silu",
+      "passed": true,
+      "elapsed_s": 2.936,
+      "stdout": "[k_silu_pointwise] 22 registers\n[k_silu_pointwise] PASS  silu: max abs err 2.384e-07  (14.944 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_sin",
+      "passed": true,
+      "elapsed_s": 2.968,
+      "stdout": "[k_sin_pointwise] 28 registers\n[k_sin_pointwise] PASS  sin: max abs err 5.960e-08  (15.008 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_softplus",
+      "passed": true,
+      "elapsed_s": 2.766,
+      "stdout": "[k_softplus_pointwise] 23 registers\n[k_softplus_pointwise] PASS  softplus: max abs err 2.384e-07  (14.848 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_sqrt",
+      "passed": false,
+      "elapsed_s": 2.334,
+      "stdout": "[k_sqrt_pointwise] 18 registers\n[k_sqrt_pointwise] FAIL  sqrt: max abs err nan (tolerance rtol=1e-06 atol=1e-06)\n    the parameters must be in meta.json's arg_order: x, sqrt\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_tanh",
+      "passed": true,
+      "elapsed_s": 2.888,
+      "stdout": "[k_tanh_pointwise] 20 registers\n[k_tanh_pointwise] PASS  tanh: max abs err 5.960e-08  (14.816 us)\n",
+      "stderr": ""
+    }
+  ]
+}

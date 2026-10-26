@@ -27,7 +27,7 @@ def main():
     args=parser.parse_args();compiler=args.compiler.resolve()
     template=root/'validation/cpu-fixtures/2026-10-24-f32-float-arithmetic'
     source=next(template.glob('*.ir.json'));rows=[]
-    for operation in ('log1p','expm1','sin','cos'):
+    for operation in ('log1p','expm1','arctan','sinh'):
         graph=Graph.from_dict(json.loads(source.read_text()));changed=False
         def walk(body):
             nonlocal changed

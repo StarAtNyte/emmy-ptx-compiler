@@ -1,0 +1,614 @@
+{
+  "compiler_sha256": "1cd77623190e0b4f10bfdb9166ee306cb1b71f2ecdb9522c89550b37ed6a4f88",
+  "results": [
+    {
+      "problem": "0cbf49-52de-4f22-adaa-d8ad9cc4e23a_scratchpad_mathfix_2026-10-26-math-gelu-tanh",
+      "passed": true,
+      "elapsed_s": 3.65,
+      "stdout": "[k_gelu_pointwise] 24 registers\n[k_gelu_pointwise] PASS  gelu: max abs err 2.384e-07  (14.4 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "1e0cbf49-52de-4f22-adaa-d8ad9cc4e23a_scratchpad_mathfix_2026-10-26-math-sigmoid",
+      "passed": true,
+      "elapsed_s": 3.199,
+      "stdout": "[k_sigmoid_pointwise] 18 registers\n[k_sigmoid_pointwise] PASS  sigmoid: max abs err 5.960e-08  (14.752 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "artifacts_multikernel_mk_attention_long",
+      "passed": true,
+      "elapsed_s": 3.418,
+      "stdout": "[k_matmul_softmax_reduce_93a77c] 56 registers\n[k_matmul_softmax_reduce_93a77c] PASS  matmul_1: max abs err 5.960e-08  (79.744 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "artifacts_multikernel_mk_attention_wide",
+      "passed": true,
+      "elapsed_s": 3.999,
+      "stdout": "[k_matmul_softmax_reduce_f5cf96] 96 registers\n[k_matmul_softmax_reduce_f5cf96] PASS  matmul_1: max abs err 8.941e-07  (86.304 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "artifacts_multikernel_mk_col_sum",
+      "passed": true,
+      "elapsed_s": 2.532,
+      "stdout": "[k_sum_1] 22 registers\n[k_sum_1] PASS  sum_1: max abs err 3.934e-06  (20.064 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "artifacts_multikernel_mk_l2_wide",
+      "passed": true,
+      "elapsed_s": 7.403,
+      "stdout": "[k_mul_1_reduce] 22 registers\n[k_mul_1_reduce] PASS  mul_1: max abs err 3.725e-09  (17.408 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "artifacts_multikernel_mk_matmul_bias_gelu",
+      "passed": true,
+      "elapsed_s": 4.917,
+      "stdout": "[k_matmul_2db247] 40 registers\n[k_matmul_2db247] PASS  gelu: max abs err 1.907e-05  (34.208 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "artifacts_multikernel_mk_matmul_relu",
+      "passed": true,
+      "elapsed_s": 4.094,
+      "stdout": "[k_matmul_8dcfaa] 86 registers\n[k_matmul_8dcfaa] PASS  relu: max abs err 2.670e-05  (25.568 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "artifacts_multikernel_mk_matmul_softmax",
+      "passed": true,
+      "elapsed_s": 5.815,
+      "stdout": "[k_matmul_softmax_reduce_f518ff] 64 registers\n[k_matmul_softmax_reduce_f518ff] PASS  softmax: max abs err 2.116e-06  (37454.624 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "artifacts_multikernel_mk_matmul_tall_k",
+      "passed": true,
+      "elapsed_s": 3.286,
+      "stdout": "[k_mm] 40 registers\n[k_mm] PASS  mm: max abs err 1.068e-04  (20.512 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "artifacts_multikernel_mk_max_big",
+      "passed": true,
+      "elapsed_s": 2.489,
+      "stdout": "[k_amax_reduce] 18 registers\n[k_amax_reduce] PASS  amax: max abs err 0.000e+00  (102.752 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "artifacts_multikernel_mk_mean_big",
+      "passed": true,
+      "elapsed_s": 2.423,
+      "stdout": "[k_mean_2ad01b] 18 registers\n[k_mean_2ad01b] PASS  mean: max abs err 2.910e-09  (163.552 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "artifacts_multikernel_mk_pointwise_then_sum",
+      "passed": true,
+      "elapsed_s": 2.483,
+      "stdout": "[k_sum_1] 22 registers\n[k_sum_1] PASS  sum_1: max abs err 1.953e-03  (20.672 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "artifacts_multikernel_mk_rms_wide",
+      "passed": true,
+      "elapsed_s": 9.238,
+      "stdout": "[k_mean_4b7aa2] 22 registers\n[k_mean_4b7aa2] PASS  mul_2: max abs err 9.537e-07  (36.896 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "artifacts_multikernel_mk_row_sum_wide",
+      "passed": true,
+      "elapsed_s": 2.427,
+      "stdout": "[k_sum_1] 22 registers\n[k_sum_1] PASS  sum_1: max abs err 4.578e-05  (20.768 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "artifacts_multikernel_mk_softmax_tall",
+      "passed": true,
+      "elapsed_s": 12.442,
+      "stdout": "[k_softmax_9a21f6] 35 registers\n[k_softmax_9a21f6] PASS  softmax: max abs err 5.960e-08  (16.928 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "artifacts_multikernel_mk_softmax_wide",
+      "passed": true,
+      "elapsed_s": 12.782,
+      "stdout": "[k_softmax_ac7ad8] 35 registers\n[k_softmax_ac7ad8] PASS  softmax: max abs err 4.657e-10  (33.568 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "artifacts_multikernel_mk_sum_1048576",
+      "passed": true,
+      "elapsed_s": 2.502,
+      "stdout": "[k_sum_1] 20 registers\n[k_sum_1] PASS  sum_1: max abs err 6.104e-05  (24.64 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "artifacts_multikernel_mk_sum_262144",
+      "passed": true,
+      "elapsed_s": 2.705,
+      "stdout": "[k_sum_1] 20 registers\n[k_sum_1] PASS  sum_1: max abs err 3.052e-05  (19.808 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "artifacts_multikernel_mk_sum_65536",
+      "passed": true,
+      "elapsed_s": 2.509,
+      "stdout": "[k_sum_1] 20 registers\n[k_sum_1] PASS  sum_1: max abs err 6.104e-05  (20.704 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "artifacts_multikernel_mk_two_matmul",
+      "passed": true,
+      "elapsed_s": 3.883,
+      "stdout": "[k_matmul_1] 40 registers\n[k_matmul_1] PASS  matmul_1: max abs err 8.392e-05  (137.472 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "challenge_problems_a01_attention",
+      "passed": true,
+      "elapsed_s": 3.996,
+      "stdout": "[k_matmul_softmax_reduce_b55365] 128 registers\n[k_matmul_softmax_reduce_b55365] PASS  matmul_1: max abs err 6.557e-07  (103.04 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "challenge_problems_a02_attention_128",
+      "passed": true,
+      "elapsed_s": 3.494,
+      "stdout": "[k_matmul_softmax_reduce_6f0029] 80 registers\n[k_matmul_softmax_reduce_6f0029] PASS  matmul_1: max abs err 3.874e-07  (51.616 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "challenge_problems_f01_rmsnorm",
+      "passed": true,
+      "elapsed_s": 7.441,
+      "stdout": "[k_mean_cbd1de] 22 registers\n[k_mean_cbd1de] PASS  mul_1: max abs err 1.907e-06  (15.456 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "challenge_problems_f02_row_softmax",
+      "passed": true,
+      "elapsed_s": 4.996,
+      "stdout": "[k_softmax_05263d] 35 registers\n[k_softmax_05263d] PASS  softmax: max abs err 7.451e-09  (15.072 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "challenge_problems_f03_l2norm",
+      "passed": true,
+      "elapsed_s": 4.775,
+      "stdout": "[k_div_reduce] 22 registers\n[k_div_reduce] PASS  div: max abs err 1.490e-08  (14.912 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "challenge_problems_m01_matmul_512",
+      "passed": true,
+      "elapsed_s": 19.039,
+      "stdout": "[k_matmul_2967be] 48 registers\n[k_matmul_2967be] PASS  matmul: max abs err 8.392e-05  (29.088 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "challenge_problems_m02_matmul_rect",
+      "passed": true,
+      "elapsed_s": 3.844,
+      "stdout": "[k_matmul] 31 registers\n[k_matmul] PASS  matmul: max abs err 1.144e-05  (14.72 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "challenge_problems_p00_scalar_add",
+      "passed": true,
+      "elapsed_s": 2.666,
+      "stdout": "[k_add_pointwise] 22 registers\n[k_add_pointwise] PASS  add: max abs err 0.000e+00  (20.352 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "challenge_problems_p01_vector_add",
+      "passed": true,
+      "elapsed_s": 2.902,
+      "stdout": "[k_add_pointwise] 22 registers\n[k_add_pointwise] PASS  add: max abs err 0.000e+00  (20.416 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "challenge_problems_p02_scale_shift",
+      "passed": true,
+      "elapsed_s": 3.517,
+      "stdout": "[k_add_pointwise] 30 registers\n[k_add_pointwise] PASS  add: max abs err 0.000e+00  (15.52 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "challenge_problems_p03_relu_mul",
+      "passed": true,
+      "elapsed_s": 3.03,
+      "stdout": "[k_mul_pointwise] 24 registers\n[k_mul_pointwise] PASS  mul: max abs err 0.000e+00  (15.264 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "challenge_problems_r01_array_sum",
+      "passed": true,
+      "elapsed_s": 2.767,
+      "stdout": "[k_sum_1_reduce] 18 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 3.815e-06  (33.248 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "challenge_problems_r02_big_sum",
+      "passed": true,
+      "elapsed_s": 2.688,
+      "stdout": "[k_sum_1_reduce] 18 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 1.526e-05  (38.88 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "challenge_problems_r03_mean",
+      "passed": true,
+      "elapsed_s": 2.638,
+      "stdout": "[k_mean_ffcca3] 18 registers\n[k_mean_ffcca3] PASS  mean: max abs err 9.313e-10  (28.128 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "challenge_problems_r04_row_sum",
+      "passed": true,
+      "elapsed_s": 2.67,
+      "stdout": "[k_sum_1_reduce] 20 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 5.722e-06  (21.472 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "e0cbf49-52de-4f22-adaa-d8ad9cc4e23a_scratchpad_mathfix_2026-10-26-math-softplus",
+      "passed": true,
+      "elapsed_s": 3.609,
+      "stdout": "[k_softplus_pointwise] 23 registers\n[k_softplus_pointwise] PASS  softplus: max abs err 2.384e-07  (15.36 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "mmy_1e0cbf49-52de-4f22-adaa-d8ad9cc4e23a_scratchpad_mathfix_2026-10-26-math-cos",
+      "passed": true,
+      "elapsed_s": 3.547,
+      "stdout": "[k_cos_pointwise] 28 registers\n[k_cos_pointwise] PASS  cos: max abs err 5.960e-08  (15.04 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "mmy_1e0cbf49-52de-4f22-adaa-d8ad9cc4e23a_scratchpad_mathfix_2026-10-26-math-exp",
+      "passed": true,
+      "elapsed_s": 3.643,
+      "stdout": "[k_exp_pointwise] 28 registers\n[k_exp_pointwise] PASS  exp: max abs err 1.907e-06  (15.264 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "mmy_1e0cbf49-52de-4f22-adaa-d8ad9cc4e23a_scratchpad_mathfix_2026-10-26-math-sin",
+      "passed": true,
+      "elapsed_s": 3.41,
+      "stdout": "[k_sin_pointwise] 28 registers\n[k_sin_pointwise] PASS  sin: max abs err 5.960e-08  (14.304 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "my_1e0cbf49-52de-4f22-adaa-d8ad9cc4e23a_scratchpad_mathfix_2026-10-26-math-gelu",
+      "passed": true,
+      "elapsed_s": 3.09,
+      "stdout": "[k_gelu_pointwise] 24 registers\n[k_gelu_pointwise] PASS  gelu: max abs err 2.431e-07  (15.104 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "my_1e0cbf49-52de-4f22-adaa-d8ad9cc4e23a_scratchpad_mathfix_2026-10-26-math-pow3",
+      "passed": true,
+      "elapsed_s": 3.462,
+      "stdout": "[k_pow_1_pointwise] 33 registers\n[k_pow_1_pointwise] PASS  pow_1: max abs err 0.000e+00  (24.864 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "my_1e0cbf49-52de-4f22-adaa-d8ad9cc4e23a_scratchpad_mathfix_2026-10-26-math-silu",
+      "passed": true,
+      "elapsed_s": 3.513,
+      "stdout": "[k_silu_pointwise] 18 registers\n[k_silu_pointwise] PASS  silu: max abs err 2.384e-07  (14.72 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "my_1e0cbf49-52de-4f22-adaa-d8ad9cc4e23a_scratchpad_mathfix_2026-10-26-math-tanh",
+      "passed": true,
+      "elapsed_s": 3.452,
+      "stdout": "[k_tanh_pointwise] 18 registers\n[k_tanh_pointwise] PASS  tanh: max abs err 5.960e-08  (15.328 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_counterexamples_2026-10-24-scope-shrunk",
+      "passed": true,
+      "elapsed_s": 2.829,
+      "stdout": "[k_sum_1_reduce] 14 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (20.416 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_counterexamples_2026-10-24-strided-shrunk",
+      "passed": true,
+      "elapsed_s": 2.784,
+      "stdout": "[k_sum_1_reduce] 22 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (19.904 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-24-abi-reordered",
+      "passed": true,
+      "elapsed_s": 2.475,
+      "stdout": "[k_sum_1_reduce] 14 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (19.776 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-24-address-extra-load",
+      "passed": true,
+      "elapsed_s": 2.712,
+      "stdout": "[k_sum_1_reduce] 14 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (19.584 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-24-address-scalar-flat",
+      "passed": true,
+      "elapsed_s": 2.82,
+      "stdout": "[k_sum_1_reduce] 14 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (20.384 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-24-address-shared-pair",
+      "passed": true,
+      "elapsed_s": 2.65,
+      "stdout": "[k_sum_1_reduce] 18 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (19.68 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-24-cross-large-tail",
+      "passed": true,
+      "elapsed_s": 3.174,
+      "stdout": "[k_sum_1_reduce] 26 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (24.064 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-24-cross-local-index-guard",
+      "passed": true,
+      "elapsed_s": 3.216,
+      "stdout": "[k_sum_1_reduce] 20 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (31.168 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-24-cross-tail",
+      "passed": true,
+      "elapsed_s": 2.994,
+      "stdout": "[k_sum_1_reduce] 20 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (23.808 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-24-cross-write-guard",
+      "passed": true,
+      "elapsed_s": 3.073,
+      "stdout": "[k_sum_1_reduce] 20 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (22.656 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-24-f32-float-arithmetic",
+      "passed": true,
+      "elapsed_s": 2.665,
+      "stdout": "[k_sum_1_reduce] 10 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (19.904 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-24-f32-float-to-int",
+      "passed": true,
+      "elapsed_s": 2.695,
+      "stdout": "[k_sum_1_reduce] 10 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (19.776 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-24-f32-mixed-compare",
+      "passed": true,
+      "elapsed_s": 2.611,
+      "stdout": "[k_sum_1_reduce] 12 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (19.904 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-24-f32-nan-truth",
+      "passed": true,
+      "elapsed_s": 2.457,
+      "stdout": "[k_sum_1_reduce] 14 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (19.68 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-24-power2-int32-extremes",
+      "passed": true,
+      "elapsed_s": 2.552,
+      "stdout": "[k_sum_1_reduce] 10 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (19.648 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-24-predicate-shared-pair",
+      "passed": true,
+      "elapsed_s": 2.708,
+      "stdout": "[k_sum_1_reduce] 18 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (20.416 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-24-zero-tile-empty-axis-control",
+      "passed": true,
+      "elapsed_s": 2.553,
+      "stdout": "[k_sum_1_reduce] 10 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (19.616 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-24-zero-tile-inner",
+      "passed": true,
+      "elapsed_s": 2.455,
+      "stdout": "[k_sum_1_reduce] 10 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (19.776 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-24-zero-tile-nested",
+      "passed": true,
+      "elapsed_s": 2.731,
+      "stdout": "[k_sum_1_reduce] 10 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (19.008 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-24-zero-tile-zero-view",
+      "passed": true,
+      "elapsed_s": 2.498,
+      "stdout": "[k_sum_1_reduce] 10 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (19.776 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-26-erf-signed-zero",
+      "passed": true,
+      "elapsed_s": 2.759,
+      "stdout": "[k_sum_1_reduce] 15 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (14.656 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-26-erf-transition",
+      "passed": true,
+      "elapsed_s": 3.381,
+      "stdout": "[k_sum_1_reduce] 16 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 1.788e-07  (14.208 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-26-exp2-powers",
+      "passed": true,
+      "elapsed_s": 3.295,
+      "stdout": "[k_sum_1_reduce] 14 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (20.0 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-26-gelu",
+      "passed": true,
+      "elapsed_s": 2.851,
+      "stdout": "[k_gelu_pointwise] 20 registers\n[k_gelu_pointwise] PASS  gelu: max abs err 2.384e-07  (20.128 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-26-log-range",
+      "passed": true,
+      "elapsed_s": 2.827,
+      "stdout": "[k_sum_1_reduce] 18 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (20.288 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-26-log10-special",
+      "passed": true,
+      "elapsed_s": 2.751,
+      "stdout": "[k_sum_1_reduce] 11 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (19.52 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-26-log2-near_one",
+      "passed": true,
+      "elapsed_s": 2.67,
+      "stdout": "[k_sum_1_reduce] 12 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 1.073e-07  (20.352 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-26-mask-legacy-rounding",
+      "passed": true,
+      "elapsed_s": 2.592,
+      "stdout": "[k_sum_1_reduce] 10 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (20.096 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-26-mask-let-truth",
+      "passed": true,
+      "elapsed_s": 2.605,
+      "stdout": "[k_sum_1_reduce] 10 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (20.192 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-26-mask-signed-zero",
+      "passed": true,
+      "elapsed_s": 2.788,
+      "stdout": "[k_sum_1_reduce] 14 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (20.672 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-26-mask-to-float",
+      "passed": true,
+      "elapsed_s": 2.658,
+      "stdout": "[k_to_pointwise] 20 registers\n[k_to_pointwise] PASS  to: max abs err 0.000e+00  (20.128 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-26-masked-attention",
+      "passed": true,
+      "elapsed_s": 2.761,
+      "stdout": "[k_matmul_2] 80 registers\n[k_matmul_2] PASS  matmul_2: max abs err 5.960e-07  (24.32 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-26-rms-square",
+      "passed": true,
+      "elapsed_s": 2.805,
+      "stdout": "[k_mean_7480a2] 22 registers\n[k_mean_7480a2] PASS  mul: max abs err 2.384e-07  (15.104 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-26-square",
+      "passed": true,
+      "elapsed_s": 2.527,
+      "stdout": "[k_sum_1_reduce] 10 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (20.128 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-26-wide-align8",
+      "passed": true,
+      "elapsed_s": 2.896,
+      "stdout": "[k_sum_1_reduce] 20 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (24.416 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-26-wide-even_stride",
+      "passed": true,
+      "elapsed_s": 3.12,
+      "stdout": "[k_sum_1_reduce] 20 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (24.064 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-26-wide-mixed_alignment",
+      "passed": true,
+      "elapsed_s": 3.027,
+      "stdout": "[k_sum_1_reduce] 20 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (24.064 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-26-wide-offset4",
+      "passed": true,
+      "elapsed_s": 3.066,
+      "stdout": "[k_sum_1_reduce] 20 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (24.128 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-26-wide-tail_six",
+      "passed": true,
+      "elapsed_s": 3.206,
+      "stdout": "[k_sum_1_reduce] 20 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (24.384 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-26-wrap-align8",
+      "passed": true,
+      "elapsed_s": 3.331,
+      "stdout": "[k_sum_1_reduce] 20 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (23.52 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-26-wrap-multiply",
+      "passed": true,
+      "elapsed_s": 2.988,
+      "stdout": "[k_sum_1_reduce] 20 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (26.592 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-26-wrap-nonlinear",
+      "passed": true,
+      "elapsed_s": 3.16,
+      "stdout": "[k_sum_1_reduce] 20 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (25.216 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "validation_cpu-fixtures_2026-10-26-wrap-signed_add",
+      "passed": true,
+      "elapsed_s": 3.13,
+      "stdout": "[k_sum_1_reduce] 20 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (23.84 us)\n",
+      "stderr": ""
+    }
+  ]
+}

@@ -33,15 +33,46 @@ http://runner.riftstack.ai:48701. Compiler emits PTX8.0 sm89, valid on target;
 local test harness retargets to sm86. Local timing cannot select target changes.
 
 **Accepted compile.py SHA256:**
-3586814ed85cd1ee59df83752a7a017df358a56d8ad762ef9f4aab96e78bfe16.
-Exact source: artifacts/compiler-erf-refined.py. Previous6237caab is reproducible
-from bea1389:compile.py and frozen as compiler-before-erf.py. Previous eeb79a3a is
-reproducible from44bd6d3:compile.py and frozen as compiler-before-masks.py.
-Previous c2f7e2b3 is reproducible from aacaa3c:compile.py. Earlier accepted sources/evidence are
+1a2ad94e87478276192f6248bba9871cd70eeeb9d90078e3ceb1224c3910703d.
+Frozen copy: artifacts/compiler-math-bounds.py. Previous 3586814e is frozen as
+artifacts/compiler-erf-refined.py. Earlier accepted sources/evidence are
 recorded in PROGRESS.md and dated validation records; old patches target those
 specific baselines, not automatically the current compiler.
 
-## Latest acceptance — square/erf and GELU/RMS
+## Latest acceptance — accurate math, launch bounds, reduce identities
+
+Evidence: validation/2026-10-26-production-iteration19.json (with a hash legend
+for every intermediate candidate) and validation/iteration19-*.json raw reports.
+
+- Own f32 math replaces bare hardware approximations: exp = ex2(rn(x*log2e))
+  corrected by the product's exact rounding error (2 ULP, chain +1 FMA), tanh
+  (odd minimax under 0.55, exp form above), log (fdlibm reduction, 1 ULP),
+  sin/cos (3-part Cody-Waite, Payne-Hanek above 105615, 2 ULP), pow (f64 log
+  and exp, C99 special cases, 0 ULP sampled). Emmy's reference kernels use
+  accurate libm, so hidden tolerances may be tight. At rtol=atol=1e-6 on the
+  RTX 5090 the old compiler failed tanh, gelu-tanh, sin, cos and pow.
+- Launch bounds: .maxnreg 65536/block for 1024-thread blocks or estimated
+  accumulator pressure (a 1024-thread fused matmul-softmax failed to launch
+  with OUT_OF_RESOURCES before); .maxntid for blocks <= 256 (a02 1.295x).
+  Always-on .maxntid/.maxnreg/.minnctapersm at 512 threads regressed m01 to
+  0.88-0.90x and was rejected.
+- Seeded max/min folds now take the IR op identity (Emmy -1e30/+1e30), not
+  +-inf. Attention whose Tile has lanes with empty strided loops returned all
+  NaN on both old and new compilers (8x8, 24x40, 100x16); all pass now.
+- statement() split into lower_<kind> methods with a dispatch table plus a
+  module overview; byte-identical PTX across 1718 kernels versus pre-refactor.
+- New corpora: tools/expressions_precision.py (+ tools/measure_precision.py),
+  expressions_multikernel.py (19 unpinned shapes; all fuse to one kernel) and
+  expressions_hidden_proxy.py (43 fresh shape/op-mix cases across all five
+  categories; old compiler 35/43, final 43/43 on the RTX 5090 after correcting
+  two of my own trace-boundary spec mistakes).
+- Local RTX 3050: no regression across 1718 corpus folders versus the old
+  compiler; its 72 failures are shared, documented stale/obsolete cases.
+  Sanitizers clean (4 tools). CPU contracts: 60+28+42+31+4+10 checks pass on
+  isolated no-Torch 3.12/3.13/3.14. Public paired timing: a02 1.295x, f02
+  0.959x (+0.13 us for accurate exp), others 0.99-1.002x. Cold compile <0.3 s.
+
+## Previous acceptance — square/erf and GELU/RMS
 
 Evidence: validation/2026-10-26-production-iteration18.json. Square uses native
 rounded multiplication; own erf uses degree23 odd series over|x|<=1 and
@@ -202,33 +233,22 @@ MLP case pass on official GPU in existing isolated no-Torch3.12 runtime.
 The MLP descriptor is a prepared external artifact; compiler and5 fixtures were
 extracted. No fresh installation claimed. No rebuild for docs/evidence-only edits.
 
-## Next work — verified checkpoint
+## Next work
 
-The working tree and origin/master were clean/synced at e6fac2c before this
-handoff update. Accepted compiler is3586814e; archive source d193ab1. All prior
-math/model/CPU/sanitizer/accuracy and discovery processes are terminal. No live
-candidate or unfinished worker should be restarted from old process handles.
+Judging order (official README; no numeric weights): hidden-set correctness
+by category, then code review, then kernel speed. The video is an eligibility
+gate. Deadline Oct 27 23:59 AoE; resubmission allowed until then.
 
-The next discovery has completed:5/5 actual frontend programs materialize,
-and current compiler fails all5 for unsupported sin/cos/pow. All argument
-buffers are f32, including the exponent3 buffer; this is an operation-lowering
-gap, not a need to broaden storage dtypes. Reproducible spec, IR/meta/oracle
-hashes and baseline failures: validation/2026-10-26-trig-power-discovery.json.
-Local assets: artifacts/next-math-discovery and
-artifacts/expressions-next-math-discovery.py.
+1. Refresh the submission package for compiler 1a2ad94e (package_submission.py)
+   and verify the archive on the official GPU.
+2. Readability for code review: public-facing README describing the design in
+   plain terms; consider splitting lower_loop. Gate refactors on byte-identical
+   PTX with the scratch equivalence approach (compile both, compare strings).
+3. Further hidden-set probing: more fresh shapes per category on the hosted
+   runner, especially attention/softmax tiles with idle lanes and reductions
+   with odd sizes. Fix any failure generally, never by workload name.
+4. Feature freeze, then the user's own video, public repository and an early
+   submission (resubmit if improved). Do not invent entrant details.
 
-Next concrete implementation priorities:
-1. Runtime-general power lowering, with negative bases/integer exponents,
-   signed zeros, NaNs/infinities and overflow/underflow cases. Do not assume
-   exponent-buffer values from names or hardcode public expressions.
-2. Sine/cosine with independent large-finite-argument and special-value gates.
-   Passing normal random inputs alone does not establish full f32 behavior.
-3. Recheck retained PTX, independent numerical/model cases, sanitizers and the
-   no-Torch Python matrix; only adopt the exact verified candidate. Update both
-   continuity files after each meaningful step and refresh package after code changes.
-
-The complete win-ready compiler objective remains active. Remaining relevant
-operator/field, layout, type/schema and access-bounds coverage still needs audit;
-these numerical milestones are not a hidden-set or broad-readiness proof.
-Keep repository private. Public repo, user's personal video and submission remain
-for later at the user's direction; do not invent fields or contact organizers.
+Win-track assessment (Step 69) stands: correctness and accuracy first, then
+readability, then speed.

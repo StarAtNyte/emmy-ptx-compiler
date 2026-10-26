@@ -1,0 +1,12 @@
+{
+  "compiler_sha256": "3586814ed85cd1ee59df83752a7a017df358a56d8ad762ef9f4aab96e78bfe16",
+  "results": [
+    {
+      "problem": "mk_matmul_softmax",
+      "passed": false,
+      "elapsed_s": 4.428,
+      "stdout": "[k_matmul_softmax_reduce_f518ff] 128 registers\n[k_matmul_softmax_reduce_f518ff] launch failed: CUDA_ERROR_LAUNCH_OUT_OF_RESOURCES: too many resources requested for launch\n",
+      "stderr": ""
+    }
+  ]
+}

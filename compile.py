@@ -1,6 +1,25 @@
 """Translate typed Emmy Kernel IR directly to PTX.
 
-The compiler never invokes Emmy's CUDA renderer or an existing compiler.
+    python compile.py kernel.ir.json > kernel.ptx
+
+The compiler never invokes Emmy's CUDA renderer, nvcc or another backend; Emmy
+is used only to load the IR (Graph.from_dict). One pass does the work:
+
+1. Load and validate: find the single KernelOp, take its launch (entry, pointer
+   order, block size) from the adjacent meta.json, and reject IR features,
+   shapes or ABIs this compiler does not lower, with a clear message.
+2. Walk the statement tree once, keeping a map from IR value names to virtual
+   PTX registers (%r, %rd, %f, %fd, %p). Each statement kind has one lowering
+   method; expressions (indices, predicates, bounds) compile recursively.
+   ptxas performs the real register allocation.
+3. Assemble the module: header, parameters, launch-bound directives, register
+   and shared-memory declarations, then the emitted body.
+
+Correctness under the prescribed launch comes first. The optimizations are
+structural and checked against the IR: FMA folding of reductions, bounded
+unrolling of shared-memory inner loops, and v2/v4 vector loads where alignment
+is proven. Elementwise math (exp, tanh, log, sin, cos, pow, erf) is implemented
+here to libm-like accuracy rather than with bare hardware approximations.
 """
 from __future__ import annotations
 
@@ -109,6 +128,8 @@ class Compiler:
         for node in graph.nodes.values():
             for tensor in node.outputs:
                 self.shapes[tensor.name] = tuple(d.value for d in tensor.shape)
+
+    # -- Input validation -----------------------------------------------------
 
     def validate_abi(self):
         """Check positional buffer descriptors without equating logical views."""
@@ -244,6 +265,8 @@ class Compiler:
                         walk(getattr(stmt, field), f'{here}.{field}')
         walk(self.node.op.body, 'body')
 
+    # -- Registers and instruction emission -----------------------------------
+
     def reg(self, kind='r'):
         self.counts[kind] += 1
         return f'%{kind}{self.counts[kind]}'
@@ -284,6 +307,8 @@ class Compiler:
         result = self.reg(kind)
         self.emit(f'{opcode} {result}, ' + ', '.join(map(str, args)) + ';')
         return result
+
+    # -- Index, predicate and scalar expressions ------------------------------
 
     def index_interval(self, expr):
         """Conservative signed-int32 bounds; unknown/overflow means no proof."""
@@ -443,6 +468,8 @@ class Compiler:
         byte_offset = self.instruction('mul.wide.s32', flat, 4, kind='rd')
         return self.instruction('add.u64', self.pointers[buffer], byte_offset, kind='rd')
 
+    # -- Elementwise operations -----------------------------------------------
+
     def arithmetic(self, op, args):
         if op == 'where':
             predicate = self.as_predicate(args[0])
@@ -461,13 +488,19 @@ class Compiler:
             return self.instruction('mul.rn.f32', args[0], args[0], kind='f')
         if op == 'erf':
             return self.error_function(args[0])
-        if op == 'copy':
+        if op in ('copy', 'pad'):
             return self.instruction('mov.f32', args[0], kind='f')
+        if op == 'tanh':
+            return self.hyperbolic_tangent(args[0])
+        if op in ('sin', 'cos'):
+            return self.sine_cosine(args[0], cosine=op == 'cos')
+        if op == 'pow':
+            return self.power(*args)
         opcode = {'add': 'add.rn.f32', 'subtract': 'sub.rn.f32',
                   'multiply': 'mul.rn.f32', 'divide': 'div.rn.f32',
                   'maximum': 'max.f32', 'minimum': 'min.f32',
                   'negative': 'neg.f32', 'sqrt': 'sqrt.rn.f32',
-                  'tanh': 'tanh.approx.f32', 'absolute': 'abs.f32', 'abs': 'abs.f32',
+                  'absolute': 'abs.f32', 'abs': 'abs.f32',
                   'rsqrt': 'rsqrt.approx.f32', 'reciprocal': 'rcp.rn.f32'}
         if op == 'relu':
             return self.instruction('max.f32', args[0], '0f00000000', kind='f')
@@ -478,14 +511,14 @@ class Compiler:
             sigmoid = self.instruction('rcp.rn.f32', denominator, kind='f')
             return sigmoid if op == 'sigmoid' else self.instruction('mul.rn.f32', args[0], sigmoid, kind='f')
         if op in ('exp', 'exp_fast'):
-            scaled = self.instruction('mul.rn.f32', args[0], self.floating(math.log2(math.e)), kind='f')
-            return self.instruction('ex2.approx.f32', scaled, kind='f')
-        if op in ('log', 'log2', 'log10'):
+            return self.exponential(args[0])
+        if op == 'log':
+            return self.natural_log(args[0])
+        if op in ('log2', 'log10'):
             logarithm = self.instruction('lg2.approx.f32', args[0], kind='f')
             if op == 'log2':
                 return logarithm
-            scale = math.log(2) if op == 'log' else math.log10(2)
-            return self.instruction('mul.rn.f32', logarithm, self.floating(scale), kind='f')
+            return self.instruction('mul.rn.f32', logarithm, self.floating(math.log10(2)), kind='f')
         if op == 'exp2':
             return self.instruction('ex2.approx.f32', args[0], kind='f')
         if op not in opcode:
@@ -518,6 +551,246 @@ class Compiler:
         ordinary = self.instruction('selp.f32', negative, positive, sign, kind='f')
         small = self.instruction('setp.le.f32', magnitude, self.floating(1), kind='p')
         return self.instruction('selp.f32', near_zero, ordinary, small, kind='f')
+
+    # -- Own f32 math library -------------------------------------------------
+    # Emmy's reference kernels call CUDA's accurate libm (expf, tanhf, logf,
+    # sinf, cosf, powf: 1-4 ULP), so hidden tolerances may be tight. These
+    # routines reach that accuracy with ordinary PTX arithmetic: range
+    # reduction, short polynomials evaluated with FMA, and explicit IEEE
+    # special cases. Hardware .approx instructions are not used here.
+
+    def f32(self, opcode, *args):
+        return self.instruction(opcode, *args, kind='f')
+
+    def exponential(self, value):
+        """expf: ex2(t) for t = rn(x*log2(e)), corrected for the rounding of t.
+
+        The product's exact rounding error (one FMA) plus the low part of log2(e)
+        give d = x*log2(e) - t; then e**x = ex2(t) * (1 + d*ln2). The correction is
+        computed beside ex2, so the dependent chain grows by one FMA only.
+        """
+        t = self.f32('mul.rn.f32', value, self.floating(1.4426950216293335))
+        power = self.f32('ex2.approx.f32', t)
+        error = self.f32('fma.rn.f32', value, self.floating(1.4426950216293335), self.f32('neg.f32', t))
+        error = self.f32('fma.rn.f32', value, self.floating(1.925963033500011e-08), error)
+        correction = self.f32('mul.rn.f32', error, self.floating(math.log(2)))
+        corrected = self.f32('fma.rn.f32', power, correction, power)
+        # Once ex2 has overflowed to inf or underflowed to 0 that is the answer;
+        # the correction would only turn it into NaN.
+        saturated = self.instruction('setp.eq.f32', power, self.floating(math.inf), kind='p')
+        saturated = self.instruction('setp.eq.or.f32', power, self.floating(0), saturated, kind='p')
+        return self.f32('selp.f32', power, corrected, saturated)
+
+    def hyperbolic_tangent(self, value):
+        """tanhf: odd minimax polynomial for |x| < 0.55, 1 - 2/(e**2|x| + 1) beyond."""
+        square = self.f32('mul.rn.f32', value, value)
+        # Fitted (relative-error Lawson iteration) to tanh(x)/x - 1 on [0, 0.55];
+        # approximation error 9.4e-10, below half an f32 ULP.
+        series = self.floating(-0.006235561333596706)
+        for coefficient in (0.021039677783846855, -0.053842708468437195, 0.13332460820674896, -0.3333331048488617):
+            series = self.f32('fma.rn.f32', series, square, self.floating(coefficient))
+        series = self.f32('mul.rn.f32', series, square)
+        # x + x*z*P(z) keeps subnormals exact; zero returns itself to keep its sign.
+        small = self.f32('fma.rn.f32', value, series, value)
+        small = self.f32('selp.f32', value, small, self.instruction('setp.eq.f32', value, self.floating(0), kind='p'))
+        magnitude = self.f32('abs.f32', value)
+        growth = self.exponential(self.f32('add.rn.f32', magnitude, magnitude))
+        quotient = self.f32('rcp.rn.f32', self.f32('add.rn.f32', growth, self.floating(1)))
+        large = self.f32('fma.rn.f32', quotient, self.floating(-2), self.floating(1))
+        negative = self.instruction('setp.lt.f32', value, self.floating(0), kind='p')
+        large = self.f32('selp.f32', self.f32('neg.f32', large), large, negative)
+        # NaN fails the comparison and takes the large path, which propagates it.
+        near_zero = self.instruction('setp.lt.f32', magnitude, self.floating(0.55), kind='p')
+        return self.f32('selp.f32', small, large, near_zero)
+
+    def natural_log(self, value):
+        """logf: fdlibm's argument reduction to [sqrt(1/2), sqrt(2)) and minimax tail."""
+        subnormal = self.instruction('setp.lt.f32', value, self.floating(2**-126), kind='p')
+        normal = self.f32('selp.f32', self.f32('mul.rn.f32', value, self.floating(2**25)), value, subnormal)
+        bias = self.instruction('selp.s32', -25, 0, subnormal)
+        bits = self.instruction('mov.b32', normal)
+        # Shift so the mantissa boundary falls at sqrt(2) instead of 2.
+        bits = self.instruction('add.s32', bits, 0x3f800000 - 0x3f3504f3)
+        exponent = self.instruction('shr.s32', bits, 23)
+        exponent = self.instruction('add.s32', exponent, bias)
+        exponent = self.f32('cvt.rn.f32.s32', self.instruction('sub.s32', exponent, 127))
+        mantissa = self.instruction('and.b32', bits, 0x007fffff)
+        mantissa = self.f32('mov.b32', self.instruction('add.s32', mantissa, 0x3f3504f3))
+        f = self.f32('sub.rn.f32', mantissa, self.floating(1))
+        s = self.f32('div.rn.f32', f, self.f32('add.rn.f32', f, self.floating(2)))
+        z = self.f32('mul.rn.f32', s, s)
+        w = self.f32('mul.rn.f32', z, z)
+        odd = self.f32('fma.rn.f32', w, self.floating(0.24279078841), self.floating(0.40000972152))
+        even = self.f32('fma.rn.f32', w, self.floating(0.28498786688), self.floating(0.66666662693))
+        tail = self.f32('add.rn.f32', self.f32('mul.rn.f32', w, odd), self.f32('mul.rn.f32', z, even))
+        half_square = self.f32('mul.rn.f32', self.f32('mul.rn.f32', f, f), self.floating(0.5))
+        result = self.f32('mul.rn.f32', s, self.f32('add.rn.f32', half_square, tail))
+        result = self.f32('fma.rn.f32', exponent, self.floating(9.0580006145e-06), result)
+        result = self.f32('sub.rn.f32', result, half_square)
+        result = self.f32('add.rn.f32', result, f)
+        result = self.f32('fma.rn.f32', exponent, self.floating(6.9313812256e-01), result)
+        # Special operands: +inf and NaN return themselves, zero gives -inf, negatives NaN.
+        passthrough = self.instruction('setp.geu.f32', value, self.floating(math.inf), kind='p')
+        result = self.f32('selp.f32', value, result, passthrough)
+        negative = self.instruction('setp.lt.f32', value, self.floating(0), kind='p')
+        result = self.f32('selp.f32', '0f7FFFFFFF', result, negative)
+        zero = self.instruction('setp.eq.f32', value, self.floating(0), kind='p')
+        return self.f32('selp.f32', '0fFF800000', result, zero)
+
+    # 192 bits of 2/pi, most significant word first, for Payne-Hanek reduction.
+    TWO_OVER_PI = (0xa2f9836e, 0x4e441529, 0xfc2757d1, 0xf534ddc0, 0xdb629599, 0x3c439041)
+
+    def sine_cosine(self, value, cosine):
+        """sinf/cosf: reduce to r = x - q*pi/2, |r| <= pi/4, then Cephes polynomials."""
+        magnitude = self.f32('abs.f32', value)
+        q = self.f32('cvt.rni.f32.f32', self.f32('mul.rn.f32', value, self.floating(2/math.pi)))
+        # Three-part pi/2 with FMA (Cody-Waite) is accurate while q fits 17 bits.
+        reduced = self.f32('fma.rn.f32', q, self.floating(-1.5707963705062866), value)
+        reduced = self.f32('fma.rn.f32', q, self.floating(4.371138828673793e-08), reduced)
+        reduced = self.f32('fma.rn.f32', q, self.floating(1.7151245100058819e-15), reduced)
+        quadrant = self.instruction('cvt.rzi.s32.f32', q)
+        huge = self.instruction('setp.gt.f32', magnitude, self.floating(105615), kind='p')
+        finite = self.instruction('setp.lt.f32', magnitude, self.floating(math.inf), kind='p')
+        huge = self.instruction('and.pred', huge, finite, kind='p')
+        done = self.label('reduced')
+        self.emit(f'@!{huge} bra {done};')
+        self.payne_hanek(value, magnitude, reduced, quadrant)
+        self.emit(done + ':')
+        if cosine:
+            # cos(x) = sin(x + pi/2): advance the quadrant by one.
+            quadrant = self.instruction('add.s32', quadrant, 1)
+        z = self.f32('mul.rn.f32', reduced, reduced)
+        sine = self.f32('fma.rn.f32', z, self.floating(-1.9515295891e-4), self.floating(8.3321608736e-3))
+        sine = self.f32('fma.rn.f32', sine, z, self.floating(-1.6666654611e-1))
+        sine = self.f32('fma.rn.f32', self.f32('mul.rn.f32', sine, z), reduced, reduced)
+        # Reduction turns -0 into +0; sin(+-0) must return the argument itself.
+        signed_zero = self.instruction('setp.eq.f32', value, self.floating(0), kind='p')
+        sine = self.f32('selp.f32', value, sine, signed_zero)
+        cos = self.f32('fma.rn.f32', z, self.floating(2.443315711809948e-5), self.floating(-1.388731625493765e-3))
+        cos = self.f32('fma.rn.f32', cos, z, self.floating(4.166664568298827e-2))
+        cos = self.f32('mul.rn.f32', self.f32('mul.rn.f32', cos, z), z)
+        cos = self.f32('add.rn.f32', self.f32('fma.rn.f32', z, self.floating(-0.5), self.floating(1)), cos)
+        odd = self.instruction('and.b32', quadrant, 1)
+        swap = self.instruction('setp.ne.s32', odd, 0, kind='p')
+        result = self.f32('selp.f32', cos, sine, swap)
+        upper = self.instruction('and.b32', quadrant, 2)
+        flip = self.instruction('setp.ne.s32', upper, 0, kind='p')
+        return self.f32('selp.f32', self.f32('neg.f32', result), result, flip)
+
+    def payne_hanek(self, value, magnitude, reduced, quadrant):
+        """Exact reduction for |x| > 105615: multiply the mantissa by 2/pi bits.
+
+        Writes the existing `reduced` and `quadrant` registers. With x = M * 2**(e-31)
+        for a 32-bit mantissa M, x*2/pi = (M * TABLE) * 2**(e-223); the 64 bits
+        around the binary point give the quadrant and a 62-bit fraction.
+        """
+        bits = self.instruction('mov.b32', magnitude)
+        exponent = self.instruction('sub.s32', self.instruction('shr.u32', bits, 23), 127)
+        mantissa = self.instruction('or.b32', self.instruction('shl.b32', bits, 8), '0x80000000')
+        # 224-bit product, least significant 32-bit limb first.
+        limbs, carry = [], None
+        for word in reversed(self.TWO_OVER_PI):
+            wide = self.instruction('mul.wide.u32', mantissa, f'0x{word:08x}', kind='rd')
+            if carry:
+                wide = self.instruction('add.u64', wide, self.instruction('cvt.u64.u32', carry, kind='rd'), kind='rd')
+            limbs.append(self.instruction('cvt.u32.u64', wide))
+            carry = self.instruction('cvt.u32.u64', self.instruction('shr.u64', wide, 32, kind='rd'))
+        limbs.append(carry)
+        # The window's lowest bit is 161 - e; for e in [16, 127] its limb is 1..4.
+        shift = self.instruction('sub.s32', 161, exponent)
+        index = self.instruction('shr.u32', shift, 5)
+        offset = self.instruction('and.b32', shift, 31)
+        def limb(base):
+            chosen = limbs[base + 1]
+            for i in (2, 3, 4):
+                is_index = self.instruction('setp.eq.u32', index, i, kind='p')
+                chosen = self.instruction('selp.b32', limbs[base + i], chosen, is_index)
+            return chosen
+        low, middle, high = limb(0), limb(1), limb(2)
+        upper = self.instruction('mov.b64', f'{{{middle}, {high}}}', kind='rd')
+        window = self.instruction('shl.b64', upper, self.instruction('sub.u32', 32, offset), kind='rd')
+        tail = self.instruction('cvt.u64.u32', self.instruction('shr.u32', low, offset), kind='rd')
+        window = self.instruction('or.b64', window, tail, kind='rd')
+        # Top two bits are the quadrant; the remaining 62 bits, read as a signed
+        # fraction, round the quadrant to nearest and give r/(pi/2) in [-1/2, 1/2).
+        fraction = self.instruction('shl.b64', window, 2, kind='rd')
+        rounds_up = self.instruction('setp.lt.s64', fraction, 0, kind='p')
+        turns = self.instruction('cvt.u32.u64', self.instruction('shr.u64', window, 62, kind='rd'))
+        turns = self.instruction('add.s32', turns, self.instruction('selp.s32', 1, 0, rounds_up))
+        angle = self.instruction('cvt.rn.f64.s64', fraction, kind='fd')
+        angle = self.instruction('mul.rn.f64', angle, f'0d{struct.pack(">d", math.pi / 2 * 2**-64).hex().upper()}', kind='fd')
+        angle = self.f32('cvt.rn.f32.f64', angle)
+        # sin is odd: a negative argument negates r and the quadrant.
+        negative = self.instruction('setp.lt.f32', value, self.floating(0), kind='p')
+        self.emit(f'selp.f32 {reduced}, {self.f32("neg.f32", angle)}, {angle}, {negative};')
+        self.emit(f'selp.s32 {quadrant}, {self.instruction("neg.s32", turns)}, {turns}, {negative};')
+
+    def double(self, value):
+        return '0d' + struct.pack('>d', float(value)).hex().upper()
+
+    def f64(self, opcode, *args):
+        return self.instruction(opcode, *args, kind='fd')
+
+    def power(self, base, exponent):
+        """powf: exp(y * log|x|) evaluated in f64, then C99 sign and special cases."""
+        magnitude = self.f64('cvt.f64.f32', self.f32('abs.f32', base))
+        # log|x| in f64: |x| = m * 2**k with m in [sqrt(1/2), sqrt(2)).
+        high, low = self.reg(), self.reg()
+        self.emit(f'mov.b64 {{{low}, {high}}}, {magnitude};')
+        high = self.instruction('add.s32', high, 0x3ff00000 - 0x3fe6a09e)
+        k = self.instruction('sub.s32', self.instruction('shr.s32', high, 20), 1023)
+        high = self.instruction('add.s32', self.instruction('and.b32', high, 0x000fffff), 0x3fe6a09e)
+        m = self.f64('mov.b64', f'{{{low}, {high}}}')
+        f = self.f64('sub.rn.f64', m, self.double(1))
+        s = self.f64('div.rn.f64', f, self.f64('add.rn.f64', f, self.double(2)))
+        z = self.f64('mul.rn.f64', s, s)
+        # log(m) = 2*atanh(s) = 2s * sum z**i/(2i+1); |s| < 0.172 so 9 terms suffice.
+        series = self.double(1/17)
+        for i in range(7, -1, -1):
+            series = self.f64('fma.rn.f64', series, z, self.double(1/(2*i + 1)))
+        logarithm = self.f64('mul.rn.f64', self.f64('add.rn.f64', s, s), series)
+        logarithm = self.f64('fma.rn.f64', self.f64('cvt.rn.f64.s32', k), self.double(math.log(2)), logarithm)
+        zero = self.instruction('setp.eq.f64', magnitude, self.double(0), kind='p')
+        logarithm = self.f64('selp.f64', self.double(-math.inf), logarithm, zero)
+        infinite = self.instruction('setp.eq.f64', magnitude, self.double(math.inf), kind='p')
+        logarithm = self.f64('selp.f64', magnitude, logarithm, infinite)
+        one = self.instruction('setp.eq.f64', magnitude, self.double(1), kind='p')
+        t = self.f64('mul.rn.f64', self.f64('cvt.f64.f32', exponent), logarithm)
+        t = self.f64('selp.f64', self.double(0), t, one)
+        # exp(t) in f64, clamped where the f32 result is already inf or zero.
+        t = self.f64('max.f64', self.f64('min.f64', t, self.double(100)), self.double(-120))
+        n = self.f64('cvt.rni.f64.f64', self.f64('mul.rn.f64', t, self.double(1/math.log(2))))
+        r = self.f64('fma.rn.f64', n, self.double(-0.6931471803691238), t)
+        r = self.f64('fma.rn.f64', n, self.double(-1.9082149292705877e-10), r)
+        series = self.double(1/math.factorial(12))
+        for order in range(11, -1, -1):
+            series = self.f64('fma.rn.f64', series, r, self.double(1/math.factorial(order)))
+        scale_bits = self.instruction('shl.b32', self.instruction('add.s32', self.instruction('cvt.rzi.s32.f64', n), 1023), 20)
+        scale = self.f64('mov.b64', f"{{{self.instruction('mov.b32', 0)}, {scale_bits}}}")
+        result = self.f32('cvt.rn.f32.f64', self.f64('mul.rn.f64', series, scale))
+        # Sign: a negative base with an odd integer exponent gives a negative result.
+        whole = self.f32('cvt.rzi.f32.f32', exponent)
+        integral = self.instruction('setp.eq.f32', whole, exponent, kind='p')
+        half = self.f32('mul.rn.f32', exponent, self.floating(0.5))
+        odd = self.instruction('setp.ne.f32', self.f32('cvt.rzi.f32.f32', half), half, kind='p')
+        odd = self.instruction('and.pred', odd, integral, kind='p')
+        sign = self.instruction('setp.lt.s32', self.instruction('mov.b32', base), 0, kind='p')
+        flip = self.instruction('and.pred', sign, odd, kind='p')
+        result = self.f32('selp.f32', self.f32('neg.f32', result), result, flip)
+        # Only finite negative bases are invalid: pow(-inf, 0.5) is +inf, like C99.
+        negative = self.instruction('setp.lt.f32', base, self.floating(0), kind='p')
+        finite = self.instruction('setp.gt.f32', base, self.floating(-math.inf), kind='p')
+        negative = self.instruction('and.pred', negative, finite, kind='p')
+        fractional = self.instruction('and.pred', negative, self.instruction('not.pred', integral, kind='p'), kind='p')
+        nan = self.instruction('setp.nan.f32', base, exponent, kind='p')
+        invalid = self.instruction('or.pred', fractional, nan, kind='p')
+        result = self.f32('selp.f32', '0f7FFFFFFF', result, invalid)
+        # pow(x, 0) = 1 and pow(1, y) = 1 even for NaN operands.
+        unit = self.instruction('setp.eq.f32', exponent, self.floating(0), kind='p')
+        unit = self.instruction('or.pred', unit, self.instruction('setp.eq.f32', base, self.floating(1), kind='p'), kind='p')
+        return self.f32('selp.f32', self.floating(1), result, unit)
+
+    # -- Statements: scopes, reductions and lowering --------------------------
 
     def combine(self, stmt):
         """Apply a reduction's merge program with its proven neutral state.
@@ -587,249 +860,308 @@ class Compiler:
         self.pointers, self.shapes, self.shared = pointers, shapes, shared
 
     def statement(self, stmt):
-        if isinstance(stmt, Tile):
-            if stmt.aux_threads:
-                raise NotImplementedError('Auxiliary threads')
-            extents = [a.extent.value for a in stmt.axes]
-            if 0 in extents:
-                return
-            # Raster grouping permutes block visitation for locality. Canonical
-            # row-major visitation covers the same independent logical tiles.
-            tid = self.instruction('mov.u32', '%tid.x')
-            self.values['lane'] = self.instruction('rem.u32', tid, 32)
-            self.values['warp'] = self.instruction('div.u32', tid, 32)
-            bid = self.instruction('mov.u32', '%ctaid.x')
-            width = str(stmt.block_threads) if stmt.block_threads else self.instruction('mov.u32', '%ntid.x')
-            gid = self.instruction('mad.lo.s32', bid, width, tid)
-            guard = self.instruction('setp.ge.u32', gid, math.prod(extents), kind='p')
-            end = self.label('tile_end')
-            self.emit(f'@{guard} bra {end};')
-            stride = math.prod(extents)
-            for axis, extent in zip(stmt.axes, extents):
-                stride //= extent
-                quotient = self.instruction('div.u32', gid, stride)
-                self.values[axis.name] = self.instruction('rem.u32', quotient, extent)
-                self.index_ranges[self.values[axis.name]] = (0, extent-1)
-            self.body(stmt.body)
-            self.emit(end + ':')
-        elif isinstance(stmt, Init):
-            self.values[stmt.name] = self.instruction('mov.f32', self.floating(stmt.identity), kind='f')
-            self.identities[stmt.name] = stmt.identity
-        elif isinstance(stmt, CpAsyncCopy):
-            if stmt.swizzle != 'NONE':
-                raise NotImplementedError('Shared-memory swizzle')
-            index = stmt.smem_index
-            if stmt.lane_index is not None:
-                index = tuple(BinaryExpr('+', origin, lane) for origin, lane in zip(index, stmt.lane_index))
-            dst = self.address(stmt.smem, index)
-            src = self.address(stmt.src, stmt.src_index)
-            self.emit(f'cp.async.ca.shared.global [{dst}], [{src}], {stmt.nbytes};')
-        elif isinstance(stmt, CpAsyncCommit):
-            self.emit('cp.async.commit_group;')
-        elif isinstance(stmt, CpAsyncWait):
-            self.emit(f'cp.async.wait_group {stmt.group};')
-        elif isinstance(stmt, Smem):
-            self.shapes[stmt.name] = tuple(stmt.extents)
-            symbol = self.shared_symbols[id(stmt)]
-            self.shared[stmt.name] = symbol
-            if self.dynamic_shared:
-                base = self.instruction('mov.u32', 'shared_pool')
-                self.pointers[stmt.name] = self.instruction('add.u32', base, self.shared_offsets[id(stmt)])
-            else:
-                self.pointers[stmt.name] = self.instruction('mov.u32', symbol)
-        elif isinstance(stmt, Sync):
-            if stmt.warp:
-                self.emit('bar.warp.sync 0xffffffff;')
-            else:
-                count = f', {stmt.count}' if stmt.count else ''
-                self.emit(f'bar.sync {stmt.barrier_id}{count};')
-        elif isinstance(stmt, Cond):
-            other, end = self.label('else'), self.label('endif')
-            predicate = self.predicate(stmt.cond)
-            self.emit(f'@!{predicate} bra {other};')
-            self.scoped_body(stmt.body)
-            self.emit(f'bra {end};')
-            self.emit(other + ':')
-            self.scoped_body(stmt.else_body)
-            self.emit(end + ':')
-        elif isinstance(stmt, WarpShuffle):
-            distance = stmt.length // 2
-            while distance:
-                for state, other in zip(stmt.state, stmt.state_b):
-                    self.values[other] = self.instruction('shfl.sync.bfly.b32', self.values[state], distance, 31, '0xffffffff', kind='f')
-                self.combine(stmt)
-                distance //= 2
-        elif isinstance(stmt, TreeHalve):
-            if self.observed_tree_buffers.intersection(stmt.bufs):
-                self.shared_tree(stmt)
-                return
-            # Preserve the binary tree's operand order, even for coupled or
-            # noncommutative merge programs. Scratch writes are dead on this path.
-            def slot(index):
-                if stmt.inner is None:
-                    return Literal(index, 'int')
-                name, scale = stmt.inner
-                return BinaryExpr('+', Literal(index * scale, 'int'), Var(name))
-            partials = [[self.instruction('ld.shared.f32', f'[{self.address(buffer, (slot(index),))}]',kind='f')
-                         for buffer in stmt.bufs] for index in range(stmt.length)]
-            half = stmt.length // 2
-            while half:
-                for index in range(half):
-                    self.values.update(zip(stmt.state,partials[index]))
-                    self.values.update(zip(stmt.state_b,partials[index+half]))
-                    self.combine(stmt)
-                    partials[index] = [self.values[name] for name in stmt.state]
-                half //= 2
-            self.values.update(zip(stmt.state,partials[0]))
-            if stmt.length > 1:
-                self.statement(Sync(barrier_id=stmt.barrier_id,count=stmt.barrier_count))
-        elif isinstance(stmt, (Loop, StridedLoop)):
-            enclosing_values, enclosing_identities = self.values.copy(), self.identities.copy()
-            carried = self.accumulators(stmt.body, stmt.axis.name)
-            folds = carried if stmt.seed else {}
-            for name, fold in folds.items():
-                register = self.reg('f')
-                self.values[name] = register
-                identity = {'add': 0.0, 'multiply': 1.0, 'maximum': -math.inf, 'minimum': math.inf}[fold.op.name]
-                self.identities[name] = identity
-                self.emit(f'mov.f32 {register}, {self.floating(identity)};')
-            axis = self.reg()
-            start = self.integer(stmt.start) if isinstance(stmt, StridedLoop) else '0'
-            start_bounds = self.index_interval(stmt.start) if isinstance(stmt, StridedLoop) else None
-            self.values[stmt.axis.name] = axis
-            dynamic_step = (isinstance(stmt, StridedLoop) and hasattr(stmt.step, 'free_vars')
-                            and bool({stmt.axis.name, stmt.axis.name + '_end'} & stmt.step.free_vars()))
-            axis_end = (isinstance(stmt, StridedLoop) and stmt.end is not None
-                        and stmt.axis.name in stmt.end.free_vars())
-            step = None if dynamic_step else self.integer(stmt.step) if isinstance(stmt, StridedLoop) else '1'
-            end = None if axis_end else self.integer(stmt.end) if isinstance(stmt, StridedLoop) and stmt.end is not None else str(stmt.axis.extent.value)
-            # Expand only straight-line shared-memory scalar inner loops.
-            # Bound expansion by extent and a statement budget to expose ILP
-            # without unbounded code growth; preserve ordered scalar tails.
-            factor = 1
-            remainder = 0
-            if (isinstance(stmt, Loop) and 4 <= stmt.axis.extent.value <= 1024
-                    and len(stmt.body) <= 64
-                    and any(isinstance(s, Load) for s in stmt.body)
-                    and all(isinstance(s, (Load, Assign, Accum, Let, Init, Select)) for s in stmt.body)
-                    and all(not isinstance(s, Load) or s.input in self.shared for s in stmt.body)):
-                limit = min(64, stmt.axis.extent.value, 1024 // len(stmt.body))
-                factor = 1 << (limit.bit_length() - 1)
-                remainder = stmt.axis.extent.value % factor
-                end = str(stmt.axis.extent.value - remainder)
-                step = str(factor)
-            self.emit(f'mov.u32 {axis}, {start};')
-            if axis_end:
-                if start_bounds is not None:
-                    self.index_ranges[axis] = start_bounds
-                end = self.integer(stmt.end)
-                self.index_ranges.pop(axis, None)
-            if isinstance(stmt, StridedLoop) and stmt.end is not None:
-                self.values[stmt.axis.name + '_end'] = end
-            if isinstance(stmt, Loop) and 0 < stmt.axis.extent.value < (1 << 31):
-                self.index_ranges[axis] = (0, stmt.axis.extent.value-1)
-            elif isinstance(stmt, StridedLoop):
-                lower = start_bounds
-                stride_bounds = None if dynamic_step else self.index_interval(stmt.step)
-                upper = None if axis_end else self.index_interval(stmt.end) if stmt.end is not None else (stmt.axis.extent.value,)*2
-                if (lower is not None and stride_bounds is not None and upper is not None
-                        and lower[0] >= 0 and stride_bounds[0] > 0
-                        and lower[1] < upper[1] and upper[1] + stride_bounds[1] < (1 << 31)):
-                    self.index_ranges[axis] = (lower[0], upper[1]-1)
-            head, tail = self.label('loop'), self.label('loop_end')
-            self.emit(head + ':')
-            done = self.instruction('setp.ge.s32', axis, end, kind='p')
-            self.emit(f'@{done} bra {tail};')
-            cross = self.cross_iteration_loads(stmt) if factor > 1 else set()
-            width = 4 if (factor >= 4 and cross
-                          and cross == self.cross_iteration_loads(stmt, 4)) else 2
-            for offset in range(factor):
-                self.cross_loads = cross
-                self.cross_width = width
-                self.cross_phase = offset % width
-                if not self.cross_phase:
-                    self.cross_cache = {}
-                self.values[stmt.axis.name] = axis if offset == 0 else self.instruction('add.s32', axis, offset)
-                if axis in self.index_ranges:
-                    self.index_ranges[self.values[stmt.axis.name]] = self.index_ranges[axis]
-                self.scoped_body(stmt.body)
-            self.cross_loads = set()
-            self.cross_cache = {}
-            self.values[stmt.axis.name] = axis
-            if dynamic_step:
-                step = self.integer(stmt.step)
-            self.emit(f'add.s32 {axis}, {axis}, {step};')
-            self.emit(f'bra {head};')
-            self.emit(tail + ':')
-            for offset in range(remainder):
-                self.values[stmt.axis.name] = axis if offset == 0 else self.instruction('add.s32', axis, offset)
-                if axis in self.index_ranges:
-                    self.index_ranges[self.values[stmt.axis.name]] = self.index_ranges[axis]
-                self.scoped_body(stmt.body)
-            if remainder:
-                self.emit(f'add.s32 {axis}, {axis}, {remainder};')
-            self.values[stmt.axis.name] = axis
-            results = {name: self.values[name] for name in carried}
-            neutrals = {name: self.identities[name] for name in carried if name in self.identities}
-            self.values = enclosing_values | results
-            self.identities = enclosing_identities | neutrals
-        elif isinstance(stmt, Select):
-            value = self.as_float(self.values[stmt.branches[-1].value])
-            for branch in reversed(stmt.branches[:-1]):
-                condition = self.predicate(branch.select)
-                value = self.instruction('selp.f32', self.as_float(self.values[branch.value]), value, condition, kind='f')
-            self.values[stmt.name] = value
-        elif isinstance(stmt, Let):
-            bounds = self.index_interval(stmt.value)
-            if isinstance(stmt.value, Literal):
-                dtype = stmt.dtype.name if stmt.dtype is not None else stmt.value.dtype
-                if dtype == 'bool':
-                    self.values[stmt.name] = self.as_predicate(self.expression(stmt.value))
-                elif dtype in ('int','i32','u32'):
-                    literal = int(stmt.value.value)
-                    self.values[stmt.name] = self.instruction('mov.b32', literal)
-                    bounds = (literal, literal) if -(1 << 31) <= literal < (1 << 31) else None
-                else:
-                    self.values[stmt.name] = self.instruction('mov.f32', self.floating(stmt.value.value), kind='f')
-            else:
-                value = self.expression(stmt.value)
-                if stmt.dtype is not None:
-                    value = (self.as_float(value) if stmt.dtype.name == 'f32'
-                             else self.as_predicate(value) if stmt.dtype.name == 'bool'
-                             else self.as_integer(value, cast_float=True))
-                if isinstance(stmt.value, Var) and value == self.values[stmt.value.name]:
-                    # A pure binding captures the current value. Aliasing the
-                    # source register would observe later accumulator updates.
-                    kind = 'f' if value.startswith('%f') else 'p' if value.startswith('%p') else 'r'
-                    opcode = {'f': 'mov.f32', 'p': 'mov.pred', 'r': 'mov.b32'}[kind]
-                    value = self.instruction(opcode, value, kind=kind)
-                self.values[stmt.name] = value
-            if bounds is not None and self.values[stmt.name].startswith('%r'):
-                self.index_ranges[self.values[stmt.name]] = bounds
-        elif isinstance(stmt, Accum):
-            self.accumulate(stmt)
-        elif isinstance(stmt, Load):
-            if stmt.dtype is not None and stmt.dtype.name != 'f32':
-                raise NotImplementedError(f'Load dtype {stmt.dtype}')
-            for i, name in enumerate(stmt.names):
-                space = 'shared' if stmt.input in self.shared else 'global'
-                self.values[name] = self.instruction(f'ld.{space}.f32', f'[{self.address(stmt.input, stmt.index, i)}]', kind='f')
-        elif isinstance(stmt, Assign):
-            value = self.arithmetic(stmt.op.name, [self.values[a] for a in stmt.args])
-            if stmt.dtype is not None:
-                if stmt.dtype.name == 'bool':
-                    value = self.as_predicate(value)
-                elif stmt.dtype.name == 'f32' and value.startswith('%p'):
-                    value = self.as_float(value)
-            self.values[stmt.name] = value
-        elif isinstance(stmt, Write):
-            for i, value in enumerate(stmt.values):
-                address = self.address(stmt.output, stmt.index, i)
-                space = 'shared' if stmt.output in self.shared else 'global'
-                opcode = f'red.{space}.add.f32' if stmt.atomic else f'st.{space}.f32'
-                self.emit(f'{opcode} [{address}], {self.as_float(self.values[value])};')
+        """Lower one IR statement by dispatching on its kind."""
+        for kinds, method in self.LOWERINGS:
+            if isinstance(stmt, kinds):
+                return method(self, stmt)
+        raise NotImplementedError(f'Statement {type(stmt).__name__}')
+
+    def lower_tile(self, stmt):
+        """Map the Tile domain onto the 1-D launch, guard extra threads and decode axes."""
+        if stmt.aux_threads:
+            raise NotImplementedError('Auxiliary threads')
+        extents = [a.extent.value for a in stmt.axes]
+        if 0 in extents:
+            return
+        # Raster grouping permutes block visitation for locality. Canonical
+        # row-major visitation covers the same independent logical tiles.
+        tid = self.instruction('mov.u32', '%tid.x')
+        self.values['lane'] = self.instruction('rem.u32', tid, 32)
+        self.values['warp'] = self.instruction('div.u32', tid, 32)
+        bid = self.instruction('mov.u32', '%ctaid.x')
+        width = str(stmt.block_threads) if stmt.block_threads else self.instruction('mov.u32', '%ntid.x')
+        gid = self.instruction('mad.lo.s32', bid, width, tid)
+        guard = self.instruction('setp.ge.u32', gid, math.prod(extents), kind='p')
+        end = self.label('tile_end')
+        self.emit(f'@{guard} bra {end};')
+        stride = math.prod(extents)
+        for axis, extent in zip(stmt.axes, extents):
+            stride //= extent
+            quotient = self.instruction('div.u32', gid, stride)
+            self.values[axis.name] = self.instruction('rem.u32', quotient, extent)
+            self.index_ranges[self.values[axis.name]] = (0, extent-1)
+        self.body(stmt.body)
+        self.emit(end + ':')
+
+    def lower_init(self, stmt):
+        """Seed carried state with its literal identity."""
+        self.values[stmt.name] = self.instruction('mov.f32', self.floating(stmt.identity), kind='f')
+        self.identities[stmt.name] = stmt.identity
+
+    def lower_cp_async_copy(self, stmt):
+        """Copy 4, 8 or 16 bytes global to shared with one cp.async."""
+        if stmt.swizzle != 'NONE':
+            raise NotImplementedError('Shared-memory swizzle')
+        index = stmt.smem_index
+        if stmt.lane_index is not None:
+            index = tuple(BinaryExpr('+', origin, lane) for origin, lane in zip(index, stmt.lane_index))
+        dst = self.address(stmt.smem, index)
+        src = self.address(stmt.src, stmt.src_index)
+        self.emit(f'cp.async.ca.shared.global [{dst}], [{src}], {stmt.nbytes};')
+
+    def lower_cp_async_commit(self, stmt):
+        self.emit('cp.async.commit_group;')
+
+    def lower_cp_async_wait(self, stmt):
+        self.emit(f'cp.async.wait_group {stmt.group};')
+
+    def lower_smem(self, stmt):
+        """Bind a shared array to its declaration-owned static symbol or pool offset."""
+        self.shapes[stmt.name] = tuple(stmt.extents)
+        symbol = self.shared_symbols[id(stmt)]
+        self.shared[stmt.name] = symbol
+        if self.dynamic_shared:
+            base = self.instruction('mov.u32', 'shared_pool')
+            self.pointers[stmt.name] = self.instruction('add.u32', base, self.shared_offsets[id(stmt)])
         else:
-            raise NotImplementedError(f'Statement {type(stmt).__name__}')
+            self.pointers[stmt.name] = self.instruction('mov.u32', symbol)
+
+    def lower_sync(self, stmt):
+        """Warp, CTA or named-barrier synchronization."""
+        if stmt.warp:
+            self.emit('bar.warp.sync 0xffffffff;')
+        else:
+            count = f', {stmt.count}' if stmt.count else ''
+            self.emit(f'bar.sync {stmt.barrier_id}{count};')
+
+    def lower_cond(self, stmt):
+        """Predicated branch; each side gets its own lexical scope."""
+        other, end = self.label('else'), self.label('endif')
+        predicate = self.predicate(stmt.cond)
+        self.emit(f'@!{predicate} bra {other};')
+        self.scoped_body(stmt.body)
+        self.emit(f'bra {end};')
+        self.emit(other + ':')
+        self.scoped_body(stmt.else_body)
+        self.emit(end + ':')
+
+    def lower_warp_shuffle(self, stmt):
+        """XOR butterfly over the lanes, merging states at each distance."""
+        distance = stmt.length // 2
+        while distance:
+            for state, other in zip(stmt.state, stmt.state_b):
+                self.values[other] = self.instruction('shfl.sync.bfly.b32', self.values[state], distance, 31, '0xffffffff', kind='f')
+            self.combine(stmt)
+            distance //= 2
+
+    def lower_tree_halve(self, stmt):
+        """Combine per-warp partials from shared memory as a binary tree."""
+        if self.observed_tree_buffers.intersection(stmt.bufs):
+            self.shared_tree(stmt)
+            return
+        # Preserve the binary tree's operand order, even for coupled or
+        # noncommutative merge programs. Scratch writes are dead on this path.
+        def slot(index):
+            if stmt.inner is None:
+                return Literal(index, 'int')
+            name, scale = stmt.inner
+            return BinaryExpr('+', Literal(index * scale, 'int'), Var(name))
+        partials = [[self.instruction('ld.shared.f32', f'[{self.address(buffer, (slot(index),))}]',kind='f')
+                     for buffer in stmt.bufs] for index in range(stmt.length)]
+        half = stmt.length // 2
+        while half:
+            for index in range(half):
+                self.values.update(zip(stmt.state,partials[index]))
+                self.values.update(zip(stmt.state_b,partials[index+half]))
+                self.combine(stmt)
+                partials[index] = [self.values[name] for name in stmt.state]
+            half //= 2
+        self.values.update(zip(stmt.state,partials[0]))
+        if stmt.length > 1:
+            self.statement(Sync(barrier_id=stmt.barrier_id,count=stmt.barrier_count))
+
+    def lower_loop(self, stmt):
+        """Counted or strided loop with folds, bounded unrolling and range facts."""
+        enclosing_values, enclosing_identities = self.values.copy(), self.identities.copy()
+        carried = self.accumulators(stmt.body, stmt.axis.name)
+        folds = carried if stmt.seed else {}
+        for name, fold in folds.items():
+            register = self.reg('f')
+            self.values[name] = register
+            # The IR's own reduce identity: Emmy uses -1e30, not -inf, for max, so
+            # a lane that folds nothing merges as exp(0) * 0 instead of NaN.
+            identity = fold.op.identity
+            self.identities[name] = identity
+            self.emit(f'mov.f32 {register}, {self.floating(identity)};')
+        axis = self.reg()
+        start = self.integer(stmt.start) if isinstance(stmt, StridedLoop) else '0'
+        start_bounds = self.index_interval(stmt.start) if isinstance(stmt, StridedLoop) else None
+        self.values[stmt.axis.name] = axis
+        dynamic_step = (isinstance(stmt, StridedLoop) and hasattr(stmt.step, 'free_vars')
+                        and bool({stmt.axis.name, stmt.axis.name + '_end'} & stmt.step.free_vars()))
+        axis_end = (isinstance(stmt, StridedLoop) and stmt.end is not None
+                    and stmt.axis.name in stmt.end.free_vars())
+        step = None if dynamic_step else self.integer(stmt.step) if isinstance(stmt, StridedLoop) else '1'
+        end = None if axis_end else self.integer(stmt.end) if isinstance(stmt, StridedLoop) and stmt.end is not None else str(stmt.axis.extent.value)
+        # Expand only straight-line shared-memory scalar inner loops.
+        # Bound expansion by extent and a statement budget to expose ILP
+        # without unbounded code growth; preserve ordered scalar tails.
+        factor = 1
+        remainder = 0
+        if (isinstance(stmt, Loop) and 4 <= stmt.axis.extent.value <= 1024
+                and len(stmt.body) <= 64
+                and any(isinstance(s, Load) for s in stmt.body)
+                and all(isinstance(s, (Load, Assign, Accum, Let, Init, Select)) for s in stmt.body)
+                and all(not isinstance(s, Load) or s.input in self.shared for s in stmt.body)):
+            limit = min(64, stmt.axis.extent.value, 1024 // len(stmt.body))
+            factor = 1 << (limit.bit_length() - 1)
+            remainder = stmt.axis.extent.value % factor
+            end = str(stmt.axis.extent.value - remainder)
+            step = str(factor)
+        self.emit(f'mov.u32 {axis}, {start};')
+        if axis_end:
+            if start_bounds is not None:
+                self.index_ranges[axis] = start_bounds
+            end = self.integer(stmt.end)
+            self.index_ranges.pop(axis, None)
+        if isinstance(stmt, StridedLoop) and stmt.end is not None:
+            self.values[stmt.axis.name + '_end'] = end
+        if isinstance(stmt, Loop) and 0 < stmt.axis.extent.value < (1 << 31):
+            self.index_ranges[axis] = (0, stmt.axis.extent.value-1)
+        elif isinstance(stmt, StridedLoop):
+            lower = start_bounds
+            stride_bounds = None if dynamic_step else self.index_interval(stmt.step)
+            upper = None if axis_end else self.index_interval(stmt.end) if stmt.end is not None else (stmt.axis.extent.value,)*2
+            if (lower is not None and stride_bounds is not None and upper is not None
+                    and lower[0] >= 0 and stride_bounds[0] > 0
+                    and lower[1] < upper[1] and upper[1] + stride_bounds[1] < (1 << 31)):
+                self.index_ranges[axis] = (lower[0], upper[1]-1)
+        head, tail = self.label('loop'), self.label('loop_end')
+        self.emit(head + ':')
+        done = self.instruction('setp.ge.s32', axis, end, kind='p')
+        self.emit(f'@{done} bra {tail};')
+        cross = self.cross_iteration_loads(stmt) if factor > 1 else set()
+        width = 4 if (factor >= 4 and cross
+                      and cross == self.cross_iteration_loads(stmt, 4)) else 2
+        for offset in range(factor):
+            self.cross_loads = cross
+            self.cross_width = width
+            self.cross_phase = offset % width
+            if not self.cross_phase:
+                self.cross_cache = {}
+            self.values[stmt.axis.name] = axis if offset == 0 else self.instruction('add.s32', axis, offset)
+            if axis in self.index_ranges:
+                self.index_ranges[self.values[stmt.axis.name]] = self.index_ranges[axis]
+            self.scoped_body(stmt.body)
+        self.cross_loads = set()
+        self.cross_cache = {}
+        self.values[stmt.axis.name] = axis
+        if dynamic_step:
+            step = self.integer(stmt.step)
+        self.emit(f'add.s32 {axis}, {axis}, {step};')
+        self.emit(f'bra {head};')
+        self.emit(tail + ':')
+        for offset in range(remainder):
+            self.values[stmt.axis.name] = axis if offset == 0 else self.instruction('add.s32', axis, offset)
+            if axis in self.index_ranges:
+                self.index_ranges[self.values[stmt.axis.name]] = self.index_ranges[axis]
+            self.scoped_body(stmt.body)
+        if remainder:
+            self.emit(f'add.s32 {axis}, {axis}, {remainder};')
+        self.values[stmt.axis.name] = axis
+        results = {name: self.values[name] for name in carried}
+        neutrals = {name: self.identities[name] for name in carried if name in self.identities}
+        self.values = enclosing_values | results
+        self.identities = enclosing_identities | neutrals
+
+    def lower_select(self, stmt):
+        """Coordinate-predicated choice between SSA values."""
+        value = self.as_float(self.values[stmt.branches[-1].value])
+        for branch in reversed(stmt.branches[:-1]):
+            condition = self.predicate(branch.select)
+            value = self.instruction('selp.f32', self.as_float(self.values[branch.value]), value, condition, kind='f')
+        self.values[stmt.name] = value
+
+    def lower_let(self, stmt):
+        """Bind a literal or pure expression; capture values instead of aliasing them."""
+        bounds = self.index_interval(stmt.value)
+        if isinstance(stmt.value, Literal):
+            dtype = stmt.dtype.name if stmt.dtype is not None else stmt.value.dtype
+            if dtype == 'bool':
+                self.values[stmt.name] = self.as_predicate(self.expression(stmt.value))
+            elif dtype in ('int','i32','u32'):
+                literal = int(stmt.value.value)
+                self.values[stmt.name] = self.instruction('mov.b32', literal)
+                bounds = (literal, literal) if -(1 << 31) <= literal < (1 << 31) else None
+            else:
+                self.values[stmt.name] = self.instruction('mov.f32', self.floating(stmt.value.value), kind='f')
+        else:
+            value = self.expression(stmt.value)
+            if stmt.dtype is not None:
+                value = (self.as_float(value) if stmt.dtype.name == 'f32'
+                         else self.as_predicate(value) if stmt.dtype.name == 'bool'
+                         else self.as_integer(value, cast_float=True))
+            if isinstance(stmt.value, Var) and value == self.values[stmt.value.name]:
+                # A pure binding captures the current value. Aliasing the
+                # source register would observe later accumulator updates.
+                kind = 'f' if value.startswith('%f') else 'p' if value.startswith('%p') else 'r'
+                opcode = {'f': 'mov.f32', 'p': 'mov.pred', 'r': 'mov.b32'}[kind]
+                value = self.instruction(opcode, value, kind=kind)
+            self.values[stmt.name] = value
+        if bounds is not None and self.values[stmt.name].startswith('%r'):
+            self.index_ranges[self.values[stmt.name]] = bounds
+
+    def lower_accum(self, stmt):
+        self.accumulate(stmt)
+
+    def lower_load(self, stmt):
+        """Scalar or consecutive loads from global or shared memory."""
+        if stmt.dtype is not None and stmt.dtype.name != 'f32':
+            raise NotImplementedError(f'Load dtype {stmt.dtype}')
+        for i, name in enumerate(stmt.names):
+            space = 'shared' if stmt.input in self.shared else 'global'
+            self.values[name] = self.instruction(f'ld.{space}.f32', f'[{self.address(stmt.input, stmt.index, i)}]', kind='f')
+
+    def lower_assign(self, stmt):
+        """One elementwise operation over SSA values."""
+        value = self.arithmetic(stmt.op.name, [self.values[a] for a in stmt.args])
+        if stmt.dtype is not None:
+            if stmt.dtype.name == 'bool':
+                value = self.as_predicate(value)
+            elif stmt.dtype.name == 'f32' and value.startswith('%p'):
+                value = self.as_float(value)
+        self.values[stmt.name] = value
+
+    def lower_write(self, stmt):
+        """Plain or atomic-add stores, one per value."""
+        for i, value in enumerate(stmt.values):
+            address = self.address(stmt.output, stmt.index, i)
+            space = 'shared' if stmt.output in self.shared else 'global'
+            opcode = f'red.{space}.add.f32' if stmt.atomic else f'st.{space}.f32'
+            self.emit(f'{opcode} [{address}], {self.as_float(self.values[value])};')
+
+    # Checked in order; the first matching kind lowers the statement.
+    LOWERINGS = (
+        (Tile, lower_tile),
+        (Init, lower_init),
+        (CpAsyncCopy, lower_cp_async_copy),
+        (CpAsyncCommit, lower_cp_async_commit),
+        (CpAsyncWait, lower_cp_async_wait),
+        (Smem, lower_smem),
+        (Sync, lower_sync),
+        (Cond, lower_cond),
+        (WarpShuffle, lower_warp_shuffle),
+        (TreeHalve, lower_tree_halve),
+        ((Loop, StridedLoop), lower_loop),
+        (Select, lower_select),
+        (Let, lower_let),
+        (Accum, lower_accum),
+        (Load, lower_load),
+        (Assign, lower_assign),
+        (Write, lower_write),
+    )
+
+    # -- Shared-memory trees, accumulation and vectorized reads ---------------
 
     def shared_tree(self, stmt):
         """Materialize observable scratch mutations with one writer per slot.
@@ -1029,6 +1361,33 @@ class Compiler:
                 self.statement(stmt)
             previous = stmt
 
+    # -- Module assembly ------------------------------------------------------
+
+    def launch_bounds(self):
+        """Performance directives derived from the prescribed block size.
+
+        Without a register cap, ptxas may use more than 65536/block registers per
+        thread and the launch fails. A cap also changes ptxas's allocation (it
+        fills the budget), which slowed a 512-thread matmul ~12%, so it applies
+        only to 1024-thread blocks, where the budget is the whole register file
+        anyway, or when carried accumulators suggest real pressure. Small blocks
+        get .maxntid, like __launch_bounds__ in Emmy's reference kernels; it let
+        ptxas speed up a single-warp attention kernel ~1.3x.
+        """
+        threads = self.launch['block'][0]
+        accumulators = 0
+        def count(body):
+            nonlocal accumulators
+            for stmt in body:
+                accumulators += isinstance(stmt, (Init, Accum))
+                for field in ('body', 'else_body'):
+                    count(getattr(stmt, field, ()) or ())
+        count(self.node.op.body)
+        estimate = 32 + 3 * accumulators
+        if threads >= 1024 or estimate * threads > 65536:
+            return [f'.maxnreg {65536 // threads // 8 * 8}']
+        return [f'.maxntid {threads}, 1, 1'] if threads <= 256 else []
+
     def compile(self):
         params = self.launch['arg_order']
         for i, name in enumerate(params):
@@ -1038,8 +1397,9 @@ class Compiler:
         self.emit('ret;')
         header = ['.version 8.0', '.target sm_89', '.address_size 64',
                   f'.visible .entry {self.node.op.name}(',
-                  ',\n'.join(f'    .param .u64 param_{i}' for i in range(len(params))), ')', '{']
-        types = {'r': '.b32', 'rd': '.b64', 'f': '.f32', 'p': '.pred'}
+                  ',\n'.join(f'    .param .u64 param_{i}' for i in range(len(params))), ')',
+                  *self.launch_bounds(), '{']
+        types = {'r': '.b32', 'rd': '.b64', 'f': '.f32', 'fd': '.f64', 'p': '.pred'}
         for kind, count in self.counts.items():
             header.append(f'    .reg {types[kind]} %{kind}<{count + 1}>;')
         if self.dynamic_shared:

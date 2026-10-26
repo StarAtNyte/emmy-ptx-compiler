@@ -1,0 +1,117 @@
+{
+  "compiler_sha256": "3586814ed85cd1ee59df83752a7a017df358a56d8ad762ef9f4aab96e78bfe16",
+  "results": [
+    {
+      "problem": "t_clamp",
+      "passed": true,
+      "elapsed_s": 2.29,
+      "stdout": "[k_clamp_pointwise] 28 registers\n[k_clamp_pointwise] PASS  clamp: max abs err 0.000e+00  (16.064 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_cos",
+      "passed": false,
+      "elapsed_s": 1.052,
+      "stdout": "[k_cos_pointwise] your compiler failed (exit code 1):\ncompile.py: Unsupported scalar operation cos\n\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_exp",
+      "passed": true,
+      "elapsed_s": 2.59,
+      "stdout": "[k_exp_pointwise] 28 registers\n[k_exp_pointwise] PASS  exp: max abs err 1.907e-06  (14.56 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_gelu",
+      "passed": true,
+      "elapsed_s": 2.37,
+      "stdout": "[k_gelu_pointwise] 26 registers\n[k_gelu_pointwise] PASS  gelu: max abs err 2.431e-07  (14.624 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_gelu_tanh",
+      "passed": false,
+      "elapsed_s": 2.754,
+      "stdout": "[k_gelu_pointwise] 28 registers\n[k_gelu_pointwise] FAIL  gelu: max abs err 5.245e-06 (tolerance rtol=1e-06 atol=1e-06)\n    the parameters must be in meta.json's arg_order: gelu_c1, gelu_c0, gelu_one, gelu_half, x, gelu\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_log",
+      "passed": false,
+      "elapsed_s": 2.313,
+      "stdout": "[k_log_pointwise] 24 registers\n[k_log_pointwise] FAIL  log: max abs err nan (tolerance rtol=1e-06 atol=1e-06)\n    the parameters must be in meta.json's arg_order: x, log\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_pow3",
+      "passed": false,
+      "elapsed_s": 1.126,
+      "stdout": "[k_pow_1_pointwise] your compiler failed (exit code 1):\ncompile.py: Unsupported scalar operation pow\n\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_pow_half",
+      "passed": false,
+      "elapsed_s": 2.478,
+      "stdout": "[k_pow_1_pointwise] 18 registers\n[k_pow_1_pointwise] FAIL  pow_1: max abs err nan (tolerance rtol=1e-06 atol=1e-06)\n    the parameters must be in meta.json's arg_order: x, pow_1\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_reciprocal",
+      "passed": true,
+      "elapsed_s": 2.505,
+      "stdout": "[k_reciprocal_pointwise] 18 registers\n[k_reciprocal_pointwise] PASS  reciprocal: max abs err 0.000e+00  (24.512 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_rsqrt",
+      "passed": false,
+      "elapsed_s": 2.545,
+      "stdout": "[k_rsqrt_pointwise] 30 registers\n[k_rsqrt_pointwise] FAIL  rsqrt: max abs err nan (tolerance rtol=1e-06 atol=1e-06)\n    the parameters must be in meta.json's arg_order: x, rsqrt\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_sigmoid",
+      "passed": true,
+      "elapsed_s": 2.566,
+      "stdout": "[k_sigmoid_pointwise] 20 registers\n[k_sigmoid_pointwise] PASS  sigmoid: max abs err 5.960e-08  (14.88 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_silu",
+      "passed": true,
+      "elapsed_s": 2.592,
+      "stdout": "[k_silu_pointwise] 18 registers\n[k_silu_pointwise] PASS  silu: max abs err 2.384e-07  (14.72 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_sin",
+      "passed": false,
+      "elapsed_s": 1.138,
+      "stdout": "[k_sin_pointwise] your compiler failed (exit code 1):\ncompile.py: Unsupported scalar operation sin\n\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_softplus",
+      "passed": true,
+      "elapsed_s": 2.553,
+      "stdout": "[k_softplus_pointwise] 26 registers\n[k_softplus_pointwise] PASS  softplus: max abs err 2.384e-07  (16.768 us)\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_sqrt",
+      "passed": false,
+      "elapsed_s": 2.19,
+      "stdout": "[k_sqrt_pointwise] 18 registers\n[k_sqrt_pointwise] FAIL  sqrt: max abs err nan (tolerance rtol=1e-06 atol=1e-06)\n    the parameters must be in meta.json's arg_order: x, sqrt\n",
+      "stderr": ""
+    },
+    {
+      "problem": "t_tanh",
+      "passed": false,
+      "elapsed_s": 2.461,
+      "stdout": "[k_tanh_pointwise] 30 registers\n[k_tanh_pointwise] FAIL  tanh: max abs err 7.451e-06 (tolerance rtol=1e-06 atol=1e-06)\n    the parameters must be in meta.json's arg_order: x, tanh\n",
+      "stderr": ""
+    }
+  ]
+}
