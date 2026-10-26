@@ -241,5 +241,5 @@
       }
     }
   ],
-  "decision": "Prioritize square, erf and native GELU. Zero-pad-plus-add passes and exposes no current compiler gap. Use own PTX lowering and numerical accuracy gates; no math implementation accepted yet."
+  "decision": "Prioritize square and erf lowering. Actual GELU IR decomposes into multiply/erf/add; no native gelu opcode is required for these cases. Zero-pad-plus-add passes and exposes no current gap. Use own PTX lowering and numerical accuracy gates; no math implementation accepted yet."
 }

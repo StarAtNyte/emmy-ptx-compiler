@@ -191,9 +191,10 @@ Two numeric bool-cast audits with zero/subnormal/max-finite inputs also pass
 both GPUs and regenerate byte-identically; included in13 frontend count.
 Mask acceptance is complete, source bea1389 published privately and archive verified.
 All jobs terminal, including the next math discovery. Actual six frontend
-programs generate: five fail current6237 compiler on square/erf/gelu, while
+programs generate: five fail current6237 compiler on square/erf (including GELU), while
 zero-pad-plus-add passes. Evidence: validation/2026-10-26-math-discovery.json,
 including reproducible spec source and scalar op counts. No math candidate yet.
-Next implement own accurate PTX square/erf/GELU lowering, verify real frontend
+Next implement own accurate PTX square and erf lowering to cover these GELU/RMS
+workloads; verify real frontend
 and adversarial numerical cases on both GPUs. Do not substitute a library
 backend, reduced precision or narrow the full win-ready objective to this subset.
