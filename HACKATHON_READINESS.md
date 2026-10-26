@@ -35,3 +35,11 @@ Current compiler and evidence: see HANDOFF.md and
 math matches libm-like accuracy (exp/tanh/sin/cos 2 ULP, log 1 ULP, pow via
 f64). The remaining entry work is the user's: own-voice video, public
 repository and submission (resubmission allowed until the deadline).
+
+Launch-resource acceptance: [record](validation/2026-10-26-launch-resources.json).
+Every block above256 threads now has a safe register ceiling, including partial
+warps. Public15/15, recognized frontend16/16 and five fresh pressure cases pass
+on the official GPU. Local no-Torch3.12/3.13/3.14 each pass176 contract checks
+plus3072 resource invariants. Selected seven-pair matmul/attention timings remain
+effectively unchanged. This fixes confirmed launch failures without establishing
+hidden-set success or optimal resource allocation for every workload.
