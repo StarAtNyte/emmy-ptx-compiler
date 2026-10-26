@@ -1,0 +1,47 @@
+{
+  "inputs": [
+    "x"
+  ],
+  "outputs": [
+    "sum_1"
+  ],
+  "nodes": {
+    "x": {
+      "op": "InputOp",
+      "op_fields": {},
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "x",
+          "shape": [
+            257
+          ],
+          "dtype": "f32"
+        }
+      ]
+    },
+    "sum_1": {
+      "op": "KernelOp",
+      "op_fields": {
+        "body": [
+          "Tile(axes=(Axis(name='thread', extent=Dim(257), window=None),), body=(Load(names=('x',), input='x', index=(Var(name='thread'),), dtype=DataType(name='f32', np=dtype('float32'), nbytes=4)), Assign(name='result', op=ElementwiseImpl('log10'), args=('x',), dtype=DataType(name='f32', np=dtype('float32'), nbytes=4)), Let(name='classified', value=TernaryExpr(cond=BinaryExpr(op='!=', left=Var(name='result'), right=Var(name='result')), if_true=Literal(value=2.0, dtype='float'), if_false=TernaryExpr(cond=BinaryExpr(op='<', left=Var(name='result'), right=Literal(value=-3.4028234663852886e+38, dtype='float')), if_true=Literal(value=-1.0, dtype='float'), if_false=TernaryExpr(cond=BinaryExpr(op='>', left=Var(name='result'), right=Literal(value=3.4028234663852886e+38, dtype='float')), if_true=Literal(value=1.0, dtype='float'), if_false=Literal(value=0.0, dtype='float')))), dtype=DataType(name='f32', np=dtype('float32'), nbytes=4)), Write(output='sum_1', index=(Var(name='thread'),), values=('classified',), value_dtype=DataType(name='f32', np=dtype('float32'), nbytes=4), atomic=False, swizzle='NONE')), block_threads=None, aux_threads=0, raster_axes=None, raster_group=None, raster_orient='m')"
+        ],
+        "name": "k_sum_1_reduce",
+        "zero_delegated": [],
+        "serial": []
+      },
+      "inputs": [
+        "x"
+      ],
+      "outputs": [
+        {
+          "name": "sum_1",
+          "shape": [
+            257
+          ],
+          "dtype": "f32"
+        }
+      ]
+    }
+  }
+}

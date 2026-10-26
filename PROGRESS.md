@@ -1400,3 +1400,50 @@ Completed 2026-10-26:
   Goal remains active: broader scalar-op/compound-kernel coverage next.
   Public repository/video remain eventual submission requirements; explicit
   private-repository/deferred-submission instructions remain in force.
+
+## Step 57 — scalar logarithm/exp2 coverage gap and candidate gates
+
+In progress 2026-10-26:
+
+- Current compiler c2f7e2b3 fails all36 initial typed logarithm/exp2 fixtures with
+  unsupported-op KeyError. Candidate eeb79a3a lowers log/log2/log10 through lg2
+  and float32 base conversion, exp2 through ex2; unknown ops reject cleanly.
+  All845 prior retained kernels emit byte-identical PTX. Main not yet changed.
+- Added typed original/fresh/renamed boundary probes and frontend compound cases.
+  Initial exp2 powers test incorrectly demanded bitwise equality from documented
+  approximate instruction. Observed1ULP at2**-127 on both GPUs; replaced that
+  test with exact two-ULP-bound classification plus separate nonzero subnormal
+  checks. Candidate source unchanged; initial failed reports preserved/excluded.
+- Final72 typed cases pass locally. Four generated log workloads pass locally,
+  including log-softmax and normalized-positive composites. Initial frontend8
+  attempts:four successful, four fail upstream CUDA rendering for log2/log10/
+  exp2. Final frontend specs retain only supported four; regeneration pending.
+- Four unsupported scalar CLI probes fail baseline diagnostic expectations and
+  pass candidate. Transformer checks, both-GPU finals, sanitizers and no-Torch
+  version matrix are still completing; inspect actual handles/reports before
+  adoption. Repo private, video/public repo later today, submission deferred.
+
+## Step 58 — accepted scalar logarithm/exp2 lowering and compound coverage
+
+Completed 2026-10-26:
+
+- Adopted exact candidate eeb79a3a after all final gates. All104 typed and four
+  frontend workloads pass both GPUs. Covers ranges, subnormals, near-one values,
+  two-ULP exp2 power bounds, folds/compositions, signed-zero/negative operands
+  and NaNs/infinities created in-kernel. Exact class probes transport finite data.
+- All four sanitizers clean on56 selected cases. Nine transformer comparisons
+  pass. All845 prior kernels emit identical PTX; no new kernel speedup claim.
+- Four CPU fixtures added, previous29 positive goldens unchanged. Full142-check
+  matrix newly passes in each isolated no-Torch3.12/3.13/3.14 runtime. Workflow
+  includes four clean unsupported-op diagnostics. Hosted CPU execution unverified.
+- All15 public kernels compile deterministically in three fresh isolated no-Torch
+  CLI processes each, local median0.629–0.703sec. No judge-limit guarantee.
+- Preserved initial overstrict exp2 failures and four upstream renderer failures
+  separately. Final supported4 frontend specs regenerate byte-identical programs.
+  Source unchanged during corrected numerical test runs.
+- Updated professional docs, requirements audit and entry/walkthrough drafts with
+  current measured scope. User reaffirmed public/video later today, compiler
+  readiness first. Keep private; no entry submitted.
+- Evidence: production-iteration16.json. Commit and package next. Broader scalar
+  masks/comparison/where and supported frontend op coverage remains open; no
+  winning/hidden-set/whole-program equivalence claim.

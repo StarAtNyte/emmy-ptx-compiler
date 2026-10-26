@@ -269,3 +269,15 @@ is also eligible at width four. Otherwise the whole loop retains two-wide loweri
 The first phase loads four registers; the next three bind their cached registers
 in the original arithmetic order. Scalar tails clear this state. Mixed alignment,
 mutable indices, writes and control-flow guards retain their previous behavior.
+
+Natural/base-two/base-ten logarithms lower through `lg2.approx.f32`; natural
+and base-ten results multiply by a rounded f32 ln(2) or log10(2). `exp2` uses
+`ex2.approx.f32` directly. These instructions omit `.ftz` so subnormal values
+remain supported. They implement approximate scalar math, not bitwise libm
+equivalence. See NVIDIA's [lg2/ex2 specification](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#floating-point-instructions-lg2).
+Boundary tests compare independent float64 NumPy results within explicit
+tolerances; exact result-class probes test negative/zero/subnormal operands
+and infinities/NaNs created inside the kernel. The exp2 powers probe classifies
+independently computed two-ULP bounds exactly, with separate positivity probes
+for subnormal outputs. Unknown scalar op names raise a clean unsupported-op
+diagnostic; they do not become a dictionary traceback.

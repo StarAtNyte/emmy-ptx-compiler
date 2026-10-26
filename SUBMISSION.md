@@ -19,44 +19,34 @@ Tech stack:
 
 Approach:
 
-> A typed visitor lowers Emmy Kernel IR directly to PTX without calling an
-> existing IR-to-code compiler. It uses the supplied metadata's parameter order
-> and launch contract, and explicitly tracks tile coordinates, loop-owned
-> accumulators, address spaces, shared-memory allocation and virtual registers.
-> Lexical environments preserve shadowed bindings and captured values while
-> explicitly carried reduction states remain writable across control flow.
+> A typed visitor translates Emmy Kernel IR directly to PTX, using Emmy only to
+> deserialize the IR. Metadata supplies positional buffer arguments and launch
+> geometry. Our lowering implements coordinates, global/shared addressing,
+> lexical bindings, loop-owned accumulators and virtual register allocation.
 >
-> Reduction lowering supports coupled online-softmax state and neutral-state
-> handling for empty lanes. Binary tree order and synchronization are preserved.
-> When scratch mutations are observable, an atomic ticket selects one writer per
-> logical slot, including repeated lanes and named-barrier groups, without extra
-> shared allocation. A cheaper register reduction is used when scratch writes
-> are dead.
+> Reductions preserve ordered combines and synchronization. Coupled online-softmax
+> states handle empty lanes explicitly. Observable shared-tree mutations use one
+> writer per logical slot; unobserved scratch can use a register reduction.
 >
-> Optimizations are tested with alternating paired runs on the hosted RTX 5090.
-> Adjacent multiply/add reduction steps contract to FMA; bounded shared-memory
-> scalar loops expand by up to 64 iterations under extent/body-size limits,
-> with scalar tails. FMA measured about 1.32x for one attention kernel. Shared
-> expansion improved one matmul step by 1.33x, then a further 1.12x in later
-> paired trials; these are separate measurements, not a combined benchmark.
-> Aligned shared-read pairing adds a measured 1.03x public matmul gain. Exact
-> signed power-of-two index shifts/masks then measure 2.57x on that matmul and
-> 2.18x/2.09x on two independent shapes. These remain separate paired observations.
-> Cross-iteration aligned shared reads add 1.48x on public matmul and 1.47x/1.39x
-> on two independent shapes in seven paired trials; scalar tails and dependency
-> guards are retained. The other sixteen workloads differ by at most 0.032 us.
-> A broader unsigned tile rewrite regressed attention and was rejected; the
-> accepted signed refinement preserves its latency. Broader unrolling and an
-> explicit global-vector pass were also rejected after measurement.
+> Structural optimizations include fold FMA, bounded shared-only loop expansion,
+> signed power-of-two index lowering and aligned shared reads across iterations.
+> Four-wide reads require matching eligibility proofs at both widths; mixed
+> eligibility retains two-wide reads and tails stay scalar. Latest seven-pair
+> RTX 5090 measurements compare two-wide with four-wide: public matmul
+> 17.024→15.008 microseconds (1.134x), independent 256×512×384
+> 13.152→11.104 (1.184x). Clocks were unlocked; these are selected kernel results,
+> not a model speedup. Regressing expansion variants were rejected.
 >
-> Validation includes all public categories, independent shape/operation and
-> schedule variations, finite-value stress cases, semantic regressions, actual
-> PyTorch MLP and staged transformer comparisons, and selected memory/race/sync/
-> initialization checks. Records identify the compiler hash and test scope.
-> Seeded typed-IR probes use independent exact numerical formulas, renamed
-> counterparts and per-case process isolation; they exposed and fixed lexical
-> binding leakage and captured-value aliasing.
-> Hidden-test results are unknown. AI coding assistance was used.
+> Validation covers all public categories, independent shapes and operation mixes,
+> renamed and fresh-seed typed IR, model comparisons and selected sanitizer runs.
+> New logarithm/exp2 support passes 104 typed and four frontend compound cases on
+> both GPUs; 845 prior kernels retain identical PTX. Four sanitizer tools are clean
+> on 56 selected new cases. The local no-Torch Python 3.12–3.14 matrix passes
+> 142 checks per version. Hosted CPU CI has not executed the current suite.
+>
+> This is a static f32 compiler with documented unsupported operations and layouts.
+> Numerical approximations have explicit tolerances and boundary tests. Hidden-test
+> results are unknown. AI coding assistance was used.
 
 ## Human fields still required
 

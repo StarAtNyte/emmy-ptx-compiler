@@ -460,6 +460,16 @@ class Compiler:
         if op in ('exp', 'exp_fast'):
             scaled = self.instruction('mul.rn.f32', args[0], self.floating(math.log2(math.e)), kind='f')
             return self.instruction('ex2.approx.f32', scaled, kind='f')
+        if op in ('log', 'log2', 'log10'):
+            logarithm = self.instruction('lg2.approx.f32', args[0], kind='f')
+            if op == 'log2':
+                return logarithm
+            scale = math.log(2) if op == 'log' else math.log10(2)
+            return self.instruction('mul.rn.f32', logarithm, self.floating(scale), kind='f')
+        if op == 'exp2':
+            return self.instruction('ex2.approx.f32', args[0], kind='f')
+        if op not in opcode:
+            raise NotImplementedError(f'Unsupported scalar operation {op}')
         return self.instruction(opcode[op], *args, kind='f')
 
     def combine(self, stmt):

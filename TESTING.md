@@ -674,3 +674,30 @@ goldens. All33 snapshot/feature checks newly pass in each isolated no-Torch
 Python3.12/3.13/3.14 environment. Together with101 diagnostic checks from unchanged
 compiler/checker source, the local matrix totals134 per version. Hosted CPU
 execution remains unverified. Evidence: validation/2026-10-26-wrap-addresses.json.
+
+## Scalar logarithm and exp2 acceptance — 26 October
+
+Use `tools/generate_scalar_log_cases.py --out DIRECTORY --seed SEED` for seeds0
+and48127, then `tools/generate_scalar_log_ieee_cases.py --source DIRECTORY
+--out IEEE_DIRECTORY`. Each seed produces36 boundary/composition cases plus16
+IEEE-class cases. Special operands are created inside PTX; transported values
+remain finite. References use independent NumPy float64 functions with explicit
+f32 accumulation where required. The two-ULP exp2 power bounds and result classes
+are checked exactly; general approximate math uses recorded tolerances. Initial
+bitwise-power tests were too strict and are retained outside acceptance results.
+
+The frontend specs `tools/expressions_scalar_logs.py` produce four natural-log
+workloads with the official generator. All104 typed and four frontend workloads
+pass on both GPUs. All four sanitizers are clean on56 original/frontend cases.
+845 retained kernels emit identical PTX; nine transformer checks pass.
+Four snapshots were added without changing the previous29 goldens.
+The complete local no-Torch3.12/3.13/3.14 matrix is now37 snapshot/feature +
+28 launch +42 ABI +31 shape +4 unsupported-op checks =142 per version.
+`tools/check_scalar_op_rejections.py` is included in CPU CI; hosted execution
+remains unverified under the known account restriction. Full evidence:
+validation/2026-10-26-production-iteration16.json.
+
+The pinned frontend CUDA renderer cannot emit log2/log10/exp2. Four initial
+frontend generation failures are recorded separately; these operations are
+covered by typed-IR probes, not claimed as frontend-generation successes.
+The final four supported specs regenerate identical IR/metadata/oracle bytes.

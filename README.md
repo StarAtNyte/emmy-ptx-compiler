@@ -56,6 +56,10 @@ it does not depend on kernel names.
 [DESIGN.md](DESIGN.md) describes the lowering, register model, numerical semantics
 and synchronization rules.
 
+Natural, base-two and base-ten logarithms and the base-two exponential use PTX
+approximate instructions with subnormal handling enabled. Unknown scalar
+operations produce a diagnostic before PTX is written.
+
 ## Performance
 
 The following measurements compare two versions of this compiler before and after
@@ -82,7 +86,7 @@ checks, isolated CLI execution and selected NVIDIA Compute Sanitizer runs.
 |---|---|
 | Official public suite | 15 problems across pointwise, reduction, matmul, fused and attention categories |
 | Model integration | Nine staged transformer seed/depth checks, covering 147 stage outputs |
-| Python compatibility | 134 local checks per version on Python 3.12, 3.13 and 3.14, without PyTorch |
+| Python compatibility | 142 local checks per version on Python 3.12, 3.13 and 3.14, without PyTorch |
 | Memory and synchronization | Selected memcheck, racecheck, synccheck and initcheck runs |
 | Packaging | Extracted archive compilation and three hosted GPU smoke checks |
 

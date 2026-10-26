@@ -1,6 +1,6 @@
 {
-  "baseline_compiler_sha256": "c2f7e2b38a1d77424201ec96eec39f2367587f032d0fdac73f87e38f74528c0e",
-  "snapshot_provenance": "Wide shared-load acceptance: two existing positive snapshots refreshed after both-GPU numerical checks; eighteen other existing snapshots unchanged. Five new alignment/fallback/offset/tail fixtures GPU verified. Four in-bounds signed-wrap fixtures added after both-GPU checks and all four sanitizers; existing25 snapshots unchanged.",
+  "baseline_compiler_sha256": "eeb79a3a217d9b07b035e71f50501de008ff542e9ed3ddf474339733cc3c7910",
+  "snapshot_provenance": "Wide shared-load acceptance: two existing positive snapshots refreshed after both-GPU numerical checks; eighteen other existing snapshots unchanged. Five new alignment/fallback/offset/tail fixtures GPU verified. Four in-bounds signed-wrap fixtures added after both-GPU checks and all four sanitizers; existing25 snapshots unchanged. Four log/exp2 fixtures added after both-GPU and sanitizer checks; existing29 positive snapshots unchanged.",
   "fixtures": [
     {
       "folder": "validation/counterexamples/2026-10-24-scope-shrunk",
@@ -291,6 +291,46 @@
         "meta.json": "d4673361394aa35236a38b9bc9a27ddbc1e11b417a62c3d30f829d585e200d2a"
       },
       "ptx_sha256": "146a7a2806ed38ea0fc9667bf798c84fff50f8c62514e7978d06afed012f9f59"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-26-log-range",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "expected.npz": "9646e052408d3d0c022480cabe0bd09699f06b8f607a939b2067f8f4d4c82f2f",
+        "k_sum_1_reduce.ir.json": "41f8973266f3ea2afcf147eac610320ed4b3c986a63b2c837c9d1daee4f37765",
+        "meta.json": "d425b26c6f6d6ce4d531ae0eebadd506d71a62138a2e7cb9b62024c14fcca35b"
+      },
+      "ptx_sha256": "0f5394ec82303fd332bf706e12e4e95a21e16b4386380e55ef2d5fdfed3d617b"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-26-log2-near_one",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "expected.npz": "f73c111f172aa32d90c0755a46b109260aa6b6bc33bd2e6330165b75265bc1cc",
+        "k_sum_1_reduce.ir.json": "6ae0c1be7fa091c46748e2c8572bfc61b3159e7cbd53a2315cc237b63d77ff32",
+        "meta.json": "97fdb9182baedda76bf0cb7d6d9867d161c6d24007ac67427b6dd36e408de5d7"
+      },
+      "ptx_sha256": "aeaf9afb9ce95b6608664545662fdf1dfd846c28c9d161195f833f73abb720c8"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-26-log10-special",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "expected.npz": "2c13e02f02bf41d1840f10a7c88c02e3d886b7934ef2c43b9ca229ab73d70b58",
+        "k_sum_1_reduce.ir.json": "0957aa4baf7ce70b25ed56e8104b8c379884ac6fe8d5994896717353bd649f7b",
+        "meta.json": "df57d05fe3733baee7003700e226f7f1155fe7314c226c8b7972534c46cf0c94"
+      },
+      "ptx_sha256": "d300cf4bc3af4a541ae299582727dd869fb33979d818fb27136b18861cb49978"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-26-exp2-powers",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "expected.npz": "e79523d920a6df3446bb944708a356817b0a0ea6897fec4b01208dc59719c87d",
+        "k_sum_1_reduce.ir.json": "388844c7e857c0daaf52a156accc3abc02a004f6085a0d64d14c45ea898951e1",
+        "meta.json": "ffb6bd10a7a2a5be90e7067bcb32591b7e0255c6b152ee7ced9e813f29e4a3c7"
+      },
+      "ptx_sha256": "009be8396eccb653f6b5e8c89b2f89d32e170f3ae4a28a1c40f595734c12862d"
     }
   ]
 }

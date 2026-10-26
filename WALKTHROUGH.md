@@ -53,20 +53,18 @@ arithmetic keeps separate rounding. Expansion by up to 64 applies only to bounde
 straight-line scalar loops whose loads read shared memory; a scalar epilogue
 handles remaining iterations. The factor also respects an expanded-body budget.
 
-Show the paired timing records. FMA improved an attention kernel from about
-119 to 91 microseconds. Shared-memory loop expansion improved matmul from about
-99 to 74 microseconds; later bounded expansion brought it to about 66.
-A broader unroll pass slowed attention, and explicit
-vector memory instructions were timing-neutral, so those versions were rejected.
-Aligned shared-read pairing reaches about 64 microseconds. Local native-code
-inspection then motivates exact signed power-of-two index lowering: public matmul
-64.160 → 24.928 microseconds, with 2.18x/2.09x on two independent shapes. A broader
-unsigned rewrite regressed attention; the accepted signed refinement avoids that
-regression. Native inspection is local-driver output, not hosted SASS or counters.
-Cross-iteration pairing then combines adjacent K reads in the bounded unroll:
-public matmul 25.088 → 16.928 microseconds, with 1.47x/1.39x on independent
-shapes. Show the alignment/index-dependency guards and the scalar tail.
-Clocks were not locked; these are measured cases rather than universal speedups.
+Show the latest paired timing record. Four-wide shared loads extend the
+existing two-wide transformation when affine unit-stride indices and 16-byte
+alignment prove eligibility. The same scalar arithmetic executes in its original
+order. Mixed eligibility retains two-wide reads, and scalar tails clear cached
+vector state. Show these guards in `cross_iteration_loads` and the loop visitor.
+
+Public matmul measured 17.024→15.008 microseconds (1.134x); independent
+256×512×384 measured 13.152→11.104 (1.184x). These are seven alternating paired
+trials with unlocked clocks. Smaller expansion limits regressed the public kernel
+by about27%, so they were rejected. Speed comes after correctness and code review
+in the hackathon criteria. Explain the evidence without claiming hidden results
+or a counter-proven hardware bottleneck.
 
 ## 3:00–4:00 — Validation and limits
 
@@ -74,6 +72,11 @@ Show the latest validation summary and one official checker invocation. Explain
 the coverage: all public categories, independently generated shapes and schedules,
 numerical stress inputs, semantic audit cases, actual PyTorch model comparisons,
 and selected Compute Sanitizer runs.
+
+Show one new logarithm boundary test. Approximate PTX math uses explicit
+tolerances; the exp2 power probe checks a two-ULP bound, while special-value
+probes classify results exactly. The local no-Torch matrix has142 checks per
+Python version; GitHub-hosted execution remains unverified.
 
 The complete transformer test uses separately traced stages because the pinned
 Emmy materializer fails on the fully fused block. It checks the same model math

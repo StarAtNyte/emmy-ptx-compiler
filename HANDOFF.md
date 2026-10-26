@@ -1,385 +1,171 @@
-# Handoff — current state, 2026-10-26
+# Handoff — current state, 26 October 2026
 
 ## Goal and authorization
 
-Build a production-level, win-worthy Emmy Kernel IR → PTX compiler and try to win
-https://github.com/cloudrift-ai/emmy-hackathon-2026.
+Build a production-level, competitive Emmy Kernel IR → PTX compiler and try to
+win https://github.com/cloudrift-ai/emmy-hackathon-2026.
+Read the user's attachment before continuing:
+/home/nitiz/.codex-account-2/attachments/06fa33fe-9788-4edf-8b70-1012b95d62d6/pasted-text-1.txt.
+Read PROGRESS.md too; it retains chronological decisions and failures.
+Update both files after each meaningful completed step.
 
-- **Do not submit yet.** User deferred submission until production-level quality.
-- Research Joseph Suarez/PufferAI, GPU MODE and recent papers/repos; apply measured
-  findings. RESEARCH_PRODUCTION.md pins inspected sources and acceptance gates.
-- Update PROGRESS.md and HANDOFF.md after each meaningful completed step. This
-  file is the current snapshot; PROGRESS retains the chronological evidence trail.
-- Repository is PRIVATE by user request (2026-10-24), confirmed through GitHub API.
-  Routine pushes remain authorized; do not make it public again without instruction. Origin:
-  https://github.com/StarAtNyte/emmy-ptx-compiler, branch master.
-- No organizer outreach/messages authorized. Entrant fields/video remain missing;
-  do not invent them. Deadline Oct 27 23:59 AoE / Oct 28 17:44 Nepal time.
+- User reaffirmed: make compiler win-ready first; public repo and own-voice video
+  can happen later today. **Keep repository private and do not submit yet.**
+- Routine pushes are authorized. Origin StarAtNyte/emmy-ptx-compiler, master.
+- Do not change billing/spending or contact organizers/authors.
+- Entrant fields, personal confirmations and video remain missing; do not invent.
+- Official requirements were rechecked at ec8cde1943f88efea3827a95bda6085553d2d407:
+  hidden-category correctness first, own code review next, kernel speed last.
+  Eventual entry needs public repo and a personal3–5min walkthrough. Deadline
+  Oct27 23:59 AoE / Oct28 17:44 Nepal. See HACKATHON_READINESS.md.
+- Broader readiness and hidden-set success remain unproven. Do not mark goal
+  complete merely because a milestone passes or submission is deferred.
 
-## Workspace/runtime
+## Runtime and current compiler
 
-Workspace /home/nitiz/Projects/Self/Challenges/emmy. Use .venv/bin/python (3.12),
-not the host default. Emmy 0.3.11, NumPy 2.5.4; development Torch CPU 2.14.1.
-Compiler needs neither Torch nor GPU. requirements-ci.lock pins CI constraints.
-Ignored challenge/upstream-emmy/.venv/artifacts are local assets, absent from a
-fresh checkout. Challenge revision ec8cde1943f88efea3827a95bda6085553d2d407.
+Workspace /home/nitiz/Projects/Self/Challenges/emmy. Use .venv/bin/python3.12,
+Emmy0.3.11 and NumPy2.5.4. Dev Torch is CPU2.14.1; compiler needs no Torch/GPU.
+Pinned CPU constraints: requirements-ci.lock. Ignored challenge/upstream-emmy/
+artifacts/.venv are local assets, absent from a fresh checkout.
 
-Local RTX 3050 Laptop 6 GiB sm86, driver 595.99.02; contest RTX 5090 sm120 at
-http://runner.riftstack.ai:48701. Compiler emits PTX 8.0 sm89; local runner changes
-that target to sm86. Local performance cannot select contest optimizations.
+Local RTX3050 Laptop6GiB sm86, driver595.99.02. Official RTX5090 sm120:
+http://runner.riftstack.ai:48701. Compiler emits PTX8.0 sm89, valid on target;
+local test harness retargets to sm86. Local timing cannot select target changes.
 
-**Current accepted compile.py SHA-256:**
-c2f7e2b38a1d77424201ec96eec39f2367587f032d0fdac73f87e38f74528c0e.
-Exact source frozen/tested as artifacts/compiler-cross-v4.py. Previous 7ebf4ff2
-is reproducible from 60676f3:compile.py. Prior
-40a1de84 is reproducible from 07f4851:compile.py. Prior
-7fbe5ee4 is reproducible from b2a1b19:compile.py. Prior
-1dfcf75f is reproducible from 0fea2c0:compile.py. Prior
-bf07d517 is reproducible from 998f3b0:compile.py. Prior 393d7600
-is reproducible from 48793dc:compile.py; b13ccba6 from 35208cf.
+**Accepted compile.py SHA256:**
+eeb79a3a217d9b07b035e71f50501de008ff542e9ed3ddf474339733cc3c7910.
+Exact frozen source: artifacts/compiler-scalar-logs.py.
+Previous c2f7e2b3 is reproducible from aacaa3c:compile.py and is frozen as
+artifacts/compiler-before-scalar-logs.py. Earlier accepted sources/evidence are
+recorded in PROGRESS.md and dated validation records; old patches target those
+specific baselines, not automatically the current compiler.
 
-## Latest accepted improvement — 26 October
+## Latest acceptance — scalar logarithms and exp2
 
-Four-wide cross-iteration shared reads are accepted. Full evidence:
-validation/2026-10-26-production-iteration15.json. The 92 structural/floating cases
-pass both GPUs; 59 changed prior kernels pass both GPUs, 641/700 retain exact PTX.
-Nine transformer checks pass; all four sanitizers clean on 49 cases including
-three actual pipelined matmuls. Local 130-check no-Torch matrix passes all three
-Python versions. Hosted CPU CI remains unverified because of account restriction.
-Final seven paired target trials: m01 17.024→15.008us (1.134x), independent
-256×512×384 13.152→11.104us (1.184x). Third-shape discovery gain did not reproduce;
-no claim. Other sixteen workloads have at most 0.032us median regression.
-README rewritten as professional compiler documentation. Requested primary-source
-review is in RESEARCH_2026-10-26.md with pinned research-refresh.json. No external
-code incorporated, Modal job/deployment or paid compute run. Repository private.
-Current archive is built from aacaa3c, verified by extracted hosted scalar-add,
-matmul and attention checks in the existing isolated no-Torch 3.12 runtime.
-Record: validation/2026-10-26-current-package.json. Wrap/current/submission ZIP
-aliases match. All archived compiler/harness/fixture bytes match tested source.
-GitHub run 40280154398 rejected all three jobs before steps: failed account
-payments/spending limit annotation. No hosted CPU success claimed.
-Historical sections below retain original counts and hashes; this section
-supersedes their current-state wording.
+Evidence: validation/2026-10-26-production-iteration16.json.
+Natural/base-two/base-ten logs lower via lg2 plus rounded f32 base conversion;
+exp2 uses ex2. No .ftz. Unknown scalar ops reject before stdout with no traceback.
+These are approximate functions, not bitwise libm replacements.
 
-## Follow-up tuning and alignment — 26 October
+- Baseline c2f7e2b3 fails36 initial typed new-operation programs. Four unsupported
+  but valid scalar op probes produce tracebacks before; candidate diagnostics pass.
+- All104 final typed and four frontend compound cases pass both GPUs. Covers
+  subnormal/normal ranges, neighbors of1, round trips, folds, log-softmax and
+  normalization, negative/zero operands, infinities and NaNs created in-kernel.
+  All transported values stay finite; result-class labels are exact.
+- Four sanitizer tools clean on56 original/frontend cases. Nine staged-transformer
+  comparisons pass. 845 retained kernels emit byte-identical PTX, preserving
+  their previous execution/performance evidence. No new kernel speedup claimed.
+- Initial power probe overrequired bitwise equality. Observed1ULP at2**-127 on
+  both GPUs is within documented approximate behavior. Final test classifies
+  independently computed2ULP bounds; separate probes check subnormals stay nonzero.
+  Initial failed reports/generator preserved under artifacts; excluded from finals.
+- Initial frontend8 attempts:4 successes,4 upstream CUDA-renderer failures for
+  log2/log10/exp2. Final supported four specs regenerate identical IR/meta/oracle
+  bytes. Typed IR probes cover the other ops; no false frontend-success claim.
+- All15 public kernels compile deterministically in three isolated no-Torch
+  processes each, local median0.629–0.703sec; no judge time-limit guarantee.
+- Four GPU-verified CPU fixtures added, previous29 snapshots unchanged.
+  All142 local checks newly pass each isolated no-Torch3.12.13/3.13.14/3.14.4:
+  37 snapshot/feature +28 launch +42 ABI +31 shape +4 unsupported-op diagnostics.
+  CPU workflow includes new diagnostic suite. **Hosted CPU CI remains unverified.**
 
-No default change after bounded-tuning.json. cg16 copy hints show only small
-selected-workload differences; max32/max16 unroll both regress m01 by about27%.
-Patches retained; do not repeat without new evidence. All timing jobs terminal.
-Live hackathon rules rechecked: correctness, then own code review, then speed.
-Public repo and personal3–5min video required at eventual submission; current
-explicit authorization keeps repo private and submission deferred.
-Signed-wrap acceptance complete:44 codegen and numerical cases pass both GPUs;
-all four sanitizers clean on22 original cases. Four retained CPU fixtures add
-coverage:33 newly checked snapshot/feature cases plus101 unchanged diagnostic
-cases total134 locally per Python3.12/3.13/3.14, without Torch. Existing25
-snapshots unchanged; compiler stays c2f7e2b3. All gate processes terminal.
-Evidence: validation/2026-10-26-wrap-addresses.json. Read HACKATHON_READINESS.md
-for verified task requirements and missing submission deliverables. Fifteen
-public kernels compile deterministically in three isolated no-Torch processes
-each, local median0.574–0.681sec. Prioritize broader scalar-op and compound
-correctness within the task vocabulary next. Refreshed archive source aacaa3c includes new generator, fixtures and readiness
-document. Compiler remains c2f7e2b3. Extracted hosted scalar-add/matmul/attention
-checks pass in existing isolated no-Torch3.12 runtime; ZIP source member hashes
-verified. Wrap/current/submission aliases identical. Current-package record
-updated; previous wide record preserved separately. No new hosted CPU CI claim.
+## Contract and semantic invariants
 
-## Contract/current implementation
+`python compile.py path/to/kernel.ir.json > out.ptx` reads Graph.from_dict plus
+adjacent meta.json. Own typed lowering; never invoke Emmy's CUDA renderer, nvcc,
+emmy compile or another compiler backend in submission. Dev tracing/reference
+math, driver JIT and disassembly do not change that boundary.
 
-`python compile.py path/to/kernel.ir.json > out.ptx` reads typed Graph.from_dict
-and adjacent meta.json, preserves parameter ABI and prescribed launch geometry.
-Our lowering must not use Emmy's CUDA renderer, nvcc or another compiler backend.
-Development driver JIT/disassembly/reference math do not change that contract.
+- Exactly one KernelOp and unique matching launch; positional f32 pointer args
+  agree with arg_order and descriptor order. Consistent permutations are valid.
+  Logical tensor shapes may differ from physical allocation shapes/scalar views.
+- Address ranks: empty→0, one→flat, full rank→row-major, otherwise additive sum.
+  Preserve permissive coordinates; do not impose logical/allocation rank equality.
+- Launch uses1D grid/block; y/z1. Cooperative Tile.block_threads must match block.x.
+  No aux thread bands. Empty Tile domain is a no-op; empty axis LIST is one cell.
+- Typed tensor/Tile/loop extents are static nonnegative integers; shared extents
+  positive (scalar() is1f32). Shared align0/natural or power-of-two. Symbolic
+  dimensions and zero-size shared arrays unsupported. No complete bounds/grid/
+  cardinality/type validator claim.
+- Predicates materialize numeric0/1 in integer contexts; conditions retain predicates.
+  Signed /,// floor and % follows divisor sign. Positive power-of-two shifts/masks
+  preserve that behavior. Unknown/overflow intervals do not prove fast truncation.
+- F32 scalar expressions support+,-,*, comparisons, truthiness, ternaries and
+  explicit numeric casts. Floating indices reject; floating Expr /,//,% unsupported
+  (typed Assign divide works). Nonfinite/out-of-range f32→i32 casts outside scope.
+- Lexical maps isolate locals; Let snapshots capture values. Mutable reduction
+  state crosses scopes explicitly. Nested fold discovery and seeded/persistent
+  loops retain ownership. Strided end is captured after initializing axis;
+  step depending on axis/end evaluates after body; axis_end is body-visible.
+- Shared storage belongs to declaration identity, including shadowed names;
+  dynamic pool above48KiB checks supplied size. Swizzles unsupported.
+- Ordered online-softmax state handles neutral lanes. TreeHalve scratch that is
+  observed uses writer tickets per logical slot; unobserved scratch can reduce
+  registers. Preserve merge order, participant barriers and scratch visibility.
 
-Static f32 storage/arithmetic, 32-bit indices, global/shared addresses, grouped
-accesses, tiles, loops, conditionals, atomics, async copies, warp and ordered tree
-merges. Observable tree scratch uses per-slot writer tickets. Unsupported explicit
-dtypes/layouts fail before PTX output; this is not a complete IR type checker.
-No auxiliary thread bands, swizzles, broad dtype/dynamic-shape support claim.
+Accepted structural optimizations: fold FMA, shared-read-only bounded unroll
+(max64, extent and1024-statement budget), aligned within-body v2 reads and
+cross-iteration v2/v4 reads. Four-wide requires every v2 eligible load to also
+prove width4; otherwise whole loop retains v2. Mutable indices, writes, global
+reads and control flow guard motion; tails clear caches. No workload-name dispatch.
 
-Accepted optimizations: adjacent fold FMA; bounded shared-only loop expansion
-(up to 64 / extent / 1024 expanded statements); aligned within- and cross-iteration shared-read
-pairing; exact signed floor/remainder power-of-two shifts/masks. No kernel-name
-selection. Generic signed / and // floor; % follows divisor sign. Lexical scopes,
-Let snapshots, declaration-identity shared allocation and nested fold discovery
-are fixed. Predicates in integer contexts become numeric 0/1, while conditions
-retain predicate registers. Strided end capture happens after axis initialization; dependent step
-executes after body; axis_end is body-visible. See DESIGN.md for details.
+## Other current evidence and rejected experiments
 
-## Latest local runner correction
+- production-iteration15.json: four-wide acceptance,84 structural+8 floating cases,
+  59 changed prior kernels pass both GPUs,641/700 byte-identical; four sanitizers
+  clean on49 cases including three actual pipelined matmuls.
+- Final seven alternating paired RTX5090 trials19workloads: m01 17.024→15.008us
+  (1.134x), independent256×512×384 13.152→11.104us (1.184x). Third-shape early gain
+  did not reproduce. Other16 max median regression0.032us. Unlocked clocks,
+  reused buffers, full outputs first trial/prefixes later; no counter proof.
+- wrap-addresses.json:44 in-bounds signed32-wrap address cases pass both GPUs;
+  all four sanitizers clean on22 originals. New algebraic wrap tests do not prove
+  bounds for all programs. Four retained CPU fixtures, old25 goldens unchanged.
+- bounded-tuning.json: cg16 copy hints show only small selected differences and
+  were not adopted; max32/max16 expansion regress m01 ~27%. Patches retained.
+- Earlier unsigned tile rewrite regressed attention; blanket/global unroll,
+  global vector pass and address CSE were rejected. Do not repeat unchanged ideas.
+- Target calibration/RESEARCH_PRODUCTION.md distinguish cache-sized bandwidth,
+  DRAM nominal specs, local-driver SASS and target timings. No hosted counters,
+  locked-clock roofline or rigorous utilization proof.
+- Requested GPU MODE, Modal, Unsloth, tinygrad, PufferAI and DeepSeek primary-source
+  review: RESEARCH_2026-10-26.md and research-refresh.json,9 repos/20 cached files.
+  Selected sections reviewed; external claims not reproduced. No external source
+  incorporated, paid compute, Modal deployment or private-source upload performed.
 
-validation/2026-10-24-runner-initialization.json fixes tools/local_runner.py, not
-compile.py. Hosted zero_outputs may name an input buffer; the old local runner
-honored this only during timed repetitions, missing the first correctness launch.
-Now it zeros requested buffers before that launch too, defaulting an omitted list
-to empty. Output=true initialization precedence stays unchanged: both runners
-zero returned buffers even when explicit data is supplied in the tested cases.
-Do not equate that flag with write permissions or ban zeroing input buffers.
+Local runner initialization correction is retained: zero_outputs may name inputs;
+zero them before initial correctness launch as well as timing. Output=true buffers
+initially zero even with explicit data in tested hosted cases. Keep compiler role
+checks separate. Runner SHA90a494a357d0368265a06fffdcdfd3895eaa87d3a19f8d51b6dd492b10531872.
 
-Eight hosted/local copy combinations (four flags×two input values) pass exact
-references for initial and timed local execution. Retained GPU fixture old-runner
-regression: control passes, zero-input case returns 7 instead of 0. New runner passes
-both. Fifteen public and nine transformer checks pass; memcheck/synccheck clean
-on both fixtures. Audit 705 retained/model descriptors: zero affected non-output
-zero targets. Compiler remains 7ebf4ff2; existing 125-check local matrix still applies.
-All gate jobs terminal. Published harness checkpoint c95beb5; archive contains
-verified fixed runner/probe/fixtures and unchanged compiler 7ebf4ff2. Three
-extracted hosted GPU smoke checks pass. Local 125-check compiler suite remains
-valid from prior acceptance; no hosted CPU CI success claimed. Repo private;
-submission deferred.
+## CI and packaging
 
-## Latest shape correction
+GitHub run40280154398 (source67c6b2f) was inspected: all3 CPU jobs rejected before
+steps, annotation failed account payments/spending limit. No account change,
+retry loop or visibility workaround authorized. Later pushes can trigger jobs;
+do not claim current hosted CPU success from local matrices. Old public86-check
+run40107112159 passed7fbe5ee4, not current source.
 
-production-iteration14.json supports zero-domain tiles as no-ops before coordinate
-decoding. Empty axis LIST has product one and still executes one cell. Static
-nonnegative typed tensor/Tile/loop extents are validated; symbolic extents fail
-clearly. Shared extents must be positive integer dimensions (scalar() is one f32),
-alignment zero/natural or power of two. Zero-sized shared arrays unsupported.
-Preserves logical/physical allocation views and valid ABI permutations.
+Previous verified archive source aacaa3c / compiler c2f7e2b3:
+ZIP9db6ffe1590498673894f58d7571aca43155bf78df7a300a6d3122d4636a3c43.
+Record validation/2026-10-26-current-package.json currently describes that old
+checkpoint. New eeb79a3a source must be committed and packaged next, using:
+`.venv/bin/python tools/package_submission.py --python artifacts/power2-release-runtime/bin/python --out artifacts/emmy-ptx-scalar-logs-checkpoint.zip`.
+Preserve old current record as2026-10-26-wrap-package.json. Inspect actual ZIP
+member bytes and extracted3 hosted smoke checks before updating current aliases.
+Never resolve the venv Python symlink (would bypass pyvenv.cfg).
 
-Baseline 40a1de84 passes four controls, fails fourteen zero-domain probes. Final 36
-original/frozen-fresh cases pass on both GPUs; 27 negative/four valid CLI shape
-controls pass. Initial generator used float index 0 in the sentinel control;
-corrected to integer and retained invalid initial runs separately, excluded from
-acceptance. Candidate source unchanged. All 658 prior kernels emit identical PTX;
-nine transformer runs pass. No fresh speedup or changed shared-memory motion.
+## Next work
 
-Four GPU-checked fixtures retained; existing sixteen goldens unchanged. Local
-matrix 24+28+42+31=125 passes on Python 3.12.13/3.13.14/3.14.4 without Torch.
-Published source 7a7f518; refreshed archive with compiler 7ebf4ff2 passes three
-hosted GPU smoke checks. GitHub run 40111398281 again rejected all jobs before
-startup for account payments/spending state; no hosted CPU results.
-All semantic/local test jobs terminal. Repo private; submission deferred.
+All semantic/CPU/transformer/sanitizer gates above have completed; do not restart.
+Record current source/evidence, commit privately and verify refreshed package.
+Then prioritize remaining supported frontend scalar/mask operation mixes. Source
+inspection found f32 masks/comparisons/where, square/pad, sin/cos/erf/pow in the
+pinned frontend's op_to_expr; current backend still lacks several. Generate real
+frontend cases first to establish the actual gap. Internal bool SSA support must
+not silently enable unsupported bool storage. Large dtype/Tensor Core expansions
+are not required by current published evaluation scope.
 
-## Previous accepted optimization — cross-iteration shared pairing
-
-This optimization was accepted as 40a1de84. Exact frozen source
-artifacts/compiler-cross-pair.py SHA256
-40a1de84e3813cb1377d1dcdd0c0e369666c5638332d6cb18155cb31fcfc678c.
-Reconstruct via experiments/cross-iteration-pair.patch against prior 7fbe5ee4.
-The lowering adds aligned v2 shared reads across even/odd positions in the existing
-bounded unroll. Requires affine unit axis coefficient, even remaining terms,
->=8-byte allocation alignment and immutable index dependencies. Skips within-body
-pairs, shadowed/local indices, writes/global reads/control; tails stay scalar.
-
-Evidence: validation/2026-10-24-cross-iteration-discovery.json. 30 baseline controls
-pass; candidate 30 original +30 frozen fresh probes pass on both GPUs. 60 explicit
-vector eligibility checks pass. Of 594 retained kernels, 561 emit identical PTX;
-all 33 changed kernels pass locally and hosted. Four sanitizers clean on 30 new
-cases plus separate exact-allocation odd-tail 5/65 checks. Nine transformer,
-existing 86 no-Torch CPU checks, eleven diagnostic probes and three isolated /tmp
-compilations pass. All sessions from these gates are terminal; do not restart them.
-
-Final SEQUENTIAL hosted 7-pair /19-workload timing (after correctness requests
-finished): m01 25.088→16.928 us (1.482x), independent 256×512×384
-19.040→12.992 (1.466x), 384×256×320 14.912→10.752 (1.387x). Other 16 within 0.032 us.
-Full outputs first trial/prefixes later; unlocked clocks. Separate exploratory
-broad timing overlapped correctness; retain but use final timing for acceptance.
-Local-driver sm120 native diagnostics differ from actual hosted code; public
-static entry grows 1546→4976 despite speedup, so static counts are not dynamic work.
-
-Main adopts the exact validated candidate. Four GPU-verified positive/tail/guard
-fixtures are committed; existing twelve goldens unchanged. Twenty local no-Torch
-snapshot/feature checks pass; CI now totals 90 checks with launch/ABI suites.
-Published as 07f4851. Ninety checks pass locally on Python 3.12.13/3.13.14/3.14.4
-without Torch. GitHub run 40109402820 did NOT start any jobs: account failed
-payments/spending limit annotation; no test logs/results. Do not claim hosted
-CI success or retry repeatedly without account state changing. Archive from
-07f4851 passes three hosted GPU smoke checks; see current-package.json.
-Broader goal/readiness gaps remain. Keep repository private; submission deferred.
-
-## Latest acceptance evidence
-
-Prior baseline performance calibration (before cross-iteration pairing):
-validation/2026-10-24-target-calibration.json and TARGET_PERFORMANCE.md. Five hosted
-trials, 8 warmups/75 iterations, alternating forward/reverse: no-work median
-2.784 us, copy 1 MiB 3.008 us, 64 MiB strided read 5366.47 effective GB/s,
-224 MiB read 1654.52 GB/s. Full outputs checked exactly first trial, prefixes
-later. Clocks unlocked/reused buffers/no eviction or counters. Initial 256+8 MiB
-request rejected by aggregate 67108864-element limit; corrected to 224+7 MiB.
-Fresh same-compiler matmul medians: 25.072/19.024/14.912 us for public512,
-256x512x384 and 384x256x320. Nominal f32/grid models leave 7.37–11.69x gaps but
-are conditional on published boost rates, not measured utilization or rigorous
-hardware bounds. Cache-sized tests must not use a cold DRAM-only roofline.
-NVIDIA whitepaper pinned: 170 SMs, 104.8 non-Tensor FP32 TFLOP/s, 1792 GB/s,
-96 MiB L2. Do not substitute reduced-precision Tensor Core peaks.
-
-Latest compiler acceptance:
-
-
-production-iteration12.json adds positional buffer ABI diagnostics: exactly one
-KernelOp per IR file, a unique matching launch entry, complete unique arg_order,
-args descriptors in the same order, f32 allocation dtype and static nonnegative
-integer allocation shapes. Preserves consistently reordered parameters, scalar
-logical views and differing logical/physical shapes. 37 negatives/five positive
-CLI controls pass. All 594 prior kernels emit identical PTX; twelve retained GPU
-fixtures pass locally and two new positive layout/order controls pass on both GPUs.
-Existing 16 snapshot/feature and 28 launch checks remain; CI adds 42 ABI probes.
-Actions run 40107112159 passes all 86 checks on Python 3.12/3.13/3.14; downloaded
-reports verify 7fbe5ee4 and no Torch. Archive from b2a1b19 passes three hosted checks.
-No full data/role/bounds/type checker.
-
-Previous launch acceptance:
-
-
-production-iteration11.json adds pre-emission launch geometry diagnostics. Rejects
-invalid/missing dimension triples, nonpositive/noninteger dimensions, y/z != 1,
-block.x > 1024, grid.x > 2147483647, invalid smem_bytes and cooperative block-width
-mismatches. Baseline emits PTX for all 25 invalid/unsupported probes; accepted
-compiler rejects them without PTX and passes three valid controls. All 594 retained
-kernels emit identical PTX; twelve committed GPU fixtures pass locally. Existing
-sixteen no-Torch checks pass; new 28-case launch CLI suite passes without Torch.
-Actions run 40106607610 passes both suites on Python 3.12/3.13/3.14; downloaded
-reports verify 1dfcf75f and no Torch. Archive from 0fea2c0 passes three hosted checks.
-No new timing/sanitizer/hosted numerical claim; retained PTX remains identical.
-Argument ABI/schema, grid coverage and general bounds validation remain open.
-
-Previous address acceptance:
-
-
-production-iteration10.json fixes address rank semantics per installed render_index:
-empty=zero, single=flat, full rank=row-major, otherwise additive coordinate sum.
-Shared pairing proofs use the same flattening. Previous compiler passes six controls
-but fails ten numerical rank probes. Final 32 original/fresh cases pass on both
-GPUs, plus two reordered-ABI candidate controls. Four sanitizers clean on 16 cases;
-nine transformer runs, three no-Torch compilations and eleven diagnostics pass.
-550 prior kernels emit identical PTX; no new timing claim. Metadata audit finds 38
-valid scalar logical-view/allocation rank differences, no order/coop mismatch.
-Do not impose strict shape-rank equality in future validation.
-
-Current CPU manifest adds four addressing/ABI fixtures; existing eight goldens
-unchanged. Sixteen no-Torch checks pass locally and on Python 3.12/3.13/3.14
-in Actions run 40099484929; downloaded reports verify bf07d517. Archive verified
-from 998f3b0. No full bounds/ABI validator claim.
-
-Previous scalar acceptance:
-production-iteration9.json corrects scalar f32 expressions/conditions/casts.
-Accepted 393d7600 supports f32 +,-,*, mixed comparisons/ternaries, IEEE float
-truthiness, explicit numeric f32/i32 Let conversion, mixed scalar/FMA operands and
-integer scalar writes into f32 storage. Floating indices reject; floating Expr
-/,//,% unsupported (typed Assign divide still supported). Nonfinite/out-of-range
-f32→i32 casts and integer-buffer storage remain outside scope.
-
-26 final baseline cases fail on b13ccba6. Final 26 original + 26 frozen fresh cases
-pass on both GPUs; four sanitizers clean on 26 selected cases, nine transformer
-runs, three no-Torch compilations and eleven diagnostic probes pass. All 498 prior
-kernels emit identical PTX, preserving prior codegen/timing evidence. Current CPU
-manifest has eight positive fixtures/four negatives: twelve local no-Torch checks
-pass. Actions run 40096495312 passes all twelve checks on Python 3.12/3.13/3.14;
-downloaded exact-hash reports join iteration9. Existing four goldens unchanged.
-
-Previous predicate-index acceptance:
-validation/2026-10-24-production-iteration8.json fixes predicate-valued indices.
-Scalar booleans materialize integer 0/1 for arithmetic, comparisons, ternary
-branches, integer Lets and memory offsets. Conditions retain .pred registers.
-All 20 corrected original probes fail driver assembly on 04b50e69; final candidate
-passes 20 original + 20 frozen fresh cases on both GPUs. Four sanitizers clean on
-20 new cases, nine transformer runs and three no-Torch compilations pass. Shared
-pairing positively emits a vector load in the predicate-address fixture.
-All 458 prior kernels emit byte-identical PTX, preserving earlier codegen; no
-fresh speedup claim. Eight rejection diagnostics still pass. New committed shared
-predicate fixture adds a fourth CPU golden: all seven checks pass locally without
-Torch, existing three goldens unchanged. Actions run 40093823051 passes all seven
-checks on Python 3.12/3.13/3.14; downloaded exact-hash reports saved in iteration8.
-
-Prior GPU/timing evidence for identical prior PTX:
-validation/2026-10-24-production-iteration7.json:
-
-- 366 prior isolated local cases plus 90 signed/divisor/extreme and two committed
-  fixtures pass (458 executions; correlated development cases).
-- 92 direct hosted proof/fixture cases plus full first-trial outputs on 19 paired
-  timing workloads pass (111 cases, not hidden-test success estimates).
-- Nine transformer runs pass; four sanitizers clean on 45 selected cases.
-- Three isolated no-Torch /tmp compilations emit byte-identical PTX, and eight
-  unsupported-feature CLI probes still reject cleanly.
-- Final seven alternating RTX 5090 trials, unlocked clocks, full outputs first
-  trial and prefixes later: public m01 64.160 → 24.928 µs (2.574x), independent
-  256×512×384 matmul 37.760 → 17.344 (2.177x), 384×256×320 31.392 → 15.008 (2.092x).
-  Other 16 workloads differ by at most 0.032 µs; no claimed win for those gaps.
-- Local-driver sm120 m01 entry 26960 → 1546 static instructions, REG48 → 40.
-  Local cuLink compilation is not hosted SASS, dynamic work or utilization proof.
-
-Original combined unsigned+signed candidate 8da911f2 was NOT adopted: m01 reached
-23.232 µs but attention128 regressed 53.920 → 58.016. Signed-only refinement
-preserves attention128; local native disassembly matches baseline exactly there.
-An unsigned divisor-one identity control did not heal the regression. Evidence:
-power2-index-discovery.json and power2-refinement.json under validation.
-Historical patches power2-index*.patch apply to 1ad0dbf source, not new main.
-
-Earlier correctness records production-iteration2/3/5/6 preserve historical failures
-and semantic gates. Larger bounded expansion/paired reads have separate timing
-records. General CSE, global unroll, grouped global vector memory and blanket
-nounroll controls are rejected/archived; avoid repeating without new evidence.
-
-## Tools and CI
-
-TESTING.md has commands. Semantic generators fuzz_semantics.py, fuzz_nested.py,
-generate_pair_cases.py, generate_signed_index_cases.py, generate_index_scope_cases.py
-generate_strided_bound_cases.py and generate_predicate_index_cases.py use
-independent mathematical references.
-validate_isolated.py uses a fresh process/context per case to avoid poisoned-context
-cascades. Shared sanitizer binary is under artifacts/vendor (see TESTING).
-
-shrink_failure.py deletes statements only while the reference passes the unchanged
-oracle and the suspect numerically mismatches. Final replay required. Historical
-scope 11 → 10 and strided 8 → 8 retained fixtures are committed under
-validation/counterexamples. These are deletion fixed points, not globally smallest.
-
-profile_resources.py reports PTX/JIT resources and local occupancy ceilings.
-profile_sass.py uses local driver cuLink plus verified NVIDIA cuobjdump/nvdisasm
-13.0.85 under artifacts/vendor, supports explicit sm120 output on sm86 hardware.
-Compact evidence/provenance: validation/2026-10-24-native-instructions.json.
-This differs from remote/direct-module JIT. No hosted counters/SASS capture or
-roofline study. Address CSE reduced PTX but five target timings were neutral;
-partial safety sweep stopped after rejection, patch/evidence preserved.
-
-CPU workflow is configured for push/PR/manual/nightly on Python 3.12–3.14.
-Current suite: twenty GPU-verified snapshots/four feature probes, plus 28 launch,
-42 ABI and 31 shape checks (125 total). Local isolated matrix passes all 125 on
-3.12.13/3.13.14/3.14.4 without Torch; environments reused from prior pinned
-installs. Full local reports in iteration14. GitHub run 40111398281 on 7a7f518
-produced no test results: every job rejected before startup for account failed
-payments/spending limit. Hosted 125-check CI remains unverified until account
-state changes. Keep repo private; no billing/spending changes authorized.
-Prior public-repo 86-check run 40107112159 passed 7fbe5ee4, not current source.
-Nightly history remains unproven.
-
-## Packaging and next work
-
-Current verified archive built from c95beb5, compiler 7ebf4ff2, fixed local runner
-90a494a3. Archive member hashes verify the runner, probe and GPU fixtures. Uses the existing
-isolated no-Torch Python 3.12.13 runtime from the earlier pinned fresh install;
-dependencies unchanged. Extracted scalar-add, matmul and attention hosted checks
-pass. Latest evidence: validation/2026-10-24-current-package.json. Archive aliases
-artifacts/emmy-ptx-runner-checkpoint.zip, artifacts/emmy-ptx-current-checkpoint.zip,
-and artifacts/emmy-ptx-submission.zip hold identical verified bytes. Prior static-shape
-archive/report retained; evidence validation/2026-10-24-static-shapes-package.json.
-No rebuild needed for documentation-only changes. No entry submitted.
-
-Next: broaden index/control-flow type validation, operation/dtype coverage and
-bounded failure shrinking. Continue target hardware lower-bound/bottleneck work;
-no hosted counters or rigorous clock-aware roofline yet. First calibration is
-recorded above. Add future retained cases to CPU CI.
-No candidate jobs remain live from this acceptance step. New CI runs may trigger
-on documentation pushes, but current hosted CI is billing-blocked as stated above.
-
-Entry drafts SUBMISSION.md/WALKTHROUGH.md reflect current measured optimizations.
-**No contest entry submitted.** Personal fields/video still missing; don't invent
-them or contact organizers. General production readiness remains unproven.
-
-Next ABI/static-shape/launch validation must preserve permissive flat/additive
-coordinates, physical/logical views and valid parameter-order permutations.
-
-ABI follow-up evidence: challenge/submit.py builds run_args in args descriptor
-order, and tools/local_runner.py builds positional parameters the same way.
-Future validation should require agreement with arg_order, while permitting
-consistent permutations of both lists. Do not require logical/allocation rank
-identity. Full ABI/schema validation and required-grid coverage remain open.
-
-Remaining validation needs initialization/output roles, payload sizes, graph/schema
-consistency, static tile shapes and required grid coverage. Preserve valid views.
-Next performance priority: investigate matmul instruction/address work, shared
-traffic/dependencies and available warp parallelism using the calibrated gap.
-Prescribed grids have 80–128 CTAs vs 170 SMs. Further optimization still needs
-independent safety gates and target paired timing; no counter-proven bottleneck.
-Current runner checkpoint is verified; prior static-shape archive is historical.
+HACKATHON_READINESS.md is the requirements audit. Personal video/publication later,
+submission deferred, hidden-set and broad production-readiness claims unproven.
