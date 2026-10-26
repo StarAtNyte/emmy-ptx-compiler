@@ -1532,3 +1532,18 @@ Completed 2026-10-26:
 - Further actual frontend math cases are generating, followed by isolated baseline
   checks. Keep this live discovery process; no new math candidate/main change yet.
   Goal remains active, repo private, video/publication later today.
+
+## Step 63 — real scalar math/GELU coverage gap established
+
+Completed discovery 2026-10-26:
+
+- Six actual frontend expressions generate successfully with pinned Emmy. Five
+  fail current6237 compiler: standalone square/erf, native GELU, explicit GELU
+  math and RMS using square. Zero-pad-plus-add passes; no padding defect claim.
+- Inspected actual scalar operation names and retained IR/meta/oracle hashes.
+  Independent NumPy/SciPy references cover the same final traced computations.
+  Evidence: math-discovery.json, including source spec and baseline failures.
+- All discovery processes terminal. No math candidate adopted; current accepted
+  mask compiler/package remains verified. Next own PTX square/erf/GELU lowering
+  and accuracy gates. User's complete win-ready objective remains active.
+  Repo private, video/publication later, no entry submitted.

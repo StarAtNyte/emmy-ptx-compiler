@@ -1,0 +1,245 @@
+{
+  "status": "Confirmed real frontend math coverage gap; no math candidate adopted",
+  "compiler_sha256": "6237caabcebbaf5503223ab90d56d19d57aa4725095ab8846f8b3d2349ae41a3",
+  "spec_source": "import numpy as np\nfrom scipy.special import erf\n\ndef gelu(x):\n    a=x.astype(np.float64)\n    return [(a*.5*(1+erf(a/np.sqrt(2)))).astype(np.float32)]\n\nOPEN=[\n dict(id='p_square_257',code='torch.square(torch.randn(257))',ref=lambda x:[np.square(x)]),\n dict(id='p_erf_513',code='torch.erf(torch.randn(513))',ref=lambda x:[erf(x.astype(np.float64)).astype(np.float32)]),\n dict(id='f_gelu_7_65',code='torch.nn.functional.gelu(torch.randn(7,65))',ref=gelu),\n dict(id='f_gelu_math_5_129',code='x=torch.randn(5,129); .5*x*(1+torch.erf(x/1.4142135623730951))',ref=gelu),\n dict(id='f_rms_square_9_129',code='x=torch.randn(9,129); x*torch.rsqrt(x.square().mean(-1,keepdim=True)+1e-5)',\n      ref=lambda x:[(x.astype(np.float64)/np.sqrt((x.astype(np.float64)**2).mean(-1,keepdims=True)+1e-5)).astype(np.float32)]),\n dict(id='p_zero_pad_add_129',code='torch.nn.functional.pad(torch.randn(129),(0,0))+1',ref=lambda x:[x+np.float32(1)]),\n]\nfor spec in OPEN:spec.update(rtol=1e-4,atol=2e-5)\n",
+  "spec_sha256": "56c3237ad5a1982f971322f600ab033f3ce93a2fc612f49fe5ab6bbc43b070a4",
+  "generation_log": "  OK    p_square_257         1 kernel(s): k_square_pointwise\n  OK    p_erf_513            1 kernel(s): k_erf_pointwise\n  OK    f_gelu_7_65          1 kernel(s): k_gelu_pointwise\n  OK    f_gelu_math_5_129    1 kernel(s): k_mul_1_pointwise\n  OK    f_rms_square_9_129   1 kernel(s): k_mean_7480a2\n  OK    p_zero_pad_add_129   1 kernel(s): k_add_pointwise\n\n6 ok, 0 failed\n",
+  "baseline_local": {
+    "compiler_sha256": "6237caabcebbaf5503223ab90d56d19d57aa4725095ab8846f8b3d2349ae41a3",
+    "isolation": "one subprocess and CUDA context per case",
+    "results": [
+      {
+        "problem": "f_gelu_7_65",
+        "path": "artifacts/math-discovery/f_gelu_7_65",
+        "meta_sha256": "2043c4d0b508940bbdba7372281157bb4a39896037b69eb52b00840942a42235",
+        "ir_sha256": {
+          "k_gelu_pointwise.ir.json": "9b827c36246e467b9be7c5942f6e3a88df9a5fd951063c61932e790fb78b77e9"
+        },
+        "passed": false,
+        "exit_code": 1,
+        "stdout": "Local PTX target: sm_86\nFAIL f_gelu_7_65: Command '['/home/nitiz/Projects/Self/Challenges/emmy/.venv/bin/python', '/home/nitiz/Projects/Self/Challenges/emmy/compile.py', 'artifacts/math-discovery/f_gelu_7_65/k_gelu_pointwise.ir.json']' returned non-zero exit status 1.\ncompile.py: Unsupported scalar operation erf\n\n0/1 passed\n",
+        "stderr": "",
+        "detail": {
+          "compiler_sha256": "6237caabcebbaf5503223ab90d56d19d57aa4725095ab8846f8b3d2349ae41a3",
+          "arch": "sm_86",
+          "results": [
+            {
+              "problem": "f_gelu_7_65",
+              "passed": false,
+              "error": "Command '['/home/nitiz/Projects/Self/Challenges/emmy/.venv/bin/python', '/home/nitiz/Projects/Self/Challenges/emmy/compile.py', 'artifacts/math-discovery/f_gelu_7_65/k_gelu_pointwise.ir.json']' returned non-zero exit status 1.",
+              "compiler_stderr": "compile.py: Unsupported scalar operation erf\n",
+              "elapsed_s": 0.553
+            }
+          ]
+        },
+        "elapsed_s": 1.547
+      },
+      {
+        "problem": "f_gelu_math_5_129",
+        "path": "artifacts/math-discovery/f_gelu_math_5_129",
+        "meta_sha256": "fc79751dae15ccc463d8a80fedc13dc5b129725fe770055b201adec56fe663d6",
+        "ir_sha256": {
+          "k_mul_1_pointwise.ir.json": "48cd1b8f886ff71c41862b75fdbf3ce4decc7645ee84ed7fcb8f945ebb02f1b0"
+        },
+        "passed": false,
+        "exit_code": 1,
+        "stdout": "Local PTX target: sm_86\nFAIL f_gelu_math_5_129: Command '['/home/nitiz/Projects/Self/Challenges/emmy/.venv/bin/python', '/home/nitiz/Projects/Self/Challenges/emmy/compile.py', 'artifacts/math-discovery/f_gelu_math_5_129/k_mul_1_pointwise.ir.json']' returned non-zero exit status 1.\ncompile.py: Unsupported scalar operation erf\n\n0/1 passed\n",
+        "stderr": "",
+        "detail": {
+          "compiler_sha256": "6237caabcebbaf5503223ab90d56d19d57aa4725095ab8846f8b3d2349ae41a3",
+          "arch": "sm_86",
+          "results": [
+            {
+              "problem": "f_gelu_math_5_129",
+              "passed": false,
+              "error": "Command '['/home/nitiz/Projects/Self/Challenges/emmy/.venv/bin/python', '/home/nitiz/Projects/Self/Challenges/emmy/compile.py', 'artifacts/math-discovery/f_gelu_math_5_129/k_mul_1_pointwise.ir.json']' returned non-zero exit status 1.",
+              "compiler_stderr": "compile.py: Unsupported scalar operation erf\n",
+              "elapsed_s": 0.592
+            }
+          ]
+        },
+        "elapsed_s": 1.397
+      },
+      {
+        "problem": "f_rms_square_9_129",
+        "path": "artifacts/math-discovery/f_rms_square_9_129",
+        "meta_sha256": "85917f7789b64acc1d33fc449c22d8981e53c338dcfa669c4ff094f43e28da75",
+        "ir_sha256": {
+          "k_mean_7480a2.ir.json": "838adf673c5efd6ddb14ef7c3f8bc57b05847eacb5010998b4271f47f39354f5"
+        },
+        "passed": false,
+        "exit_code": 1,
+        "stdout": "Local PTX target: sm_86\nFAIL f_rms_square_9_129: Command '['/home/nitiz/Projects/Self/Challenges/emmy/.venv/bin/python', '/home/nitiz/Projects/Self/Challenges/emmy/compile.py', 'artifacts/math-discovery/f_rms_square_9_129/k_mean_7480a2.ir.json']' returned non-zero exit status 1.\ncompile.py: Unsupported scalar operation square\n\n0/1 passed\n",
+        "stderr": "",
+        "detail": {
+          "compiler_sha256": "6237caabcebbaf5503223ab90d56d19d57aa4725095ab8846f8b3d2349ae41a3",
+          "arch": "sm_86",
+          "results": [
+            {
+              "problem": "f_rms_square_9_129",
+              "passed": false,
+              "error": "Command '['/home/nitiz/Projects/Self/Challenges/emmy/.venv/bin/python', '/home/nitiz/Projects/Self/Challenges/emmy/compile.py', 'artifacts/math-discovery/f_rms_square_9_129/k_mean_7480a2.ir.json']' returned non-zero exit status 1.",
+              "compiler_stderr": "compile.py: Unsupported scalar operation square\n",
+              "elapsed_s": 0.619
+            }
+          ]
+        },
+        "elapsed_s": 1.444
+      },
+      {
+        "problem": "p_erf_513",
+        "path": "artifacts/math-discovery/p_erf_513",
+        "meta_sha256": "e5b3d8ae804d8e544ce52a6780d9c275cba469a02f0204bbd33dc98b3d8e0aed",
+        "ir_sha256": {
+          "k_erf_pointwise.ir.json": "a89e60931b64843cb0b5ad82f90cf4ada5acd350c458d6961230d12798035e65"
+        },
+        "passed": false,
+        "exit_code": 1,
+        "stdout": "Local PTX target: sm_86\nFAIL p_erf_513: Command '['/home/nitiz/Projects/Self/Challenges/emmy/.venv/bin/python', '/home/nitiz/Projects/Self/Challenges/emmy/compile.py', 'artifacts/math-discovery/p_erf_513/k_erf_pointwise.ir.json']' returned non-zero exit status 1.\ncompile.py: Unsupported scalar operation erf\n\n0/1 passed\n",
+        "stderr": "",
+        "detail": {
+          "compiler_sha256": "6237caabcebbaf5503223ab90d56d19d57aa4725095ab8846f8b3d2349ae41a3",
+          "arch": "sm_86",
+          "results": [
+            {
+              "problem": "p_erf_513",
+              "passed": false,
+              "error": "Command '['/home/nitiz/Projects/Self/Challenges/emmy/.venv/bin/python', '/home/nitiz/Projects/Self/Challenges/emmy/compile.py', 'artifacts/math-discovery/p_erf_513/k_erf_pointwise.ir.json']' returned non-zero exit status 1.",
+              "compiler_stderr": "compile.py: Unsupported scalar operation erf\n",
+              "elapsed_s": 0.612
+            }
+          ]
+        },
+        "elapsed_s": 1.478
+      },
+      {
+        "problem": "p_square_257",
+        "path": "artifacts/math-discovery/p_square_257",
+        "meta_sha256": "e16002681fd9e8dfe0739ea5909e1f162f4f4987570147876ed6709f3520e780",
+        "ir_sha256": {
+          "k_square_pointwise.ir.json": "9b1415276c8a496b1d6448a65bbe1f624f8c6d760afebd7305bbf51e93462e91"
+        },
+        "passed": false,
+        "exit_code": 1,
+        "stdout": "Local PTX target: sm_86\nFAIL p_square_257: Command '['/home/nitiz/Projects/Self/Challenges/emmy/.venv/bin/python', '/home/nitiz/Projects/Self/Challenges/emmy/compile.py', 'artifacts/math-discovery/p_square_257/k_square_pointwise.ir.json']' returned non-zero exit status 1.\ncompile.py: Unsupported scalar operation square\n\n0/1 passed\n",
+        "stderr": "",
+        "detail": {
+          "compiler_sha256": "6237caabcebbaf5503223ab90d56d19d57aa4725095ab8846f8b3d2349ae41a3",
+          "arch": "sm_86",
+          "results": [
+            {
+              "problem": "p_square_257",
+              "passed": false,
+              "error": "Command '['/home/nitiz/Projects/Self/Challenges/emmy/.venv/bin/python', '/home/nitiz/Projects/Self/Challenges/emmy/compile.py', 'artifacts/math-discovery/p_square_257/k_square_pointwise.ir.json']' returned non-zero exit status 1.",
+              "compiler_stderr": "compile.py: Unsupported scalar operation square\n",
+              "elapsed_s": 0.627
+            }
+          ]
+        },
+        "elapsed_s": 1.705
+      },
+      {
+        "problem": "p_zero_pad_add_129",
+        "path": "artifacts/math-discovery/p_zero_pad_add_129",
+        "meta_sha256": "0ff4b70961321320ccb2b5d24bdb548fdd0d561e6138a01f0877056681533353",
+        "ir_sha256": {
+          "k_add_pointwise.ir.json": "4dea424d6a03483c6fbb520e7d1050208e413a67e5323b9d19b11de35ade7557"
+        },
+        "passed": true,
+        "exit_code": 0,
+        "stdout": "Local PTX target: sm_86\nPASS p_zero_pad_add_129\n1/1 passed\n",
+        "stderr": "",
+        "detail": {
+          "compiler_sha256": "6237caabcebbaf5503223ab90d56d19d57aa4725095ab8846f8b3d2349ae41a3",
+          "arch": "sm_86",
+          "results": [
+            {
+              "problem": "p_zero_pad_add_129",
+              "passed": true,
+              "elapsed_s": 0.733
+            }
+          ]
+        },
+        "elapsed_s": 1.85
+      }
+    ]
+  },
+  "cases": [
+    {
+      "folder": "artifacts/math-discovery/f_gelu_7_65",
+      "scalar_operations": {
+        "multiply": 3,
+        "erf": 1,
+        "add": 1
+      },
+      "files": {
+        "expected.npz": "dc9517323de459854c8531e7995795255744ca3748d5f50ba55ae5644f539dec",
+        "k_gelu_pointwise.ir.json": "9b827c36246e467b9be7c5942f6e3a88df9a5fd951063c61932e790fb78b77e9",
+        "meta.json": "2043c4d0b508940bbdba7372281157bb4a39896037b69eb52b00840942a42235"
+      }
+    },
+    {
+      "folder": "artifacts/math-discovery/f_gelu_math_5_129",
+      "scalar_operations": {
+        "reciprocal": 3,
+        "multiply": 9,
+        "erf": 3,
+        "add": 3
+      },
+      "files": {
+        "expected.npz": "446cba5c0576fa0e1877740e7dc79d42382c0c131be3d22a0bdc84d9602c4736",
+        "k_mul_1_pointwise.ir.json": "48cd1b8f886ff71c41862b75fdbf3ce4decc7645ee84ed7fcb8f945ebb02f1b0",
+        "meta.json": "fc79751dae15ccc463d8a80fedc13dc5b129725fe770055b201adec56fe663d6"
+      }
+    },
+    {
+      "folder": "artifacts/math-discovery/f_rms_square_9_129",
+      "scalar_operations": {
+        "square": 1,
+        "add": 2,
+        "reciprocal": 1,
+        "multiply": 2,
+        "rsqrt": 1
+      },
+      "files": {
+        "expected.npz": "8fd4e0bf29119ce99bfa6ab18c8c615e0d6dfd20042552770511598689dd0c82",
+        "k_mean_7480a2.ir.json": "838adf673c5efd6ddb14ef7c3f8bc57b05847eacb5010998b4271f47f39354f5",
+        "meta.json": "85917f7789b64acc1d33fc449c22d8981e53c338dcfa669c4ff094f43e28da75"
+      }
+    },
+    {
+      "folder": "artifacts/math-discovery/p_erf_513",
+      "scalar_operations": {
+        "erf": 3
+      },
+      "files": {
+        "expected.npz": "04514f9f7830e3e6b948d40cceebc3430ad6ce82e4dae6281d782c34978d7b77",
+        "k_erf_pointwise.ir.json": "a89e60931b64843cb0b5ad82f90cf4ada5acd350c458d6961230d12798035e65",
+        "meta.json": "e5b3d8ae804d8e544ce52a6780d9c275cba469a02f0204bbd33dc98b3d8e0aed"
+      }
+    },
+    {
+      "folder": "artifacts/math-discovery/p_square_257",
+      "scalar_operations": {
+        "square": 1
+      },
+      "files": {
+        "expected.npz": "e909275aea0c9621ace03ec2719cc9da5f163b1042f471d8f8290ed8c81aa560",
+        "k_square_pointwise.ir.json": "9b1415276c8a496b1d6448a65bbe1f624f8c6d760afebd7305bbf51e93462e91",
+        "meta.json": "e16002681fd9e8dfe0739ea5909e1f162f4f4987570147876ed6709f3520e780"
+      }
+    },
+    {
+      "folder": "artifacts/math-discovery/p_zero_pad_add_129",
+      "scalar_operations": {
+        "add": 3
+      },
+      "files": {
+        "expected.npz": "dc0f8f0097d5b6ac8cedcf9eb11ac7cfcb1fca829f40456309744b1f08971f85",
+        "k_add_pointwise.ir.json": "4dea424d6a03483c6fbb520e7d1050208e413a67e5323b9d19b11de35ade7557",
+        "meta.json": "0ff4b70961321320ccb2b5d24bdb548fdd0d561e6138a01f0877056681533353"
+      }
+    }
+  ],
+  "decision": "Prioritize square, erf and native GELU. Zero-pad-plus-add passes and exposes no current compiler gap. Use own PTX lowering and numerical accuracy gates; no math implementation accepted yet."
+}

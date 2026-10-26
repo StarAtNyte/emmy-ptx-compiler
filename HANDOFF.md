@@ -190,8 +190,10 @@ submission deferred, hidden-set and broad production-readiness claims unproven.
 Two numeric bool-cast audits with zero/subnormal/max-finite inputs also pass
 both GPUs and regenerate byte-identically; included in13 frontend count.
 Mask acceptance is complete, source bea1389 published privately and archive verified.
-All mask gate processes terminal. New math discovery is running from ignored
-artifacts/expressions-math-discovery.py into artifacts/math-discovery, followed
-by isolated baseline checks. Cases: square, erf, native GELU, explicit GELU math,
-RMS via square and zero-pad-plus-add. Inspect actual live handle/report before
-restarting. Main remains6237caab; no math candidate adopted yet.
+All jobs terminal, including the next math discovery. Actual six frontend
+programs generate: five fail current6237 compiler on square/erf/gelu, while
+zero-pad-plus-add passes. Evidence: validation/2026-10-26-math-discovery.json,
+including reproducible spec source and scalar op counts. No math candidate yet.
+Next implement own accurate PTX square/erf/GELU lowering, verify real frontend
+and adversarial numerical cases on both GPUs. Do not substitute a library
+backend, reduced precision or narrow the full win-ready objective to this subset.
