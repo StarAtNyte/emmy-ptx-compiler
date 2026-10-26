@@ -52,9 +52,14 @@ no claim. Other sixteen workloads have at most 0.032us median regression.
 README rewritten as professional compiler documentation. Requested primary-source
 review is in RESEARCH_2026-10-26.md with pinned research-refresh.json. No external
 code incorporated, Modal job/deployment or paid compute run. Repository private.
-The package section below describes the previous checkpoint until a new package
-record is verified after committing this source. Historical sections retain their
-original counts and hashes; this section supersedes their current-state wording.
+Current archive is built from 67c6b2f, verified by extracted hosted scalar-add,
+matmul and attention checks in the existing isolated no-Torch 3.12 runtime.
+Record: validation/2026-10-26-current-package.json. Wide/current/submission ZIP
+aliases match. All archived compiler/harness/fixture bytes match tested source.
+GitHub run 40280154398 rejected all three jobs before steps: failed account
+payments/spending limit annotation. No hosted CPU success claimed.
+Historical sections below retain original counts and hashes; this section
+supersedes their current-state wording.
 
 ## Contract/current implementation
 

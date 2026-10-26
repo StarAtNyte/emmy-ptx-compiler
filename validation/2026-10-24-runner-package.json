@@ -1,0 +1,51 @@
+{
+  "status": "verified runner-initialization checkpoint; compiler unchanged; no entry submission or production-readiness claim; hosted CPU CI account restriction remains",
+  "package_report": {
+    "commit": "c95beb5496859aaaa847b687955e830193e7ef81",
+    "compiler_sha256": "7ebf4ff2395ddd9bd4f7c2eb2aa213c8cd24c505149c2c757edf159c0cbf5a61",
+    "archive_sha256": "4b0847b1d0bbd969705d8617cbc0369ceed075327e2a8e1d6e3f967c85ffb1bf",
+    "checks": [
+      {
+        "problem": "p00_scalar_add",
+        "passed": true,
+        "stdout": "[k_add_pointwise] 22 registers\n[k_add_pointwise] PASS  add: max abs err 0.000e+00  (22.624 us)\n",
+        "stderr": ""
+      },
+      {
+        "problem": "m01_matmul_512",
+        "passed": true,
+        "stdout": "[k_matmul_2967be] 40 registers\n[k_matmul_2967be] PASS  matmul: max abs err 8.392e-05  (28.896 us)\n",
+        "stderr": ""
+      },
+      {
+        "problem": "a01_attention",
+        "passed": true,
+        "stdout": "[k_matmul_softmax_reduce_b55365] 128 registers\n[k_matmul_softmax_reduce_b55365] PASS  matmul_1: max abs err 6.557e-07  (102.144 us)\n",
+        "stderr": ""
+      }
+    ],
+    "environment": {
+      "python": "3.12.13 (main, Jul 23 2026, 14:43:28) [Clang 22.1.3 ]",
+      "torch_installed": false
+    }
+  },
+  "archived_source_hashes": {
+    "compile.py": "7ebf4ff2395ddd9bd4f7c2eb2aa213c8cd24c505149c2c757edf159c0cbf5a61",
+    "tools/local_runner.py": "90a494a357d0368265a06fffdcdfd3895eaa87d3a19f8d51b6dd492b10531872",
+    "tools/probe_runner_initialization.py": "e9863612e8ea63777ec2977fc56f9844830adb6b9c89b76854ade7ca26bfa0a4",
+    "validation/runner-fixtures/2026-10-24-zero-input/k_sum_1_reduce.ir.json": "36e53a795383a4f2f43efa4f8a17a093a14e810bfc71ffa188545dbb231e7cff",
+    "validation/runner-fixtures/2026-10-24-zero-input/meta.json": "e80b4cae12fb3c62152a812759317f1588d5c95df80aedef5e7db7ead0c2133d",
+    "validation/runner-fixtures/2026-10-24-zero-input/expected.npz": "ed03962284111f2eeb064c728e023bffff8c4398e02148e548b8d601809030f9",
+    "validation/runner-fixtures/2026-10-24-nonzero-input-control/k_sum_1_reduce.ir.json": "36e53a795383a4f2f43efa4f8a17a093a14e810bfc71ffa188545dbb231e7cff",
+    "validation/runner-fixtures/2026-10-24-nonzero-input-control/meta.json": "7c6b3e648e3f1fa21e7cc3d37f51d385e4948e8040afb9cb26ab719143addf04",
+    "validation/runner-fixtures/2026-10-24-nonzero-input-control/expected.npz": "0dc159f418f0b689ddd39d8ed9110b41142ebce43903e35365871c3d57d35cd8"
+  },
+  "archive_paths": [
+    "artifacts/emmy-ptx-runner-checkpoint.zip",
+    "artifacts/emmy-ptx-current-checkpoint.zip",
+    "artifacts/emmy-ptx-submission.zip"
+  ],
+  "archive_bytes": 1436001,
+  "environment_note": "existing isolated no-Torch Python 3.12.13 runtime; dependencies unchanged",
+  "previous_checkpoint_record": "2026-10-24-static-shapes-package.json"
+}
