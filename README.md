@@ -79,9 +79,10 @@ Boolean results convert numerically when written into f32 buffers.
 
 Elementwise math is implemented in the compiler to libm-like accuracy, because
 Emmy's reference kernels use CUDA's accurate `expf`, `tanhf`, `logf`, `sinf`,
-`cosf` and `powf`: exp and tanh within 2 ULP, log 1 ULP, sin/cos 2 ULP with
+`cosf` and `powf`: sampled normal-range exp and tanh within 2 ULP, log 1 ULP, sin/cos 2 ULP with
 Payne–Hanek reduction for huge arguments, and pow through f64 with C99 special
-cases. The previous hardware-approximation version failed tanh, GELU-tanh, sin,
+cases. These are sampled measurements, not global error bounds; sampled
+subnormal exp results reached 4 ULP. The previous hardware-approximation version failed tanh, GELU-tanh, sin,
 cos and pow problems at 1e-6 tolerance on the official GPU. See
 [DESIGN.md](DESIGN.md#elementwise-math). Unknown scalar operations produce a
 diagnostic before PTX is written.
@@ -120,8 +121,9 @@ checks, isolated CLI execution and selected NVIDIA Compute Sanitizer runs.
 | Hidden-set proxies | 43 fresh shape/op-mix cases, 57 edge shapes and 13 batched/broadcast layouts, generated with the organizers' tool, all passing on the official GPU |
 | Math accuracy | Ten elementwise fixtures passing at rtol = atol = 1e-6 on the official GPU, plus wide-range ULP sweeps |
 | Model integration | Nine staged transformer seed/depth checks, covering 147 stage outputs |
-| Python compatibility | 175 local checks per version on Python 3.12, 3.13 and 3.14, without PyTorch |
+| Python compatibility | 176 local contract checks per version on Python 3.12, 3.13 and 3.14, without PyTorch; 3072 additional register-ceiling checks |
 | Memory and synchronization | Selected memcheck, racecheck, synccheck and initcheck runs |
+| Launch resources | Large-block pressure regressions, 16 frontend schedule probes and exhaustive CPU register-ceiling checks; [record](validation/2026-10-26-launch-resources.json) |
 | Packaging | Extracted archive compilation and three hosted GPU smoke checks |
 
 The transformer checks execute separately traced stages with host transfers and

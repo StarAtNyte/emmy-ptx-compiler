@@ -1747,3 +1747,77 @@ Completed 2026-10-26. Packaged public smoke checks pass. The extracted
 compile.py passes all 36 fixtures dated 2026-10-26, extracted from the same
 archive, on the official RTX 5090. Record: 2026-10-26-current-package.json;
 the 1a2ad94e package record is preserved as 2026-10-26-math-bounds-package.json.
+
+## Step 76 — adversarial launch-pressure review
+
+Completed 2026-10-26 discovery, accepted compiler still 51239969. The user
+reaffirmed compiler quality across all judging criteria; publication/video stay
+deferred. Fresh public run passes 15/15 on the official GPU; local six contract
+suites pass 175/175, plus 3 scalar-expression rejection checks.
+
+New tools/generate_launch_pressure_cases.py constructs exact copy kernels with
+many live values crossing a CTA barrier and no accumulators. Initial generator
+used Load's singular positional name for a tuple; corrected to keyword names
+before using the probes as compiler evidence. Valid cases pass only 1/4 on
+both GPUs with the accepted compiler: 384/512/768-thread variants fail launch
+OUT_OF_RESOURCES (hosted assembler reports 255 registers). The 256-thread
+control passes. Reports artifacts/launch-pressure-before-{local,hosted}.json.
+
+An exact .reqntid bound fixes all four on both GPUs, but seven clean paired
+target trials regress m01 15.040 to 17.056 us (0.882x); other three workloads
+are neutral. This broad candidate is not adopted. A narrower cap48 candidate
+is neutral in an initial five-pair m01 measurement; cap64 regresses ~12%.
+Further budget variants and fresh frontend large-block probes are in progress.
+No new compiler is accepted at this checkpoint.
+
+## Step 77 — bounded state/math register budgets
+
+Candidate c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8
+adds a cap to every block above 256 threads, using whole physical warps and
+eight-register allocation granularity for its architectural ceiling. The tuning
+hint starts at40 plus one register per Init/Accum, rounds down to8 with a48
+minimum, and allows8 more per compound math Assign. 1024-thread blocks keep64.
+The hint only affects spilling/performance; the architectural bound always wins.
+
+The first state-only budget (7dee2831) fixed launch failures but regressed a
+512-thread attention case 17.024 to23.168us. Rejected. Math headroom restores
+its72-register allocation. An intermediate state coefficient also inflated an
+independent matmul's56-register allocation to80; the final per-state budget
+restores56. Seven paired final trials: public m01 15.040→15.040us, independent
+attention32x16 17.024→17.024us, independent shared matmul11.072→11.168us.
+Unlocked clocks; full outputs first trial and prefixes thereafter. No speedup
+claim. Final correctness/compatibility and package gates are being recorded.
+
+The first frontend schedule sweep tried t320/t768/t1024. Emmy0.3.11 silently
+falls back to256 for these strings; those32 cases represent duplicated schedules,
+not32 independent schedules. The retained generator uses only recognized t256
+and t512:16 shape/operator/schedule cases. Other widths come from explicit typed
+IR probes. Diagnostic matrices and rejected variants remain in artifacts until
+the final record is consolidated.
+
+## Step 78 — accepted launch-resource fix and final gates
+
+Accepted compiler c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8.
+validation/2026-10-26-launch-resources.json consolidates baseline failures,
+rejected budgets, final target timing, numerical checks and compatibility.
+validation/iteration20-equivalence.json retains IR/meta/PTX fingerprints:
+1953 programs/diagnostics compared;1918 byte-identical, all1953 identical after
+removing launch directives. Only register allocation hints change.
+
+Exact final source: public15/15, recognized frontend schedule probes16/16 and
+five fresh pressure widths289/352/640/896/1024 pass on RTX5090. Local22/22 retained,
+frontend and fresh checks pass. Nine transformer runs pass147 stage checks.
+All four sanitizers are clean on final attention/shared-matmul; prior state-only
+policy's pressure fixtures also had all four tools clean (their PTX is unchanged
+by the final hint refinement). Isolated no-Torch Python3.12/3.13/3.14 each pass
+176 contract checks plus3072 register-ceiling invariants. CI wiring is updated;
+hosted CI remains unexecuted for the previously documented billing restriction.
+
+Seven-pair final timings: publicmatmul15.040→15.040us, attention32x16
+17.024→17.024us, independent sharedmatmul11.072→11.168us. All first-trial outputs
+checked fully, later trials use prefixes. No new speedup claimed.
+
+Retained512-thread pressure fixture extends CPU snapshots57 positives+4 negative
+probes; prior56 positives stay byte-identical. README sampled-error language and
+launch policy docs corrected. CLAUDE.md now agrees that visibility/video/submission
+are deferred. Packaging is the remaining release check for this source.

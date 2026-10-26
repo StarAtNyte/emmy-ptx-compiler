@@ -110,11 +110,26 @@ loop iterations (for example 8x8) produced all-NaN output before the first chang
 Every reference kernel declares `__launch_bounds__(block)`. Without an
 equivalent, ptxas may use more registers per thread than a large block can
 hold: a 1024-thread fused matmul-softmax used 128 registers and failed with
-CUDA_ERROR_LAUNCH_OUT_OF_RESOURCES. The compiler emits `.maxnreg 65536/block`
-for 1024-thread blocks, or when carried accumulators suggest pressure, and
-`.maxntid` for blocks of at most 256 threads. Caps change ptxas's allocation
-(it tends to fill the budget), and capping a 512-thread matmul slowed it to
-0.88x, so caps are not applied when they cannot be needed.
+CUDA_ERROR_LAUNCH_OUT_OF_RESOURCES. Large live sets without accumulators can
+also exceed the limit: three exact-copy/barrier probes with 384/512/768 threads
+failed on both GPUs before every large block received a cap.
+
+Blocks of at most 256 threads retain `.maxntid`. Larger blocks receive
+`.maxnreg` bounded by 65536 registers divided over complete physical warps,
+rounded down to an eight-register allocation unit. Counting logical threads
+alone would miss the allocation consumed by idle lanes in a partial final warp.
+1024-thread blocks retain a 64-register cap. Other large blocks use the lower
+of the architectural ceiling and a coarse IR-state budget (at least 48 registers),
+with eight additional temporary registers per compound math operation. The
+state/math estimate affects spilling and performance, never whether a cap exists.
+
+An exact `.reqntid` bound and the tested 64/80/96-register caps regressed public
+matmul to about 0.88x. The selected 48-register budget for that IR measured
+15.008 to 15.040 us in seven paired target trials, within timing variation.
+A state-only estimate regressed a 512-thread attention case by 26%; accounting
+for compound math temporaries restores its measured register allocation and
+timing. This is not a guarantee of optimal register budgets for unseen kernels.
+See the launch-resource validation record and `tools/check_launch_resources.py`.
 
 ## Matmul transport
 

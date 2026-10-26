@@ -10,5 +10,5 @@ checking the recorded compiler hash and actual report.
 
 Current priority: defer competition submission and push toward a production-level,
 win-worthy compiler through recent research, profiling and measured experiments.
-Public repository publication is already approved and completed; do not ask for
-that approval again. Entrant details/video are a later submission dependency.
+The user has deferred public visibility, video and submission. Keep the repository
+private and focus on compiler correctness, code quality and measured target speed.

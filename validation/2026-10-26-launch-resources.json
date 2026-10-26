@@ -1,0 +1,2453 @@
+{
+  "date": "2026-10-26",
+  "status": "accepted after correctness, resource, compatibility, sanitizer and target timing checks",
+  "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+  "baseline_compiler_sha256": "512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32",
+  "changes": [
+    "Register cap for every >256-thread block, bounded using complete physical warps and eight-register allocation units.",
+    "Empirical budget:40+Init/Accum count rounded down to8, minimum48, plus8 per compound math Assign; architectural ceiling always wins; 1024-thread cap remains64.",
+    "New exact-copy/barrier generator and retained512-thread regression, recognized256/512-thread frontend schedule probes, exhaustive CPU resource invariant wired into CI.",
+    "README accuracy claims qualified as sampled measurements; continuity instructions align with deferred publication."
+  ],
+  "accepted": {
+    "public_hosted": {
+      "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+      "results": [
+        {
+          "problem": "a01_attention",
+          "passed": true,
+          "elapsed_s": 2.547,
+          "stdout": "[k_matmul_softmax_reduce_b55365] 128 registers\n[k_matmul_softmax_reduce_b55365] PASS  matmul_1: max abs err 6.557e-07  (104.352 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "a02_attention_128",
+          "passed": true,
+          "elapsed_s": 2.058,
+          "stdout": "[k_matmul_softmax_reduce_6f0029] 80 registers\n[k_matmul_softmax_reduce_6f0029] PASS  matmul_1: max abs err 3.874e-07  (53.664 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "f01_rmsnorm",
+          "passed": true,
+          "elapsed_s": 6.287,
+          "stdout": "[k_mean_cbd1de] 22 registers\n[k_mean_cbd1de] PASS  mul_1: max abs err 1.907e-06  (16.576 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "f02_row_softmax",
+          "passed": true,
+          "elapsed_s": 3.466,
+          "stdout": "[k_softmax_05263d] 35 registers\n[k_softmax_05263d] PASS  softmax: max abs err 7.451e-09  (16.384 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "f03_l2norm",
+          "passed": true,
+          "elapsed_s": 7.193,
+          "stdout": "[k_div_reduce] 22 registers\n[k_div_reduce] PASS  div: max abs err 1.490e-08  (16.768 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "m01_matmul_512",
+          "passed": true,
+          "elapsed_s": 16.7,
+          "stdout": "[k_matmul_2967be] 48 registers\n[k_matmul_2967be] PASS  matmul: max abs err 8.392e-05  (28.096 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "m02_matmul_rect",
+          "passed": true,
+          "elapsed_s": 3.128,
+          "stdout": "[k_matmul] 31 registers\n[k_matmul] PASS  matmul: max abs err 1.526e-05  (16.224 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "p00_scalar_add",
+          "passed": true,
+          "elapsed_s": 1.585,
+          "stdout": "[k_add_pointwise] 22 registers\n[k_add_pointwise] PASS  add: max abs err 0.000e+00  (24.0 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "p01_vector_add",
+          "passed": true,
+          "elapsed_s": 1.953,
+          "stdout": "[k_add_pointwise] 22 registers\n[k_add_pointwise] PASS  add: max abs err 0.000e+00  (23.712 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "p02_scale_shift",
+          "passed": true,
+          "elapsed_s": 2.642,
+          "stdout": "[k_add_pointwise] 30 registers\n[k_add_pointwise] PASS  add: max abs err 0.000e+00  (16.768 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "p03_relu_mul",
+          "passed": true,
+          "elapsed_s": 1.892,
+          "stdout": "[k_mul_pointwise] 24 registers\n[k_mul_pointwise] PASS  mul: max abs err 0.000e+00  (16.896 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r01_array_sum",
+          "passed": true,
+          "elapsed_s": 1.585,
+          "stdout": "[k_sum_1_reduce] 18 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 3.815e-06  (23.52 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r02_big_sum",
+          "passed": true,
+          "elapsed_s": 1.603,
+          "stdout": "[k_sum_1_reduce] 18 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 1.526e-05  (40.832 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r03_mean",
+          "passed": true,
+          "elapsed_s": 1.862,
+          "stdout": "[k_mean_ffcca3] 18 registers\n[k_mean_ffcca3] PASS  mean: max abs err 9.313e-10  (31.52 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "r04_row_sum",
+          "passed": true,
+          "elapsed_s": 1.835,
+          "stdout": "[k_sum_1_reduce] 20 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 5.722e-06  (24.768 us)\n",
+          "stderr": ""
+        }
+      ]
+    },
+    "frontend_hosted": {
+      "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+      "results": [
+        {
+          "problem": "large_amax_3_67_t256",
+          "passed": true,
+          "elapsed_s": 1.931,
+          "stdout": "[k_amax_reduce] 20 registers\n[k_amax_reduce] PASS  amax: max abs err 0.000e+00  (24.192 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "large_amax_3_67_t512",
+          "passed": true,
+          "elapsed_s": 1.778,
+          "stdout": "[k_amax_reduce] 23 registers\n[k_amax_reduce] PASS  amax: max abs err 0.000e+00  (23.616 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "large_amax_5_1031_t256",
+          "passed": true,
+          "elapsed_s": 1.835,
+          "stdout": "[k_amax_reduce] 20 registers\n[k_amax_reduce] PASS  amax: max abs err 0.000e+00  (23.744 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "large_amax_5_1031_t512",
+          "passed": true,
+          "elapsed_s": 1.871,
+          "stdout": "[k_amax_reduce] 23 registers\n[k_amax_reduce] PASS  amax: max abs err 0.000e+00  (23.808 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "large_rms_3_67_t256",
+          "passed": true,
+          "elapsed_s": 1.796,
+          "stdout": "[k_mean_e0ae48] 22 registers\n[k_mean_e0ae48] PASS  mul_1: max abs err 2.384e-07  (24.096 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "large_rms_3_67_t512",
+          "passed": true,
+          "elapsed_s": 1.923,
+          "stdout": "[k_mean_e0ae48] 26 registers\n[k_mean_e0ae48] PASS  mul_1: max abs err 2.384e-07  (41.12 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "large_rms_5_1031_t256",
+          "passed": true,
+          "elapsed_s": 3.376,
+          "stdout": "[k_mean_66b484] 22 registers\n[k_mean_66b484] PASS  mul_1: max abs err 2.384e-07  (17.024 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "large_rms_5_1031_t512",
+          "passed": true,
+          "elapsed_s": 2.734,
+          "stdout": "[k_mean_66b484] 26 registers\n[k_mean_66b484] PASS  mul_1: max abs err 2.384e-07  (16.864 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "large_softmax_3_67_t256",
+          "passed": true,
+          "elapsed_s": 2.219,
+          "stdout": "[k_softmax_d17e39] 39 registers\n[k_softmax_d17e39] PASS  softmax: max abs err 5.960e-08  (24.896 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "large_softmax_3_67_t512",
+          "passed": true,
+          "elapsed_s": 2.139,
+          "stdout": "[k_softmax_d17e39] 63 registers\n[k_softmax_d17e39] PASS  softmax: max abs err 5.960e-08  (21.44 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "large_softmax_5_1031_t256",
+          "passed": true,
+          "elapsed_s": 3.163,
+          "stdout": "[k_softmax_371e01] 39 registers\n[k_softmax_371e01] PASS  softmax: max abs err 5.960e-08  (21.056 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "large_softmax_5_1031_t512",
+          "passed": true,
+          "elapsed_s": 3.102,
+          "stdout": "[k_softmax_371e01] 63 registers\n[k_softmax_371e01] PASS  softmax: max abs err 5.960e-08  (16.736 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "large_sum_3_67_t256",
+          "passed": true,
+          "elapsed_s": 1.734,
+          "stdout": "[k_sum_1_reduce] 22 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 4.768e-07  (23.968 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "large_sum_3_67_t512",
+          "passed": true,
+          "elapsed_s": 1.824,
+          "stdout": "[k_sum_1_reduce] 23 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 4.768e-07  (24.352 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "large_sum_5_1031_t256",
+          "passed": true,
+          "elapsed_s": 1.819,
+          "stdout": "[k_sum_1_reduce] 22 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 3.815e-06  (23.936 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "large_sum_5_1031_t512",
+          "passed": true,
+          "elapsed_s": 1.853,
+          "stdout": "[k_sum_1_reduce] 23 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 3.815e-06  (24.16 us)\n",
+          "stderr": ""
+        }
+      ]
+    },
+    "fresh_pressure_hosted": {
+      "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+      "results": [
+        {
+          "problem": "live_137_threads_1024_s113",
+          "passed": true,
+          "elapsed_s": 8.577,
+          "stdout": "[k_sum_1_reduce] 64 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (107.456 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "live_137_threads_289_s113",
+          "passed": true,
+          "elapsed_s": 5.081,
+          "stdout": "[k_sum_1_reduce] 48 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (40.448 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "live_137_threads_352_s113",
+          "passed": true,
+          "elapsed_s": 8.65,
+          "stdout": "[k_sum_1_reduce] 48 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (45.696 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "live_137_threads_640_s113",
+          "passed": true,
+          "elapsed_s": 5.222,
+          "stdout": "[k_sum_1_reduce] 48 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (68.8 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "live_137_threads_896_s113",
+          "passed": true,
+          "elapsed_s": 5.211,
+          "stdout": "[k_sum_1_reduce] 48 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (97.408 us)\n",
+          "stderr": ""
+        }
+      ]
+    },
+    "local_retained_frontend_fresh": {
+      "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+      "isolation": "one subprocess and CUDA context per case",
+      "results": [
+        {
+          "problem": "2026-10-26-launch-pressure-512",
+          "path": "validation/cpu-fixtures/2026-10-26-launch-pressure-512",
+          "meta_sha256": "2d97187778631d1ee12ce4f18ff15a5e1deb48af493d3b8a642a7111800a4a5f",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "df627446947302b55242cfa2c903db69914529f9d5e56498f120d40a824f6a0b"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS 2026-10-26-launch-pressure-512\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "2026-10-26-launch-pressure-512",
+                "passed": true,
+                "elapsed_s": 0.294
+              }
+            ]
+          },
+          "elapsed_s": 0.74
+        },
+        {
+          "problem": "large_amax_3_67_t256",
+          "path": "artifacts/large-blocks-final/large_amax_3_67_t256",
+          "meta_sha256": "257a52c077a6ab3bfc8edaf4daf982c48997ef59af6e3a7ced6eac38081bbfc7",
+          "ir_sha256": {
+            "k_amax_reduce.ir.json": "2ee8847d0f0b7b6a5a2ada474ea2dfdfdd0a872d3eaf2621e9aa49e75779a13d"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS large_amax_3_67_t256\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "large_amax_3_67_t256",
+                "passed": true,
+                "elapsed_s": 0.269
+              }
+            ]
+          },
+          "elapsed_s": 0.741
+        },
+        {
+          "problem": "large_amax_3_67_t512",
+          "path": "artifacts/large-blocks-final/large_amax_3_67_t512",
+          "meta_sha256": "fd7a2af7db077398e035eb348ab848d9d3e24cdcec1b217cd8653cda2bedffc4",
+          "ir_sha256": {
+            "k_amax_reduce.ir.json": "0b0c7e49748638ab3b782cae9d98e6a20e30221b8f8eef446e2c922ddcdbb101"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS large_amax_3_67_t512\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "large_amax_3_67_t512",
+                "passed": true,
+                "elapsed_s": 0.275
+              }
+            ]
+          },
+          "elapsed_s": 0.662
+        },
+        {
+          "problem": "large_amax_5_1031_t256",
+          "path": "artifacts/large-blocks-final/large_amax_5_1031_t256",
+          "meta_sha256": "6b7d0864576039dbc6ae92b97d1331a21bb2d87ec26ed6f52af13c35b834495e",
+          "ir_sha256": {
+            "k_amax_reduce.ir.json": "67b51967977e73beeb4b2b7ba0f269e4be1712305e2cfd9bd14484202918d77f"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS large_amax_5_1031_t256\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "large_amax_5_1031_t256",
+                "passed": true,
+                "elapsed_s": 0.273
+              }
+            ]
+          },
+          "elapsed_s": 0.736
+        },
+        {
+          "problem": "large_amax_5_1031_t512",
+          "path": "artifacts/large-blocks-final/large_amax_5_1031_t512",
+          "meta_sha256": "04e6566e8dee33e5d70e19ceb1414abbac05857f9a5ae3993d219c087db9114b",
+          "ir_sha256": {
+            "k_amax_reduce.ir.json": "269118c87981ce45a46deac43b97e59925d2cb5a0998a664ce64f2e8652b550a"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS large_amax_5_1031_t512\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "large_amax_5_1031_t512",
+                "passed": true,
+                "elapsed_s": 0.27
+              }
+            ]
+          },
+          "elapsed_s": 0.733
+        },
+        {
+          "problem": "large_rms_3_67_t256",
+          "path": "artifacts/large-blocks-final/large_rms_3_67_t256",
+          "meta_sha256": "643928899f255ba80c6949d91a78b0557fc91600c956b839331d255a992b631f",
+          "ir_sha256": {
+            "k_mean_e0ae48.ir.json": "98759d3a6b375e55cc82d90524a86976e63e38b291fb74f2bdf92d1ba8887daa"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS large_rms_3_67_t256\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "large_rms_3_67_t256",
+                "passed": true,
+                "elapsed_s": 0.338
+              }
+            ]
+          },
+          "elapsed_s": 0.857
+        },
+        {
+          "problem": "large_rms_3_67_t512",
+          "path": "artifacts/large-blocks-final/large_rms_3_67_t512",
+          "meta_sha256": "e1816e514ff6d8fec907f1f7f7613431326a90905a086156b90071c7de12229c",
+          "ir_sha256": {
+            "k_mean_e0ae48.ir.json": "e992eb361150236d375c8fe8d6a47553d364587ad43939f6f6dac04ca01263b8"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS large_rms_3_67_t512\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "large_rms_3_67_t512",
+                "passed": true,
+                "elapsed_s": 0.3
+              }
+            ]
+          },
+          "elapsed_s": 0.744
+        },
+        {
+          "problem": "large_rms_5_1031_t256",
+          "path": "artifacts/large-blocks-final/large_rms_5_1031_t256",
+          "meta_sha256": "7d566b0e587975c98c2709a5bd04e9e5438d1c8c8bd915826a28dfd612b4018c",
+          "ir_sha256": {
+            "k_mean_66b484.ir.json": "fb32e1f73e094dda80dec33853ac278d63bc9025602d1f446800b99697122dd1"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS large_rms_5_1031_t256\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "large_rms_5_1031_t256",
+                "passed": true,
+                "elapsed_s": 0.302
+              }
+            ]
+          },
+          "elapsed_s": 0.749
+        },
+        {
+          "problem": "large_rms_5_1031_t512",
+          "path": "artifacts/large-blocks-final/large_rms_5_1031_t512",
+          "meta_sha256": "dd3459d34ea2852fdc8d2ff73307cc8e6c29d1a40bf8af532d4a8bf3415261d8",
+          "ir_sha256": {
+            "k_mean_66b484.ir.json": "c07900379a9f769498a0b4565179b780c3b287ee90e56227e1945aea84ed9878"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS large_rms_5_1031_t512\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "large_rms_5_1031_t512",
+                "passed": true,
+                "elapsed_s": 0.27
+              }
+            ]
+          },
+          "elapsed_s": 0.734
+        },
+        {
+          "problem": "large_softmax_3_67_t256",
+          "path": "artifacts/large-blocks-final/large_softmax_3_67_t256",
+          "meta_sha256": "a712d2d7f630cd48a2ce304594932cb7f15270938e180e4aed3a56c0be117ff0",
+          "ir_sha256": {
+            "k_softmax_d17e39.ir.json": "d6e8c08eecd4c60da6f86d68ac30838f6f65daea25aee276fe610671f569e231"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS large_softmax_3_67_t256\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "large_softmax_3_67_t256",
+                "passed": true,
+                "elapsed_s": 0.348
+              }
+            ]
+          },
+          "elapsed_s": 0.842
+        },
+        {
+          "problem": "large_softmax_3_67_t512",
+          "path": "artifacts/large-blocks-final/large_softmax_3_67_t512",
+          "meta_sha256": "432061b44c5d5182373f0678816885b15d9b34e76454bd876e72447a8db8112a",
+          "ir_sha256": {
+            "k_softmax_d17e39.ir.json": "89e00a629eeebb00a06ee6ab69a57ba571c6b67ffa4730745b37c86a1fc299e7"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS large_softmax_3_67_t512\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "large_softmax_3_67_t512",
+                "passed": true,
+                "elapsed_s": 0.265
+              }
+            ]
+          },
+          "elapsed_s": 0.708
+        },
+        {
+          "problem": "large_softmax_5_1031_t256",
+          "path": "artifacts/large-blocks-final/large_softmax_5_1031_t256",
+          "meta_sha256": "09451a59a6c340f6ad7b903828abb63fa1c3a37a9e41bc4468a02755f50032d4",
+          "ir_sha256": {
+            "k_softmax_371e01.ir.json": "90ae3ba8231f345d58758acdf08ae0093b7de564cb1034270c55ef0c693ac3cd"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS large_softmax_5_1031_t256\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "large_softmax_5_1031_t256",
+                "passed": true,
+                "elapsed_s": 0.354
+              }
+            ]
+          },
+          "elapsed_s": 0.866
+        },
+        {
+          "problem": "large_softmax_5_1031_t512",
+          "path": "artifacts/large-blocks-final/large_softmax_5_1031_t512",
+          "meta_sha256": "d40333901335ac4ae8241d756bcaec19ddf9de2c865bd3eb92978226e948d0f6",
+          "ir_sha256": {
+            "k_softmax_371e01.ir.json": "c0b6cf46529a0685047f9066e5219775f79b5d9d3abc1a00eb7f887acad05d19"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS large_softmax_5_1031_t512\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "large_softmax_5_1031_t512",
+                "passed": true,
+                "elapsed_s": 0.32
+              }
+            ]
+          },
+          "elapsed_s": 0.783
+        },
+        {
+          "problem": "large_sum_3_67_t256",
+          "path": "artifacts/large-blocks-final/large_sum_3_67_t256",
+          "meta_sha256": "e7183b659b5b2e2e36ccd2e6cdf8b8538c478f73c58b4e32e9dedf4e94f578b6",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "0a747aab943b64ba574000c4a3537d9aaee288c1ad4eea03a1870bbdd0748e31"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS large_sum_3_67_t256\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "large_sum_3_67_t256",
+                "passed": true,
+                "elapsed_s": 0.267
+              }
+            ]
+          },
+          "elapsed_s": 0.721
+        },
+        {
+          "problem": "large_sum_3_67_t512",
+          "path": "artifacts/large-blocks-final/large_sum_3_67_t512",
+          "meta_sha256": "a0f9e0a60d36bdf88894cb1999964863ddf27e165922ea05a0d4cbe3872e1921",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "1060d834306470ee177f8f3aebac4259311b32e0fd10691d6d3c11e132758da6"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS large_sum_3_67_t512\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "large_sum_3_67_t512",
+                "passed": true,
+                "elapsed_s": 0.276
+              }
+            ]
+          },
+          "elapsed_s": 0.854
+        },
+        {
+          "problem": "large_sum_5_1031_t256",
+          "path": "artifacts/large-blocks-final/large_sum_5_1031_t256",
+          "meta_sha256": "842ceeca32af8d2a4f502d0e8379c92f46e60ec1fd0bb7fb5ad13f9357a331f8",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "587ab11cbda82bfedb611fcf2c2f983f12c54f75bcc0cd95be9c1e41acd6f338"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS large_sum_5_1031_t256\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "large_sum_5_1031_t256",
+                "passed": true,
+                "elapsed_s": 0.287
+              }
+            ]
+          },
+          "elapsed_s": 0.803
+        },
+        {
+          "problem": "large_sum_5_1031_t512",
+          "path": "artifacts/large-blocks-final/large_sum_5_1031_t512",
+          "meta_sha256": "95cbeac5ab8736ccab773cbf32a57a0fcad4ff268307da428f0ba7cf4c453864",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "838bd70b22a4506202e97d799027b9a78a4efb699a7b4359b262f7dcd287d232"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS large_sum_5_1031_t512\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "large_sum_5_1031_t512",
+                "passed": true,
+                "elapsed_s": 0.277
+              }
+            ]
+          },
+          "elapsed_s": 0.789
+        },
+        {
+          "problem": "live_137_threads_1024_s113",
+          "path": "artifacts/launch-pressure-fresh/live_137_threads_1024_s113",
+          "meta_sha256": "7684317e6ddd6371833b451f9db3a209b308b0dacf13910b8b3120fdab0c5399",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "af3f907c0eddee3612815c1c77a09b792e8e7c3cc0108e207bf4449fe34645d7"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS live_137_threads_1024_s113\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "live_137_threads_1024_s113",
+                "passed": true,
+                "elapsed_s": 0.299
+              }
+            ]
+          },
+          "elapsed_s": 1.022
+        },
+        {
+          "problem": "live_137_threads_289_s113",
+          "path": "artifacts/launch-pressure-fresh/live_137_threads_289_s113",
+          "meta_sha256": "02e5c7343a4bb79c33b37f39d15c8c20124c3b55f3577bbc54ecbe0c458edd3b",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "3ac5973b83cea8ff4c6140189e564ae65fb7d00a727fc09f4866468b7c82ca5b"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS live_137_threads_289_s113\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "live_137_threads_289_s113",
+                "passed": true,
+                "elapsed_s": 0.292
+              }
+            ]
+          },
+          "elapsed_s": 0.858
+        },
+        {
+          "problem": "live_137_threads_352_s113",
+          "path": "artifacts/launch-pressure-fresh/live_137_threads_352_s113",
+          "meta_sha256": "8225ad0a932bc52854069fcd409788e811e33d1196962636e600ae9aa7c5d86d",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "4c6c303f3c87b14740f1b764aa6c844e6be19087691560c8eb4c6e8ef5843f09"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS live_137_threads_352_s113\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "live_137_threads_352_s113",
+                "passed": true,
+                "elapsed_s": 0.299
+              }
+            ]
+          },
+          "elapsed_s": 0.899
+        },
+        {
+          "problem": "live_137_threads_640_s113",
+          "path": "artifacts/launch-pressure-fresh/live_137_threads_640_s113",
+          "meta_sha256": "0dd3766f4d4eec681b95a7999be33e773d4f49a7e2bf1094554fb294e23eb0f7",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "8b796c818773f1695419a6585193388e66a6d749fd1fe76ac7f77f2376620dee"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS live_137_threads_640_s113\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "live_137_threads_640_s113",
+                "passed": true,
+                "elapsed_s": 0.28
+              }
+            ]
+          },
+          "elapsed_s": 0.665
+        },
+        {
+          "problem": "live_137_threads_896_s113",
+          "path": "artifacts/launch-pressure-fresh/live_137_threads_896_s113",
+          "meta_sha256": "243921653e758e8b0b68541a5f6111b4682a53751f738463d5e861e5cac7176c",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "afbb91fcd6373de5596c3273f7dc91771285689344be90570bce7314966b9593"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS live_137_threads_896_s113\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "live_137_threads_896_s113",
+                "passed": true,
+                "elapsed_s": 0.304
+              }
+            ]
+          },
+          "elapsed_s": 0.789
+        }
+      ]
+    },
+    "transformer_local": {
+      "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+      "arch": "sm_86",
+      "model": "seeded RMSNorm + QKV SDPA + output projection + residual SiLU MLP",
+      "shape": [
+        1,
+        4,
+        16
+      ],
+      "execution": "seven separately traced stages, host transfers",
+      "results": [
+        {
+          "seed": 9,
+          "depth": 1,
+          "passed": true,
+          "stage_checks": 7,
+          "max_abs_error": 1.1920928955078125e-06
+        },
+        {
+          "seed": 9,
+          "depth": 2,
+          "passed": true,
+          "stage_checks": 14,
+          "max_abs_error": 1.1920928955078125e-06
+        },
+        {
+          "seed": 9,
+          "depth": 4,
+          "passed": true,
+          "stage_checks": 28,
+          "max_abs_error": 1.1920928955078125e-06
+        },
+        {
+          "seed": 71,
+          "depth": 1,
+          "passed": true,
+          "stage_checks": 7,
+          "max_abs_error": 2.86102294921875e-06
+        },
+        {
+          "seed": 71,
+          "depth": 2,
+          "passed": true,
+          "stage_checks": 14,
+          "max_abs_error": 2.86102294921875e-06
+        },
+        {
+          "seed": 71,
+          "depth": 4,
+          "passed": true,
+          "stage_checks": 28,
+          "max_abs_error": 2.86102294921875e-06
+        },
+        {
+          "seed": 613,
+          "depth": 1,
+          "passed": true,
+          "stage_checks": 7,
+          "max_abs_error": 3.4570693969726562e-06
+        },
+        {
+          "seed": 613,
+          "depth": 2,
+          "passed": true,
+          "stage_checks": 14,
+          "max_abs_error": 3.6954879760742188e-06
+        },
+        {
+          "seed": 613,
+          "depth": 4,
+          "passed": true,
+          "stage_checks": 28,
+          "max_abs_error": 4.291534423828125e-06
+        }
+      ]
+    },
+    "sanitizers_local": {
+      "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+      "problems": [
+        "a_attention_32_16",
+        "m_shared_256_512_384"
+      ],
+      "results": [
+        {
+          "tool": "memcheck",
+          "exit_code": 0,
+          "passed": true,
+          "summaries": [
+            "========= LEAK SUMMARY: 0 bytes leaked in 0 allocations",
+            "========= ERROR SUMMARY: 0 errors"
+          ]
+        },
+        {
+          "tool": "racecheck",
+          "exit_code": 0,
+          "passed": true,
+          "summaries": [
+            "========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)"
+          ]
+        },
+        {
+          "tool": "synccheck",
+          "exit_code": 0,
+          "passed": true,
+          "summaries": [
+            "========= ERROR SUMMARY: 0 errors"
+          ]
+        },
+        {
+          "tool": "initcheck",
+          "exit_code": 0,
+          "passed": true,
+          "summaries": [
+            "========= ERROR SUMMARY: 0 errors"
+          ]
+        }
+      ]
+    },
+    "resource_invariant": {
+      "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+      "scope": "register-allocation ceiling only; not GPU execution or shared-memory limits",
+      "checked": 3072,
+      "passed": true,
+      "failures": []
+    },
+    "paired_target_timing": {
+      "clock_locked": false,
+      "warmup": 8,
+      "iters": 75,
+      "compilers": {
+        "baseline": "512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32",
+        "candidate": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8"
+      },
+      "timing_return_limit": 256,
+      "results": [
+        {
+          "problem": "m_shared_256_512_384",
+          "samples_us": {
+            "baseline": [
+              11.072,
+              10.976,
+              10.976,
+              11.072,
+              9.312,
+              11.072,
+              11.072
+            ],
+            "candidate": [
+              11.168,
+              11.232,
+              11.2,
+              11.168,
+              11.168,
+              11.2,
+              11.168
+            ]
+          },
+          "baseline_median_us": 11.072,
+          "candidate_median_us": 11.168,
+          "speedup": 0.9914040114613181,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul": {
+                "k_matmul": 56
+              }
+            },
+            "candidate": {
+              "k_matmul": {
+                "k_matmul": 56
+              }
+            }
+          }
+        },
+        {
+          "problem": "m01_matmul_512",
+          "samples_us": {
+            "baseline": [
+              15.04,
+              15.04,
+              15.04,
+              15.04,
+              15.04,
+              15.04,
+              15.04
+            ],
+            "candidate": [
+              15.072,
+              15.04,
+              15.04,
+              15.04,
+              15.04,
+              15.04,
+              15.04
+            ]
+          },
+          "baseline_median_us": 15.04,
+          "candidate_median_us": 15.04,
+          "speedup": 1.0,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_2967be": {
+                "k_matmul_2967be": 48
+              }
+            },
+            "candidate": {
+              "k_matmul_2967be": {
+                "k_matmul_2967be": 48
+              }
+            }
+          }
+        },
+        {
+          "problem": "a_attention_32_16",
+          "samples_us": {
+            "baseline": [
+              17.024,
+              17.024,
+              17.056,
+              17.056,
+              17.024,
+              17.056,
+              17.024
+            ],
+            "candidate": [
+              17.024,
+              17.024,
+              17.024,
+              17.024,
+              17.024,
+              17.024,
+              17.056
+            ]
+          },
+          "baseline_median_us": 17.024,
+          "candidate_median_us": 17.024,
+          "speedup": 1.0,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_softmax_reduce_023903": {
+                "k_matmul_softmax_reduce_023903": 72
+              }
+            },
+            "candidate": {
+              "k_matmul_softmax_reduce_023903": {
+                "k_matmul_softmax_reduce_023903": 72
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "no_torch_matrices": {
+    "3.12": {
+      "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+      "results": [
+        {
+          "check": "check_cpu_contract",
+          "passed": true,
+          "stdout": "PASS 2026-10-24-scope-shrunk\nPASS 2026-10-24-strided-shrunk\nPASS 2026-10-24-power2-int32-extremes\nPASS 2026-10-24-predicate-shared-pair\nPASS 2026-10-24-f32-float-arithmetic\nPASS 2026-10-24-f32-float-to-int\nPASS 2026-10-24-f32-mixed-compare\nPASS 2026-10-24-f32-nan-truth\nPASS 2026-10-24-address-extra-load\nPASS 2026-10-24-address-scalar-flat\nPASS 2026-10-24-address-shared-pair\nPASS 2026-10-24-abi-reordered\nPASS 2026-10-24-cross-tail\nPASS 2026-10-24-cross-large-tail\nPASS 2026-10-24-cross-write-guard\nPASS 2026-10-24-cross-local-index-guard\nPASS 2026-10-24-zero-tile-inner\nPASS 2026-10-24-zero-tile-nested\nPASS 2026-10-24-zero-tile-empty-axis-control\nPASS 2026-10-24-zero-tile-zero-view\nPASS 2026-10-26-wide-align8\nPASS 2026-10-26-wide-even_stride\nPASS 2026-10-26-wide-mixed_alignment\nPASS 2026-10-26-wide-offset4\nPASS 2026-10-26-wide-tail_six\nPASS 2026-10-26-wrap-signed_add\nPASS 2026-10-26-wrap-multiply\nPASS 2026-10-26-wrap-align8\nPASS 2026-10-26-wrap-nonlinear\nPASS 2026-10-26-log-range\nPASS 2026-10-26-log2-near_one\nPASS 2026-10-26-log10-special\nPASS 2026-10-26-exp2-powers\nPASS 2026-10-26-mask-to-float\nPASS 2026-10-26-mask-signed-zero\nPASS 2026-10-26-mask-legacy-rounding\nPASS 2026-10-26-mask-let-truth\nPASS 2026-10-26-masked-attention\nPASS 2026-10-26-erf-signed-zero\nPASS 2026-10-26-erf-transition\nPASS 2026-10-26-square\nPASS 2026-10-26-gelu\nPASS 2026-10-26-rms-square\nPASS 2026-10-26-math-cos\nPASS 2026-10-26-math-exp\nPASS 2026-10-26-math-gelu\nPASS 2026-10-26-math-gelu-tanh\nPASS 2026-10-26-math-pow3\nPASS 2026-10-26-math-sigmoid\nPASS 2026-10-26-math-silu\nPASS 2026-10-26-math-sin\nPASS 2026-10-26-math-softplus\nPASS 2026-10-26-math-tanh\nPASS 2026-10-26-math-sin-cos-mix\nPASS 2026-10-26-register-cap-1024\nPASS 2026-10-26-attention-empty-lanes\nPASS 2026-10-26-launch-pressure-512\nPASS tensor_f16\nPASS write_f16\nPASS write_swizzle\nPASS floating_index\n",
+          "stderr": ""
+        },
+        {
+          "check": "check_launch_contract",
+          "passed": true,
+          "stdout": "PASS grid_missing\nPASS grid_short\nPASS grid_zero\nPASS grid_negative\nPASS grid_float\nPASS grid_bool\nPASS grid_y\nPASS grid_z\nPASS block_missing\nPASS block_short\nPASS block_zero\nPASS block_negative\nPASS block_float\nPASS block_bool\nPASS block_y\nPASS block_z\nPASS block_limit\nPASS grid_limit\nPASS smem_missing\nPASS smem_negative\nPASS smem_float\nPASS smem_bool\nPASS cooperative_mismatch\nPASS cooperative_zero\nPASS cooperative_negative\nPASS cooperative_match\nPASS reordered_abi\n28/28 contract expectations met\n",
+          "stderr": ""
+        },
+        {
+          "check": "check_abi_contract",
+          "passed": true,
+          "stdout": "PASS arg_order_missing\nPASS arg_order_null\nPASS arg_order_string\nPASS arg_order_empty\nPASS args_missing\nPASS args_null\nPASS args_string\nPASS args_empty\nPASS order_duplicate\nPASS order_unknown\nPASS order_nonstring\nPASS order_empty_name\nPASS order_unhashable\nPASS descriptor_order\nPASS descriptor_missing\nPASS descriptor_extra\nPASS descriptor_not_object\nPASS descriptor_name_missing\nPASS dtype_missing\nPASS dtype_f16\nPASS dtype_i32\nPASS dtype_f64\nPASS shape_missing\nPASS shape_null\nPASS shape_string\nPASS shape_negative\nPASS shape_fractional\nPASS shape_bool\nPASS shape_nested\nPASS entry_missing\nPASS entry_wrong\nPASS entry_duplicate\nPASS kernels_missing\nPASS kernels_not_list\nPASS kernel_not_object\nPASS consistent_reorder\nPASS allocation_reshape\nPASS other_entry\nPASS reordered_fixture\nPASS no_kernel\nPASS multiple_kernels\n42/42 contract expectations met\n",
+          "stderr": ""
+        },
+        {
+          "check": "check_static_shapes",
+          "passed": true,
+          "stdout": "PASS tensor_negative\nPASS tensor_symbolic\nPASS tensor_bool\nPASS tile_negative\nPASS tile_symbolic\nPASS tile_bool\nPASS tile_fractional\nPASS tile_composite\nPASS loop_negative\nPASS loop_symbolic\nPASS loop_bool\nPASS loop_fractional\nPASS loop_composite\nPASS strided_negative\nPASS strided_symbolic\nPASS strided_bool\nPASS strided_fractional\nPASS strided_composite\nPASS shared_zero\nPASS shared_negative\nPASS shared_fractional\nPASS shared_symbolic\nPASS shared_bool\nPASS align_negative\nPASS align_nonpower\nPASS align_fractional\nPASS align_bool\nPASS scalar_tensor\nPASS zero_tensor_view\nPASS natural_alignment\nPASS scalar_shared\n31/31 expectations met\n",
+          "stderr": ""
+        },
+        {
+          "check": "check_scalar_op_rejections",
+          "passed": true,
+          "stdout": "PASS log1p\nPASS expm1\nPASS arctan\nPASS sinh\n",
+          "stderr": ""
+        },
+        {
+          "check": "check_bool_contract",
+          "passed": true,
+          "stdout": "PASS input_bool\nPASS output_bool\nPASS argument_bool\nPASS shared_bool\nPASS load_bool\nPASS init_bool\nPASS accum_bool\nPASS assign_i32\nPASS bool_assign_write\nPASS bool_let_write\n",
+          "stderr": ""
+        },
+        {
+          "check": "check_launch_resources",
+          "passed": true,
+          "stdout": "3072/3072 register ceilings satisfy the CTA resource limit\n",
+          "stderr": ""
+        }
+      ]
+    },
+    "3.13": {
+      "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+      "results": [
+        {
+          "check": "check_cpu_contract",
+          "passed": true,
+          "stdout": "PASS 2026-10-24-scope-shrunk\nPASS 2026-10-24-strided-shrunk\nPASS 2026-10-24-power2-int32-extremes\nPASS 2026-10-24-predicate-shared-pair\nPASS 2026-10-24-f32-float-arithmetic\nPASS 2026-10-24-f32-float-to-int\nPASS 2026-10-24-f32-mixed-compare\nPASS 2026-10-24-f32-nan-truth\nPASS 2026-10-24-address-extra-load\nPASS 2026-10-24-address-scalar-flat\nPASS 2026-10-24-address-shared-pair\nPASS 2026-10-24-abi-reordered\nPASS 2026-10-24-cross-tail\nPASS 2026-10-24-cross-large-tail\nPASS 2026-10-24-cross-write-guard\nPASS 2026-10-24-cross-local-index-guard\nPASS 2026-10-24-zero-tile-inner\nPASS 2026-10-24-zero-tile-nested\nPASS 2026-10-24-zero-tile-empty-axis-control\nPASS 2026-10-24-zero-tile-zero-view\nPASS 2026-10-26-wide-align8\nPASS 2026-10-26-wide-even_stride\nPASS 2026-10-26-wide-mixed_alignment\nPASS 2026-10-26-wide-offset4\nPASS 2026-10-26-wide-tail_six\nPASS 2026-10-26-wrap-signed_add\nPASS 2026-10-26-wrap-multiply\nPASS 2026-10-26-wrap-align8\nPASS 2026-10-26-wrap-nonlinear\nPASS 2026-10-26-log-range\nPASS 2026-10-26-log2-near_one\nPASS 2026-10-26-log10-special\nPASS 2026-10-26-exp2-powers\nPASS 2026-10-26-mask-to-float\nPASS 2026-10-26-mask-signed-zero\nPASS 2026-10-26-mask-legacy-rounding\nPASS 2026-10-26-mask-let-truth\nPASS 2026-10-26-masked-attention\nPASS 2026-10-26-erf-signed-zero\nPASS 2026-10-26-erf-transition\nPASS 2026-10-26-square\nPASS 2026-10-26-gelu\nPASS 2026-10-26-rms-square\nPASS 2026-10-26-math-cos\nPASS 2026-10-26-math-exp\nPASS 2026-10-26-math-gelu\nPASS 2026-10-26-math-gelu-tanh\nPASS 2026-10-26-math-pow3\nPASS 2026-10-26-math-sigmoid\nPASS 2026-10-26-math-silu\nPASS 2026-10-26-math-sin\nPASS 2026-10-26-math-softplus\nPASS 2026-10-26-math-tanh\nPASS 2026-10-26-math-sin-cos-mix\nPASS 2026-10-26-register-cap-1024\nPASS 2026-10-26-attention-empty-lanes\nPASS 2026-10-26-launch-pressure-512\nPASS tensor_f16\nPASS write_f16\nPASS write_swizzle\nPASS floating_index\n",
+          "stderr": ""
+        },
+        {
+          "check": "check_launch_contract",
+          "passed": true,
+          "stdout": "PASS grid_missing\nPASS grid_short\nPASS grid_zero\nPASS grid_negative\nPASS grid_float\nPASS grid_bool\nPASS grid_y\nPASS grid_z\nPASS block_missing\nPASS block_short\nPASS block_zero\nPASS block_negative\nPASS block_float\nPASS block_bool\nPASS block_y\nPASS block_z\nPASS block_limit\nPASS grid_limit\nPASS smem_missing\nPASS smem_negative\nPASS smem_float\nPASS smem_bool\nPASS cooperative_mismatch\nPASS cooperative_zero\nPASS cooperative_negative\nPASS cooperative_match\nPASS reordered_abi\n28/28 contract expectations met\n",
+          "stderr": ""
+        },
+        {
+          "check": "check_abi_contract",
+          "passed": true,
+          "stdout": "PASS arg_order_missing\nPASS arg_order_null\nPASS arg_order_string\nPASS arg_order_empty\nPASS args_missing\nPASS args_null\nPASS args_string\nPASS args_empty\nPASS order_duplicate\nPASS order_unknown\nPASS order_nonstring\nPASS order_empty_name\nPASS order_unhashable\nPASS descriptor_order\nPASS descriptor_missing\nPASS descriptor_extra\nPASS descriptor_not_object\nPASS descriptor_name_missing\nPASS dtype_missing\nPASS dtype_f16\nPASS dtype_i32\nPASS dtype_f64\nPASS shape_missing\nPASS shape_null\nPASS shape_string\nPASS shape_negative\nPASS shape_fractional\nPASS shape_bool\nPASS shape_nested\nPASS entry_missing\nPASS entry_wrong\nPASS entry_duplicate\nPASS kernels_missing\nPASS kernels_not_list\nPASS kernel_not_object\nPASS consistent_reorder\nPASS allocation_reshape\nPASS other_entry\nPASS reordered_fixture\nPASS no_kernel\nPASS multiple_kernels\n42/42 contract expectations met\n",
+          "stderr": ""
+        },
+        {
+          "check": "check_static_shapes",
+          "passed": true,
+          "stdout": "PASS tensor_negative\nPASS tensor_symbolic\nPASS tensor_bool\nPASS tile_negative\nPASS tile_symbolic\nPASS tile_bool\nPASS tile_fractional\nPASS tile_composite\nPASS loop_negative\nPASS loop_symbolic\nPASS loop_bool\nPASS loop_fractional\nPASS loop_composite\nPASS strided_negative\nPASS strided_symbolic\nPASS strided_bool\nPASS strided_fractional\nPASS strided_composite\nPASS shared_zero\nPASS shared_negative\nPASS shared_fractional\nPASS shared_symbolic\nPASS shared_bool\nPASS align_negative\nPASS align_nonpower\nPASS align_fractional\nPASS align_bool\nPASS scalar_tensor\nPASS zero_tensor_view\nPASS natural_alignment\nPASS scalar_shared\n31/31 expectations met\n",
+          "stderr": ""
+        },
+        {
+          "check": "check_scalar_op_rejections",
+          "passed": true,
+          "stdout": "PASS log1p\nPASS expm1\nPASS arctan\nPASS sinh\n",
+          "stderr": ""
+        },
+        {
+          "check": "check_bool_contract",
+          "passed": true,
+          "stdout": "PASS input_bool\nPASS output_bool\nPASS argument_bool\nPASS shared_bool\nPASS load_bool\nPASS init_bool\nPASS accum_bool\nPASS assign_i32\nPASS bool_assign_write\nPASS bool_let_write\n",
+          "stderr": ""
+        },
+        {
+          "check": "check_launch_resources",
+          "passed": true,
+          "stdout": "3072/3072 register ceilings satisfy the CTA resource limit\n",
+          "stderr": ""
+        }
+      ]
+    },
+    "3.14": {
+      "compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+      "results": [
+        {
+          "check": "check_cpu_contract",
+          "passed": true,
+          "stdout": "PASS 2026-10-24-scope-shrunk\nPASS 2026-10-24-strided-shrunk\nPASS 2026-10-24-power2-int32-extremes\nPASS 2026-10-24-predicate-shared-pair\nPASS 2026-10-24-f32-float-arithmetic\nPASS 2026-10-24-f32-float-to-int\nPASS 2026-10-24-f32-mixed-compare\nPASS 2026-10-24-f32-nan-truth\nPASS 2026-10-24-address-extra-load\nPASS 2026-10-24-address-scalar-flat\nPASS 2026-10-24-address-shared-pair\nPASS 2026-10-24-abi-reordered\nPASS 2026-10-24-cross-tail\nPASS 2026-10-24-cross-large-tail\nPASS 2026-10-24-cross-write-guard\nPASS 2026-10-24-cross-local-index-guard\nPASS 2026-10-24-zero-tile-inner\nPASS 2026-10-24-zero-tile-nested\nPASS 2026-10-24-zero-tile-empty-axis-control\nPASS 2026-10-24-zero-tile-zero-view\nPASS 2026-10-26-wide-align8\nPASS 2026-10-26-wide-even_stride\nPASS 2026-10-26-wide-mixed_alignment\nPASS 2026-10-26-wide-offset4\nPASS 2026-10-26-wide-tail_six\nPASS 2026-10-26-wrap-signed_add\nPASS 2026-10-26-wrap-multiply\nPASS 2026-10-26-wrap-align8\nPASS 2026-10-26-wrap-nonlinear\nPASS 2026-10-26-log-range\nPASS 2026-10-26-log2-near_one\nPASS 2026-10-26-log10-special\nPASS 2026-10-26-exp2-powers\nPASS 2026-10-26-mask-to-float\nPASS 2026-10-26-mask-signed-zero\nPASS 2026-10-26-mask-legacy-rounding\nPASS 2026-10-26-mask-let-truth\nPASS 2026-10-26-masked-attention\nPASS 2026-10-26-erf-signed-zero\nPASS 2026-10-26-erf-transition\nPASS 2026-10-26-square\nPASS 2026-10-26-gelu\nPASS 2026-10-26-rms-square\nPASS 2026-10-26-math-cos\nPASS 2026-10-26-math-exp\nPASS 2026-10-26-math-gelu\nPASS 2026-10-26-math-gelu-tanh\nPASS 2026-10-26-math-pow3\nPASS 2026-10-26-math-sigmoid\nPASS 2026-10-26-math-silu\nPASS 2026-10-26-math-sin\nPASS 2026-10-26-math-softplus\nPASS 2026-10-26-math-tanh\nPASS 2026-10-26-math-sin-cos-mix\nPASS 2026-10-26-register-cap-1024\nPASS 2026-10-26-attention-empty-lanes\nPASS 2026-10-26-launch-pressure-512\nPASS tensor_f16\nPASS write_f16\nPASS write_swizzle\nPASS floating_index\n",
+          "stderr": ""
+        },
+        {
+          "check": "check_launch_contract",
+          "passed": true,
+          "stdout": "PASS grid_missing\nPASS grid_short\nPASS grid_zero\nPASS grid_negative\nPASS grid_float\nPASS grid_bool\nPASS grid_y\nPASS grid_z\nPASS block_missing\nPASS block_short\nPASS block_zero\nPASS block_negative\nPASS block_float\nPASS block_bool\nPASS block_y\nPASS block_z\nPASS block_limit\nPASS grid_limit\nPASS smem_missing\nPASS smem_negative\nPASS smem_float\nPASS smem_bool\nPASS cooperative_mismatch\nPASS cooperative_zero\nPASS cooperative_negative\nPASS cooperative_match\nPASS reordered_abi\n28/28 contract expectations met\n",
+          "stderr": ""
+        },
+        {
+          "check": "check_abi_contract",
+          "passed": true,
+          "stdout": "PASS arg_order_missing\nPASS arg_order_null\nPASS arg_order_string\nPASS arg_order_empty\nPASS args_missing\nPASS args_null\nPASS args_string\nPASS args_empty\nPASS order_duplicate\nPASS order_unknown\nPASS order_nonstring\nPASS order_empty_name\nPASS order_unhashable\nPASS descriptor_order\nPASS descriptor_missing\nPASS descriptor_extra\nPASS descriptor_not_object\nPASS descriptor_name_missing\nPASS dtype_missing\nPASS dtype_f16\nPASS dtype_i32\nPASS dtype_f64\nPASS shape_missing\nPASS shape_null\nPASS shape_string\nPASS shape_negative\nPASS shape_fractional\nPASS shape_bool\nPASS shape_nested\nPASS entry_missing\nPASS entry_wrong\nPASS entry_duplicate\nPASS kernels_missing\nPASS kernels_not_list\nPASS kernel_not_object\nPASS consistent_reorder\nPASS allocation_reshape\nPASS other_entry\nPASS reordered_fixture\nPASS no_kernel\nPASS multiple_kernels\n42/42 contract expectations met\n",
+          "stderr": ""
+        },
+        {
+          "check": "check_static_shapes",
+          "passed": true,
+          "stdout": "PASS tensor_negative\nPASS tensor_symbolic\nPASS tensor_bool\nPASS tile_negative\nPASS tile_symbolic\nPASS tile_bool\nPASS tile_fractional\nPASS tile_composite\nPASS loop_negative\nPASS loop_symbolic\nPASS loop_bool\nPASS loop_fractional\nPASS loop_composite\nPASS strided_negative\nPASS strided_symbolic\nPASS strided_bool\nPASS strided_fractional\nPASS strided_composite\nPASS shared_zero\nPASS shared_negative\nPASS shared_fractional\nPASS shared_symbolic\nPASS shared_bool\nPASS align_negative\nPASS align_nonpower\nPASS align_fractional\nPASS align_bool\nPASS scalar_tensor\nPASS zero_tensor_view\nPASS natural_alignment\nPASS scalar_shared\n31/31 expectations met\n",
+          "stderr": ""
+        },
+        {
+          "check": "check_scalar_op_rejections",
+          "passed": true,
+          "stdout": "PASS log1p\nPASS expm1\nPASS arctan\nPASS sinh\n",
+          "stderr": ""
+        },
+        {
+          "check": "check_bool_contract",
+          "passed": true,
+          "stdout": "PASS input_bool\nPASS output_bool\nPASS argument_bool\nPASS shared_bool\nPASS load_bool\nPASS init_bool\nPASS accum_bool\nPASS assign_i32\nPASS bool_assign_write\nPASS bool_let_write\n",
+          "stderr": ""
+        },
+        {
+          "check": "check_launch_resources",
+          "passed": true,
+          "stdout": "3072/3072 register ceilings satisfy the CTA resource limit\n",
+          "stderr": ""
+        }
+      ]
+    }
+  },
+  "counts": {
+    "public_hosted": 15,
+    "frontend_hosted": 16,
+    "fresh_pressure_hosted": 5,
+    "local_retained_frontend_fresh": 22,
+    "cpu_contract_per_python": 176,
+    "resource_invariants_per_python": 3072,
+    "transformer_runs": 9,
+    "transformer_stage_checks": 147
+  },
+  "equivalence": {
+    "record": "iteration20-equivalence.json",
+    "sha256": "94922f4d23ae4a5549ef37446851093b7f2500d6a9dbc70cbe6b6c33aab6cc11",
+    "compared": 1953,
+    "identical_ptx": 1918,
+    "identical_except_launch_bound": 1953
+  },
+  "baseline_launch_pressure": {
+    "hosted": {
+      "compiler_sha256": "512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32",
+      "results": [
+        {
+          "problem": "live_128_threads_768_s0",
+          "passed": false,
+          "elapsed_s": 7.189,
+          "stdout": "[k_sum_1_reduce] 255 registers\n[k_sum_1_reduce] launch failed: CUDA_ERROR_LAUNCH_OUT_OF_RESOURCES: too many resources requested for launch\n",
+          "stderr": ""
+        },
+        {
+          "problem": "live_160_threads_256_s0",
+          "passed": true,
+          "elapsed_s": 5.152,
+          "stdout": "[k_sum_1_reduce] 255 registers\n[k_sum_1_reduce] PASS  sum_1: max abs err 0.000e+00  (64.96 us)\n",
+          "stderr": ""
+        },
+        {
+          "problem": "live_160_threads_512_s0",
+          "passed": false,
+          "elapsed_s": 4.747,
+          "stdout": "[k_sum_1_reduce] 255 registers\n[k_sum_1_reduce] launch failed: CUDA_ERROR_LAUNCH_OUT_OF_RESOURCES: too many resources requested for launch\n",
+          "stderr": ""
+        },
+        {
+          "problem": "live_192_threads_384_s0",
+          "passed": false,
+          "elapsed_s": 5.607,
+          "stdout": "[k_sum_1_reduce] 255 registers\n[k_sum_1_reduce] launch failed: CUDA_ERROR_LAUNCH_OUT_OF_RESOURCES: too many resources requested for launch\n",
+          "stderr": ""
+        }
+      ]
+    },
+    "local": {
+      "compiler_sha256": "512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32",
+      "isolation": "one subprocess and CUDA context per case",
+      "results": [
+        {
+          "problem": "live_128_threads_768_s0",
+          "path": "artifacts/launch-pressure/live_128_threads_768_s0",
+          "meta_sha256": "4dd0da0716a9f88a70ce700525be6552814204a7f36ded21ff64861a3d62957e",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "22be521ed7dc06207f44e98398e3f1461660eea07a156e3ddbdaf1be772aac23"
+          },
+          "passed": false,
+          "exit_code": 1,
+          "stdout": "Local PTX target: sm_86\nFAIL live_128_threads_768_s0: cuLaunchKernel: CUDA_ERROR_LAUNCH_OUT_OF_RESOURCES\n0/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "live_128_threads_768_s0",
+                "passed": false,
+                "error": "cuLaunchKernel: CUDA_ERROR_LAUNCH_OUT_OF_RESOURCES",
+                "elapsed_s": 0.307
+              }
+            ]
+          },
+          "elapsed_s": 0.853
+        },
+        {
+          "problem": "live_160_threads_256_s0",
+          "path": "artifacts/launch-pressure/live_160_threads_256_s0",
+          "meta_sha256": "f70890bf60032a37cac9d279f11ff26d8eebb61a9490ce43319fc42e441d6d55",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "7ed942a2f73fd01daad38e6b1e47ea51db0d9cb166c9eabe228e898b107c2f33"
+          },
+          "passed": true,
+          "exit_code": 0,
+          "stdout": "Local PTX target: sm_86\nPASS live_160_threads_256_s0\n1/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "live_160_threads_256_s0",
+                "passed": true,
+                "elapsed_s": 0.348
+              }
+            ]
+          },
+          "elapsed_s": 0.803
+        },
+        {
+          "problem": "live_160_threads_512_s0",
+          "path": "artifacts/launch-pressure/live_160_threads_512_s0",
+          "meta_sha256": "2d97187778631d1ee12ce4f18ff15a5e1deb48af493d3b8a642a7111800a4a5f",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "df627446947302b55242cfa2c903db69914529f9d5e56498f120d40a824f6a0b"
+          },
+          "passed": false,
+          "exit_code": 1,
+          "stdout": "Local PTX target: sm_86\nFAIL live_160_threads_512_s0: cuLaunchKernel: CUDA_ERROR_LAUNCH_OUT_OF_RESOURCES\n0/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "live_160_threads_512_s0",
+                "passed": false,
+                "error": "cuLaunchKernel: CUDA_ERROR_LAUNCH_OUT_OF_RESOURCES",
+                "elapsed_s": 0.318
+              }
+            ]
+          },
+          "elapsed_s": 0.802
+        },
+        {
+          "problem": "live_192_threads_384_s0",
+          "path": "artifacts/launch-pressure/live_192_threads_384_s0",
+          "meta_sha256": "18a72641abfa59c9ab519faaf95a06478970da4d426f8406e2c328763f12f351",
+          "ir_sha256": {
+            "k_sum_1_reduce.ir.json": "b88ed8ee08456a46b4d1c1f76a4c51130d1d751f6aaa6600a049675e83720786"
+          },
+          "passed": false,
+          "exit_code": 1,
+          "stdout": "Local PTX target: sm_86\nFAIL live_192_threads_384_s0: cuLaunchKernel: CUDA_ERROR_LAUNCH_OUT_OF_RESOURCES\n0/1 passed\n",
+          "stderr": "",
+          "detail": {
+            "compiler_sha256": "512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32",
+            "arch": "sm_86",
+            "results": [
+              {
+                "problem": "live_192_threads_384_s0",
+                "passed": false,
+                "error": "cuLaunchKernel: CUDA_ERROR_LAUNCH_OUT_OF_RESOURCES",
+                "elapsed_s": 0.335
+              }
+            ]
+          },
+          "elapsed_s": 0.803
+        }
+      ]
+    }
+  },
+  "baseline_resource_invariant": {
+    "checked": 3072,
+    "passed": 1080,
+    "failures": 1992,
+    "examples": [
+      {
+        "threads": 257,
+        "states": 0,
+        "bounds": []
+      },
+      {
+        "threads": 258,
+        "states": 0,
+        "bounds": []
+      },
+      {
+        "threads": 259,
+        "states": 0,
+        "bounds": []
+      },
+      {
+        "threads": 260,
+        "states": 0,
+        "bounds": []
+      },
+      {
+        "threads": 261,
+        "states": 0,
+        "bounds": []
+      },
+      {
+        "threads": 262,
+        "states": 0,
+        "bounds": []
+      },
+      {
+        "threads": 263,
+        "states": 0,
+        "bounds": []
+      },
+      {
+        "threads": 264,
+        "states": 0,
+        "bounds": []
+      }
+    ]
+  },
+  "rejected_or_diagnostic_variants": {
+    "required_exact_block": {
+      "clock_locked": false,
+      "warmup": 8,
+      "iters": 75,
+      "compilers": {
+        "baseline": "512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32",
+        "candidate": "38b59b39ec93c48a7cca7adc7fde45da5c0445b268518bc48653ee4cf1da580a"
+      },
+      "timing_return_limit": 256,
+      "results": [
+        {
+          "problem": "m01_matmul_512",
+          "samples_us": {
+            "baseline": [
+              15.04,
+              15.072,
+              15.04,
+              15.04,
+              15.072,
+              15.04,
+              15.072
+            ],
+            "candidate": [
+              17.056,
+              17.056,
+              17.056,
+              17.056,
+              17.056,
+              17.056,
+              17.024
+            ]
+          },
+          "baseline_median_us": 15.04,
+          "candidate_median_us": 17.056,
+          "speedup": 0.8818011257035646,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_2967be": {
+                "k_matmul_2967be": 48
+              }
+            },
+            "candidate": {
+              "k_matmul_2967be": {
+                "k_matmul_2967be": 40
+              }
+            }
+          }
+        },
+        {
+          "problem": "hp_m_256_256_256",
+          "samples_us": {
+            "baseline": [
+              6.784,
+              6.784,
+              6.816,
+              6.816,
+              6.784,
+              6.816,
+              7.552
+            ],
+            "candidate": [
+              6.784,
+              6.816,
+              6.784,
+              6.784,
+              6.784,
+              6.816,
+              6.816
+            ]
+          },
+          "baseline_median_us": 6.816,
+          "candidate_median_us": 6.784,
+          "speedup": 1.0047169811320755,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_d590cf": {
+                "k_matmul_d590cf": 86
+              }
+            },
+            "candidate": {
+              "k_matmul_d590cf": {
+                "k_matmul_d590cf": 86
+              }
+            }
+          }
+        },
+        {
+          "problem": "hp_m_33_1024_65",
+          "samples_us": {
+            "baseline": [
+              27.264,
+              27.264,
+              27.296,
+              27.264,
+              27.264,
+              27.296,
+              27.296
+            ],
+            "candidate": [
+              27.264,
+              27.264,
+              27.296,
+              27.296,
+              27.296,
+              27.264,
+              27.264
+            ]
+          },
+          "baseline_median_us": 27.264,
+          "candidate_median_us": 27.264,
+          "speedup": 1.0,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_ce48cc": {
+                "k_matmul_ce48cc": 34
+              }
+            },
+            "candidate": {
+              "k_matmul_ce48cc": {
+                "k_matmul_ce48cc": 34
+              }
+            }
+          }
+        },
+        {
+          "problem": "hp_a_256_32",
+          "samples_us": {
+            "baseline": [
+              127.648,
+              127.616,
+              127.648,
+              127.616,
+              127.616,
+              127.616,
+              127.648
+            ],
+            "candidate": [
+              127.68,
+              127.616,
+              127.648,
+              127.648,
+              127.648,
+              127.616,
+              127.648
+            ]
+          },
+          "baseline_median_us": 127.616,
+          "candidate_median_us": 127.648,
+          "speedup": 0.9997493106041615,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_softmax_reduce_a874e6": {
+                "k_matmul_softmax_reduce_a874e6": 72
+              }
+            },
+            "candidate": {
+              "k_matmul_softmax_reduce_a874e6": {
+                "k_matmul_softmax_reduce_a874e6": 72
+              }
+            }
+          }
+        }
+      ]
+    },
+    "state_only_primary": {
+      "clock_locked": false,
+      "warmup": 8,
+      "iters": 75,
+      "compilers": {
+        "baseline": "512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32",
+        "candidate": "7dee2831cecc38b12bedc57449ab6fb92d4bcba1ca6787f10026255dec0add92"
+      },
+      "timing_return_limit": 256,
+      "results": [
+        {
+          "problem": "m01_matmul_512",
+          "samples_us": {
+            "baseline": [
+              15.04,
+              15.008,
+              15.008,
+              15.04,
+              15.04,
+              15.008,
+              15.008
+            ],
+            "candidate": [
+              15.04,
+              15.072,
+              15.008,
+              15.04,
+              15.04,
+              15.04,
+              15.04
+            ]
+          },
+          "baseline_median_us": 15.008,
+          "candidate_median_us": 15.04,
+          "speedup": 0.997872340425532,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_2967be": {
+                "k_matmul_2967be": 48
+              }
+            },
+            "candidate": {
+              "k_matmul_2967be": {
+                "k_matmul_2967be": 48
+              }
+            }
+          }
+        },
+        {
+          "problem": "large_rms_5_1031_t512",
+          "samples_us": {
+            "baseline": [
+              4.736,
+              4.768,
+              4.736,
+              4.736,
+              4.736,
+              4.736,
+              4.736
+            ],
+            "candidate": [
+              4.768,
+              4.8,
+              4.736,
+              4.8,
+              4.768,
+              4.768,
+              4.736
+            ]
+          },
+          "baseline_median_us": 4.736,
+          "candidate_median_us": 4.768,
+          "speedup": 0.9932885906040269,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_mean_66b484": {
+                "k_mean_66b484": 26
+              }
+            },
+            "candidate": {
+              "k_mean_66b484": {
+                "k_mean_66b484": 26
+              }
+            }
+          }
+        },
+        {
+          "problem": "large_softmax_5_1031_t512",
+          "samples_us": {
+            "baseline": [
+              4.768,
+              4.736,
+              4.736,
+              4.736,
+              4.736,
+              4.736,
+              4.736
+            ],
+            "candidate": [
+              4.768,
+              4.768,
+              4.736,
+              4.704,
+              4.768,
+              4.704,
+              4.736
+            ]
+          },
+          "baseline_median_us": 4.736,
+          "candidate_median_us": 4.736,
+          "speedup": 1.0,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_softmax_371e01": {
+                "k_softmax_371e01": 40
+              }
+            },
+            "candidate": {
+              "k_softmax_371e01": {
+                "k_softmax_371e01": 47
+              }
+            }
+          }
+        },
+        {
+          "problem": "hp_m_256_256_256",
+          "samples_us": {
+            "baseline": [
+              6.784,
+              7.552,
+              6.816,
+              7.584,
+              6.816,
+              6.816,
+              6.816
+            ],
+            "candidate": [
+              6.816,
+              6.816,
+              6.784,
+              6.816,
+              6.816,
+              6.816,
+              6.816
+            ]
+          },
+          "baseline_median_us": 6.816,
+          "candidate_median_us": 6.816,
+          "speedup": 1.0,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_d590cf": {
+                "k_matmul_d590cf": 86
+              }
+            },
+            "candidate": {
+              "k_matmul_d590cf": {
+                "k_matmul_d590cf": 86
+              }
+            }
+          }
+        },
+        {
+          "problem": "hp_a_256_32",
+          "samples_us": {
+            "baseline": [
+              127.648,
+              127.616,
+              127.648,
+              127.648,
+              127.648,
+              127.616,
+              127.648
+            ],
+            "candidate": [
+              127.616,
+              127.616,
+              127.616,
+              127.616,
+              127.616,
+              127.616,
+              127.616
+            ]
+          },
+          "baseline_median_us": 127.648,
+          "candidate_median_us": 127.616,
+          "speedup": 1.0002507522567703,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_softmax_reduce_a874e6": {
+                "k_matmul_softmax_reduce_a874e6": 72
+              }
+            },
+            "candidate": {
+              "k_matmul_softmax_reduce_a874e6": {
+                "k_matmul_softmax_reduce_a874e6": 72
+              }
+            }
+          }
+        }
+      ]
+    },
+    "state_only_secondary": {
+      "clock_locked": false,
+      "warmup": 8,
+      "iters": 75,
+      "compilers": {
+        "baseline": "512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32",
+        "candidate": "7dee2831cecc38b12bedc57449ab6fb92d4bcba1ca6787f10026255dec0add92"
+      },
+      "timing_return_limit": 256,
+      "results": [
+        {
+          "problem": "m_shared_256_512_384",
+          "samples_us": {
+            "baseline": [
+              10.976,
+              10.976,
+              11.104,
+              11.104,
+              11.072,
+              10.784,
+              11.136
+            ],
+            "candidate": [
+              11.2,
+              11.2,
+              11.168,
+              11.136,
+              11.2,
+              11.232,
+              11.2
+            ]
+          },
+          "baseline_median_us": 11.072,
+          "candidate_median_us": 11.2,
+          "speedup": 0.9885714285714285,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul": {
+                "k_matmul": 56
+              }
+            },
+            "candidate": {
+              "k_matmul": {
+                "k_matmul": 80
+              }
+            }
+          }
+        },
+        {
+          "problem": "a_attention_32_16",
+          "samples_us": {
+            "baseline": [
+              17.024,
+              17.056,
+              17.024,
+              17.056,
+              17.024,
+              17.024,
+              17.024
+            ],
+            "candidate": [
+              23.136,
+              23.168,
+              23.2,
+              23.168,
+              23.168,
+              23.168,
+              23.2
+            ]
+          },
+          "baseline_median_us": 17.024,
+          "candidate_median_us": 23.168,
+          "speedup": 0.7348066298342542,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_softmax_reduce_023903": {
+                "k_matmul_softmax_reduce_023903": 72
+              }
+            },
+            "candidate": {
+              "k_matmul_softmax_reduce_023903": {
+                "k_matmul_softmax_reduce_023903": 48
+              }
+            }
+          }
+        },
+        {
+          "problem": "mk_matmul_tall_k",
+          "samples_us": {
+            "baseline": [
+              4.832,
+              4.832,
+              4.896,
+              4.864,
+              4.896,
+              4.896,
+              4.896
+            ],
+            "candidate": [
+              4.864,
+              4.864,
+              4.864,
+              4.864,
+              4.864,
+              4.864,
+              4.832
+            ]
+          },
+          "baseline_median_us": 4.896,
+          "candidate_median_us": 4.864,
+          "speedup": 1.006578947368421,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_mm": {
+                "k_mm": 40
+              }
+            },
+            "candidate": {
+              "k_mm": {
+                "k_mm": 48
+              }
+            }
+          }
+        }
+      ]
+    },
+    "intermediate_math_budget": {
+      "clock_locked": false,
+      "warmup": 8,
+      "iters": 75,
+      "compilers": {
+        "baseline": "512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32",
+        "candidate": "fca09f3b6d90600c2cef8d8137da658ab9175fab0319532007875ba21218c7cb"
+      },
+      "timing_return_limit": 256,
+      "results": [
+        {
+          "problem": "m01_matmul_512",
+          "samples_us": {
+            "baseline": [
+              15.04,
+              15.04,
+              15.04,
+              15.04,
+              15.04,
+              15.04,
+              15.04
+            ],
+            "candidate": [
+              15.04,
+              15.04,
+              15.04,
+              15.04,
+              15.04,
+              15.04,
+              15.008
+            ]
+          },
+          "baseline_median_us": 15.04,
+          "candidate_median_us": 15.04,
+          "speedup": 1.0,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_2967be": {
+                "k_matmul_2967be": 48
+              }
+            },
+            "candidate": {
+              "k_matmul_2967be": {
+                "k_matmul_2967be": 48
+              }
+            }
+          }
+        },
+        {
+          "problem": "a_attention_32_16",
+          "samples_us": {
+            "baseline": [
+              17.056,
+              17.056,
+              17.024,
+              17.056,
+              17.024,
+              17.056,
+              17.024
+            ],
+            "candidate": [
+              17.024,
+              17.056,
+              17.024,
+              17.024,
+              17.024,
+              17.056,
+              17.024
+            ]
+          },
+          "baseline_median_us": 17.056,
+          "candidate_median_us": 17.024,
+          "speedup": 1.0018796992481203,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_softmax_reduce_023903": {
+                "k_matmul_softmax_reduce_023903": 72
+              }
+            },
+            "candidate": {
+              "k_matmul_softmax_reduce_023903": {
+                "k_matmul_softmax_reduce_023903": 72
+              }
+            }
+          }
+        },
+        {
+          "problem": "large_softmax_5_1031_t512",
+          "samples_us": {
+            "baseline": [
+              4.736,
+              4.768,
+              4.736,
+              4.768,
+              4.736,
+              4.736,
+              4.736
+            ],
+            "candidate": [
+              4.768,
+              4.768,
+              4.768,
+              4.768,
+              4.736,
+              4.768,
+              4.768
+            ]
+          },
+          "baseline_median_us": 4.736,
+          "candidate_median_us": 4.768,
+          "speedup": 0.9932885906040269,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_softmax_371e01": {
+                "k_softmax_371e01": 40
+              }
+            },
+            "candidate": {
+              "k_softmax_371e01": {
+                "k_softmax_371e01": 63
+              }
+            }
+          }
+        },
+        {
+          "problem": "m_shared_256_512_384",
+          "samples_us": {
+            "baseline": [
+              10.976,
+              9.312,
+              10.976,
+              11.072,
+              10.976,
+              10.912,
+              10.976
+            ],
+            "candidate": [
+              11.168,
+              11.264,
+              11.168,
+              11.168,
+              11.2,
+              11.2,
+              11.168
+            ]
+          },
+          "baseline_median_us": 10.976,
+          "candidate_median_us": 11.168,
+          "speedup": 0.9828080229226362,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul": {
+                "k_matmul": 56
+              }
+            },
+            "candidate": {
+              "k_matmul": {
+                "k_matmul": 80
+              }
+            }
+          }
+        }
+      ]
+    },
+    "fixed_64": {
+      "clock_locked": false,
+      "warmup": 8,
+      "iters": 75,
+      "compilers": {
+        "baseline": "512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32",
+        "candidate": "4e39e3d1a203f5583077957291b60d38c0329ba056aac2386176d14b5b8d02b4"
+      },
+      "timing_return_limit": 256,
+      "results": [
+        {
+          "problem": "m01_matmul_512",
+          "samples_us": {
+            "baseline": [
+              15.04,
+              15.04,
+              15.04,
+              15.04,
+              15.04
+            ],
+            "candidate": [
+              17.024,
+              16.96,
+              16.96,
+              17.024,
+              17.024
+            ]
+          },
+          "baseline_median_us": 15.04,
+          "candidate_median_us": 17.024,
+          "speedup": 0.8834586466165413,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_2967be": {
+                "k_matmul_2967be": 48
+              }
+            },
+            "candidate": {
+              "k_matmul_2967be": {
+                "k_matmul_2967be": 64
+              }
+            }
+          }
+        }
+      ]
+    },
+    "fixed_80": {
+      "clock_locked": false,
+      "warmup": 8,
+      "iters": 75,
+      "compilers": {
+        "baseline": "512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32",
+        "candidate": "2487627ccb24224f0070b4fb5c73297aca38c1c8f0ce1e14b89565db89075f99"
+      },
+      "timing_return_limit": 256,
+      "results": [
+        {
+          "problem": "m01_matmul_512",
+          "samples_us": {
+            "baseline": [
+              15.072,
+              15.04,
+              15.04,
+              15.04,
+              15.04
+            ],
+            "candidate": [
+              17.056,
+              17.056,
+              17.056,
+              17.056,
+              17.024
+            ]
+          },
+          "baseline_median_us": 15.04,
+          "candidate_median_us": 17.056,
+          "speedup": 0.8818011257035646,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_2967be": {
+                "k_matmul_2967be": 48
+              }
+            },
+            "candidate": {
+              "k_matmul_2967be": {
+                "k_matmul_2967be": 80
+              }
+            }
+          }
+        }
+      ]
+    },
+    "fixed_96": {
+      "clock_locked": false,
+      "warmup": 8,
+      "iters": 75,
+      "compilers": {
+        "baseline": "512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32",
+        "candidate": "edd7b925232bcfa2e045e7f44f8dfe5f14c4a92fecf3fcb4f1fb5bca591e75b4"
+      },
+      "timing_return_limit": 256,
+      "results": [
+        {
+          "problem": "m01_matmul_512",
+          "samples_us": {
+            "baseline": [
+              15.04,
+              15.008,
+              15.008,
+              16.544,
+              15.008
+            ],
+            "candidate": [
+              17.056,
+              17.056,
+              17.024,
+              17.024,
+              17.024
+            ]
+          },
+          "baseline_median_us": 15.008,
+          "candidate_median_us": 17.024,
+          "speedup": 0.8815789473684209,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_2967be": {
+                "k_matmul_2967be": 48
+              }
+            },
+            "candidate": {
+              "k_matmul_2967be": {
+                "k_matmul_2967be": 96
+              }
+            }
+          }
+        }
+      ]
+    },
+    "attention_72": {
+      "clock_locked": false,
+      "warmup": 8,
+      "iters": 75,
+      "compilers": {
+        "baseline": "512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32",
+        "candidate": "9858e3a38fa8e613a2e6cd1928b5ace6cb5976b4efadf43dc480c78a0788b80f"
+      },
+      "timing_return_limit": 256,
+      "results": [
+        {
+          "problem": "a_attention_32_16",
+          "samples_us": {
+            "baseline": [
+              17.056,
+              17.024,
+              17.056,
+              17.024,
+              17.056
+            ],
+            "candidate": [
+              17.056,
+              17.056,
+              17.056,
+              17.056,
+              17.024
+            ]
+          },
+          "baseline_median_us": 17.056,
+          "candidate_median_us": 17.056,
+          "speedup": 1.0,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_softmax_reduce_023903": {
+                "k_matmul_softmax_reduce_023903": 72
+              }
+            },
+            "candidate": {
+              "k_matmul_softmax_reduce_023903": {
+                "k_matmul_softmax_reduce_023903": 72
+              }
+            }
+          }
+        }
+      ]
+    },
+    "attention_80": {
+      "clock_locked": false,
+      "warmup": 8,
+      "iters": 75,
+      "compilers": {
+        "baseline": "512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32",
+        "candidate": "2487627ccb24224f0070b4fb5c73297aca38c1c8f0ce1e14b89565db89075f99"
+      },
+      "timing_return_limit": 256,
+      "results": [
+        {
+          "problem": "a_attention_32_16",
+          "samples_us": {
+            "baseline": [
+              17.056,
+              17.056,
+              17.056,
+              17.056,
+              17.056
+            ],
+            "candidate": [
+              17.024,
+              17.024,
+              17.024,
+              17.024,
+              17.024
+            ]
+          },
+          "baseline_median_us": 17.056,
+          "candidate_median_us": 17.024,
+          "speedup": 1.0018796992481203,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_softmax_reduce_023903": {
+                "k_matmul_softmax_reduce_023903": 72
+              }
+            },
+            "candidate": {
+              "k_matmul_softmax_reduce_023903": {
+                "k_matmul_softmax_reduce_023903": 72
+              }
+            }
+          }
+        }
+      ]
+    },
+    "attention_96": {
+      "clock_locked": false,
+      "warmup": 8,
+      "iters": 75,
+      "compilers": {
+        "baseline": "512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32",
+        "candidate": "edd7b925232bcfa2e045e7f44f8dfe5f14c4a92fecf3fcb4f1fb5bca591e75b4"
+      },
+      "timing_return_limit": 256,
+      "results": [
+        {
+          "problem": "a_attention_32_16",
+          "samples_us": {
+            "baseline": [
+              17.024,
+              17.024,
+              17.024,
+              17.056,
+              17.024
+            ],
+            "candidate": [
+              17.024,
+              17.056,
+              17.056,
+              17.024,
+              17.024
+            ]
+          },
+          "baseline_median_us": 17.024,
+          "candidate_median_us": 17.024,
+          "speedup": 1.0,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_softmax_reduce_023903": {
+                "k_matmul_softmax_reduce_023903": 72
+              }
+            },
+            "candidate": {
+              "k_matmul_softmax_reduce_023903": {
+                "k_matmul_softmax_reduce_023903": 72
+              }
+            }
+          }
+        }
+      ]
+    },
+    "attention_128": {
+      "clock_locked": false,
+      "warmup": 8,
+      "iters": 75,
+      "compilers": {
+        "baseline": "512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32",
+        "candidate": "583750e7ac6637a4060007750d42a5d87e3fb16e64b8228d461aee7454f6de39"
+      },
+      "timing_return_limit": 256,
+      "results": [
+        {
+          "problem": "a_attention_32_16",
+          "samples_us": {
+            "baseline": [
+              17.024,
+              17.024,
+              17.056,
+              17.024,
+              17.056
+            ],
+            "candidate": [
+              17.024,
+              17.056,
+              17.056,
+              17.024,
+              17.056
+            ]
+          },
+          "baseline_median_us": 17.024,
+          "candidate_median_us": 17.056,
+          "speedup": 0.99812382739212,
+          "outputs_passed": true,
+          "output_check": "full first trial; returned prefix thereafter",
+          "registers": {
+            "baseline": {
+              "k_matmul_softmax_reduce_023903": {
+                "k_matmul_softmax_reduce_023903": 72
+              }
+            },
+            "candidate": {
+              "k_matmul_softmax_reduce_023903": {
+                "k_matmul_softmax_reduce_023903": 72
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "methodology_notes": [
+    "Target GPU RTX5090; local GPU sm86 retargeted by development harness only.",
+    "Timing uses seven alternating pairs, eight warmups,75 timed iterations, full output first trial and prefix thereafter; clocks unlocked.",
+    "Final public matmul and512-thread attention timings unchanged; independent shared matmul11.072->11.168us (<1%). No speedup claim.",
+    "Initial32 frontend cases included unrecognized work-width strings that silently fell back to256; final16 cases use only recognized t256/t512.",
+    "CPU register invariants do not execute PTX or establish shared-memory/bounds correctness; corpus includes overlapping fixtures and unsupported diagnostics.",
+    "No hidden-set score, global numerical proof or optimal-resource-budget guarantee; repository visibility/video/submission remain deferred."
+  ]
+}

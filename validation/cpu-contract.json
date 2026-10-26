@@ -1,6 +1,6 @@
 {
-  "baseline_compiler_sha256": "512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32",
-  "snapshot_provenance": "Wide shared-load acceptance: two existing positive snapshots refreshed after both-GPU numerical checks; eighteen other existing snapshots unchanged. Five new alignment/fallback/offset/tail fixtures GPU verified. Four in-bounds signed-wrap fixtures added after both-GPU checks and all four sanitizers; existing25 snapshots unchanged. Four log/exp2 fixtures added after both-GPU and sanitizer checks; existing29 positive snapshots unchanged. Five bool-SSA/mask/attention fixtures added after both-GPU and sanitizer checks; previous33 positive snapshots unchanged. Five square/erf/GELU/RMS snapshots added after refined both-GPU/sanitizer gates; previous38 positives unchanged. Accurate own f32 math (exp/tanh/log/sin/cos/pow), launch-bound directives and IR-defined reduce identities: every snapshot refreshed because each entry now carries a launch directive; all fixtures passed on both GPUs before refresh. Thirteen new math, register-cap and empty-lane attention fixtures added after both-GPU checks. Loop lowering split into helpers with byte-identical PTX across 1833 kernels; snapshots unchanged.",
+  "baseline_compiler_sha256": "c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8",
+  "snapshot_provenance": "Wide shared-load acceptance: two existing positive snapshots refreshed after both-GPU numerical checks; eighteen other existing snapshots unchanged. Five new alignment/fallback/offset/tail fixtures GPU verified. Four in-bounds signed-wrap fixtures added after both-GPU checks and all four sanitizers; existing25 snapshots unchanged. Four log/exp2 fixtures added after both-GPU and sanitizer checks; existing29 positive snapshots unchanged. Five bool-SSA/mask/attention fixtures added after both-GPU and sanitizer checks; previous33 positive snapshots unchanged. Five square/erf/GELU/RMS snapshots added after refined both-GPU/sanitizer gates; previous38 positives unchanged. Accurate own f32 math (exp/tanh/log/sin/cos/pow), launch-bound directives and IR-defined reduce identities: every snapshot refreshed because each entry now carries a launch directive; all fixtures passed on both GPUs before refresh. Thirteen new math, register-cap and empty-lane attention fixtures added after both-GPU checks. Loop lowering split into helpers with byte-identical PTX across 1833 kernels; snapshots unchanged. Large-block launch resource fix: previous 56 positive PTX snapshots unchanged. One exact-copy/barrier fixture with 512 threads retained after both-GPU numerical checks; baseline launch fails OUT_OF_RESOURCES. New budget emits a safe .maxnreg 48 for this case.",
   "fixtures": [
     {
       "folder": "validation/counterexamples/2026-10-24-scope-shrunk",
@@ -561,6 +561,16 @@
         "meta.json": "acc05db126e6a5034f642e6cf54c71f6658aac6d125d4893f8f4ddb688b047ea"
       },
       "ptx_sha256": "08c7911af3ff8920b56291d372b07bdedc892baac1267898990865c84d9a9be0"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-26-launch-pressure-512",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "expected.npz": "ceda26338624333fc103f3815840fa2f261f8354b7b66a9bcb5cdbe4656dbca6",
+        "k_sum_1_reduce.ir.json": "df627446947302b55242cfa2c903db69914529f9d5e56498f120d40a824f6a0b",
+        "meta.json": "2d97187778631d1ee12ce4f18ff15a5e1deb48af493d3b8a642a7111800a4a5f"
+      },
+      "ptx_sha256": "c1833a09cf5e7b9967941819fe35b86a254c3a54cffea42c6488753fd0768d2a"
     }
   ]
 }

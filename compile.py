@@ -1394,27 +1394,42 @@ class Compiler:
     def launch_bounds(self):
         """Performance directives derived from the prescribed block size.
 
-        Without a register cap, ptxas may use more than 65536/block registers per
-        thread and the launch fails. A cap also changes ptxas's allocation (it
-        fills the budget), which slowed a 512-thread matmul ~12%, so it applies
-        only to 1024-thread blocks, where the budget is the whole register file
-        anyway, or when carried accumulators suggest real pressure. Small blocks
-        get .maxntid, like __launch_bounds__ in Emmy's reference kernels; it let
-        ptxas speed up a single-warp attention kernel ~1.3x.
+        Every large block gets a register cap: even a kernel without folds can
+        keep hundreds of values live across a barrier. Physical registers are
+        allocated to whole warps, including a partially occupied final warp.
+
+        The IR state/math estimate only tunes a budget within that safe ceiling; it
+        never decides whether to enforce the ceiling. A modest budget avoids
+        encouraging ptxas to inflate register use on small-state kernels. Small
+        blocks retain the measured .maxntid hint; 1024-thread blocks retain
+        their existing architectural cap. Underestimation can cause spilling,
+        but cannot remove the launch resource bound.
         """
         threads = self.launch['block'][0]
         accumulators = 0
+        math_ops = 0
         def count(body):
-            nonlocal accumulators
+            nonlocal accumulators, math_ops
             for stmt in body:
                 accumulators += isinstance(stmt, (Init, Accum))
+                if isinstance(stmt, Assign) and stmt.op.name in (
+                        'exp', 'exp_fast', 'tanh', 'log', 'sin', 'cos',
+                        'pow', 'erf', 'sigmoid', 'silu'):
+                    math_ops += 1
                 for field in ('body', 'else_body'):
                     count(getattr(stmt, field, ()) or ())
         count(self.node.op.body)
-        estimate = 32 + 3 * accumulators
-        if threads >= 1024 or estimate * threads > 65536:
-            return [f'.maxnreg {65536 // threads // 8 * 8}']
-        return [f'.maxntid {threads}, 1, 1'] if threads <= 256 else []
+        estimate = 40 + accumulators
+        if threads <= 256:
+            return [f'.maxntid {threads}, 1, 1']
+        warps = (threads + 31) // 32
+        limit = 65536 // (32 * warps) // 8 * 8
+        # Compound math expands to temporary registers beyond the IR fold
+        # state. Reserving eight per operation avoids spilling the measured
+        # online-softmax attention kernel while preserving the matmul budget.
+        hint = max(48, estimate // 8 * 8) + 8 * math_ops
+        budget = limit if threads == 1024 else min(limit, hint)
+        return [f'.maxnreg {budget}']
 
     def compile(self):
         params = self.launch['arg_order']

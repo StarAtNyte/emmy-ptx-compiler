@@ -23,6 +23,20 @@ Update both files after each meaningful completed step.
 
 ## Runtime and current compiler
 
+Latest acceptance (steps76–77): all >256-thread blocks now get a safe register
+ceiling based on complete physical warps. The state/math budget preserves measured
+matmul and attention performance. Baseline384/512/768-thread copy/barrier probes
+failed launch on both GPUs; fixed probes pass. Exact .reqntid and a state-only
+budget were rejected after12% matmul/26% attention regressions. See
+validation/2026-10-26-launch-resources.json and tools/check_launch_resources.py.
+
+Final gates: hosted public15/15, frontend16/16, fresh pressure5/5; local22/22;
+transformer9 runs/147 stage checks; four sanitizers clean on final attention and
+shared matmul. Each isolated no-Torch3.12/3.13/3.14 passes176 contracts and3072
+register-ceiling checks. Seven-pair target public matmul/attention medians unchanged;
+independent shared matmul11.072→11.168us (<1%). Packaging needs rebuilding after
+this source commit. No hidden score or new speedup claimed.
+
 Workspace /home/nitiz/Projects/Self/Challenges/emmy. Use .venv/bin/python3.12,
 Emmy0.3.11 and NumPy2.5.4. Dev Torch is CPU2.14.1; compiler needs no Torch/GPU.
 Pinned CPU constraints: requirements-ci.lock. Ignored challenge/upstream-emmy/
@@ -33,15 +47,16 @@ http://runner.riftstack.ai:48701. Compiler emits PTX8.0 sm89, valid on target;
 local test harness retargets to sm86. Local timing cannot select target changes.
 
 **Accepted compile.py SHA256:**
-512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32
-(loop-lowering helpers; byte-identical PTX to 1a2ad94e across 1833 kernels, so
-the iteration19 GPU evidence applies). Frozen: artifacts/compiler-loop-split.py.
+c9184bfd67d79d2a267192936439e83b57000974a0f36859a516c0cc71fe19c8
+(launch-resource fix; all1953 compared kernels retain identical PTX bodies,
+1918 are completely byte-identical). Frozen: artifacts/compiler-safe-budget-one-state.py.
+Previous51239969 is artifacts/compiler-review-baseline.py and compiler-loop-split.py.
 1a2ad94e is frozen as artifacts/compiler-math-bounds.py. Previous 3586814e is frozen as
 artifacts/compiler-erf-refined.py. Earlier accepted sources/evidence are
 recorded in PROGRESS.md and dated validation records; old patches target those
 specific baselines, not automatically the current compiler.
 
-## Latest acceptance — accurate math, launch bounds, reduce identities
+## Previous acceptance — accurate math, launch bounds, reduce identities
 
 Evidence: validation/2026-10-26-production-iteration19.json (with a hash legend
 for every intermediate candidate) and validation/iteration19-*.json raw reports.

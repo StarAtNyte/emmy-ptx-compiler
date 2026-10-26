@@ -342,6 +342,28 @@ only an observed validity filter. The reducer does not prove arbitrary IR valid.
 
 ## CPU contract CI
 
+Large-block resource regressions are checked separately from the numerical
+contracts. The CPU resource check covers every block size from 257 through
+1024 at four state-pressure levels, including partially occupied warps:
+
+```sh
+.venv/bin/python tools/check_launch_resources.py --report artifacts/launch-resources.json
+.venv/bin/python tools/generate_launch_pressure_cases.py --out artifacts/launch-pressure
+.venv/bin/python tools/validate.py --problems artifacts/launch-pressure
+.venv/bin/python tools/generate_launch_pressure_cases.py --out artifacts/launch-pressure-fresh --seed 113 --threads 289 352 640 896 1024
+.venv/bin/python tools/validate.py --problems artifacts/launch-pressure-fresh
+.venv/bin/python challenge/tools/generate.py tools/expressions_large_blocks.py --emmy .venv/bin/emmy --out artifacts/large-blocks
+.venv/bin/python tools/validate.py --problems artifacts/large-blocks
+```
+
+The frontend schedule suite uses recognized t256/t512 presets. Emmy 0.3.11
+silently falls back to 256 for unrecognized t320/t768/t1024 strings; those are
+not distinct frontend schedules. Explicit typed pressure cases supply the
+other launch widths. An exact-copy/barrier case with 512 threads is retained
+in the CPU fixtures after both-GPU checks; it fails launch on the pre-fix
+compiler and passes with the register ceiling. CPU snapshots verify codegen,
+not numerical execution.
+
 `.github/workflows/cpu-contract.yml` runs on pushes, pull requests, manual dispatch
 and nightly at 02:17 UTC on Python 3.12/3.13/3.14. It installs runtime requirements
 with exact version constraints from `requirements-ci.lock`, checks dependency
