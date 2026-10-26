@@ -128,3 +128,14 @@ validation/2026-10-24-cross-iteration-discovery.json. Main now adopts that exact
 Local 90-check matrix passes all three Python versions; packaged hosted smoke
 checks pass. Actual GitHub CI jobs were rejected before starting for account
 billing/spending-limit state; see production-iteration13.json.
+
+## Cache and expansion recheck after four-wide loads — not adopted
+
+`async-cg.patch`, `wide-limit32.patch` and `wide-limit16.patch` apply to source
+67c6b2f (compiler c2f7e2b3). Seven confirmation pairs for cg show small selected
+matmul differences, insufficient for a default change. Both smaller expansion
+limits regress public m01 from15.040 to19.136us in five paired trials; independent
+shapes are effectively neutral. Full safety/holdout sweeps intentionally not run
+after rejection. Initial cg command had a nonexistent fifth input path after four
+completed workloads; partial results retained separately from confirmation.
+Evidence: validation/2026-10-26-bounded-tuning.json. Main stays c2f7e2b3.

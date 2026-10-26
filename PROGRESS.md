@@ -1343,3 +1343,45 @@ Completed 2026-10-26:
   results on all three Python versions remain separate from unverified hosted CI.
 - Further candidates: signed-address overflow proofs, measured cache-policy
   variants and bounded structural search; no speculative target speedup claimed.
+
+## Step 54 — bounded post-vectorization tuning and hackathon alignment recheck
+
+Completed 2026-10-26:
+
+- Re-read live official README/TASK: hidden-category correctness first, own code
+  review first tiebreak, speed last. Existing direct PTX CLI/metadata contract
+  remains aligned. Submission requires public repo and personal3–5min video;
+  keep repo private and submission deferred under current explicit instruction.
+- Tested legal16-byte cg async-copy alternative. Four completed discovery
+  workloads and seven confirmation pairs on three matmuls show only0–1.5percent
+  differences; insufficient evidence to change default. Initial discovery ended
+  on nonexistent fifth fixture path; retained partial record, did not call full.
+- Rechecked max32/max16 expansion after four-wide loads. Both regress public
+  matmul15.040→19.136us in five pairs; independent shapes effectively neutral.
+  Reject both, preserve patches, skip unnecessary acceptance sweeps.
+- Main remains c2f7e2b3; tested package remains valid. Evidence: bounded-tuning.json.
+  Next prioritize correctness:44 in-bounds signed-wrap address cases generated,
+  codegen/local GPU checks pass; hosted/sanitizer gates still running.
+
+## Step 55 — in-bounds signed-wrap coverage and requirements audit
+
+Completed 2026-10-26:
+
+- Added generator for22 original and22 frozen-fresh/renamed shared-address cases
+  with overflowing signed32 intermediates but unchanged in-bounds final indices.
+  Covers additive/flat views, nonlinear row terms, two-wide fallback and scalar
+  guards. All44 codegen checks and numerical cases pass on both GPUs.
+- All four sanitizers clean on22 original cases. Initial sanitizer invocation
+  used directory instead of executable and launched nothing; corrected run passes.
+  Final generator regeneration confirms all tested IR/meta/oracle bytes identical.
+- Added four GPU-verified CPU snapshots; existing25 unchanged. All33 snapshot/
+  feature checks pass on each isolated no-Torch Python3.12/3.13/3.14. Combine with
+  unchanged compiler/checker101 earlier diagnostics:134 total per Python.
+- Exact compiler c2f7e2b3 unchanged. Fifteen public kernels each compile
+  deterministically in three fresh no-Torch processes from /tmp, local medians
+  0.574–0.681 seconds. This is not an unknown judge time-limit guarantee.
+- Rechecked official rules head ec8cde1. Added HACKATHON_READINESS.md with explicit
+  verified requirements, limits and missing submission deliverables. Correctness
+  and code review take priority over final-tiebreak kernel speed. Broader scalar
+  op/compound coverage is next; production readiness and hidden success unproven.
+- Evidence: wrap-addresses.json. Repo private, submission deferred, no outreach.

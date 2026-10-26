@@ -1,0 +1,47 @@
+{
+  "inputs": [
+    "x"
+  ],
+  "outputs": [
+    "sum_1"
+  ],
+  "nodes": {
+    "x": {
+      "op": "InputOp",
+      "op_fields": {},
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "x",
+          "shape": [
+            8192
+          ],
+          "dtype": "f32"
+        }
+      ]
+    },
+    "sum_1": {
+      "op": "KernelOp",
+      "op_fields": {
+        "body": [
+          "Tile(axes=(Axis(name='thread', extent=Dim(64), window=None),), body=(Smem(name='scratch', extents=(64, 128), dtype='float', align=16), StridedLoop(axis=Axis(name='copy', extent=Dim(8192), window=None), start=Var(name='thread'), step=Literal(value=64, dtype='int'), body=(Load(names=('item',), input='x', index=(Var(name='copy'),), dtype=None), Write(output='scratch', index=(Var(name='copy'),), values=('item',), value_dtype=None, atomic=False, swizzle='NONE')), unroll=False, end=None, seed=True), Sync(barrier_id=0, count=None, warp=False), Loop(axis=Axis(name='step', extent=Dim(7), window=None), body=(Load(names=('value',), input='scratch', index=(Var(name='thread'), BinaryExpr(op='-', left=BinaryExpr(op='+', left=BinaryExpr(op='%', left=Var(name='step'), right=Literal(value=3, dtype='int')), right=Literal(value=2147483647, dtype='int')), right=Literal(value=2147483647, dtype='int'))), dtype=None), Accum(name='total', value='value', op=ElementwiseImpl('add'), dtype=None, axes=('step',), base=None)), unroll=False, seed=True), Write(output='sum_1', index=(Var(name='thread'),), values=('total',), value_dtype=None, atomic=False, swizzle='NONE')), block_threads=None, aux_threads=0, raster_axes=None, raster_group=None, raster_orient='m')"
+        ],
+        "name": "k_sum_1_reduce",
+        "zero_delegated": [],
+        "serial": []
+      },
+      "inputs": [
+        "x"
+      ],
+      "outputs": [
+        {
+          "name": "sum_1",
+          "shape": [
+            64
+          ],
+          "dtype": "f32"
+        }
+      ]
+    }
+  }
+}

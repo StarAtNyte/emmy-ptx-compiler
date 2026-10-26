@@ -1,0 +1,12 @@
+--- a/compile.py
++++ b/compile.py
+@@ -566,7 +566,8 @@
+                 index = tuple(BinaryExpr('+', origin, lane) for origin, lane in zip(index, stmt.lane_index))
+             dst = self.address(stmt.smem, index)
+             src = self.address(stmt.src, stmt.src_index)
+-            self.emit(f'cp.async.ca.shared.global [{dst}], [{src}], {stmt.nbytes};')
++            policy = 'cg' if stmt.nbytes == 16 else 'ca'
++            self.emit(f'cp.async.{policy}.shared.global [{dst}], [{src}], {stmt.nbytes};')
+         elif isinstance(stmt, CpAsyncCommit):
+             self.emit('cp.async.commit_group;')
+         elif isinstance(stmt, CpAsyncWait):

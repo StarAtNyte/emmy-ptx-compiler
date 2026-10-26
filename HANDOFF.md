@@ -61,6 +61,26 @@ payments/spending limit annotation. No hosted CPU success claimed.
 Historical sections below retain original counts and hashes; this section
 supersedes their current-state wording.
 
+## Follow-up tuning and alignment — 26 October
+
+No default change after bounded-tuning.json. cg16 copy hints show only small
+selected-workload differences; max32/max16 unroll both regress m01 by about27%.
+Patches retained; do not repeat without new evidence. All timing jobs terminal.
+Live hackathon rules rechecked: correctness, then own code review, then speed.
+Public repo and personal3–5min video required at eventual submission; current
+explicit authorization keeps repo private and submission deferred.
+Signed-wrap acceptance complete:44 codegen and numerical cases pass both GPUs;
+all four sanitizers clean on22 original cases. Four retained CPU fixtures add
+coverage:33 newly checked snapshot/feature cases plus101 unchanged diagnostic
+cases total134 locally per Python3.12/3.13/3.14, without Torch. Existing25
+snapshots unchanged; compiler stays c2f7e2b3. All gate processes terminal.
+Evidence: validation/2026-10-26-wrap-addresses.json. Read HACKATHON_READINESS.md
+for verified task requirements and missing submission deliverables. Fifteen
+public kernels compile deterministically in three isolated no-Torch processes
+each, local median0.574–0.681sec. Prioritize broader scalar-op and compound
+correctness within the task vocabulary next. Package compiler remains valid;
+new fixtures/docs will be included in the next archived source checkpoint.
+
 ## Contract/current implementation
 
 `python compile.py path/to/kernel.ir.json > out.ptx` reads typed Graph.from_dict

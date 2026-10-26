@@ -1,6 +1,6 @@
 {
   "baseline_compiler_sha256": "c2f7e2b38a1d77424201ec96eec39f2367587f032d0fdac73f87e38f74528c0e",
-  "snapshot_provenance": "Wide shared-load acceptance: two existing positive snapshots refreshed after both-GPU numerical checks; eighteen other existing snapshots unchanged. Five new alignment/fallback/offset/tail fixtures GPU verified.",
+  "snapshot_provenance": "Wide shared-load acceptance: two existing positive snapshots refreshed after both-GPU numerical checks; eighteen other existing snapshots unchanged. Five new alignment/fallback/offset/tail fixtures GPU verified. Four in-bounds signed-wrap fixtures added after both-GPU checks and all four sanitizers; existing25 snapshots unchanged.",
   "fixtures": [
     {
       "folder": "validation/counterexamples/2026-10-24-scope-shrunk",
@@ -251,6 +251,46 @@
         "meta.json": "ecd2c1256a60ca66edc04872fba3e0a4194bd47202a82929e2c0d0d9293b1058"
       },
       "ptx_sha256": "4defdf523b268e1b251b3a6b92ab7e9176c4e7bcbc9a5e9d49323f0fbb5edfe7"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-26-wrap-signed_add",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "expected.npz": "039d993bc6242742087c45d4468512fe631afbd0ed6fb7cc8446ade2bfdd7cfc",
+        "k_sum_1_reduce.ir.json": "79646117a6a7f076a536c3f73c9f3bb6b73be99d36cbcac33f7bc042f6d84569",
+        "meta.json": "7f341a5ec370e8c82d5013041a66907369cb55dd385db299aeb5245d495e017f"
+      },
+      "ptx_sha256": "a6298a9fa3142bfb1eef6009481295e51b5a899800640a810870816c65f7493a"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-26-wrap-multiply",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "expected.npz": "039d993bc6242742087c45d4468512fe631afbd0ed6fb7cc8446ade2bfdd7cfc",
+        "k_sum_1_reduce.ir.json": "e2d94f4abcffe41a9b9ebd36f3b0b0307fcdc78e862950d2846ab3bb04a8fcc1",
+        "meta.json": "719ba7bd85f9f5eb07ec6efb89920840ce5bc87f8a3952fb8f5fa97732eeaefe"
+      },
+      "ptx_sha256": "b72ae22e2afa008c4b7c595d08b516e26e61f04f904164e3cac4c964ca3a3618"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-26-wrap-align8",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "expected.npz": "039d993bc6242742087c45d4468512fe631afbd0ed6fb7cc8446ade2bfdd7cfc",
+        "k_sum_1_reduce.ir.json": "0275f98dcc59a866d8b59cf26a3bfc0c8cf27986c8f12f76eb81c0c32ca19545",
+        "meta.json": "d72776c7f527559801a4a16a4948a60b8e2b3cdb1ea01436c6327530fd290caf"
+      },
+      "ptx_sha256": "91eae3eb0bad61bd09044d37064c56564f10cdf46488fc95ccc349a463d079fc"
+    },
+    {
+      "folder": "validation/cpu-fixtures/2026-10-26-wrap-nonlinear",
+      "ir": "k_sum_1_reduce.ir.json",
+      "files": {
+        "expected.npz": "3d288f3da4f457dad8f84c85979658a042f9447e9934f6100b7346cc07704425",
+        "k_sum_1_reduce.ir.json": "786354f1b5c82705a2ccb1a4648c16cb43f68ffe17f547085646094c766528a3",
+        "meta.json": "d4673361394aa35236a38b9bc9a27ddbc1e11b417a62c3d30f829d585e200d2a"
+      },
+      "ptx_sha256": "146a7a2806ed38ea0fc9667bf798c84fff50f8c62514e7978d06afed012f9f59"
     }
   ]
 }

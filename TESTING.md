@@ -657,3 +657,20 @@ both GPUs; 641 remain byte-identical. Nine transformer checks pass.
 All four Compute Sanitizer tools are clean on 46 synthetic cases and three actual
 pipelined matmuls. Final seven-pair timing covers 19 workloads sequentially.
 Full reports and fixture hashes: validation/2026-10-26-production-iteration15.json.
+
+## Signed-wrap shared-address regression coverage — 26 October
+
+Generate with `tools/generate_wrap_shared_cases.py --out DIRECTORY --seed SEED`
+for seeds0 and39019. Each generates22 cases: add/subtract/multiply intermediates
+wrap at signed32 boundaries while final indices remain in bounds. Flat/additive
+views, opaque row expressions, width-two fallback and scalar guards are included
+with renamed variants. Original independent scalar-fixture oracles are preserved.
+All44 codegen checks and numerical cases pass on both GPUs. All four sanitizer
+tools are clean on22 original cases. The generator never forms an out-of-bounds
+pointer to test wraparound. This is regression coverage, not a formal proof.
+
+Four GPU-verified fixtures add snapshot coverage without changing existing25
+goldens. All33 snapshot/feature checks newly pass in each isolated no-Torch
+Python3.12/3.13/3.14 environment. Together with101 diagnostic checks from unchanged
+compiler/checker source, the local matrix totals134 per version. Hosted CPU
+execution remains unverified. Evidence: validation/2026-10-26-wrap-addresses.json.
