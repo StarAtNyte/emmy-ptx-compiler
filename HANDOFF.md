@@ -164,25 +164,24 @@ checks separate. Runner SHA90a494a357d0368265a06fffdcdfd3895eaa87d3a19f8d51b6dd4
 
 ## CI and packaging
 
-GitHub run40280154398 (source67c6b2f) was inspected: all3 CPU jobs rejected before
-steps, annotation failed account payments/spending limit. No account change,
-retry loop or visibility workaround authorized. Later pushes can trigger jobs;
-do not claim current hosted CPU success from local matrices. Old public86-check
-run40107112159 passed7fbe5ee4, not current source.
+GitHub run40295512213 (sourcebea1389) inspected: all3 CPU jobs rejected before
+steps; annotation confirms account payments/spending limit. No compiler tests
+ran. No account change, retry loop or visibility workaround authorized. Current
+hosted CPU157-check suite remains unverified despite local157-check matrices.
 
-Current verified archive source 44bd6d3 / compiler eeb79a3a:
-ZIP7e1a3474678d4d1aaf2f907732377872386e3f703a2d501d6303619fd5dc19b3.
-Record validation/2026-10-26-current-package.json. Previous wrap record preserved
-as2026-10-26-wrap-package.json. Scalar-logs/current/submission ZIP aliases match.
-Actual ZIP compiler/harness/generator/manifest/fixture member bytes checked.
-Extracted hosted scalar-add/matmul/attention plus four new-operation fixture
-checks pass in existing isolated no-Torch3.12 runtime. No fresh install claimed.
-No archive rebuild needed for documentation/evidence-only updates.
+Current verified archive source bea1389 / compiler6237caab:
+ZIP041536e115f31a8b4561b9fbe1f33b36fe852cde2eb401ae575ab0122cb05c9e.
+Record validation/2026-10-26-current-package.json. Previous scalar-log checkpoint
+preserved as2026-10-26-scalar-logs-package.json. Masks/current/submission ZIP
+aliases match. Actual compiler/harness/generator/manifest/fixture bytes checked.
+Extracted hosted scalar-add/matmul/attention plus all5 retained mask/attention
+fixtures pass in existing isolated no-Torch3.12 runtime. No fresh install claimed.
+No rebuild needed for documentation/evidence-only updates.
 
 ## Next work
 
 All semantic/CPU/transformer/sanitizer gates above have completed; do not restart.
-Commit source/evidence and refresh archive, then remaining frontend scalar ops.
+Mask source/evidence published and archive verified. Next remaining frontend scalar ops.
 Large dtype/Tensor Core expansions are not required by published evaluation scope.
 
 HACKATHON_READINESS.md is the requirements audit. Personal video/publication later,
@@ -190,8 +189,9 @@ submission deferred, hidden-set and broad production-readiness claims unproven.
 
 Two numeric bool-cast audits with zero/subnormal/max-finite inputs also pass
 both GPUs and regenerate byte-identically; included in13 frontend count.
-Mask acceptance is complete; all gate processes terminal. Commit current source
-and verify a new archive. Current-package still describes previous eeb79a3a
-checkpoint44bd6d3 until refresh; preserve it as scalar-logs-package.json.
-Next inspect remaining supported frontend scalar operation mixes (square/pad,
-pow/sin/cos/erf) using actual generated examples before implementing further ops.
+Mask acceptance is complete, source bea1389 published privately and archive verified.
+All mask gate processes terminal. New math discovery is running from ignored
+artifacts/expressions-math-discovery.py into artifacts/math-discovery, followed
+by isolated baseline checks. Cases: square, erf, native GELU, explicit GELU math,
+RMS via square and zero-pad-plus-add. Inspect actual live handle/report before
+restarting. Main remains6237caab; no math candidate adopted yet.

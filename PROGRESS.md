@@ -1515,3 +1515,20 @@ Additional step61 verification: two actual frontend bool→float and cast-affine
 programs pass both GPUs with explicit zero, subnormal and max-finite inputs.
 Portable generator expressions_scalar_mask_casts.py recreates exact tested bytes.
 Frontend total13;157 CPU and75 selected sanitizer cases unchanged.
+
+## Step 62 — mask checkpoint archived and actual release features verified
+
+Completed 2026-10-26:
+
+- Publishedbea1389 privately. Independently checked ZIP compiler/harness/mask
+  generators/manifest and retained fixture bytes against tested source.
+- Extracted standard scalar-add/matmul/attention plus all5 retained new mask/
+  attention fixtures pass on official GPU in existing isolated no-Torch3.12.
+  Masks/current/submission ZIP aliases match; previous scalar-log package record
+  retained separately. No entry submitted or fresh installation claimed.
+- Inspected sourcebea1389 Actions run40295512213: all3 jobs fail before steps.
+  Annotation confirms account payments/spending limit, not compiler test failures.
+  Hosted157 checks remain unverified; no account change or repeated reruns.
+- Further actual frontend math cases are generating, followed by isolated baseline
+  checks. Keep this live discovery process; no new math candidate/main change yet.
+  Goal remains active, repo private, video/publication later today.
