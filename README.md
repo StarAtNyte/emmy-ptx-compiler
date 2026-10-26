@@ -36,6 +36,24 @@ launch configuration. Logical tensor views may differ from physical allocation
 shapes. The compiler emits PTX 8.0 targeting `sm_89`; the caller launches the entry
 using the supplied grid, block and shared-memory settings.
 
+## How it works
+
+`compile.py` is a single file with one `Compiler` class:
+
+1. **Load and validate.** Find the single `KernelOp`, take the entry name,
+   pointer order and block size from `meta.json`, and reject unsupported IR
+   features, shapes or ABIs with a clear message before emitting anything.
+2. **Walk the statements once.** Each IR statement kind has one lowering method
+   (`lower_tile`, `lower_loop`, `lower_warp_shuffle`, `lower_write`, ...). A map
+   from IR value names to virtual registers carries values; index and predicate
+   expressions compile recursively. ptxas performs register allocation.
+3. **Assemble.** Header, parameters, launch-bound directives, register and
+   shared-memory declarations, then the body.
+
+Sections in the file follow the same order: validation, emission helpers,
+expressions, elementwise operations and the math library, statement lowering,
+reductions and vectorized reads, module assembly.
+
 ## Supported features
 
 | Area | Implementation |
@@ -59,15 +77,22 @@ and synchronization rules.
 Comparisons, logical masks and selection support internal boolean values.
 Boolean results convert numerically when written into f32 buffers.
 
-Natural, base-two and base-ten logarithms and the base-two exponential use PTX
-approximate instructions with subnormal handling enabled. Unknown scalar
-operations produce a diagnostic before PTX is written.
-
-The backend emits its own f32 `erf` approximation and rounded `square`
-operations. Generated GELU and RMS workloads and a three-layer GELU MLP are
-validated against independent numerical references.
+Elementwise math is implemented in the compiler to libm-like accuracy, because
+Emmy's reference kernels use CUDA's accurate `expf`, `tanhf`, `logf`, `sinf`,
+`cosf` and `powf`: exp and tanh within 2 ULP, log 1 ULP, sin/cos 2 ULP with
+Payne–Hanek reduction for huge arguments, and pow through f64 with C99 special
+cases. The previous hardware-approximation version failed tanh, GELU-tanh, sin,
+cos and pow problems at 1e-6 tolerance on the official GPU. See
+[DESIGN.md](DESIGN.md#elementwise-math). Unknown scalar operations produce a
+diagnostic before PTX is written.
 
 ## Performance
+
+Launch-bound directives (`.maxntid` for small blocks) made the single-warp
+attention problem `a02_attention_128` 1.295x faster (53.9 to 41.6 µs, five paired
+trials on the RTX 5090). Accurate `exp` costs 0.13 µs on the row-softmax problem
+(0.959x); the other thirteen public problems are within 1%.
+[Record](validation/2026-10-26-production-iteration19.json).
 
 The following measurements compare two versions of this compiler before and after
 two-wide and four-wide aligned shared reads across iterations. Each result uses seven alternating
@@ -92,8 +117,10 @@ checks, isolated CLI execution and selected NVIDIA Compute Sanitizer runs.
 | Check | Verified scope |
 |---|---|
 | Official public suite | 15 problems across pointwise, reduction, matmul, fused and attention categories |
+| Hidden-set proxies | 43 fresh shape/op-mix cases, 57 edge shapes and 13 batched/broadcast layouts, generated with the organizers' tool, all passing on the official GPU |
+| Math accuracy | Ten elementwise fixtures passing at rtol = atol = 1e-6 on the official GPU, plus wide-range ULP sweeps |
 | Model integration | Nine staged transformer seed/depth checks, covering 147 stage outputs |
-| Python compatibility | 162 local checks per version on Python 3.12, 3.13 and 3.14, without PyTorch |
+| Python compatibility | 175 local checks per version on Python 3.12, 3.13 and 3.14, without PyTorch |
 | Memory and synchronization | Selected memcheck, racecheck, synccheck and initcheck runs |
 | Packaging | Extracted archive compilation and three hosted GPU smoke checks |
 

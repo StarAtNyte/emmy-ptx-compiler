@@ -1721,3 +1721,13 @@ Completed 2026-10-26 with compiler 1a2ad94e (no code change).
   argument order (mask is a positional input). Matvec was removed: Emmy
   emits IR that only reads the first vector element. Record:
   validation/2026-10-26-shape-probes.json.
+
+## Step 73 — README and DESIGN updated for the accepted compiler
+
+Completed 2026-10-26 (documentation only). README gains a "How it works"
+section that maps the three stages onto compile.py's sections and lower_<kind>
+methods, replaces the stale approximate-math paragraph, adds the launch-bound
+timing result and updates the validation table (hidden-set proxies, 175 CPU
+checks per Python). DESIGN gains "Elementwise math" (per-function lowering
+and sampled ULP) and "Launch bounds", and the neutral-state paragraph now
+describes the IR identity fix. No package rebuild needed for docs-only edits.

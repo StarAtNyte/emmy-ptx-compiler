@@ -97,10 +97,24 @@ Another barrier publishes the restored floating-point state. No extra shared
 allocation is needed. This slower fallback is limited to observable scratch.
 
 Short softmax rows exposed an important neutral-state problem: empty lanes carry
-maximum=-infinity and sum=0. Combining two empty states naively evaluates
-exp(-infinity - -infinity), creating NaN. Merge lowering checks the known identity
-tuple and selects the other operand when either operand is neutral. This leaves
-ordinary scalar subtraction and exponential semantics unchanged.
+the maximum's identity and sum=0. With an identity of -infinity, combining two
+empty states evaluates exp(-infinity - -infinity), creating NaN. Seeded folds
+therefore start from the IR operation's own identity (`ElementwiseImpl.identity`:
+-1e30 for maximum, +1e30 for minimum, as Emmy's reference kernels do), and merge
+lowering also checks the known identity tuple and selects the other operand when
+either operand is neutral. Small attention shapes whose Tile gives some lanes no
+loop iterations (for example 8x8) produced all-NaN output before the first change.
+
+## Launch bounds
+
+Every reference kernel declares `__launch_bounds__(block)`. Without an
+equivalent, ptxas may use more registers per thread than a large block can
+hold: a 1024-thread fused matmul-softmax used 128 registers and failed with
+CUDA_ERROR_LAUNCH_OUT_OF_RESOURCES. The compiler emits `.maxnreg 65536/block`
+for 1024-thread blocks, or when carried accumulators suggest pressure, and
+`.maxntid` for blocks of at most 256 threads. Caps change ptxas's allocation
+(it tends to fill the budget), and capping a 512-thread matmul slowed it to
+0.88x, so caps are not applied when they cannot be needed.
 
 ## Matmul transport
 
@@ -270,17 +284,34 @@ The first phase loads four registers; the next three bind their cached registers
 in the original arithmetic order. Scalar tails clear this state. Mixed alignment,
 mutable indices, writes and control-flow guards retain their previous behavior.
 
-Natural/base-two/base-ten logarithms lower through `lg2.approx.f32`; natural
-and base-ten results multiply by a rounded f32 ln(2) or log10(2). `exp2` uses
-`ex2.approx.f32` directly. These instructions omit `.ftz` so subnormal values
-remain supported. They implement approximate scalar math, not bitwise libm
-equivalence. See NVIDIA's [lg2/ex2 specification](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#floating-point-instructions-lg2).
-Boundary tests compare independent float64 NumPy results within explicit
-tolerances; exact result-class probes test negative/zero/subnormal operands
-and infinities/NaNs created inside the kernel. The exp2 powers probe classifies
-independently computed two-ULP bounds exactly, with separate positivity probes
-for subnormal outputs. Unknown scalar op names raise a clean unsupported-op
-diagnostic; they do not become a dictionary traceback.
+## Elementwise math
+
+Emmy's reference kernels call CUDA's accurate libm (`expf`, `tanhf`, `logf`,
+`sinf`, `cosf`, `powf`), so a hidden problem's tolerance may be tight; the open
+pointwise problems use 0 or 1e-6. The compiler therefore implements these
+functions itself instead of emitting bare hardware approximations:
+
+| Operation | Lowering | Worst sampled error |
+|---|---|---|
+| `exp` | `ex2.approx` of t = rn(x·log2 e), multiplied by 1 + d·ln 2, where d = x·log2 e − t comes exactly from one FMA plus the low part of log2 e | 2 ULP |
+| `tanh` | odd minimax polynomial below 0.55 (fitted to 9.4e-10), 1 − 2/(e^2\|x\| + 1) above | 2 ULP |
+| `log` | fdlibm reduction to [√½, √2) and its minimax tail; subnormals prescaled | 1 ULP |
+| `sin`, `cos` | three-part Cody–Waite π/2 reduction with FMA, Payne–Hanek with 192 bits of 2/π above 105615, Cephes polynomials | 2 ULP |
+| `pow` | log and exp in f64, then C99 rules for signs, zeros, infinities and NaN | 0 ULP sampled |
+| `erf` | odd series near zero, Abramowitz–Stegun 7.1.26 beyond (below) | 3 ULP |
+| `sqrt`, `div`, `rcp` | IEEE round-to-nearest instructions | 0 ULP |
+
+Errors were measured on the local GPU with wide-range samples against float64
+references (`tools/measure_precision.py`); they are not whole-domain proofs.
+Special operands follow C99/CUDA: signed zeros, infinities and NaN propagate.
+
+The `exp` design matters for speed. Online softmax merges are latency-bound, and
+a polynomial `exp` slowed them to 0.64x. Computing the rounding correction beside
+`ex2` adds only one FMA to the dependent chain (softmax 0.96-1.00x).
+
+`log2`, `log10` and `exp2` still use `lg2.approx.f32`/`ex2.approx.f32` (without
+`.ftz`); Emmy's renderer cannot emit them, so they never appear in generated
+problems.
 
 Boolean scalar values may use predicate registers in Assign/Let. All six
 comparisons support f32 operands; not_equal uses unordered-not-equal so NaN
