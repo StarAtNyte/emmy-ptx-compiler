@@ -1303,3 +1303,27 @@ Completed 2026-10-24:
   harness parity/regressions/public/model/sanitizer evidence recorded separately.
   Hosted CPU CI remains unverified because of account restriction. Full goal stays
   active; broader compiler/metadata coverage remains open. Repo private, no entry.
+
+## Step 52 — four-wide shared reads, research refresh and professional README
+
+Completed 2026-10-26:
+
+- Accepted compiler c2f7e2b3. Select width four only when the full two-wide eligible
+  set also proves 16-byte alignment and modulo-four address coefficients. Scalar
+  tails and arithmetic order remain intact; mixed eligibility retains width two.
+- 84 structural and eight cancellation/magnitude cases pass both GPUs; all 92
+  codegen checks pass. Regeneration confirmed identical tested IR/meta/oracle bytes.
+  Of 700 prior kernels, 641 retain exact PTX; all 59 changed pass both GPUs.
+- Nine transformer checks pass. Four sanitizers clean on 46 synthetic cases and
+  three actual pipelined matmuls. All 130 local CPU checks pass each isolated
+  no-Torch Python 3.12/3.13/3.14 runtime. Hosted CPU CI remains unverified.
+- Final seven alternating target pairs across 19 workloads: m01 17.024→15.008us
+  (1.134x), independent256 13.152→11.104us (1.184x). Third-shape discovery gain
+  did not reproduce; no claim. Other16 max median regression0.032us.
+- Reviewed requested GPU MODE, Modal, Unsloth, tinygrad, PufferAI, DeepSeek and
+  recent papers from primary sources, pinned nine repositories and20 source files.
+  Findings produced floating-order stress and actual-pipeline sanitizer coverage.
+  No external code incorporated or cloud/paid job run. Professional README now
+  presents compiler capabilities, usage, measured results and validation.
+- Evidence: production-iteration15.json and research-refresh.json (26 October).
+  Next commit source and verify refreshed archive. Repo private; no contest entry.

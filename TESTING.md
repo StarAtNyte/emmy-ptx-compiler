@@ -637,3 +637,23 @@ extracted hosted emitter smoke checks pass without Torch using the existing pinn
 Python 3.12 runtime. Compiler7ebf4ff2 is unchanged. Prior local 125-check CPU results
 remain compiler evidence; they do not test CUDA host initialization or establish
 hosted CI success.
+
+## Four-wide shared-read acceptance — 26 October
+
+Current compiler c2f7e2b3 passes 130 checks per Python version (29 snapshot/feature,
+28 launch, 42 ABI, 31 shape) in isolated no-Torch 3.12.13, 3.13.14 and 3.14.4.
+Two old GPU-verified snapshots were refreshed; eighteen are unchanged and five
+new alignment/stride/tail fixtures were added. These are local results; hosted
+CPU CI remains unverified under the known account restriction.
+
+Generate structural cases with `tools/generate_cross_iteration_cases.py --wide-guards`
+and floating stress with `--wide-guards --floating-stress`, using seeds 0 and 28103
+and distinct `--out` directories. Check their manifests with
+`tools/check_cross_width_codegen.py MANIFEST... --baseline BASELINE --candidate compile.py --report REPORT`.
+Recover the baseline with `git show 60676f3:compile.py`. All 92 codegen cases pass,
+including exact PTX preservation for scalar/two-wide fallbacks. All 92 pass on both
+local and hosted GPUs. The 59 changed members of 700 retained kernels also pass
+both GPUs; 641 remain byte-identical. Nine transformer checks pass.
+All four Compute Sanitizer tools are clean on 46 synthetic cases and three actual
+pipelined matmuls. Final seven-pair timing covers 19 workloads sequentially.
+Full reports and fixture hashes: validation/2026-10-26-production-iteration15.json.

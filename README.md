@@ -1,200 +1,126 @@
-# Emmy Kernel IR to PTX
+# Emmy PTX Compiler
 
-A Python compiler for the [Emmy Hackathon](https://github.com/cloudrift-ai/emmy-hackathon-2026).
-It loads Emmy's typed Kernel IR and emits PTX directly, without invoking an
-existing IR-to-code compiler. All 15 public problems pass across all five categories.
+A direct compiler from typed [Emmy](https://github.com/cloudrift-ai/emmy-hackathon-2026)
+Kernel IR to NVIDIA PTX. It lowers control flow, reductions and memory operations
+while preserving the kernel entry point, buffer ABI and prescribed launch geometry.
 
-## Run
+The compiler is implemented in Python and emits PTX directly. Compilation requires
+neither a GPU nor PyTorch, and does not invoke CUDA C++, nvcc or another compiler
+backend. NVIDIA's assembler and driver perform final machine-code generation.
 
-Python 3.12 or newer is required. Compilation needs neither Torch nor a GPU.
+## Getting started
+
+Requires Python 3.12 or later. Install the pinned runtime with `uv`:
 
 ```sh
 uv venv --python 3.12 .venv
 uv pip install --python .venv/bin/python -r requirements.txt -c requirements-ci.lock
-.venv/bin/python compile.py path/to/kernel.ir.json > out.ptx
 ```
 
-The neighboring `meta.json` supplies parameter order. The emitted entry name comes
-from the IR; the launch remains the one prescribed by the problem. PTX uses
-version 8.0 and target sm_89, tested on the organizers' RTX 5090.
+Compile a kernel:
 
-## Implementation
+```sh
+.venv/bin/python compile.py path/to/kernel.ir.json > kernel.ptx
+```
 
-[compile.py](compile.py) is the standalone translator. It handles tile coordinate
-decoding and guards, recursive index expressions, scalar/grouped accesses, loops,
-conditional folds, warp combines, shared memory, asynchronous copies, barriers,
-atomics and dynamic shared allocation above 48 KiB. Virtual registers are left
-for ptxas to allocate.
+The input directory must contain the IR file and an adjacent `meta.json`:
 
-Online softmax state merges preserve both the running maximum and denominator,
-including empty-state identities. Tree reductions preserve binary merge order and
-synchronization. A conservative use analysis removes dead scratch writes; when
-scratch is observed, an atomic ticket selects one writer per logical slot without
-extra allocation. This also handles repeated lanes and named-barrier groups.
+```text
+problem/
+├── k_example.ir.json
+└── meta.json
+```
 
-Targeted FMA contraction applies to adjacent multiply/add reduction steps.
-Bounded scalar loops reading shared memory expand by up to 64 iterations, capped
-by extent and body size, with ordered scalar tails.
-Aligned shared reads can pair into vector loads. Positive power-of-two signed
-index divisors use exact arithmetic shifts/masks, including negative numerators.
-These optimizations use typed IR properties, without problem-name recognition.
-[DESIGN.md](DESIGN.md) explains the lowering and its tradeoffs.
+The metadata specifies positional buffer arguments, allocation descriptors and
+launch configuration. Logical tensor views may differ from physical allocation
+shapes. The compiler emits PTX 8.0 targeting `sm_89`; the caller launches the entry
+using the supplied grid, block and shared-memory settings.
+
+## Supported features
+
+| Area | Implementation |
+|---|---|
+| Data types | f32 buffers and arithmetic; i32 scalar bindings and numeric casts |
+| Indexing | Static shapes, multi-axis tile decoding, 32-bit index arithmetic, 64-bit global addresses |
+| Control flow | Loops, strided loops, conditionals, scoped bindings and carried reduction state |
+| Memory | Global and shared memory, grouped accesses, aligned vector reads and dynamic shared allocation |
+| Synchronization | Barriers, named barriers, asynchronous copies and atomic adds |
+| Reductions | Warp operations, ordered tree merges and coupled online-softmax state |
+| Diagnostics | ABI, launch and typed static-shape checks before PTX emission |
+
+Optimizations include adjacent reduction FMA contraction, bounded shared-memory
+loop expansion, aligned shared reads across iterations and exact signed
+power-of-two index lowering. Selection uses IR structure and alignment proofs;
+it does not depend on kernel names.
+
+[DESIGN.md](DESIGN.md) describes the lowering, register model, numerical semantics
+and synchronization rules.
+
+## Performance
+
+The following measurements compare two versions of this compiler before and after
+two-wide and four-wide aligned shared reads across iterations. Each result uses seven alternating
+paired trials on the hosted RTX 5090, with eight warmups and 75 timed iterations.
+
+| Matmul dimensions (M × K × N) | Baseline | Optimized | Speedup |
+|---|---:|---:|---:|
+| 512 × 512 × 512 | 17.024 µs | 15.008 µs | 1.134× |
+| 256 × 512 × 384 | 13.152 µs | 11.104 µs | 1.184× |
+
+Both implementations passed full-output checks in the first trial and prefix
+checks thereafter. Clocks were unlocked and buffers were reused. These are
+kernel-level measurements for the listed workloads, not end-to-end model results.
+See the [measurement record](validation/2026-10-26-production-iteration15.json)
+and [target performance analysis](TARGET_PERFORMANCE.md) for samples and assumptions.
 
 ## Validation
 
-The [prior baseline record](validation/2026-10-23-iteration5.json) identifies
-the previous compiler hash and measured scope:
+Validation combines numerical references, generated IR regressions, integration
+checks, isolated CLI execution and selected NVIDIA Compute Sanitizer runs.
 
-| Check | Result |
-| --- | --- |
-| Public problems, hosted RTX 5090 | 15/15 |
-| Additional hosted cases | 73/73 |
-| Local regression cases, RTX 3050 | 157/157 |
-| Complete staged transformer seed/depth checks | 9/9, 147 stage outputs |
-| Selected semantic audit, four sanitizer tools | 11 cases, no errors/hazards |
+| Check | Verified scope |
+|---|---|
+| Official public suite | 15 problems across pointwise, reduction, matmul, fused and attention categories |
+| Model integration | Nine staged transformer seed/depth checks, covering 147 stage outputs |
+| Python compatibility | 130 local checks per version on Python 3.12, 3.13 and 3.14, without PyTorch |
+| Memory and synchronization | Selected memcheck, racecheck, synccheck and initcheck runs |
+| Packaging | Extracted archive compilation and three hosted GPU smoke checks |
 
-The [production optimization iteration](validation/2026-10-24-production-iteration1.json)
-records the earlier bounded-expansion compiler separately: 50 hosted cases, 74 local cases,
-nine complete transformer checks (147 stage outputs), and all four sanitizer
-tools clean on seven selected shared-memory cases. These totals overlap the
-baseline corpus; they must not be added as independent generalization evidence.
+The transformer checks execute separately traced stages with host transfers and
+measure correctness. Generated cases use independent numerical references and
+include alignment, loop-tail, scope, shape and initialization regressions. Test
+corpora overlap; their counts are not estimates of unseen-workload coverage.
 
-The [scope-correctness iteration](validation/2026-10-24-production-iteration2.json)
-records 99 hosted cases and 172 local cases, nine complete transformer checks,
-and four sanitizer tools clean on 15 selected cases. A seven-family typed-IR
-generator exposed leaked lexical bindings and aliased captured values; the old
-compiler fails all 14 reduced counterexamples and the current compiler passes.
-Inputs have independent exact numerical oracles and renamed counterparts.
-The grammar is bounded; this is not evidence of arbitrary IR support.
-
-The latest [nested-scope iteration](validation/2026-10-24-production-iteration3.json)
-records 232 local cases and 52 new hosted cases, including four 96 KiB dynamic
-shared-memory probes, plus nine transformer checks and four sanitizer tools on
-12 selected cases. It fixes declaration-specific shared storage and nested fold
-seed discovery. All 15 public kernels emit byte-identical PTX to the previous
-accepted compiler; their existing timing results are unchanged code-generation
-evidence, rather than fresh measurements in this iteration.
-
-Corpora cover shapes, operation mixes, schedules, finite-value stress inputs,
-alignment layouts, loop tails, actual PyTorch MLP/transformer comparisons and
-semantic regressions. They have been used during development and are not an
-estimate of hidden-test success. The pinned Emmy materializer fails on the fully
-fused transformer; separately traced stages execute the same complete model math
-with host transfers. That test measures correctness rather than model speed.
-
-To run the public checker:
+To run the official hosted checker:
 
 ```sh
 git clone https://github.com/cloudrift-ai/emmy-hackathon-2026 challenge
 .venv/bin/python tools/validate.py
 ```
 
-[TESTING.md](TESTING.md) contains complete reproduction commands, local execution,
-paired timing and sanitizer details. A committed-source archive was also tested
-from another directory in a fresh environment without Torch installed.
+[TESTING.md](TESTING.md) contains reproduction commands and hardware requirements.
+The [CPU workflow](.github/workflows/cpu-contract.yml) is configured for Python
+3.12–3.14. Current compatibility results are from isolated local environments;
+GitHub-hosted execution remains unverified. Exact source hashes, environments and
+results are retained in [validation](validation/).
 
-A later [frozen-compiler check](validation/2026-10-24-holdout.json) passed ten
-additional valid cases on both GPUs without compiler changes. It records two
-upstream tracing failures and a corrected callable-boundary fixture, including
-the initial results.
+## Current limitations
 
-The [signed power-of-two iteration](validation/2026-10-24-production-iteration7.json)
-records 458 local fixture executions, 111 hosted cases (including full-output
-first timing trials), nine transformer runs, and four sanitizers on 45 selected
-cases. These are correlated development checks. An unsigned tile-coordinate
-rewrite was rejected after a repeatable attention regression; the accepted signed
-refinement preserves that workload while improving three measured matmuls.
+The implementation targets static f32 kernels. Additional storage dtypes,
+auxiliary thread bands, shared-memory swizzles, zero-sized shared allocations and
+some expression operators remain unsupported. Grouped accesses are generally
+scalarized unless a vectorization rule proves eligibility. Multi-axis tiles map
+to a one-dimensional CUDA grid and block.
 
-The [predicate-index iteration](validation/2026-10-24-production-iteration8.json)
-fixes invalid PTX when booleans are used numerically. Forty new cases pass on both
-GPUs, with selected sanitizer/model checks; all 458 prior kernels retain
-byte-identical PTX. This correctness fix does not claim a fresh speedup.
+The compiler does not yet provide complete whole-IR type checking, access-bounds
+proofs or cardinality-overflow analysis. Cooperative kernels must satisfy their
+barrier participation requirements. Local sm_86 validation uses a test-harness
+target adjustment; the compiler's default output target remains sm_89.
 
-The [scalar-expression iteration](validation/2026-10-24-production-iteration9.json)
-adds f32 expressions/conditions and numeric casts: 52 new cases pass on both GPUs,
-with selected sanitizer/model/runtime checks. All 498 prior kernels retain
-byte-identical PTX. Floating indices reject cleanly; integer-buffer storage and
-floating Expr division remain unsupported.
+## Documentation
 
-The [address-rank iteration](validation/2026-10-24-production-iteration10.json)
-fixes additive and scalar-view flat offsets, including shared vector reads.
-Thirty-two new address cases and two ABI-order controls pass on both GPUs; all
-550 prior kernels retain byte-identical PTX. Logical view rank can differ from
-physical allocation rank. Full ABI and memory-bounds validation remain open.
-
-## Measured performance
-
-Alternating paired RTX 5090 trials checked both compilers' outputs. Clocks were
-not locked; these are observations on named kernels, not universal speedups.
-
-| Optimization | Kernel | Median before → after | Speedup |
-| --- | --- | --- | --- |
-| Reduction FMA | Public a01 attention | 119.424 → 90.784 µs | 1.315× |
-| Shared-memory loop expansion | Public m01 matmul | 98.944 → 74.400 µs | 1.330× |
-| Larger bounded shared expansion | Public m01 matmul | 74.304 → 66.176 µs | 1.123× |
-| Aligned shared-read pairing | Public m01 matmul | 66.176 → 64.160 µs | 1.031× |
-| Aligned shared-read pairing | Independent 384×256×320 matmul | 35.488 → 31.392 µs | 1.130× |
-| Signed power-of-two index lowering | Public m01 matmul | 64.160 → 24.928 µs | 2.574× |
-| Signed power-of-two index lowering | Independent 256×512×384 matmul | 37.760 → 17.344 µs | 2.177× |
-| Signed power-of-two index lowering | Independent 384×256×320 matmul | 31.392 → 15.008 µs | 2.092× |
-| Cross-iteration shared-read pairing | Public m01 matmul | 25.088 → 16.928 µs | 1.482× |
-| Cross-iteration shared-read pairing | Independent 256×512×384 matmul | 19.040 → 12.992 µs | 1.466× |
-| Cross-iteration shared-read pairing | Independent 384×256×320 matmul | 14.912 → 10.752 µs | 1.387× |
-
-The semantic audit retained those performance levels. Raw samples are preserved
-in the validation records. Explicit vector accesses were timing-neutral, and
-unrestricted scalar-loop expansion regressed attention; those versions are
-archived under [experiments](experiments/README.md) rather than active.
-The accepted shared-read pairing preserves attention latency within measurement noise;
-[iteration four](validation/2026-10-24-production-iteration4.json) records its
-semantic, sanitizer, standalone-runtime and target-timing gates;
-see [production research and gates](RESEARCH_PRODUCTION.md) for the current
-research direction, profiling limits and remaining production work.
-
-## Scope and submission
-
-The storage/data-arithmetic path is f32; scalar i32 bindings and numeric casts
-are supported. Shapes are static, with 32-bit index math
-and 64-bit global addresses. Additional dtypes, auxiliary thread bands, shared
-swizzles and some operations remain unsupported. Grouped accesses are scalarized.
-No hidden-set result or prize outcome is claimed.
-
-[SUBMISSION.md](SUBMISSION.md) holds the entry draft and required entrant fields.
-[WALKTHROUGH.md](WALKTHROUGH.md) is an own-voice recording outline with understanding
-questions. The private repository is https://github.com/StarAtNyte/emmy-ptx-compiler.
-The competition entry still requires the entrant details and own-voice video.
-
-The CPU workflow is configured for pushes, pull requests and nightly on Python
-3.12–3.14. Current 125-check suite passes locally on 3.12.13/3.13.14/3.14.4 without
-Torch: committed numerical snapshots, CLI isolation and feature/launch/ABI/shape
-probes. See [workflow](.github/workflows/cpu-contract.yml), [testing](TESTING.md)
-and [current evidence](validation/2026-10-24-production-iteration14.json).
-GitHub [run 40111398281](https://github.com/StarAtNyte/emmy-ptx-compiler/actions/runs/40111398281)
-rejected all jobs before starting due to account billing/spending-limit state;
-current hosted CPU CI is unverified. The refreshed archive separately passes
-three hosted GPU smoke checks. Earlier hosted results cover earlier source only.
-
-Target launch/memory calibration and conditional f32 workload models are in
-[TARGET_PERFORMANCE.md](TARGET_PERFORMANCE.md). Baseline calibration uses the
-prior 7fbe5ee4 compiler; subsequent paired optimization measurements are separate.
-
-The [cross-iteration pairing acceptance](validation/2026-10-24-production-iteration13.json)
-retains scalar tails and index/alignment guards. Sixty new cases pass on both GPUs;
-561 prior kernels keep identical PTX and all 33 changed kernels pass on both GPUs.
-Final seven-pair timing covers nineteen workloads; the other sixteen differ by
-at most 0.032 µs. That acceptance record retains the corresponding local matrix
-and package evidence; the current expanded suite is described above.
-
-The [static-shape iteration](validation/2026-10-24-production-iteration14.json)
-fixes zero-domain tiles as no-ops while preserving one-cell empty-axis-list tiles.
-Thirty-six numerical cases pass on both GPUs; 658 prior kernels retain identical
-PTX. Typed symbolic/negative dimensions and malformed shared extents/alignment
-now fail before PTX output. Scalar and zero logical views remain supported;
-zero-sized shared allocations remain explicitly unsupported. The expanded
-125-check suite passes locally on Python 3.12–3.14 without Torch. Hosted CPU CI
-still needs verification once account billing permits jobs to start.
-
-A [local-runner initialization audit](validation/2026-10-24-runner-initialization.json)
-found and fixed missing first-launch zeroing when zero_outputs names an input.
-Hosted parity, retained GPU regressions and public/model checks pass. The compiler
-is unchanged; this corrects the validation harness, not generated PTX.
+- [Compiler design](DESIGN.md)
+- [Testing and reproduction](TESTING.md)
+- [Target performance and hardware models](TARGET_PERFORMANCE.md)
+- [Research and optimization criteria](RESEARCH_PRODUCTION.md)
+- [Validation records](validation/)

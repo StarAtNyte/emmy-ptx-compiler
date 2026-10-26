@@ -1,4 +1,4 @@
-# Handoff — current state, 2026-10-24
+# Handoff — current state, 2026-10-26
 
 ## Goal and authorization
 
@@ -29,13 +29,32 @@ http://runner.riftstack.ai:48701. Compiler emits PTX 8.0 sm89; local runner chan
 that target to sm86. Local performance cannot select contest optimizations.
 
 **Current accepted compile.py SHA-256:**
-7ebf4ff2395ddd9bd4f7c2eb2aa213c8cd24c505149c2c757edf159c0cbf5a61.
-Exact source frozen/tested as artifacts/compiler-static-shapes.py. Prior
+c2f7e2b38a1d77424201ec96eec39f2367587f032d0fdac73f87e38f74528c0e.
+Exact source frozen/tested as artifacts/compiler-cross-v4.py. Previous 7ebf4ff2
+is reproducible from 60676f3:compile.py. Prior
 40a1de84 is reproducible from 07f4851:compile.py. Prior
 7fbe5ee4 is reproducible from b2a1b19:compile.py. Prior
 1dfcf75f is reproducible from 0fea2c0:compile.py. Prior
 bf07d517 is reproducible from 998f3b0:compile.py. Prior 393d7600
 is reproducible from 48793dc:compile.py; b13ccba6 from 35208cf.
+
+## Latest accepted improvement — 26 October
+
+Four-wide cross-iteration shared reads are accepted. Full evidence:
+validation/2026-10-26-production-iteration15.json. The 92 structural/floating cases
+pass both GPUs; 59 changed prior kernels pass both GPUs, 641/700 retain exact PTX.
+Nine transformer checks pass; all four sanitizers clean on 49 cases including
+three actual pipelined matmuls. Local 130-check no-Torch matrix passes all three
+Python versions. Hosted CPU CI remains unverified because of account restriction.
+Final seven paired target trials: m01 17.024→15.008us (1.134x), independent
+256×512×384 13.152→11.104us (1.184x). Third-shape discovery gain did not reproduce;
+no claim. Other sixteen workloads have at most 0.032us median regression.
+README rewritten as professional compiler documentation. Requested primary-source
+review is in RESEARCH_2026-10-26.md with pinned research-refresh.json. No external
+code incorporated, Modal job/deployment or paid compute run. Repository private.
+The package section below describes the previous checkpoint until a new package
+record is verified after committing this source. Historical sections retain their
+original counts and hashes; this section supersedes their current-state wording.
 
 ## Contract/current implementation
 

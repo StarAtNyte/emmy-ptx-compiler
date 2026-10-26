@@ -1,6 +1,6 @@
 # Production research and experiment gates
 
-Snapshot: 2026-10-24. Submission is deferred. This document separates external
+Original snapshot: 2026-10-24. Updated review: 2026-10-26. Submission is deferred. This document separates external
 claims from our measurements; it does not certify production readiness.
 
 ## Primary material inspected
@@ -52,3 +52,12 @@ use BF16/FP4 tensor-core peak figures to score scalar-f32 kernels. A first targe
 roofline is inappropriate for repeated cache-resident workloads. Actual clocks
 and counters remain unavailable; rigorous hardware lower bounds and measured
 utilization remain unproven.
+
+## 26 October refresh
+
+[The focused review](RESEARCH_2026-10-26.md) covers GPU MODE, Modal, Unsloth,
+tinygrad, PufferAI, DeepGEMM, FlashMLA, TileKernels and selected September/October
+papers. Nine repository heads and twenty inspected files are pinned. It records
+which ideas fit the current contract, which require separate experiments, and
+which change precision, hardware or execution scope. Additional cancellation,
+magnitude and pipelined-sanitizer checks were applied to the wider-load candidate.

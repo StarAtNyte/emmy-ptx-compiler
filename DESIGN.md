@@ -261,3 +261,11 @@ zero-sized shared arrays remain explicitly unsupported. Shared alignment must be
 zero for natural alignment or a positive power of two. Checks run before shared
 allocation/address arithmetic, including nested and else bodies. This does not
 establish cardinality/address overflow safety, grid coverage or access bounds.
+
+Four-wide extension (26 October): the same proof is evaluated modulo four with
+at least 16-byte physical alignment. A bounded expansion factor of at least four
+selects `ld.shared.v4.f32` only when every eligible two-wide cross-iteration load
+is also eligible at width four. Otherwise the whole loop retains two-wide lowering.
+The first phase loads four registers; the next three bind their cached registers
+in the original arithmetic order. Scalar tails clear this state. Mixed alignment,
+mutable indices, writes and control-flow guards retain their previous behavior.

@@ -27,7 +27,8 @@ def main():
             folder=Path(case['folder']);ir=next(folder.glob('*.ir.json'))
             assert digest(ir)==case['ir_sha256'],f'Fixture changed: {ir}'
             launch=json.loads((folder/'meta.json').read_text())['kernels'][0]
-            counts=[module.Compiler(Graph.from_dict(json.loads(ir.read_text())),launch).compile().count('ld.shared.v2.f32') for module in modules]
+            emitted=[module.Compiler(Graph.from_dict(json.loads(ir.read_text())),launch).compile() for module in modules]
+            counts=[ptx.count('ld.shared.v2.f32')+ptx.count('ld.shared.v4.f32') for ptx in emitted]
             report['results'].append(dict(case,baseline_vectors=counts[0],candidate_vectors=counts[1],
                 passed=(counts[1]>counts[0])==case['expect_new_vector']))
     args.report.parent.mkdir(parents=True,exist_ok=True)

@@ -47,6 +47,7 @@ class Compiler:
         self.cross_loads = set()
         self.cross_cache = {}
         self.cross_phase = 0
+        self.cross_width = 2
         self.lines = []
         self.counts = Counter()
         self.values = {}
@@ -683,9 +684,12 @@ class Compiler:
             done = self.instruction('setp.ge.s32', axis, end, kind='p')
             self.emit(f'@{done} bra {tail};')
             cross = self.cross_iteration_loads(stmt) if factor > 1 else set()
+            width = 4 if (factor >= 4 and cross
+                          and cross == self.cross_iteration_loads(stmt, 4)) else 2
             for offset in range(factor):
                 self.cross_loads = cross
-                self.cross_phase = offset % 2
+                self.cross_width = width
+                self.cross_phase = offset % width
                 if not self.cross_phase:
                     self.cross_cache = {}
                 self.values[stmt.axis.name] = axis if offset == 0 else self.instruction('add.s32', axis, offset)
@@ -890,7 +894,7 @@ class Compiler:
                 break
         return pairs, removed
 
-    def cross_iteration_loads(self, loop):
+    def cross_iteration_loads(self, loop, width=2):
         """Pair affine adjacent reads at even unrolled-loop positions."""
         writes = set()
         loads = [s for s in loop.body if isinstance(s, Load)]
@@ -906,14 +910,14 @@ class Compiler:
         axis = Var(loop.axis.name)
         for index, stmt in enumerate(loop.body):
             if (index in occupied or not isinstance(stmt, Load) or len(stmt.names) != 1
-                    or self.shared_symbol_alignments[self.shared[stmt.input]] < 8):
+                    or self.shared_symbol_alignments[self.shared[stmt.input]] < 4*width):
                 continue
             if any(expr.free_vars() & writes for expr in stmt.index):
                 continue
             terms, constant = self.flat_linear(stmt.input, stmt.index)
-            if terms.get(axis) != 1 or constant % 2:
+            if terms.get(axis) != 1 or constant % width:
                 continue
-            if any((loop.axis.name in term.free_vars() or coefficient % 2)
+            if any((loop.axis.name in term.free_vars() or coefficient % width)
                    for term, coefficient in terms.items() if term != axis):
                 continue
             eligible.add(id(stmt))
@@ -931,13 +935,13 @@ class Compiler:
         for index, stmt in enumerate(statements):
             if id(stmt) in self.cross_loads:
                 if self.cross_phase:
-                    self.values[stmt.names[0]] = self.cross_cache[id(stmt)]
+                    self.values[stmt.names[0]] = self.cross_cache[id(stmt)][self.cross_phase-1]
                 else:
-                    registers = [self.reg('f'), self.reg('f')]
+                    registers = [self.reg('f') for _ in range(self.cross_width)]
                     address = self.address(stmt.input, stmt.index)
-                    self.emit(f'ld.shared.v2.f32 {{{", ".join(registers)}}}, [{address}];')
+                    self.emit(f'ld.shared.v{self.cross_width}.f32 {{{", ".join(registers)}}}, [{address}];')
                     self.values[stmt.names[0]] = registers[0]
-                    self.cross_cache[id(stmt)] = registers[1]
+                    self.cross_cache[id(stmt)] = registers[1:]
                 previous = stmt
                 continue
             if index in removed:

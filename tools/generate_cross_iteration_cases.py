@@ -21,12 +21,20 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--out',type=Path,required=True)
     parser.add_argument('--seed',type=int,default=0)
+    parser.add_argument('--wide-guards',action='store_true')
+    parser.add_argument('--floating-stress',action='store_true')
     args = parser.parse_args()
     source = root/'validation/cpu-fixtures/2026-10-24-abi-reordered'
     cases = [('aligned',4),('tail',5),('large',64),('large_tail',65),('odd',5),
              ('weak',5),('local_index',5),('axis_shadow',5),('nonunit',5),
              ('nonlinear',7),('shared_write',5),('global_read',5),('additive',7),
              ('flat_view',5),('odd_stride',5)]
+    if args.wide_guards:
+        cases += [('align8',5),('offset2',5),('offset4',7),('even_stride',5),
+                  ('mixed_alignment',5),('tail_six',6)]
+    if args.floating_stress:
+        if not args.wide_guards:parser.error('floating-stress requires wide-guards')
+        cases=[('cancellation',8),('magnitude',65)]
     manifest = []
     k = lambda x:Literal(x,'int')
     b = lambda op,x,y:BinaryExpr(op,x,y)
@@ -35,11 +43,16 @@ def main():
             prefix = f's{args.seed}_' if renamed else ''
             n = lambda name:prefix+name
             v = lambda name:Var(n(name))
-            columns = 129 if variant=='odd_stride' else 128
+            columns = 129 if variant=='odd_stride' else 130 if variant=='even_stride' else 128
             size = 64*columns
             data = np.random.default_rng(args.seed).integers(-8,9,size=size).astype(np.float32)
+            if variant=='cancellation':data=np.tile(np.array([1e8,1.,-1e8,1.],dtype=np.float32),size//4)
+            if variant=='magnitude':
+                data=np.random.default_rng(args.seed).standard_normal(size).astype(np.float32)
+                data*=np.tile(np.array([1e-4,1.,1e4,1.],dtype=np.float32),size//4)
             coords = v('step')
             if variant=='odd':coords=b('+',coords,k(1))
+            if variant in ('offset2','offset4'):coords=b('+',coords,k(2 if variant=='offset2' else 4))
             if variant=='nonunit':coords=b('*',coords,k(2))
             if variant=='nonlinear':coords=b('%',coords,k(3))
             before = ()
@@ -56,6 +69,10 @@ def main():
             if variant=='shared_write':
                 leaf+=(Write(n('scratch'),(v('thread'),b('+',v('step'),k(1))),value=n('value')),)
             value = n('value')
+            if variant=='mixed_alignment':
+                leaf+=(Load(n('second'),n('scratch'),(v('thread'),b('+',coords,k(2)))),
+                       Assign(n('sum'),ElementwiseImpl('add'),(n('value'),n('second'))))
+                value=n('sum')
             if variant=='global_read':
                 leaf+=(Load(n('global'),'x',(v('thread'),)),
                        Assign(n('sum'),ElementwiseImpl('add'),(n('value'),n('global'))))
@@ -64,7 +81,7 @@ def main():
             copy = StridedLoop(Axis(n('copy'),Dim(size)),v('thread'),k(64),(
                 Load(n('item'),'x',(v('copy'),)),
                 Write(n('scratch'),(v('copy'),),value=n('item'))))
-            body = (Smem(n('scratch'),shape,align=4 if variant=='weak' else 16),copy,Sync(),
+            body = (Smem(n('scratch'),shape,align=4 if variant=='weak' else 8 if variant=='align8' else 16),copy,Sync(),
                     Loop(Axis(n('step'),Dim(trips)),leaf),Write('sum_1',(v('thread'),),value=n('total')))
             graph=Graph.from_dict(json.loads(next(source.glob('*.ir.json')).read_text()))
             for node in graph.nodes.values():
@@ -73,9 +90,11 @@ def main():
                 if type(node.op).__name__=='KernelOp':node.op=replace(node.op,body=(Tile((Axis(n('thread'),Dim(64)),),body),))
             work=data.reshape(64,columns).copy();expected=np.zeros(64,dtype=np.float32)
             for step in range(trips):
-                c=(step+1 if variant in ('odd','local_index') else 2 if variant=='axis_shadow'
+                c=(step+1 if variant in ('odd','local_index') else step+2 if variant=='offset2'
+                   else step+4 if variant=='offset4' else 2 if variant=='axis_shadow'
                    else 2*step if variant=='nonunit' else step%3 if variant=='nonlinear' else step)
                 item=work[:,c].copy()
+                if variant=='mixed_alignment':item+=work[:,c+2]
                 if variant=='shared_write':work[:,step+1]=item
                 if variant=='global_read':item+=data[:64]
                 expected+=item
@@ -91,9 +110,13 @@ def main():
             (folder/'meta.json').write_text(json.dumps(meta,indent=2)+'\n')
             np.savez(folder/'expected.npz',sum_1=expected)
             manifest.append({'folder':str(folder),'variant':variant,'trips':trips,'seed':args.seed,
-                'renamed':renamed,'expect_new_vector':variant in ('aligned','tail','large','large_tail','additive','flat_view'),
+                'renamed':renamed,'expect_new_vector':variant in ('aligned','tail','large','large_tail','additive','flat_view',
+                    'align8','offset2','offset4','even_stride','mixed_alignment','tail_six','cancellation','magnitude'),
                 'ir_sha256':hashlib.sha256(payload.encode()).hexdigest(),
-                'oracle':'exact independent small-integer NumPy updates over private rows'})
+                'oracle':'independent ordered float32 NumPy updates over private rows'})
+            if args.wide_guards:
+                manifest[-1]['expected_cross_width']=(2 if variant in ('align8','offset2','even_stride','mixed_alignment')
+                    else 4 if variant in ('aligned','tail','large','large_tail','additive','flat_view','offset4','tail_six','cancellation','magnitude') else 0)
     (args.out/'manifest.json').write_text(json.dumps({'generator_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'cases':manifest},indent=2)+'\n')
     print(f'Generated {len(manifest)} cross-iteration cases')
 
