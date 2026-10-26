@@ -1740,3 +1740,10 @@ per-copy emission to seed_folds, expansion_factor, axis_bounds and
 loop_iteration. Every one of 1833 corpus/fixture kernels compiles to identical
 PTX (or the identical diagnostic) as 1a2ad94e, so earlier GPU evidence carries
 over. CPU contracts (all six suites) pass on isolated 3.12/3.13/3.14.
+
+## Step 75 — package refreshed for f1e9d7a / 51239969
+
+Completed 2026-10-26. Packaged public smoke checks pass. The extracted
+compile.py passes all 36 fixtures dated 2026-10-26, extracted from the same
+archive, on the official RTX 5090. Record: 2026-10-26-current-package.json;
+the 1a2ad94e package record is preserved as 2026-10-26-math-bounds-package.json.

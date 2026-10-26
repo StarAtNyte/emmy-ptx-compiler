@@ -36,7 +36,7 @@ local test harness retargets to sm86. Local timing cannot select target changes.
 512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32
 (loop-lowering helpers; byte-identical PTX to 1a2ad94e across 1833 kernels, so
 the iteration19 GPU evidence applies). Frozen: artifacts/compiler-loop-split.py.
-1a2ad94e Frozen copy: artifacts/compiler-math-bounds.py. Previous 3586814e is frozen as
+1a2ad94e is frozen as artifacts/compiler-math-bounds.py. Previous 3586814e is frozen as
 artifacts/compiler-erf-refined.py. Earlier accepted sources/evidence are
 recorded in PROGRESS.md and dated validation records; old patches target those
 specific baselines, not automatically the current compiler.
@@ -241,12 +241,13 @@ Judging order (official README; no numeric weights): hidden-set correctness
 by category, then code review, then kernel speed. The video is an eligibility
 gate. Deadline Oct 27 23:59 AoE; resubmission allowed until then.
 
-Package for 7c15e10 / 1a2ad94e is built and verified
-(validation/2026-10-26-current-package.json); rebuild after any code change.
+Package for f1e9d7a / 51239969 is built and verified: extracted compiler and all
+36 fixtures dated 2026-10-26 pass on the official GPU
+(validation/2026-10-26-current-package.json). Rebuild after any code change.
 
-1. Readability for code review: public-facing README describing the design in
-   plain terms; consider splitting lower_loop. Gate refactors on byte-identical
-   PTX with the scratch equivalence approach (compile both, compare strings).
+1. Readability: README "How it works", DESIGN math/launch sections and the
+   lower_loop split are done. Further refactors must stay byte-identical
+   (compile both versions on every corpus folder and compare PTX strings).
 2. Further hidden-set probing: more fresh shapes per category on the hosted
    runner, especially attention/softmax tiles with idle lanes and reductions
    with odd sizes. Fix any failure generally, never by workload name.
