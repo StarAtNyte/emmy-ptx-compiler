@@ -33,8 +33,10 @@ http://runner.riftstack.ai:48701. Compiler emits PTX8.0 sm89, valid on target;
 local test harness retargets to sm86. Local timing cannot select target changes.
 
 **Accepted compile.py SHA256:**
-1a2ad94e87478276192f6248bba9871cd70eeeb9d90078e3ceb1224c3910703d.
-Frozen copy: artifacts/compiler-math-bounds.py. Previous 3586814e is frozen as
+512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32
+(loop-lowering helpers; byte-identical PTX to 1a2ad94e across 1833 kernels, so
+the iteration19 GPU evidence applies). Frozen: artifacts/compiler-loop-split.py.
+1a2ad94e Frozen copy: artifacts/compiler-math-bounds.py. Previous 3586814e is frozen as
 artifacts/compiler-erf-refined.py. Earlier accepted sources/evidence are
 recorded in PROGRESS.md and dated validation records; old patches target those
 specific baselines, not automatically the current compiler.

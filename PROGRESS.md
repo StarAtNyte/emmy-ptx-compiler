@@ -1731,3 +1731,12 @@ timing result and updates the validation table (hidden-set proxies, 175 CPU
 checks per Python). DESIGN gains "Elementwise math" (per-function lowering
 and sampled ULP) and "Launch bounds", and the neutral-state paragraph now
 describes the IR identity fix. No package rebuild needed for docs-only edits.
+
+## Step 74 — loop lowering split into helpers (byte-identical)
+
+Completed 2026-10-26. compile.py 512399691bfc1db88769ef1d53b54588b6042abd51237025c57ba993827b4d32 (frozen as artifacts/compiler-loop-split.py).
+lower_loop now delegates fold seeding, expansion choice, axis range proof and
+per-copy emission to seed_folds, expansion_factor, axis_bounds and
+loop_iteration. Every one of 1833 corpus/fixture kernels compiles to identical
+PTX (or the identical diagnostic) as 1a2ad94e, so earlier GPU evidence carries
+over. CPU contracts (all six suites) pass on isolated 3.12/3.13/3.14.
