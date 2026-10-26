@@ -40,7 +40,7 @@ using the supplied grid, block and shared-memory settings.
 
 | Area | Implementation |
 |---|---|
-| Data types | f32 buffers and arithmetic; i32 scalar bindings and numeric casts |
+| Data types | f32 buffers and arithmetic; i32 scalar bindings, boolean scalar values and numeric casts |
 | Indexing | Static shapes, multi-axis tile decoding, 32-bit index arithmetic, 64-bit global addresses |
 | Control flow | Loops, strided loops, conditionals, scoped bindings and carried reduction state |
 | Memory | Global and shared memory, grouped accesses, aligned vector reads and dynamic shared allocation |
@@ -55,6 +55,9 @@ it does not depend on kernel names.
 
 [DESIGN.md](DESIGN.md) describes the lowering, register model, numerical semantics
 and synchronization rules.
+
+Comparisons, logical masks and selection support internal boolean values.
+Boolean results convert numerically when written into f32 buffers.
 
 Natural, base-two and base-ten logarithms and the base-two exponential use PTX
 approximate instructions with subnormal handling enabled. Unknown scalar
@@ -86,7 +89,7 @@ checks, isolated CLI execution and selected NVIDIA Compute Sanitizer runs.
 |---|---|
 | Official public suite | 15 problems across pointwise, reduction, matmul, fused and attention categories |
 | Model integration | Nine staged transformer seed/depth checks, covering 147 stage outputs |
-| Python compatibility | 142 local checks per version on Python 3.12, 3.13 and 3.14, without PyTorch |
+| Python compatibility | 157 local checks per version on Python 3.12, 3.13 and 3.14, without PyTorch |
 | Memory and synchronization | Selected memcheck, racecheck, synccheck and initcheck runs |
 | Packaging | Extracted archive compilation and three hosted GPU smoke checks |
 

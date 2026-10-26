@@ -701,3 +701,33 @@ The pinned frontend CUDA renderer cannot emit log2/log10/exp2. Four initial
 frontend generation failures are recorded separately; these operations are
 covered by typed-IR probes, not claimed as frontend-generation successes.
 The final four supported specs regenerate identical IR/metadata/oracle bytes.
+
+## Scalar masks and boolean SSA acceptance — 26 October
+
+`tools/generate_scalar_mask_cases.py --out DIRECTORY --seed SEED` produces64
+exact probes per seed (0 and60317). All128 pass both GPUs. Tests cover all six
+comparisons, NaN comparisons and truth, logical/legacy f32 masks, selected and
+unselected NaN branches, signed-zero selection, bool indices/Let conversion,
+bool sources written into f32 buffers, and declared-f32 rounding after comparisons.
+
+`tools/expressions_scalar_masks.py` and `expressions_scalar_masks_fresh.py` produce
+13 frontend workloads, including full QK→mask→softmax→value attention. All pass
+both GPUs;957 prior kernels retain exact PTX. Nine transformer comparisons
+pass; all four sanitizers clean on75 selected cases. Initial setup mistakes
+computed some operations outside the final traced expression; those failed
+oracles/packages are preserved separately and excluded. Final specs inline the
+intended QK/ReLU computations into the traced expression; compiler unchanged.
+
+Five GPU-verified snapshots add coverage, previous33 positives unchanged.
+The full no-Torch local matrix newly passes on Python3.12/3.13/3.14:42 snapshot/
+feature +28 launch +42 ABI +31 shape +4 unsupported-op +10 bool-boundary =157.
+`tools/check_bool_contract.py` distinguishes valid bool SSA/conversion from
+unsupported bool buffer/storage/type cases, never launching invalid programs.
+Hosted CPU CI remains unverified. Evidence: production-iteration17.json.
+
+`tools/expressions_scalar_mask_casts.py --out DIRECTORY` additionally generates
+two frontend casts and applies explicit signed-zero, subnormal and maximum-finite
+inputs with exact NumPy references. Both pass on both GPUs and regenerate
+identical bytes. Keep operations under test inside the final traced expression:
+earlier tensor assignments become trace inputs. Check graph_inputs against the
+reference signature before counting a package as a compiler test.

@@ -1,0 +1,47 @@
+{
+  "inputs": [
+    "x"
+  ],
+  "outputs": [
+    "sum_1"
+  ],
+  "nodes": {
+    "x": {
+      "op": "InputOp",
+      "op_fields": {},
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "x",
+          "shape": [
+            514
+          ],
+          "dtype": "f32"
+        }
+      ]
+    },
+    "sum_1": {
+      "op": "KernelOp",
+      "op_fields": {
+        "body": [
+          "Tile(axes=(Axis(name='thread', extent=Dim(257), window=None),), body=(Load(names=('x',), input='x', index=(Var(name='thread'),), dtype=DataType(name='f32', np=dtype('float32'), nbytes=4)), Load(names=('y',), input='x', index=(BinaryExpr(op='+', left=Var(name='thread'), right=Literal(value=257, dtype='int')),), dtype=DataType(name='f32', np=dtype('float32'), nbytes=4)), Let(name='zero', value=Literal(value=0.0, dtype='float'), dtype=DataType(name='f32', np=dtype('float32'), nbytes=4)), Assign(name='mask', op=ElementwiseImpl('greater'), args=('x', 'zero'), dtype=DataType(name='f32', np=dtype('float32'), nbytes=4)), Let(name='result', value=BinaryExpr(op='+', left=Var(name='mask'), right=Literal(value=16777217, dtype='int')), dtype=DataType(name='f32', np=dtype('float32'), nbytes=4)), Write(output='sum_1', index=(Var(name='thread'),), values=('result',), value_dtype=DataType(name='f32', np=dtype('float32'), nbytes=4), atomic=False, swizzle='NONE')), block_threads=None, aux_threads=0, raster_axes=None, raster_group=None, raster_orient='m')"
+        ],
+        "name": "k_sum_1_reduce",
+        "zero_delegated": [],
+        "serial": []
+      },
+      "inputs": [
+        "x"
+      ],
+      "outputs": [
+        {
+          "name": "sum_1",
+          "shape": [
+            257
+          ],
+          "dtype": "f32"
+        }
+      ]
+    }
+  }
+}

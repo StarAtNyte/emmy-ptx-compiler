@@ -21,6 +21,8 @@ Show `Compiler.statement`, `integer`, and `address` in `compile.py`.
 - Tile axes decode a linear work index; extra work items are guarded.
 - Buffers use row-major element offsets and 64-bit global pointers.
 - Values map to fresh virtual registers; ptxas handles physical allocation.
+- Boolean masks use predicates internally and convert to1.0/0.0 for f32 outputs;
+  a source bool annotation does not make the output allocation a bool array.
 - Loop folds reset at their owning axis, while non-seeding loops retain state.
 
 Explain why a wrong argument order or tile decode can produce incorrect results
@@ -75,7 +77,7 @@ and selected Compute Sanitizer runs.
 
 Show one new logarithm boundary test. Approximate PTX math uses explicit
 tolerances; the exp2 power probe checks a two-ULP bound, while special-value
-probes classify results exactly. The local no-Torch matrix has142 checks per
+probes classify results exactly. The local no-Torch matrix has157 checks per
 Python version; GitHub-hosted execution remains unverified.
 
 The complete transformer test uses separately traced stages because the pinned

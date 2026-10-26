@@ -33,14 +33,37 @@ http://runner.riftstack.ai:48701. Compiler emits PTX8.0 sm89, valid on target;
 local test harness retargets to sm86. Local timing cannot select target changes.
 
 **Accepted compile.py SHA256:**
-eeb79a3a217d9b07b035e71f50501de008ff542e9ed3ddf474339733cc3c7910.
-Exact frozen source: artifacts/compiler-scalar-logs.py.
-Previous c2f7e2b3 is reproducible from aacaa3c:compile.py and is frozen as
-artifacts/compiler-before-scalar-logs.py. Earlier accepted sources/evidence are
+6237caabcebbaf5503223ab90d56d19d57aa4725095ab8846f8b3d2349ae41a3.
+Exact frozen source: artifacts/compiler-scalar-masks.py. Previous eeb79a3a is
+reproducible from44bd6d3:compile.py and frozen as compiler-before-masks.py.
+Previous c2f7e2b3 is reproducible from aacaa3c:compile.py. Earlier accepted sources/evidence are
 recorded in PROGRESS.md and dated validation records; old patches target those
 specific baselines, not automatically the current compiler.
 
-## Latest acceptance — scalar logarithms and exp2
+## Latest acceptance — internal bool SSA and masks
+
+Evidence: validation/2026-10-26-production-iteration17.json. All six scalar
+comparisons, logical/legacy f32 masks, where and bool Assign/Let supported.
+Write.value_dtype bool permits numeric conversion into still-f32 storage.
+Global/shared bool buffers, bool Load/Init/Accum and general integer Assign
+remain unsupported; storage ABI still f32. Comparisons normalize declared-f32
+outputs; NaN truth/inequality and signed-zero selection retain scalar semantics.
+
+All128 exact original/fresh/renamed typed probes and13 frontend workloads pass
+both GPUs, including full masked attention. Nine transformer checks pass;
+all four sanitizers clean on75 selected cases. 957 prior kernels emit identical
+PTX. No new kernel speedup claim. Five positive CPU fixtures added, old33 unchanged.
+Full157-check no-Torch matrix newly passes all3 Python versions (42+28+42+31+4+10).
+Cold CLI public15×3processes, medians0.923–1.068sec while CPU matrix ran; no
+before/after speed claim or judge time-limit guarantee. Hosted CPU CI unverified.
+
+Initial candidate4/5 exposed source-bool→f32 Write conversion, refined5/5.
+Initial attention oracle assumed3 inputs but an out-of-trace s=q@k made inputs
+s,v. Two ReLU setup expressions had the same trace-boundary mistake. Final
+specs inline intended QK/ReLU computations; all corrected6 workloads pass both
+GPUs. Failed intermediate test versions preserved/excluded; compiler6237 unchanged.
+
+## Previous acceptance — scalar logarithms and exp2
 
 Evidence: validation/2026-10-26-production-iteration16.json.
 Natural/base-two/base-ten logs lower via lg2 plus rounded f32 base conversion;
@@ -159,19 +182,16 @@ No archive rebuild needed for documentation/evidence-only updates.
 ## Next work
 
 All semantic/CPU/transformer/sanitizer gates above have completed; do not restart.
-Source/evidence published privately as44bd6d3, refreshed archive verified.
-Next prioritize remaining supported frontend scalar/mask operation mixes. Source
-inspection found f32 masks/comparisons/where, square/pad, sin/cos/erf/pow in the
-pinned frontend's op_to_expr; current backend still lacks several. Generate real
-frontend cases first to establish the actual gap. Internal bool SSA support must
-not silently enable unsupported bool storage. Large dtype/Tensor Core expansions
-are not required by current published evaluation scope.
+Commit source/evidence and refresh archive, then remaining frontend scalar ops.
+Large dtype/Tensor Core expansions are not required by published evaluation scope.
 
 HACKATHON_READINESS.md is the requirements audit. Personal video/publication later,
 submission deferred, hidden-set and broad production-readiness claims unproven.
 
-A five-expression mask discovery run is now in progress (ignored spec
-artifacts/expressions-mask-discovery.py, output artifacts/mask-discovery).
-It tests where/comparison-float/interval-mask/positive-sum/masked-softmax with
-the official generator, then isolated local validation. Inspect live process
-handle and actual reports before acting; do not restart on an observation timeout.
+Two numeric bool-cast audits with zero/subnormal/max-finite inputs also pass
+both GPUs and regenerate byte-identically; included in13 frontend count.
+Mask acceptance is complete; all gate processes terminal. Commit current source
+and verify a new archive. Current-package still describes previous eeb79a3a
+checkpoint44bd6d3 until refresh; preserve it as scalar-logs-package.json.
+Next inspect remaining supported frontend scalar operation mixes (square/pad,
+pow/sin/cos/erf) using actual generated examples before implementing further ops.

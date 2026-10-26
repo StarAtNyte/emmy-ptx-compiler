@@ -281,3 +281,18 @@ and infinities/NaNs created inside the kernel. The exp2 powers probe classifies
 independently computed two-ULP bounds exactly, with separate positivity probes
 for subnormal outputs. Unknown scalar op names raise a clean unsupported-op
 diagnostic; they do not become a dictionary traceback.
+
+Boolean scalar values may use predicate registers in Assign/Let. All six
+comparisons support f32 operands; not_equal uses unordered-not-equal so NaN
+compares unequal, while the other relations are ordered. Numeric truth uses
+`setp.neu.f32` against0, including NaN=true and signed zeros=false.
+`where` selects already-computed scalar branch values with `selp.f32`; it does
+not make earlier loads lazy. Logical/legacy f32-mask and/or/not operate on truth
+values, with explicit numeric normalization for f32-typed Assign results. That
+normalization preserves floating arithmetic semantics in later Expr evaluation.
+
+Write.value_dtype annotates the SOURCE value. A bool source can convert into a
+validated f32 buffer as1.0/0.0; its predicate bits are not stored as float bits.
+This does not enable bool pointers, bool global/shared arrays or bool Load,
+Init/Accum storage. Dedicated boundary probes retain those rejections and the
+existing restriction on general integer scalar Assign arithmetic.

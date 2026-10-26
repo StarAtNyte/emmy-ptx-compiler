@@ -40,9 +40,10 @@ Approach:
 > Validation covers all public categories, independent shapes and operation mixes,
 > renamed and fresh-seed typed IR, model comparisons and selected sanitizer runs.
 > New logarithm/exp2 support passes 104 typed and four frontend compound cases on
-> both GPUs; 845 prior kernels retain identical PTX. Four sanitizer tools are clean
-> on 56 selected new cases. The local no-Torch Python 3.12–3.14 matrix passes
-> 142 checks per version. Hosted CPU CI has not executed the current suite.
+> both GPUs. Internal boolean SSA/masks pass 128 typed and 13 frontend workloads,
+> including full masked attention; 957 prior kernels retain identical PTX. Four
+> sanitizer tools are clean on 75 selected mask cases. The local no-Torch Python 3.12–3.14 matrix passes
+> 157 checks per version. Hosted CPU CI has not executed the current suite.
 >
 > This is a static f32 compiler with documented unsupported operations and layouts.
 > Numerical approximations have explicit tolerances and boundary tests. Hidden-test

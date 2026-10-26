@@ -1463,3 +1463,55 @@ Completed 2026-10-26:
   or billing/privacy changes. Goal active, repo private, video/publication later.
 - Next: five real frontend mask/comparison/compound expressions are generating,
   followed by isolated baseline checks. Do not restart this live discovery run.
+
+## Step 60 — real frontend masks expose internal-boolean coverage gap
+
+In progress 2026-10-26:
+
+- Five real frontend where/comparison/mask/fused cases generate successfully;
+  accepted eeb79a3a compiler fails all5 on internal bool Assign/write annotations.
+  First mask candidate passes4/5; remaining comparison-to-float case requires
+  allowing bool VALUE conversion into still-f32 storage. Refined candidate
+  6237caabcebbaf5503223ab90d56d19d57aa4725095ab8846f8b3d2349ae41a3
+  passes all5 locally. Accepted main unchanged pending full gates.
+- Candidate supports internal bool Assign/Let, all6 scalar comparisons, logical
+  masks and where, preserving f32 mask outputs and numeric bool→f32 conversion.
+  Global/shared buffers remain f32; integer bitwise/storage not enabled.
+- All128 exact typed probes (seeds0/60317, renamed) pass locally, including NaN
+  comparisons/truth/selection, signed-zero branch selection, bool indices and
+  explicit f32 rounding after legacy comparisons. 957 prior kernels emit exact
+  PTX. Both-GPU/sanitizer gates are running.
+- Five fresh frontend expressions generate successfully; one masked-attention
+  reference expects3 inputs but trace exposes2. Investigating retained official
+  trace before defining oracle; do not count failed packaging as compiler evidence.
+- Goal active; repo private; video/publication later today; no entry submission.
+
+## Step 61 — accepted boolean SSA, masks and full masked-attention coverage
+
+Completed 2026-10-26:
+
+- Adopted exact6237caab candidate. All128 exact typed and13 frontend workloads
+  pass both GPUs, including full QK→mask→softmax→value attention. All957 prior
+  kernels emit exact PTX; nine transformer comparisons pass. Four sanitizers
+  clean on75 selected cases; no new kernel speedup claim.
+- Supports pure internal Bool Assign/Let, all6 comparisons, logical/legacy F32
+  masks, where and numeric bool source→f32 buffer conversion. F32-typed masks
+  normalize numerically to preserve later float Expr rounding. Bool global/shared
+  storage/Load/Init/Accum and general integer Assign remain rejected.
+- Five positive CPU fixtures added, previous33 unchanged. All157 checks newly
+  pass each isolated no-Torch3.12/3.13/3.14 runtime. Bool-boundary suite10 cases
+  is included in workflow. Hosted CPU CI still unverified, not a compiler blocker.
+- Public15 kernels compile deterministically in3 isolated no-Torch processes
+  each: local medians0.923–1.068sec under concurrent CPU-check load. No judge
+  time-limit guarantee or before/after compilation-speed claim.
+- Persistent trace audit showed premature s=q@k and ReLU assignments were outside
+  the traced final expression. Corrected intended operation placement, retained
+  initial failed test versions; all6 final fresh frontend cases pass both GPUs.
+  Compiler source unchanged during these fixture corrections.
+- Evidence: production-iteration17.json. Commit/package next. Remaining scalar
+  op coverage still open; repo private, video/publication later, no entry submitted.
+
+Additional step61 verification: two actual frontend bool→float and cast-affine
+programs pass both GPUs with explicit zero, subnormal and max-finite inputs.
+Portable generator expressions_scalar_mask_casts.py recreates exact tested bytes.
+Frontend total13;157 CPU and75 selected sanitizer cases unchanged.

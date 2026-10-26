@@ -191,12 +191,14 @@ class Compiler:
                 allowed = ('f32',)
                 if isinstance(stmt, Smem):
                     allowed = ('float', 'f32')
+                elif isinstance(stmt, Assign):
+                    allowed = ('f32', 'bool')
                 elif isinstance(stmt, Let):
-                    allowed = ('f32', 'i32')
+                    allowed = ('f32', 'i32', 'bool')
                 if name is not None and name not in allowed:
                     unsupported(here, f'dtype {name}')
                 if isinstance(stmt, Write):
-                    if stmt.value_dtype is not None and stmt.value_dtype.name not in ('f32', 'i32'):
+                    if stmt.value_dtype is not None and stmt.value_dtype.name not in ('f32', 'i32', 'bool'):
                         unsupported(here, f'write dtype {stmt.value_dtype}')
                     if stmt.swizzle != 'NONE':
                         unsupported(here, f'write swizzle {stmt.swizzle}')
@@ -413,11 +415,13 @@ class Compiler:
             return self.instruction(opcode, left, right)
         raise NotImplementedError(f'Index expression: {expr!r}')
 
-    def predicate(self, expr):
-        value = self.expression(expr)
+    def as_predicate(self, value):
         if self.is_float(value):
             return self.instruction('setp.neu.f32', value, self.floating(0), kind='p')
         return value if value.startswith('%p') else self.instruction('setp.ne.s32', value, 0, kind='p')
+
+    def predicate(self, expr):
+        return self.as_predicate(self.expression(expr))
 
     def address(self, buffer, index, offset=0):
         shape = self.shapes[buffer]
@@ -440,7 +444,19 @@ class Compiler:
         return self.instruction('add.u64', self.pointers[buffer], byte_offset, kind='rd')
 
     def arithmetic(self, op, args):
+        if op == 'where':
+            predicate = self.as_predicate(args[0])
+            return self.instruction('selp.f32', self.as_float(args[1]), self.as_float(args[2]), predicate, kind='f')
+        if op in ('bitwise_and', 'logical_and', 'bitwise_or', 'logical_or'):
+            opcode = 'and.pred' if op in ('bitwise_and', 'logical_and') else 'or.pred'
+            return self.instruction(opcode, *(self.as_predicate(value) for value in args), kind='p')
+        if op in ('bitwise_not', 'logical_not'):
+            return self.instruction('not.pred', self.as_predicate(args[0]), kind='p')
         args = [self.as_float(value) for value in args]
+        comparisons = {'equal': 'eq', 'not_equal': 'neu', 'less': 'lt', 'less_equal': 'le',
+                       'greater': 'gt', 'greater_equal': 'ge'}
+        if op in comparisons:
+            return self.instruction(f'setp.{comparisons[op]}.f32', *args, kind='p')
         if op == 'copy':
             return self.instruction('mov.f32', args[0], kind='f')
         opcode = {'add': 'add.rn.f32', 'subtract': 'sub.rn.f32',
@@ -736,7 +752,9 @@ class Compiler:
             bounds = self.index_interval(stmt.value)
             if isinstance(stmt.value, Literal):
                 dtype = stmt.dtype.name if stmt.dtype is not None else stmt.value.dtype
-                if dtype in ('int','i32','u32'):
+                if dtype == 'bool':
+                    self.values[stmt.name] = self.as_predicate(self.expression(stmt.value))
+                elif dtype in ('int','i32','u32'):
                     literal = int(stmt.value.value)
                     self.values[stmt.name] = self.instruction('mov.b32', literal)
                     bounds = (literal, literal) if -(1 << 31) <= literal < (1 << 31) else None
@@ -746,6 +764,7 @@ class Compiler:
                 value = self.expression(stmt.value)
                 if stmt.dtype is not None:
                     value = (self.as_float(value) if stmt.dtype.name == 'f32'
+                             else self.as_predicate(value) if stmt.dtype.name == 'bool'
                              else self.as_integer(value, cast_float=True))
                 if isinstance(stmt.value, Var) and value == self.values[stmt.value.name]:
                     # A pure binding captures the current value. Aliasing the
@@ -765,7 +784,13 @@ class Compiler:
                 space = 'shared' if stmt.input in self.shared else 'global'
                 self.values[name] = self.instruction(f'ld.{space}.f32', f'[{self.address(stmt.input, stmt.index, i)}]', kind='f')
         elif isinstance(stmt, Assign):
-            self.values[stmt.name] = self.arithmetic(stmt.op.name, [self.values[a] for a in stmt.args])
+            value = self.arithmetic(stmt.op.name, [self.values[a] for a in stmt.args])
+            if stmt.dtype is not None:
+                if stmt.dtype.name == 'bool':
+                    value = self.as_predicate(value)
+                elif stmt.dtype.name == 'f32' and value.startswith('%p'):
+                    value = self.as_float(value)
+            self.values[stmt.name] = value
         elif isinstance(stmt, Write):
             for i, value in enumerate(stmt.values):
                 address = self.address(stmt.output, stmt.index, i)
