@@ -1,25 +1,7 @@
-"""Translate typed Emmy Kernel IR directly to PTX.
+"""Emmy Kernel IR to PTX. Emmy supplies typed deserialization; lowering is local.
 
     python compile.py kernel.ir.json > kernel.ptx
 
-The compiler never invokes Emmy's CUDA renderer, nvcc or another backend; Emmy
-is used only to load the IR (Graph.from_dict). One pass does the work:
-
-1. Load and validate: find the single KernelOp, take its launch (entry, pointer
-   order, block size) from the adjacent meta.json, and reject IR features,
-   shapes or ABIs this compiler does not lower, with a clear message.
-2. Walk the statement tree once, keeping a map from IR value names to virtual
-   PTX registers (%r, %rd, %f, %fd, %p). Each statement kind has one lowering
-   method; expressions (indices, predicates, bounds) compile recursively.
-   ptxas performs the real register allocation.
-3. Assemble the module: header, parameters, launch-bound directives, register
-   and shared-memory declarations, then the emitted body.
-
-Correctness under the prescribed launch comes first. The optimizations are
-structural and checked against the IR: FMA folding of reductions, bounded
-unrolling of shared-memory inner loops, and v2/v4 vector loads where alignment
-is proven. Elementwise math (exp, tanh, log, sin, cos, pow, erf) is implemented
-here to libm-like accuracy rather than with bare hardware approximations.
 """
 from __future__ import annotations
 
@@ -98,7 +80,7 @@ class Compiler:
                     if hasattr(stmt, field):
                         inspect_tree_uses(getattr(stmt, field), in_loop or isinstance(stmt, (Loop, StridedLoop)))
         inspect_tree_uses(self.node.op.body)
-        self.observed_tree_buffers.update(b for b,n in tree_counts.items() if n > 1 or b in read_buffers)
+        self.observed_tree_buffers.update(b for b, n in tree_counts.items() if n > 1 or b in read_buffers)
         def collect_shared(body):
             for stmt in body:
                 if isinstance(stmt, Smem) and id(stmt) not in self.shared_offsets:
@@ -552,22 +534,15 @@ class Compiler:
         small = self.instruction('setp.le.f32', magnitude, self.floating(1), kind='p')
         return self.instruction('selp.f32', near_zero, ordinary, small, kind='f')
 
-    # -- Own f32 math library -------------------------------------------------
-    # Emmy's reference kernels call CUDA's accurate libm (expf, tanhf, logf,
-    # sinf, cosf, powf: 1-4 ULP), so hidden tolerances may be tight. These
-    # routines reach that accuracy with ordinary PTX arithmetic: range
-    # reduction, short polynomials evaluated with FMA, and explicit IEEE
-    # special cases. Hardware .approx instructions are not used here.
+    # Compound math: range reduction, FMA polynomials and IEEE special cases.
 
     def f32(self, opcode, *args):
         return self.instruction(opcode, *args, kind='f')
 
     def exponential(self, value):
-        """expf: ex2(t) for t = rn(x*log2(e)), corrected for the rounding of t.
+        """Correct ex2(t), t = rn(x*log2(e)), by its product-rounding error.
 
-        The product's exact rounding error (one FMA) plus the low part of log2(e)
-        give d = x*log2(e) - t; then e**x = ex2(t) * (1 + d*ln2). The correction is
-        computed beside ex2, so the dependent chain grows by one FMA only.
+        With d = x*log2(e) - t, exp(x) = ex2(t) * (1 + d*ln2) to first order.
         """
         t = self.f32('mul.rn.f32', value, self.floating(1.4426950216293335))
         power = self.f32('ex2.approx.f32', t)
@@ -793,12 +768,7 @@ class Compiler:
     # -- Statements: scopes, reductions and lowering --------------------------
 
     def combine(self, stmt):
-        """Apply a reduction's merge program with its proven neutral state.
-
-        In an online softmax, merging two empty lanes would otherwise evaluate
-        exp(-inf - -inf). Returning the other state for an identity operand
-        enforces the reduction identity without changing ordinary scalar exp.
-        """
+        """Merge states, bypassing neutral operands to avoid exp(-inf - -inf)."""
         left = [self.values[name] for name in stmt.state]
         right = [self.values[name] for name in stmt.state_b]
         neutral = all(name in self.identities for name in stmt.state)
@@ -836,12 +806,7 @@ class Compiler:
         return names
 
     def scoped_body(self, statements):
-        """Keep block-local SSA bindings private and external state writable.
-
-        Reduction primitives can rebind a carried name to a fresh register.
-        Copy their final values into the enclosing register before restoring
-        the map, so branches and repeated loop iterations see runtime updates.
-        """
+        """Restore local bindings; copy rebound reduction state into outer registers."""
         values, identities = self.values.copy(), self.identities.copy()
         pointers, shapes, shared = self.pointers.copy(), self.shapes.copy(), self.shared.copy()
         declarations = set()
@@ -860,7 +825,6 @@ class Compiler:
         self.pointers, self.shapes, self.shared = pointers, shapes, shared
 
     def statement(self, stmt):
-        """Lower one IR statement by dispatching on its kind."""
         for kinds, method in self.LOWERINGS:
             if isinstance(stmt, kinds):
                 return method(self, stmt)
@@ -894,12 +858,10 @@ class Compiler:
         self.emit(end + ':')
 
     def lower_init(self, stmt):
-        """Seed carried state with its literal identity."""
         self.values[stmt.name] = self.instruction('mov.f32', self.floating(stmt.identity), kind='f')
         self.identities[stmt.name] = stmt.identity
 
     def lower_cp_async_copy(self, stmt):
-        """Copy 4, 8 or 16 bytes global to shared with one cp.async."""
         if stmt.swizzle != 'NONE':
             raise NotImplementedError('Shared-memory swizzle')
         index = stmt.smem_index
@@ -927,7 +889,6 @@ class Compiler:
             self.pointers[stmt.name] = self.instruction('mov.u32', symbol)
 
     def lower_sync(self, stmt):
-        """Warp, CTA or named-barrier synchronization."""
         if stmt.warp:
             self.emit('bar.warp.sync 0xffffffff;')
         else:
@@ -935,7 +896,6 @@ class Compiler:
             self.emit(f'bar.sync {stmt.barrier_id}{count};')
 
     def lower_cond(self, stmt):
-        """Predicated branch; each side gets its own lexical scope."""
         other, end = self.label('else'), self.label('endif')
         predicate = self.predicate(stmt.cond)
         self.emit(f'@!{predicate} bra {other};')
@@ -966,17 +926,17 @@ class Compiler:
                 return Literal(index, 'int')
             name, scale = stmt.inner
             return BinaryExpr('+', Literal(index * scale, 'int'), Var(name))
-        partials = [[self.instruction('ld.shared.f32', f'[{self.address(buffer, (slot(index),))}]',kind='f')
+        partials = [[self.instruction('ld.shared.f32', f'[{self.address(buffer, (slot(index),))}]', kind='f')
                      for buffer in stmt.bufs] for index in range(stmt.length)]
         half = stmt.length // 2
         while half:
             for index in range(half):
-                self.values.update(zip(stmt.state,partials[index]))
-                self.values.update(zip(stmt.state_b,partials[index+half]))
+                self.values.update(zip(stmt.state, partials[index]))
+                self.values.update(zip(stmt.state_b, partials[index + half]))
                 self.combine(stmt)
                 partials[index] = [self.values[name] for name in stmt.state]
             half //= 2
-        self.values.update(zip(stmt.state,partials[0]))
+        self.values.update(zip(stmt.state, partials[0]))
         if stmt.length > 1:
             self.statement(Sync(barrier_id=stmt.barrier_id,count=stmt.barrier_count))
 
@@ -1052,7 +1012,6 @@ class Compiler:
         self.identities = enclosing_identities | neutrals
 
     def seed_folds(self, folds):
-        """Start each carried fold at its reduction identity."""
         for name, fold in folds.items():
             register = self.reg('f')
             self.values[name] = register
@@ -1063,11 +1022,7 @@ class Compiler:
             self.emit(f'mov.f32 {register}, {self.floating(identity)};')
 
     def expansion_factor(self, stmt):
-        """Power-of-two expansion for straight-line shared-memory inner loops.
-
-        Expansion is bounded by the extent and a statement budget to expose ILP
-        without unbounded code growth; other loops are not expanded.
-        """
+        """Expand shared-read-only leaf loops within an extent and statement budget."""
         body, extent = stmt.body, stmt.axis.extent.value
         if not (isinstance(stmt, Loop) and 4 <= extent <= 1024 and len(body) <= 64
                 and any(isinstance(s, Load) for s in body)
@@ -1143,7 +1098,6 @@ class Compiler:
         self.accumulate(stmt)
 
     def lower_load(self, stmt):
-        """Scalar or consecutive loads from global or shared memory."""
         if stmt.dtype is not None and stmt.dtype.name != 'f32':
             raise NotImplementedError(f'Load dtype {stmt.dtype}')
         for i, name in enumerate(stmt.names):
@@ -1151,7 +1105,6 @@ class Compiler:
             self.values[name] = self.instruction(f'ld.{space}.f32', f'[{self.address(stmt.input, stmt.index, i)}]', kind='f')
 
     def lower_assign(self, stmt):
-        """One elementwise operation over SSA values."""
         value = self.arithmetic(stmt.op.name, [self.values[a] for a in stmt.args])
         if stmt.dtype is not None:
             if stmt.dtype.name == 'bool':
@@ -1161,7 +1114,6 @@ class Compiler:
         self.values[stmt.name] = value
 
     def lower_write(self, stmt):
-        """Plain or atomic-add stores, one per value."""
         for i, value in enumerate(stmt.values):
             address = self.address(stmt.output, stmt.index, i)
             space = 'shared' if stmt.output in self.shared else 'global'
@@ -1202,35 +1154,35 @@ class Compiler:
         scale = stmt.inner[1] if stmt.inner else 1
         left = Var(stmt.tid_var)
         if stmt.inner:
-            left = BinaryExpr('+',BinaryExpr('*',left,Literal(scale,'int')),Var(stmt.inner[0]))
+            left = BinaryExpr('+', BinaryExpr('*', left, Literal(scale, 'int')), Var(stmt.inner[0]))
         half = stmt.length // 2
         while half:
-            eligible = self.instruction('setp.lt.s32',self.values[stmt.tid_var],half,kind='p')
+            eligible = self.instruction('setp.lt.s32', self.values[stmt.tid_var], half, kind='p')
             end = self.label('tree_merged')
             self.emit(f'@!{eligible} bra {end};')
-            right = BinaryExpr('+',left,Literal(half*scale,'int'))
-            for name, other, buffer in zip(stmt.state,stmt.state_b,stmt.bufs):
-                self.values[name] = self.instruction('ld.shared.f32',f'[{self.address(buffer,(left,))}]',kind='f')
-                self.values[other] = self.instruction('ld.shared.f32',f'[{self.address(buffer,(right,))}]',kind='f')
+            right = BinaryExpr('+', left, Literal(half * scale, 'int'))
+            for name, other, buffer in zip(stmt.state, stmt.state_b, stmt.bufs):
+                self.values[name] = self.instruction('ld.shared.f32', f'[{self.address(buffer, (left,))}]', kind='f')
+                self.values[other] = self.instruction('ld.shared.f32', f'[{self.address(buffer, (right,))}]', kind='f')
             self.combine(stmt)
             results = [self.values[name] for name in stmt.state]
             self.emit(end + ':')
-            barrier = Sync(barrier_id=stmt.barrier_id,count=stmt.barrier_count)
+            barrier = Sync(barrier_id=stmt.barrier_id, count=stmt.barrier_count)
             self.statement(barrier)
-            address = self.address(stmt.bufs[0],(left,))
-            self.instruction(f'@{eligible} atom.shared.exch.b32',f'[{address}]',0)
+            address = self.address(stmt.bufs[0], (left,))
+            self.instruction(f'@{eligible} atom.shared.exch.b32', f'[{address}]', 0)
             self.statement(barrier)
-            ticket = self.instruction('mov.u32','0xffffffff')
+            ticket = self.instruction('mov.u32', '0xffffffff')
             self.emit(f'@{eligible} atom.shared.add.u32 {ticket}, [{address}], 1;')
             self.statement(barrier)
-            writer = self.instruction('setp.eq.u32',ticket,0,kind='p')
-            for value,buffer in zip(results,stmt.bufs):
-                self.emit(f'@{writer} st.shared.f32 [{self.address(buffer,(left,))}], {value};')
+            writer = self.instruction('setp.eq.u32', ticket, 0, kind='p')
+            for value, buffer in zip(results, stmt.bufs):
+                self.emit(f'@{writer} st.shared.f32 [{self.address(buffer, (left,))}], {value};')
             self.statement(barrier)
             half //= 2
-        root = Var(stmt.inner[0]) if stmt.inner else Literal(0,'int')
-        for name,buffer in zip(stmt.state,stmt.bufs):
-            self.values[name] = self.instruction('ld.shared.f32',f'[{self.address(buffer,(root,))}]',kind='f')
+        root = Var(stmt.inner[0]) if stmt.inner else Literal(0, 'int')
+        for name, buffer in zip(stmt.state, stmt.bufs):
+            self.values[name] = self.instruction('ld.shared.f32', f'[{self.address(buffer, (root,))}]', kind='f')
 
     def accumulate(self, stmt, product=None):
         dest = self.values[stmt.name]
@@ -1350,12 +1302,7 @@ class Compiler:
         return eligible
 
     def body(self, statements):
-        """Contract an adjacent multiply/fold, never ordinary pointwise math.
-
-        Adjacency within the same body proves that the multiply operands have
-        not changed. Reduction tolerances allow this single-rounding contraction.
-        ptxas removes the now-unused separate multiply when it has no other use.
-        """
+        """Fold adjacent multiply/accumulate pairs; adjacency preserves operands."""
         previous = None
         pairs, removed = self.shared_pairs(statements)
         for index, stmt in enumerate(statements):
@@ -1376,9 +1323,9 @@ class Compiler:
             if index in pairs:
                 other = pairs[index]
                 registers = [self.reg('f'), self.reg('f')]
-                address = self.address(stmt.input,stmt.index)
+                address = self.address(stmt.input, stmt.index)
                 self.emit(f'ld.shared.v2.f32 {{{", ".join(registers)}}}, [{address}];')
-                self.values.update(zip((*stmt.names,*other.names),registers))
+                self.values.update(zip((*stmt.names, *other.names), registers))
                 previous = stmt
                 continue
             if (isinstance(stmt, Accum) and stmt.op.name == 'add'
@@ -1392,18 +1339,9 @@ class Compiler:
     # -- Module assembly ------------------------------------------------------
 
     def launch_bounds(self):
-        """Performance directives derived from the prescribed block size.
+        """Bound registers by physical warps, including partially occupied ones.
 
-        Every large block gets a register cap: even a kernel without folds can
-        keep hundreds of values live across a barrier. Physical registers are
-        allocated to whole warps, including a partially occupied final warp.
-
-        The IR state/math estimate only tunes a budget within that safe ceiling; it
-        never decides whether to enforce the ceiling. A modest budget avoids
-        encouraging ptxas to inflate register use on small-state kernels. Small
-        blocks retain the measured .maxntid hint; 1024-thread blocks retain
-        their existing architectural cap. Underestimation can cause spilling,
-        but cannot remove the launch resource bound.
+        The state/math hint tunes spilling within the architectural ceiling.
         """
         threads = self.launch['block'][0]
         accumulators = 0
@@ -1424,9 +1362,7 @@ class Compiler:
             return [f'.maxntid {threads}, 1, 1']
         warps = (threads + 31) // 32
         limit = 65536 // (32 * warps) // 8 * 8
-        # Compound math expands to temporary registers beyond the IR fold
-        # state. Reserving eight per operation avoids spilling the measured
-        # online-softmax attention kernel while preserving the matmul budget.
+        # Compound math needs temporaries beyond the IR's carried state.
         hint = max(48, estimate // 8 * 8) + 8 * math_ops
         budget = limit if threads == 1024 else min(limit, hint)
         return [f'.maxnreg {budget}']
