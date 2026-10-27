@@ -1,6 +1,6 @@
 # Validation results
 
-Measured on 26 October 2026 with the compiler from commit `3504527`.
+Measured on 26 October 2026 with the compiler from commit `1b32419`.
 
 | Check | Result | Environment |
 | --- | --- | --- |
@@ -53,15 +53,15 @@ and outputs were checked in full first and by returned prefix on later trials.
 Adding accurate exp changed row-softmax from 2.976 to 3.104 µs, a 0.128 µs cost.
 
 The original samples and compiler fingerprints are preserved in the
-[shared-read experiment record](https://github.com/StarAtNyte/emmy-ptx-compiler/blob/de5609d/validation/2026-10-26-production-iteration15.json)
-and [public launch-bound timing record](https://github.com/StarAtNyte/emmy-ptx-compiler/blob/de5609d/validation/iteration19-bench-l-public.json).
+[shared-read experiment record](https://github.com/StarAtNyte/emmy-ptx-compiler/blob/41fde8ba2b97a7fa5e58f63110618c787876b8e3/validation/2026-10-26-production-iteration15.json)
+and [public launch-bound timing record](https://github.com/StarAtNyte/emmy-ptx-compiler/blob/41fde8ba2b97a7fa5e58f63110618c787876b8e3/validation/iteration19-bench-l-public.json).
 Shape/layout results are retained in the
-[shape probe record](https://github.com/StarAtNyte/emmy-ptx-compiler/blob/de5609d/validation/2026-10-26-shape-probes.json);
+[shape probe record](https://github.com/StarAtNyte/emmy-ptx-compiler/blob/41fde8ba2b97a7fa5e58f63110618c787876b8e3/validation/2026-10-26-shape-probes.json);
 the 43 shape/op-mix results are in the
-[compiler acceptance record](https://github.com/StarAtNyte/emmy-ptx-compiler/blob/de5609d/validation/2026-10-26-production-iteration19.json).
+[compiler acceptance record](https://github.com/StarAtNyte/emmy-ptx-compiler/blob/41fde8ba2b97a7fa5e58f63110618c787876b8e3/validation/2026-10-26-production-iteration19.json).
 
 Detailed experimental reports were removed from the working tree during repository
-cleanup. The original records remain in git history at commit `de5609d`, under
+cleanup. The original records remain in git history at commit `41fde8b`, under
 `validation/2026-10-26-launch-resources.json` and
 `validation/iteration20-equivalence.json`. New test and benchmark reports belong
 in ignored `artifacts/`.
